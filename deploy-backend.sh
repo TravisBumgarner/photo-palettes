@@ -5,7 +5,7 @@ rm -rf tmp-heroku-deploy
 mkdir tmp-heroku-deploy
 cp -r backend/* tmp-heroku-deploy/
 cp backend/requirements.txt tmp-heroku-deploy/
-cp backend/Procfile tmp-heroku-deploy/  # Create this if needed
+cp Procfile tmp-heroku-deploy/  # Copy from root directory
 
 cd tmp-heroku-deploy
 git init
@@ -16,4 +16,4 @@ git push -f heroku main
 cd ..
 rm -rf tmp-heroku-deploy
 
-heroku open photo-palettes-backend
+heroku open --app photo-palettes-backend

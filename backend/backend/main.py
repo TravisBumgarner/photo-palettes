@@ -14,6 +14,14 @@ if config.environment == "local":
         allow_methods=["*"],
         allow_headers=["*"],
     )
+elif config.environment == "production":
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=["https://photo-palettes-frontend-bb66abc40c21.herokuapp.com/"],
+        allow_credentials=True,
+        allow_methods=["*"],
+        allow_headers=["*"],
+    )
 else:
     raise ValueError("Invalid environment")
 
