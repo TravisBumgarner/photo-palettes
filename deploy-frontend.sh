@@ -16,4 +16,4 @@ git commit -m "Deploy frontend"
 git push -f heroku main
 cd ..
 
-heroku open photo-palettes-frontend
+heroku open --app photo-palettes-frontend
