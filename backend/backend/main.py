@@ -6,8 +6,8 @@ from fastapi.middleware.cors import CORSMiddleware
 from backend.config import config
 
 app = FastAPI()
-
-if config.environment.environment == "local":
+print('ruda', config.environment)
+if config.environment == "local":
     app.add_middleware(
         CORSMiddleware,
         allow_origins=["*"],
