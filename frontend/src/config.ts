@@ -2,7 +2,9 @@
 // with NextJS notNull runs before the process.env is available.
 
 const config = {
-  apiUrl: process.env.NEXT_PUBLIC_API_URL,
+  apiUrl: process.env.NEXT_PUBLIC_API_URL!,
+  supabaseUrl: process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  supabaseAnonKey: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
 };
 
 export default config;
