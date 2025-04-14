@@ -1,33 +1,31 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
-import QueryProvider from "../components/QueryProvider";
+import localFont from "next/font/local";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+const satoshi = localFont({
+  src: [
+    {
+      path: "../../public/fonts/Satoshi-Variable.woff2",
+      weight: "300 700",
+      style: "normal",
+    },
+  ],
+  variable: "--font-satoshi",
 });
 
 export const metadata: Metadata = {
   title: "Photo Palettes",
-  description: "Social platform for generating color palettes from photos.",
+  description: "Generate color palettes from photos",
 };
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   return (
-    <html lang="en">
-      <body className={`${geistSans.variable} ${geistMono.variable}`}>
-        <QueryProvider>{children}</QueryProvider>
-      </body>
+    <html lang="en" className={satoshi.variable}>
+      <body>{children}</body>
     </html>
   );
 }

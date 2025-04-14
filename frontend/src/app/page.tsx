@@ -2,6 +2,14 @@
 
 import Image from "next/image";
 
+const linkStyle = {
+  color: "#bd4e85",
+  textDecoration: "none",
+  "&:hover": {
+    textDecoration: "underline",
+  },
+};
+
 const Welcome = () => {
   return (
     <div
@@ -14,27 +22,38 @@ const Welcome = () => {
         margin: "0px auto",
         padding: "20px",
         boxSizing: "border-box",
+        fontSize: "30px",
+        color: "#222",
       }}
     >
-      <div style={{ maxWidth: "450px" }}>
+      <div>
         <h1>Welcome to Photo Palettes!</h1>
+        <p>A social platform for generating color palettes from photos.</p>
         <p>
-          A social platform for generating color palettes from photos inspired
-          by{" "}
-          <a target="_blank" href="https://seis.pointlessprojects.com">
+          Inspired by{" "}
+          <a
+            style={linkStyle}
+            target="_blank"
+            href="https://seis.pointlessprojects.com"
+          >
             Seis Colores / Six Colors
           </a>
           . Check out some of the examples below.
         </p>
         <h2>Inspired?</h2>
         <p>
-          <a target="_blank" href="https://forms.gle/DZv1LyEwmEMmZPcC8">
+          <a
+            style={linkStyle}
+            target="_blank"
+            href="https://forms.gle/DZv1LyEwmEMmZPcC8"
+          >
             Join the Closed Alpha
           </a>
           !
         </p>
         <p>
           <a
+            style={linkStyle}
             target="_blank"
             href="https://bsky.app/profile/sillysideprojects.bsky.social"
           >
@@ -45,13 +64,18 @@ const Welcome = () => {
         <p>
           - Travis Bumgarner (
           <a
+            style={linkStyle}
             target="_blank"
             href="https://www.linkedin.com/in/travisbumgarner/"
           >
             LinkedIn
           </a>
           ,&nbsp;
-          <a target="_blank" href="https://travisbumgarner.dev">
+          <a
+            style={linkStyle}
+            target="_blank"
+            href="https://travisbumgarner.dev"
+          >
             Portfolio
           </a>
           )
