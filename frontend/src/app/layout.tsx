@@ -14,8 +14,15 @@ const satoshi = localFont({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://photopalettes.com"),
   title: "Photo Palettes",
-  description: "Generate color palettes from photos",
+  description: "A social platform for generating color palettes from photos.",
+  icons: {
+    icon: "/favicon.png",
+  },
+  openGraph: {
+    images: ["/og.png"],
+  },
 };
 
 export default function RootLayout({
