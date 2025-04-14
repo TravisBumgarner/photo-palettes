@@ -10,6 +10,43 @@ const linkStyle = {
   },
 };
 
+const Inspired = () => {
+  return (
+    <div>
+      <h2>Inspired?</h2>
+      <ul>
+        <li>
+          <a
+            style={linkStyle}
+            target="_blank"
+            href="https://forms.gle/DZv1LyEwmEMmZPcC8"
+          >
+            Join the Closed Alpha
+          </a>
+        </li>
+        <li>
+          <a
+            style={linkStyle}
+            target="_blank"
+            href="https://discord.com/invite/J8jwMxEEff"
+          >
+            Join the Chat on Discord
+          </a>
+        </li>
+        <li>
+          <a
+            style={linkStyle}
+            target="_blank"
+            href="https://bsky.app/profile/sillysideprojects.bsky.social"
+          >
+            Connect on Bluesky
+          </a>
+        </li>
+      </ul>
+    </div>
+  );
+};
+
 const Welcome = () => {
   return (
     <div
@@ -40,37 +77,7 @@ const Welcome = () => {
           </a>
           . Check out some of the examples below.
         </p>
-        <h2>Inspired?</h2>
-        <p>
-          <a
-            style={linkStyle}
-            target="_blank"
-            href="https://forms.gle/DZv1LyEwmEMmZPcC8"
-          >
-            Join the Closed Alpha
-          </a>
-          !
-        </p>
-        <p>
-          <a
-            style={linkStyle}
-            target="_blank"
-            href="https://discord.com/invite/J8jwMxEEff"
-          >
-            Join the Chat on Discord
-          </a>
-          !
-        </p>
-        <p>
-          <a
-            style={linkStyle}
-            target="_blank"
-            href="https://bsky.app/profile/sillysideprojects.bsky.social"
-          >
-            Connect on Bluesky
-          </a>
-          !
-        </p>
+        <Inspired />
         <p>
           - Travis Bumgarner (
           <a
@@ -100,6 +107,7 @@ const Welcome = () => {
       <div style={{ width: "100%", aspectRatio: 16 / 9, position: "relative" }}>
         <Image fill alt="color palette 1" src="/landing_page/3.png" />
       </div>
+      <Inspired />
     </div>
   );
 };
