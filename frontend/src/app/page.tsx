@@ -55,9 +55,19 @@ const Welcome = () => {
           <a
             style={linkStyle}
             target="_blank"
+            href="https://discord.com/invite/J8jwMxEEff"
+          >
+            Join the Chat on Discord
+          </a>
+          !
+        </p>
+        <p>
+          <a
+            style={linkStyle}
+            target="_blank"
             href="https://bsky.app/profile/sillysideprojects.bsky.social"
           >
-            Build with Me
+            Connect on Bluesky
           </a>
           !
         </p>
