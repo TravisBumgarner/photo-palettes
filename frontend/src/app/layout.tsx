@@ -1,3 +1,4 @@
+import { GoogleAnalytics } from "@next/third-parties/google";
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
@@ -32,6 +33,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={satoshi.variable}>
+      <head>
+        <GoogleAnalytics gaId="G-ZC6BZFH3W8" />
+      </head>
       <body>{children}</body>
     </html>
   );
