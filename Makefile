@@ -40,12 +40,7 @@ up:
 	@echo "Starting services..."
 	@echo "Backend: http://localhost:8000"
 	@echo "Frontend: http://localhost:3000"
-	@docker compose up
-
-# Start services in background
-up-d:
-	@echo "Starting services in background..."
-	@docker compose up -d
+	@docker compose up --build
 
 # Stop services
 down:

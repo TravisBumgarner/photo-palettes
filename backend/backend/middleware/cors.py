@@ -3,7 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 
 def setup_cors(app: FastAPI, environment: str):
-    if environment == "local":
+    if environment == "development":
         app.add_middleware(
             CORSMiddleware,
             allow_origins=["*"],
@@ -23,4 +23,4 @@ def setup_cors(app: FastAPI, environment: str):
             allow_headers=["*"],
         )
     else:
-        raise ValueError("Invalid environment")
+        raise ValueError("Invalid environment - " + environment)

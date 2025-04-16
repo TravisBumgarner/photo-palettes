@@ -1,6 +1,6 @@
 from sqlalchemy import String
 from sqlalchemy.orm import Mapped, mapped_column
-from .database import Base
+from .engine import Base
 
 class Color(Base):
     __tablename__ = "colors"
