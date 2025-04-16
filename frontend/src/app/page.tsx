@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import useGlobalStore from "../store";
 
 const linkStyle = {
   color: "#bd4e85",
@@ -48,6 +49,8 @@ const Inspired = () => {
 };
 
 const Welcome = () => {
+  const user = useGlobalStore((state) => state.user);
+
   return (
     <div
       style={{
@@ -64,7 +67,7 @@ const Welcome = () => {
       }}
     >
       <div>
-        <h1>Welcome to Photo Palettes!</h1>
+        <h1>Welcome {user?.email ? user?.email : "to Photo Palettes!"}</h1>
         <p>A social platform for generating color palettes from photos.</p>
         <p>
           Inspired by{" "}

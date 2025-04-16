@@ -1,6 +1,9 @@
 import { GoogleAnalytics } from "@next/third-parties/google";
 import type { Metadata } from "next";
 import localFont from "next/font/local";
+import QueryProvider from "../providers/QueryProvider";
+import { LoadUserIntoStore } from "./components/LoadUserIntoState";
+import Navigation from "./components/Navigation";
 import "./globals.css";
 
 const satoshi = localFont({
@@ -36,7 +39,11 @@ export default function RootLayout({
       <head>
         <GoogleAnalytics gaId="G-ZC6BZFH3W8" />
       </head>
-      <body>{children}</body>
+      <body>
+        <LoadUserIntoStore />
+        <Navigation />
+        <QueryProvider>{children}</QueryProvider>
+      </body>
     </html>
   );
 }

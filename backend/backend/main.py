@@ -1,42 +1,23 @@
 from typing import Union
-
-from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware
+from fastapi import FastAPI, Request
+from supabase import create_client, Client
 
 from backend.config import config
+from backend.middleware import create_auth_middleware, setup_cors
+
+supabase: Client = create_client(config.supabase.url, config.supabase.key)
 
 app = FastAPI()
-if config.environment == "local":
-    app.add_middleware(
-        CORSMiddleware,
-        allow_origins=["*"],
-        allow_credentials=True,
-        allow_methods=["*"],
-        allow_headers=["*"],
-    )
-elif config.environment == "production":
-    app.add_middleware(
-        CORSMiddleware,
-        allow_origins=["https://photo-palettes-frontend-bb66abc40c21.herokuapp.com"],
-        allow_credentials=True,
-        allow_methods=["*"],
-        allow_headers=["*"],
-    )
-else:
-    raise ValueError("Invalid environment")
 
+# Setup middleware
+app.middleware("http")(create_auth_middleware(supabase))
+setup_cors(app, config.environment)
 
 @app.get("/")
 def read_root():
     return {"Hello": "World!"}
 
-
-@app.get("/config")
-def read_config():
-    return config
-
-
-@app.get("/items/{item_id}")
-def read_item(item_id: int, q: Union[str, None] = None):
-    return {"item_id": item_id, "q": q}
+@app.get("/whoami")
+async def whoami(request: Request):
+    return {"message": "Hello, " + request.state.user.email}
 
