@@ -12,15 +12,13 @@ Takes screenshots of seis-colores and crops them to a square.
 
 Content
 
+Bsky
 ```
-Seis Colores 1 / 145
+Have a photo you want to turn into a color palette? Message me!
+Join the closed alpha: photopalettes.com 
 
+View them all: seis.pointlessprojects.com
 
-tags
-`
-
-Bsky tags
-```
 #palette #color #colorpalette #colorpalettes #photopalettes #photography #art #photo
 
 ```
