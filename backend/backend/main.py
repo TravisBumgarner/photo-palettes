@@ -5,7 +5,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from backend.config import config
 
 from supabase import create_client, Client
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, Request, Response
 
 supabase: Client = create_client(config.supabase.url, config.supabase.key)
 
@@ -28,7 +28,7 @@ async def add_authentication(request: Request, call_next):
     if request.method == "OPTIONS":
         return await call_next(request)
 
-    token = request.headers.get("authorization", "").replace("Bearer", "")
+    token = request.headers.get("authorization", "").replace("Bearer ", "")
 
     if not token:
         return Response("Unauthorized", status_code=401)
@@ -40,7 +40,7 @@ async def add_authentication(request: Request, call_next):
         supabase.postgrest.auth(token)
 
     except Exception:
-        return Response("Invalid user token", status_code=401)
+        return Response("Unauthorized", status_code=401)
 
     return await call_next(request)
 
