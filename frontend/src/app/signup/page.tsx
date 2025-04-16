@@ -12,11 +12,16 @@ const SignupSchema = z.object({
   repeatPassword: z.string().min(MINIMUM_PASSWORD_LENGTH),
 })
 
+// Congrats, you found the secret invitation key!
+// The rest of the app is quite secure.
+const SUPER_SECRET_INVITATION_KEY = 'welcome-to-photo-palettes'
+
 export default function SignupPage() {
   const [error, setError] = useState<string | null>(null)
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [repeatPassword, setRepeatPassword] = useState('')
+  const [invitationKey, setInvitationKey] = useState('')
   const router = useRouter()
   const setIsAppAuthenticating = useGlobalStore(state => state.setIsAppAuthenticating)
 
@@ -32,6 +37,11 @@ export default function SignupPage() {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
+
+    if (invitationKey !== SUPER_SECRET_INVITATION_KEY) {
+      setError('Invalid invitation key')
+      return
+    }
 
     if (password !== repeatPassword) {
       setError('Passwords do not match')
@@ -64,6 +74,15 @@ export default function SignupPage() {
   return (
     <form onSubmit={handleSubmit}>
       {error && <p style={{ color: 'red' }}>{error}</p>}
+      <label htmlFor="invitationKey">Invitation Key:</label>
+      <input
+        id="invitationKey"
+        name="invitationKey"
+        type="text"
+        required
+        value={invitationKey}
+        onChange={e => setInvitationKey(e.target.value)}
+      />
       <label htmlFor="email">Email:</label>
       <input
         id="email"
@@ -91,7 +110,9 @@ export default function SignupPage() {
         value={repeatPassword}
         onChange={handleRepeatPasswordChange}
       />
-      <button type="submit">Sign up</button>
+      <button disabled={!invitationKey || !password || !repeatPassword || !email} type="submit">
+        Sign up
+      </button>
     </form>
   )
 }
