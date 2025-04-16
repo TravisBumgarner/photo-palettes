@@ -1,10 +1,12 @@
+import logging
+
 from fastapi import Request
 from fastapi.responses import JSONResponse
 from supabase import Client
-import logging
 
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
+
 
 def create_auth_middleware(supabase: Client):
     async def add_authentication(request: Request, call_next):
@@ -21,14 +23,14 @@ def create_auth_middleware(supabase: Client):
 
         auth_header = request.headers.get("authorization", "")
         logger.debug(f"Auth header: {auth_header}")
-        
+
         token = auth_header.replace("Bearer ", "")
         logger.debug(f"Token: {token}")
 
         if not token:
             return JSONResponse(
                 status_code=401,
-                content={"error": "Unauthorized", "message": "No token provided"}
+                content={"error": "Unauthorized", "message": "No token provided"},
             )
 
         try:
@@ -42,9 +44,13 @@ def create_auth_middleware(supabase: Client):
             logger.error(f"Auth error: {str(e)}")
             return JSONResponse(
                 status_code=401,
-                content={"error": "Unauthorized", "message": "Invalid user token", "details": str(e)}
+                content={
+                    "error": "Unauthorized",
+                    "message": "Invalid user token",
+                    "details": str(e),
+                },
             )
 
         return await call_next(request)
-    
-    return add_authentication 
+
+    return add_authentication
