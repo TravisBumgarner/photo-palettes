@@ -1,10 +1,11 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { ChangeEvent, useState } from "react";
 import { z } from "zod";
 import { MINIMUM_PASSWORD_LENGTH } from "../../consts";
 import { signup } from "../../services/supabase/actions";
-
+import useGlobalStore from "../../store";
 const SignupSchema = z.object({
   email: z.string().email(),
   password: z.string().min(MINIMUM_PASSWORD_LENGTH),
@@ -16,6 +17,10 @@ export default function SignupPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [repeatPassword, setRepeatPassword] = useState("");
+  const router = useRouter();
+  const setIsAppAuthenticating = useGlobalStore(
+    (state) => state.setIsAppAuthenticating
+  );
 
   const handlePasswordChange = (e: ChangeEvent<HTMLInputElement>) => {
     const newPassword = e.target.value;
@@ -46,7 +51,13 @@ export default function SignupPage() {
     formData.append("password", password);
 
     try {
-      await signup(formData);
+      const response = await signup(formData);
+      if (response.success) {
+        setIsAppAuthenticating(true);
+        router.push("/");
+      } else {
+        setError(response.error);
+      }
     } catch (err) {
       setError(
         err instanceof Error ? err.message : "An error occurred during signup"

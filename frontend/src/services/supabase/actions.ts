@@ -1,9 +1,10 @@
 "use server";
 import { revalidatePath } from "next/cache";
-import { redirect } from "next/navigation";
 import { createClient } from "./server";
 
-export async function login(formData: FormData) {
+type Response = { success: true } | { error: string; success: false };
+
+export async function login(formData: FormData): Promise<Response> {
   const supabase = await createClient();
   // type-casting here for convenience
   // in practice, you should validate your inputs
@@ -13,14 +14,14 @@ export async function login(formData: FormData) {
   };
   const { error } = await supabase.auth.signInWithPassword(data);
   if (error) {
-    redirect("/error");
+    return { error: error.message, success: false };
   }
 
   revalidatePath("/", "layout");
-  redirect("/");
+  return { success: true };
 }
 
-export async function signup(formData: FormData) {
+export async function signup(formData: FormData): Promise<Response> {
   const supabase = await createClient();
   // type-casting here for convenience
   // in practice, you should validate your inputs
@@ -30,15 +31,15 @@ export async function signup(formData: FormData) {
   };
   const { error } = await supabase.auth.signUp(data);
   if (error) {
-    redirect("/error");
+    return { error: error.message, success: false };
   }
   revalidatePath("/", "layout");
-  redirect("/");
+  return { success: true };
 }
 
-export async function logout() {
+export async function logout(): Promise<Response> {
   const supabase = await createClient();
   await supabase.auth.signOut();
   revalidatePath("/", "layout");
-  redirect("/");
+  return { success: true };
 }

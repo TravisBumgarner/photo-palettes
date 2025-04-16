@@ -7,7 +7,14 @@ const Navigation = () => {
   const user = useGlobalStore((state) => state.user);
 
   return (
-    <div>
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "row",
+        justifyContent: "flex-end",
+        gap: "14px",
+      }}
+    >
       <Link href="/">Home</Link>
       {user ? (
         <Link href="/logout">Logout</Link>

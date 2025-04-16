@@ -6,8 +6,11 @@ import { State } from "./types";
 const useGlobalStore = create<State>()(
   devtools(
     (set) => ({
-      user: null,
+      user: undefined,
+      isAppAuthenticating: true,
       setUser: (user: User | null) => set({ user }),
+      setIsAppAuthenticating: (isAppAuthenticating: boolean) =>
+        set({ isAppAuthenticating }),
     }),
     {
       name: "store",

@@ -40,7 +40,6 @@ export default function RootLayout({
         <GoogleAnalytics gaId="G-ZC6BZFH3W8" />
       </head>
       <body>
-        {" "}
         <LoadUserIntoStore />
         <Navigation />
         <QueryProvider>{children}</QueryProvider>

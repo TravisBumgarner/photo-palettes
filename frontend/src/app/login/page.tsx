@@ -1,10 +1,11 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { z } from "zod";
 import { MINIMUM_PASSWORD_LENGTH } from "../../consts";
 import { login } from "../../services/supabase/actions";
-
+import useGlobalStore from "../../store";
 const LoginSchema = z.object({
   email: z.string().email(),
   password: z.string().min(MINIMUM_PASSWORD_LENGTH),
@@ -12,6 +13,10 @@ const LoginSchema = z.object({
 
 export default function LoginPage() {
   const [error, setError] = useState<string | null>(null);
+  const router = useRouter();
+  const setIsAppAuthenticating = useGlobalStore(
+    (state) => state.setIsAppAuthenticating
+  );
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -26,7 +31,14 @@ export default function LoginPage() {
       return;
     }
 
-    await login(formData);
+    const response = await login(formData);
+    if (response.success) {
+      setIsAppAuthenticating(true);
+      router.push("/");
+    } else {
+      setError(response.error);
+      router.push("/error");
+    }
   };
 
   return (
