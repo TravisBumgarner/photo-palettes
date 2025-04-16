@@ -1,23 +1,23 @@
-"use client";
+'use client'
 
-import Link from "next/link";
-import config from "../../config";
-import useGlobalStore from "../../store";
+import Link from 'next/link'
+import config from '../../config'
+import useGlobalStore from '../../store'
 
 const Navigation = () => {
-  const user = useGlobalStore((state) => state.user);
+  const user = useGlobalStore(state => state.user)
 
   if (!config.showNavigation) {
-    return null;
+    return null
   }
 
   return (
     <div
       style={{
-        display: "flex",
-        flexDirection: "row",
-        justifyContent: "flex-end",
-        gap: "14px",
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'flex-end',
+        gap: '14px',
       }}
     >
       <Link href="/">Home</Link>
@@ -30,7 +30,7 @@ const Navigation = () => {
         </>
       )}
     </div>
-  );
-};
+  )
+}
 
-export default Navigation;
+export default Navigation

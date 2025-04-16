@@ -1,24 +1,24 @@
-"use client";
+'use client'
 
-import { useRouter } from "next/navigation";
-import { useEffect } from "react";
-import { logout } from "../../services/supabase/actions";
-import useGlobalStore from "../../store";
+import { useRouter } from 'next/navigation'
+import { useEffect } from 'react'
+import { logout } from '../../services/supabase/actions'
+import useGlobalStore from '../../store'
 
 export default function LogoutPage() {
-  const router = useRouter();
-  const setUser = useGlobalStore((state) => state.setUser);
+  const router = useRouter()
+  const setUser = useGlobalStore(state => state.setUser)
 
   useEffect(() => {
     const logoutUser = async () => {
-      setUser(null);
-      const response = await logout();
+      setUser(null)
+      const response = await logout()
       if (response?.success) {
-        router.push("/");
+        router.push('/')
       }
-    };
-    logoutUser();
-  }, [router, setUser]);
+    }
+    logoutUser()
+  }, [router, setUser])
 
-  return <div>Logging out...</div>;
+  return <div>Logging out...</div>
 }

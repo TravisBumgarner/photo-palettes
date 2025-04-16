@@ -1,6 +1,6 @@
-import config from "../config";
+import config from '../config'
 
 export const callBackend = async () => {
-  const res = await fetch(`${config.apiUrl}`);
-  return res.json();
-};
+  const res = await fetch(`${config.apiUrl}`)
+  return res.json()
+}

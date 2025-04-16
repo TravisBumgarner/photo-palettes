@@ -1,13 +1,13 @@
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion } from 'framer-motion'
 
 const Loading = () => {
   return (
     <div
       style={{
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        height: "100%",
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: '100%',
       }}
     >
       <AnimatePresence>
@@ -18,7 +18,7 @@ const Loading = () => {
           transition={{
             rotate: {
               duration: 4,
-              ease: "linear",
+              ease: 'linear',
               repeat: Infinity,
             },
           }}
@@ -26,13 +26,13 @@ const Loading = () => {
             width: 75,
             height: 75,
             border: `20px solid black`,
-            borderTopColor: "white",
-            borderRadius: "50%",
+            borderTopColor: 'white',
+            borderRadius: '50%',
           }}
         />
       </AnimatePresence>
     </div>
-  );
-};
+  )
+}
 
-export default Loading;
+export default Loading
