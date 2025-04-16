@@ -11,10 +11,6 @@ def create_auth_middleware(supabase: Client):
         # Whitelist of routes that don't need auth
         public_routes = {
             "/",
-            "/config",
-            "/docs",
-            "/redoc",
-            "/openapi.json"
         }
 
         if request.url.path in public_routes:
