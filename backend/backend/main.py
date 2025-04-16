@@ -17,19 +17,7 @@ setup_cors(app, config.environment)
 def read_root():
     return {"Hello": "World!"}
 
-
-@app.get("/config")
-def read_config():
-    return config
-
-
-@app.get("/items/{item_id}")
-def read_item(item_id: int, q: Union[str, None] = None):
-    return {"item_id": item_id, "q": q}
-
-
 @app.get("/whoami")
 async def whoami(request: Request):
-    print(request.state.user)
     return {"message": "Hello, " + request.state.user.email}
 

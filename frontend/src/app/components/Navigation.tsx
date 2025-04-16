@@ -7,7 +7,6 @@ import useGlobalStore from "../../store";
 const Navigation = () => {
   const user = useGlobalStore((state) => state.user);
 
-  console.log("config", config);
   if (!config.showNavigation) {
     return null;
   }
