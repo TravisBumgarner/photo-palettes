@@ -13,17 +13,29 @@ app = FastAPI()
 
 @app.middleware("http")
 async def add_authentication(request: Request, call_next):
+    # Whitelist of routes that don't need auth
+    public_routes = {
+        "/",
+        "/config",
+        "/docs",
+        "/redoc",
+        "/openapi.json"
+    }
+
+    if request.url.path in public_routes:
+        return await call_next(request)
 
     if request.method == "OPTIONS":
         return await call_next(request)
 
-    token = request.headers.get("authorization", "").replace("Bearer ", "")
+    token = request.headers.get("authorization", "").replace("Bearer", "")
 
     if not token:
         return Response("Unauthorized", status_code=401)
 
     try:
         auth = supabase.auth.get_user(token)
+        request.state.user = auth.user
         request.state.user_id = auth.user.id
         supabase.postgrest.auth(token)
 
@@ -70,4 +82,6 @@ def read_item(item_id: int, q: Union[str, None] = None):
 
 @app.get("/whoami")
 async def whoami(request: Request):
-    return {"message": "Hello, world!"}
+    print(request.state.user)
+    return {"message": "Hello, " + request.state.user.email}
+
