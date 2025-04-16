@@ -12,9 +12,15 @@ class BaseServiceSettings(BaseSettings):
 #     port: int
 #     database: str
 
+class SupabaseSettings(BaseServiceSettings):
+    model_config = SettingsConfigDict(env_prefix="SUPABASE_")
+    url: str
+    key: str
+
 class Config(BaseSettings):
     environment: str
     # postgres: PostgresSettings = PostgresSettings()
+    supabase: SupabaseSettings = SupabaseSettings()
 
     model_config = SettingsConfigDict(env_file='.env', extra='ignore')
 
