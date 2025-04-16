@@ -10,7 +10,7 @@ services:
       - ./frontend/public:/app/public
       - ./frontend/next.config.js:/app/next.config.js
     environment:
-      - NODE_ENV=development
+      - ENVIRONMENT=development
       - NEXT_PUBLIC_SHOW_NAVIGATION=true
       - NEXT_PUBLIC_API_URL=http://localhost:8000
       - NEXT_PUBLIC_SUPABASE_URL=https://lanpbkfvzvdpdapavwic.supabase.co

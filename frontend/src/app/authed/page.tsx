@@ -1,5 +1,6 @@
 "use client";
 
+import config from "../../config";
 import { createClient } from "../../services/supabase/client";
 
 const Authed = () => {
@@ -8,7 +9,7 @@ const Authed = () => {
     const session = await supabase.auth.getSession();
     const tokens = session?.data?.session?.access_token;
 
-    const response = await fetch("http://localhost:8000/whoami", {
+    const response = await fetch(config.apiUrl + "/whoami", {
       method: "GET",
       headers: {
         "Content-Type": "application/json",

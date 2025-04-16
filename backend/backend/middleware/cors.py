@@ -13,7 +13,10 @@ def setup_cors(app: FastAPI, environment: str):
     elif environment == "production":
         app.add_middleware(
             CORSMiddleware,
-            allow_origins=["https://photo-palettes-frontend-bb66abc40c21.herokuapp.com"],
+            allow_origins=[
+                "https://photo-palettes-frontend-bb66abc40c21.herokuapp.com",
+                "https://photopalettes.com",
+                ],
             allow_credentials=True,
             allow_methods=["*"],
             allow_headers=["*"],

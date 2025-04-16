@@ -1,7 +1,11 @@
 #!/bin/bash
 
-# Exit on error
-set -e
+# Test everything
+if ! ./check-everything.sh; then
+    echo "Error: check-everything.sh failed"
+    exit 1
+fi
+
 
 APP_NAME="photo-palettes-frontend"
 DEPLOY_DIR="tmp-heroku-deploy"

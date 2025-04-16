@@ -1,5 +1,11 @@
 #!/bin/bash
 
+# Test everything
+if ! ./check-everything.sh; then
+    echo "Error: check-everything.sh failed"
+    exit 1
+fi
+
 # Deploy FastAPI backend to Heroku
 rm -rf tmp-heroku-deploy
 mkdir tmp-heroku-deploy
