@@ -10,3 +10,4 @@ class Color(Base):
     id: Mapped[int] = mapped_column(primary_key=True)
     name: Mapped[str] = mapped_column(String, unique=True)
     hex: Mapped[str] = mapped_column(String, unique=False, default="#000000")
+    hsl: Mapped[str] = mapped_column(String, unique=False, default="0 0 0")

@@ -6,10 +6,8 @@ from backend.config import get_config
 config = get_config()
 
 # Synchronous PostgreSQL connection URL
-DATABASE_URL = f"postgresql://{config.postgres.user}:{config.postgres.password}@{config.postgres.host}:{config.postgres.port}/{config.postgres.database}"
-
 # Create an engine for synchronous PostgreSQL connection
-engine = create_engine(DATABASE_URL, echo=True)
+engine = create_engine(config.database_url, echo=True)
 
 # Synchronous session factory
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)

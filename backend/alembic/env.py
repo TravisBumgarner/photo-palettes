@@ -11,23 +11,23 @@ from alembic import context
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "app")))
 
 from backend.config import get_config
-from backend.database.engine import DATABASE_URL, Base
+from backend.database.engine import Base
 
-config = get_config()
+app_config = get_config()
 
 # this is the Alembic Config object
-config = context.config
-fileConfig(config.config_file_name)
+alambric_config = context.config
+fileConfig(alambric_config.config_file_name)
 
 
-config.set_main_option("sqlalchemy.url", DATABASE_URL)
+alambric_config.set_main_option("sqlalchemy.url", app_config.database_url)
 
 target_metadata = Base.metadata
 
 
 def run_migrations_offline():
     context.configure(
-        url=DATABASE_URL,
+        url=app_config.postgres.database_url,
         target_metadata=target_metadata,
         literal_binds=True,
         compare_type=True,
@@ -38,7 +38,7 @@ def run_migrations_offline():
 
 def run_migrations_online():
     connectable = engine_from_config(
-        config.get_section(config.config_ini_section),
+        alambric_config.get_section(alambric_config.config_ini_section),
         prefix="sqlalchemy.",
         poolclass=pool.NullPool,
     )
