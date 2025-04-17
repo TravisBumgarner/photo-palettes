@@ -1,10 +1,10 @@
-from typing import AsyncGenerator
-from fastapi import Depends
-from sqlalchemy.ext.asyncio import AsyncSession
+from typing import Generator
 
-from .engine import AsyncSessionLocal
+from sqlalchemy.orm import Session
+
+from .engine import SessionLocal
 
 
-async def get_db() -> AsyncGenerator[AsyncSession, None]:
-    async with AsyncSessionLocal() as session:
+def get_db() -> Generator[Session, None, None]:
+    with SessionLocal() as session:
         yield session

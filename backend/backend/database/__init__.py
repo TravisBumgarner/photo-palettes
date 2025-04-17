@@ -1,4 +1,6 @@
-from .engine import AsyncSessionLocal, engine, Base
-from . import models
+# __init__.py
 
-__all__ = ["AsyncSessionLocal", "engine", "Base", "models"]
+from .engine import SessionLocal, engine, Base
+from .models import *
+
+__all__ = ["SessionLocal", "engine", "Base", "models"]

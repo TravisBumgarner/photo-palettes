@@ -1,20 +1,20 @@
-from sqlalchemy.ext.asyncio import async_sessionmaker, create_async_engine
-from sqlalchemy.orm import DeclarativeBase
+from sqlalchemy import create_engine
+from sqlalchemy.orm import DeclarativeBase, sessionmaker
 
 from backend.config import get_config
 
 config = get_config()
 
-# ✅ Update with your real DB credentials
-DATABASE_URL = f"postgresql+asyncpg://{config.postgres.user}:{config.postgres.password}@{config.postgres.host}:{config.postgres.port}/{config.postgres.database}"
+# Synchronous PostgreSQL connection URL
+DATABASE_URL = f"postgresql://{config.postgres.user}:{config.postgres.password}@{config.postgres.host}:{config.postgres.port}/{config.postgres.database}"
 
-# Create an async engine for PostgreSQL
-engine = create_async_engine(DATABASE_URL, echo=True)
+# Create an engine for synchronous PostgreSQL connection
+engine = create_engine(DATABASE_URL, echo=True)
 
-# Async session maker (like session factory)
-AsyncSessionLocal = async_sessionmaker(bind=engine, expire_on_commit=False)
+# Synchronous session factory
+SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 
-# Declarative base class for models
+# Declarative base for models
 class Base(DeclarativeBase):
     pass
