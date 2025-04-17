@@ -11,7 +11,7 @@ logger = logging.getLogger(__name__)
 def create_auth_middleware(supabase: Client):
     async def add_authentication(request: Request, call_next):
         # Whitelist of routes that don't need auth
-        public_routes = {"/", "/testdb"}
+        public_routes = {"/"}
 
         if request.url.path in public_routes:
             return await call_next(request)
