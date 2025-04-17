@@ -4,7 +4,7 @@ import Link from 'next/link'
 import config from '../../config'
 import useGlobalStore from '../../store'
 
-const Navigation = () => {
+const AuthLinks = () => {
   const user = useGlobalStore(state => state.user)
 
   if (!config.showNavigation) {
@@ -12,15 +12,7 @@ const Navigation = () => {
   }
 
   return (
-    <div
-      style={{
-        display: 'flex',
-        flexDirection: 'row',
-        justifyContent: 'flex-end',
-        gap: '14px',
-      }}
-    >
-      <Link href="/">Home</Link>
+    <>
       {user ? (
         <Link href="/logout">Logout</Link>
       ) : (
@@ -29,6 +21,40 @@ const Navigation = () => {
           <Link href="/signup">Signup</Link>
         </>
       )}
+    </>
+  )
+}
+
+const Navigation = () => {
+  return (
+    <div
+      style={{
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        margin: `10px 20px`,
+      }}
+    >
+      <div
+        style={{
+          display: 'flex',
+          flexDirection: 'row',
+          gap: '14px',
+        }}
+      >
+        <Link href="/">Home</Link>
+        <AuthLinks />
+      </div>
+      <div
+        style={{
+          display: 'flex',
+          flexDirection: 'row',
+          gap: '14px',
+        }}
+      >
+        <Link href="/privacy">Privacy Policy</Link>
+        <Link href="/tos">Terms of Service</Link>
+      </div>
     </div>
   )
 }
