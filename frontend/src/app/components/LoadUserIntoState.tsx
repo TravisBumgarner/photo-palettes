@@ -35,7 +35,7 @@ export function LoadUserIntoStore() {
         top: 0,
         bottom: 0,
         position: 'fixed',
-        background: 'white',
+        background: 'var(--background)',
       }}
     >
       <Loading />
