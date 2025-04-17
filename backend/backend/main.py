@@ -1,5 +1,6 @@
 from contextlib import asynccontextmanager
 
+import sentry_sdk
 from fastapi import Depends, FastAPI, Request
 from sqlalchemy import select
 from sqlalchemy.orm import Session
@@ -15,6 +16,14 @@ config = get_config()
 supabase: Client = create_client(config.supabase.url, config.supabase.key)
 
 app = FastAPI()
+
+sentry_sdk.init(
+    dsn="https://f93e30187cac28b7c1985fe2c7640a90@o196886.ingest.us.sentry.io/4509166019936256",
+    # Add data like request headers and IP for users,
+    # see https://docs.sentry.io/platforms/python/data-management/data-collected/ for more info
+    send_default_pii=True,
+)
+
 
 # Setup middleware
 app.middleware("http")(create_auth_middleware(supabase))
