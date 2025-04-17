@@ -1,8 +1,7 @@
-# Makefile for backend migration commands
-
-# Docker image and container names
-IMAGE_NAME = myapp-image
-DB_CONTAINER_NAME = db
+help:
+	@echo "Available commands:"
+	@echo "  make migrate      - Run alembic migrations inside Docker container"
+	@echo "  make make-migration - Generate a new alembic migration inside Docker container"
 
 # Run alembic migrations inside Docker container
 migrate:
