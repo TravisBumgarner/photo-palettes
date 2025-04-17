@@ -2,14 +2,15 @@ Photo Palettes
 
 Social platform for generating color palettes from photos.
 
-# Debug
+# Local Setup
 
-- `heroku logs --tail --app photo-palettes-backend`
-# Add Environment Variable
+make setup
+
+# Debug
 
 ## Local
 
-Add to `docker-compose.yml`: 
+Add to `docker-compose.yml`:
 
 ```
     environment:
