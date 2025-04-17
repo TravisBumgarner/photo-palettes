@@ -26,10 +26,6 @@ const AuthLinks = () => {
 }
 
 const Navigation = () => {
-  if (!config.showNavigation) {
-    return null
-  }
-
   return (
     <div
       style={{
