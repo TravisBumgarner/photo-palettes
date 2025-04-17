@@ -1,7 +1,9 @@
-from pydantic_settings import BaseSettings, SettingsConfigDict
-from pydantic import ValidationError, Field
 import sys
 from functools import lru_cache
+
+from pydantic import Field, ValidationError
+from pydantic_settings import BaseSettings, SettingsConfigDict
+
 
 class BaseServiceSettings(BaseSettings):
     model_config = SettingsConfigDict(env_file=".env", extra="ignore")
@@ -9,11 +11,7 @@ class BaseServiceSettings(BaseSettings):
 
 class PostgresSettings(BaseServiceSettings):
     model_config = SettingsConfigDict(env_prefix="POSTGRES_")
-    user: str
-    password: str
-    host: str
-    port: int
-    database: str
+    database_url: str
 
 
 class SupabaseSettings(BaseServiceSettings):
