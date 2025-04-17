@@ -44,19 +44,19 @@ def read_root():
     return {"message": "Hello, World!"}
 
 
-# @app.get("/testdb")
-# def insert_and_get_color(db: Session = Depends(get_db)):
-#     print("inserting color")
-#     color = models.Color(name="magenta")
-#     db.add(color)
-#     db.commit()
+@app.get("/testdb")
+def insert_and_get_color(db: Session = Depends(get_db)):
+    print("inserting color")
+    color = models.Color(name="magenta")
+    db.add(color)
+    db.commit()
 
-#     # Get the color back
-#     stmt = select(models.Color).where(models.Color.name == "magenta")
-#     result = db.execute(stmt)
-#     fetched_color = result.scalar_one()
+    # Get the color back
+    stmt = select(models.Color).where(models.Color.name == "magenta")
+    result = db.execute(stmt)
+    fetched_color = result.scalar_one()
 
-#     return {"id": fetched_color.id, "name": fetched_color.name}
+    return {"id": fetched_color.id, "name": fetched_color.name}
 
 
 @app.get("/whoami")

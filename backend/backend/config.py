@@ -1,17 +1,12 @@
 import sys
 from functools import lru_cache
 
-from pydantic import Field, ValidationError
+from pydantic import Field, ValidationError, field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class BaseServiceSettings(BaseSettings):
     model_config = SettingsConfigDict(env_file=".env", extra="ignore")
-
-
-class PostgresSettings(BaseServiceSettings):
-    model_config = SettingsConfigDict(env_prefix="POSTGRES_")
-    database_url: str
 
 
 class SupabaseSettings(BaseServiceSettings):
@@ -22,10 +17,17 @@ class SupabaseSettings(BaseServiceSettings):
 
 class Config(BaseSettings):
     environment: str
-    postgres: PostgresSettings = Field(default_factory=PostgresSettings)
+    database_url: str
     supabase: SupabaseSettings = Field(default_factory=SupabaseSettings)
 
     model_config = SettingsConfigDict(env_file=".env", extra="ignore")
+
+    # SqlAlchemy expects postgresql://, but postgres:// is what we get from Heroku.
+    @field_validator("database_url")
+    def convert_postgres_url(cls, v: str) -> str:
+        if v.startswith("postgres://"):
+            return v.replace("postgres://", "postgresql://", 1)
+        return v
 
 
 @lru_cache()

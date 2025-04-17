@@ -20,7 +20,7 @@ alambric_config = context.config
 fileConfig(alambric_config.config_file_name)
 
 
-alambric_config.set_main_option("sqlalchemy.url", app_config.postgres.database_url)
+alambric_config.set_main_option("sqlalchemy.url", app_config.database_url)
 
 target_metadata = Base.metadata
 
