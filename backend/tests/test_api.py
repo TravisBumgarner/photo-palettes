@@ -23,7 +23,7 @@ def check_server():
 def test_root_endpoint():
     response = requests.get(f"{BASE_URL}/")
     assert response.status_code == 200
-    assert response.json() == {"Hello": "World!"}
+    assert response.json() == {"message": "Hello, World!"}
 
 
 def test_whoami_unauthorized():
