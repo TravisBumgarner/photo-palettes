@@ -9,15 +9,14 @@ const Authed = () => {
     const session = await supabase.auth.getSession()
     const tokens = session?.data?.session?.access_token
 
-    const response = await fetch(config.apiUrl + '/whoami', {
+    await fetch(config.apiUrl + '/whoami', {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${tokens}`,
       },
     })
-    const json = await response.json()
-    console.log(json.message)
+    // const json = await response.json()
   }
 
   return (

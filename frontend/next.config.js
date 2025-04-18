@@ -1,5 +1,8 @@
 /** @type {import('next').NextConfig} */
-import { withSentryConfig } from '@sentry/nextjs'
+
+// Making this import/export will cause lint to fail.
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+const { withSentryConfig } = require('@sentry/nextjs')
 
 const config = {
   env: {
@@ -20,4 +23,5 @@ const sentryWebpackPluginOptions = {
   automaticVercelMonitors: true,
 }
 
-export default withSentryConfig(config, sentryWebpackPluginOptions)
+// Making this import/export will cause lint to fail.
+module.exports = withSentryConfig(config, sentryWebpackPluginOptions)

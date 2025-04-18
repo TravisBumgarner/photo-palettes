@@ -20,4 +20,7 @@ pytest
 echo "Checking frontend..."
 cd ../frontend
 
-echo "Shame on you!"
+echo "Linting..."
+npm run lint
+
+
