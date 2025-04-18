@@ -62,6 +62,7 @@ export default function SignupPage() {
       const response = await signup(formData)
       if (response.success) {
         setIsAppAuthenticating(true)
+        alert('Check your email for a confirmation.')
         router.push('/')
       } else {
         setError(response.error)

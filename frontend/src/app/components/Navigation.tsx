@@ -1,15 +1,10 @@
 'use client'
 
 import Link from 'next/link'
-import config from '../../config'
 import useGlobalStore from '../../store'
 
 const AuthLinks = () => {
   const user = useGlobalStore(state => state.user)
-
-  if (!config.showNavigation) {
-    return null
-  }
 
   return (
     <>
