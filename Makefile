@@ -5,6 +5,9 @@ help:
 	@echo "Available commands:"
 	@echo "  make setup        - Set up the project with Docker"
 	@echo "  make up           - Start all services"
+	@echo "  make deploy-all   - Deploy all services"
+	@echo "  make deploy-backend - Deploy backend"
+	@echo "  make deploy-frontend - Deploy frontend"
 setup:
 	@echo "Setting up project locally..."
 	@if [ ! -d ".venv" ]; then \
@@ -24,3 +27,15 @@ up:
 	@echo "Backend: http://localhost:8000"
 	@echo "Frontend: http://localhost:3000"
 	@docker compose up --build
+
+deploy-all:
+	@echo "Deploying all services..."
+	@./scripts/deploy-all.sh
+
+deploy-backend:
+	@echo "Deploying backend..."
+	@./scripts/deploy-backend.sh
+
+deploy-frontend:
+	@echo "Deploying frontend..."
+	@./scripts/deploy-frontend.sh

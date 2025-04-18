@@ -1,21 +1,21 @@
 #!/bin/bash
 
-# Test everything
-if ! ./check-everything.sh; then
-    echo "Error: check-everything.sh failed"
+# Test frontend
+if ! ./scripts/check-frontend.sh; then
+    echo "Error: check-frontend.sh failed"
     exit 1
 fi
 
-
 APP_NAME="photo-palettes-frontend"
 DEPLOY_DIR="tmp-heroku-deploy"
+LOCAL_DIR="frontend"
 
 # Clean and recreate deploy directory
 rm -rf $DEPLOY_DIR
 mkdir $DEPLOY_DIR
 
 # Copy everything from frontend/, including dotfiles and excluding node_modules/.next
-rsync -av frontend/ $DEPLOY_DIR/ \
+rsync -av $LOCAL_DIR/ $DEPLOY_DIR/ \
   --exclude=node_modules \
   --exclude=.next
 
@@ -39,4 +39,4 @@ cd ..
 rm -rf $DEPLOY_DIR
 
 # Open deployed app
-heroku open --app $APP_NAME
+open "https://photopalettes.com"

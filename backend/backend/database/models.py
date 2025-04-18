@@ -1,13 +1,14 @@
-from sqlalchemy import String
+from datetime import datetime
+
+from sqlalchemy import DateTime, String
 from sqlalchemy.orm import Mapped, mapped_column
 
 from .engine import Base
 
 
-class Color(Base):
-    __tablename__ = "colors"
+class AlphaSignup(Base):
+    __tablename__ = "alpha_signups"
 
     id: Mapped[int] = mapped_column(primary_key=True)
-    name: Mapped[str] = mapped_column(String, unique=True)
-    hex: Mapped[str] = mapped_column(String, unique=False, default="#000000")
-    hsl: Mapped[str] = mapped_column(String, unique=False, default="0 0 0")
+    email: Mapped[str] = mapped_column(String, unique=True)
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.now)

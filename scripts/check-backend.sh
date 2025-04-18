@@ -1,8 +1,6 @@
 # Exit on error
 set -e
 
-echo "Checking everything..."
-
 echo "Activating virtual environment..."
 if [ ! -d ".venv" ]; then
     echo "Virtual environment not found. Please create one with 'python -m venv venv' and try again."
@@ -12,12 +10,6 @@ fi
 source .venv/bin/activate
 
 echo "Checking backend..."
-cd backend
-
 echo "Running tests..."
-pytest
+cd backend && pytest
 
-echo "Checking frontend..."
-cd ../frontend
-
-echo "Shame on you!"

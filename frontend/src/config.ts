@@ -6,6 +6,7 @@ const config = {
   supabaseUrl: process.env.NEXT_PUBLIC_SUPABASE_URL!,
   supabaseAnonKey: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
   showNavigation: process.env.NEXT_PUBLIC_SHOW_NAVIGATION === 'true',
+  environment: process.env.NEXT_PUBLIC_ENVIRONMENT!,
 }
 
 export default config

@@ -1,7 +1,8 @@
 from contextlib import asynccontextmanager
 
 import sentry_sdk
-from fastapi import Depends, FastAPI, Request
+from fastapi import Depends, FastAPI, Form, Request
+from pydantic import BaseModel, EmailStr
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 from supabase import Client, create_client
@@ -10,6 +11,7 @@ from backend.config import get_config
 from backend.database import engine, models
 from backend.database.deps import get_db
 from backend.middleware import create_auth_middleware, setup_cors
+from backend.middleware.auth import public_routes
 
 config = get_config()
 
@@ -44,19 +46,20 @@ def read_root():
     return {"message": "Hello, World!"}
 
 
-# @app.get("/testdb")
-# def insert_and_get_color(db: Session = Depends(get_db)):
-#     print("inserting color")
-#     color = models.Color(name="magenta")
-#     db.add(color)
-#     db.commit()
+ALPHA_SIGNUP_ROUTE = "/alpha-signup"
+public_routes.add(ALPHA_SIGNUP_ROUTE)
 
-#     # Get the color back
-#     stmt = select(models.Color).where(models.Color.name == "magenta")
-#     result = db.execute(stmt)
-#     fetched_color = result.scalar_one()
 
-#     return {"id": fetched_color.id, "name": fetched_color.name}
+class AlphaSignupRequest(BaseModel):
+    email: EmailStr
+
+
+@app.post(ALPHA_SIGNUP_ROUTE)
+def alpha_signup(request: AlphaSignupRequest):
+    db = next(get_db())
+    db.add(models.AlphaSignup(email=request.email))
+    db.commit()
+    return {"message": "Alpha signup successful"}
 
 
 @app.get("/whoami")
