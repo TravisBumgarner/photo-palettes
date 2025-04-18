@@ -4,7 +4,7 @@ help:
 	@echo "  make make-migration - Generate a new alembic migration inside Docker container"
 
 # Generate a new alembic migration inside Docker container
-make-migration:
+migration:
 	@read -p "Enter migration message: " msg; \
 	docker-compose run --rm backend alembic revision --autogenerate -m "$$msg"
 
@@ -29,4 +29,4 @@ production-downgrade:
 		echo "Downgrade cancelled"; \
 		exit 1; \
 	fi; \
-	docker compose -f ../docker-compose.yml -f ../docker-compose.prod.yml run --rm backend alembic downgrade -1
+	docker -f ../docker-compose.yml -f ../docker-compose.prod.yml exec backend alembic downgrade -1

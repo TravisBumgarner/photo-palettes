@@ -7,11 +7,12 @@ from supabase import Client
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
 
+# Added from main.py
+public_routes = {"/"}
+
 
 def create_auth_middleware(supabase: Client):
     async def add_authentication(request: Request, call_next):
-        # Whitelist of routes that don't need auth
-        public_routes = {"/"}
 
         if request.url.path in public_routes:
             return await call_next(request)
