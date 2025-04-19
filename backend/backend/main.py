@@ -1,9 +1,8 @@
 from contextlib import asynccontextmanager
 
 import sentry_sdk
-from fastapi import Depends, FastAPI, Form, Request
+from fastapi import Depends, FastAPI, Request
 from pydantic import BaseModel, EmailStr
-from sqlalchemy import select
 from sqlalchemy.orm import Session
 from supabase import Client, create_client
 
@@ -12,6 +11,7 @@ from backend.database import engine, models
 from backend.database.deps import get_db
 from backend.middleware import create_auth_middleware, setup_cors
 from backend.middleware.auth import public_routes
+from backend.routes import alpha_signup, create_palette, ok, whoami
 
 config = get_config()
 
@@ -41,27 +41,7 @@ async def lifespan(app: FastAPI):
     # Run shutdown logic here if needed
 
 
-@app.get("/")
-def read_root():
-    return {"message": "Hello, World!"}
-
-
-ALPHA_SIGNUP_ROUTE = "/alpha-signup"
-public_routes.add(ALPHA_SIGNUP_ROUTE)
-
-
-class AlphaSignupRequest(BaseModel):
-    email: EmailStr
-
-
-@app.post(ALPHA_SIGNUP_ROUTE)
-def alpha_signup(request: AlphaSignupRequest):
-    db = next(get_db())
-    db.add(models.AlphaSignup(email=request.email))
-    db.commit()
-    return {"message": "Alpha signup successful"}
-
-
-@app.get("/whoami")
-async def whoami(request: Request):
-    return {"message": "Hello, " + request.state.user.email}
+app.include_router(ok.router)
+app.include_router(create_palette.router)
+app.include_router(whoami.router)
+app.include_router(create_palette.router)

@@ -5,6 +5,7 @@ help:
 	@echo "Available commands:"
 	@echo "  make setup        - Set up the project with Docker"
 	@echo "  make up           - Start all services"
+	@echo "  make down         - Stop all services"
 	@echo "  make deploy-all   - Deploy all services"
 	@echo "  make deploy-backend - Deploy backend"
 	@echo "  make deploy-frontend - Deploy frontend"
@@ -27,6 +28,9 @@ up:
 	@echo "Backend: http://localhost:8000"
 	@echo "Frontend: http://localhost:3000"
 	@docker compose up --build
+
+down:
+	@docker compose down
 
 deploy-all:
 	@echo "Deploying all services..."
