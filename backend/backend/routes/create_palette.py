@@ -1,6 +1,6 @@
 from fastapi import APIRouter, File, HTTPException, UploadFile
 
-from backend.params import sync_params
+from backend.sync_params import sync_params
 
 # from PIL import Image
 

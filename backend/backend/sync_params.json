@@ -1,6 +1,8 @@
 {
-  "supported_image_types": {
-    "backend": ["image/jpeg", "image/png", "image/webp"],
-    "frontend": [".jpg", ".jpeg", ".png", ".webp"]
+  "frontend": {
+    "supportedImageTypes": [".png", ".jpg", ".jpeg"]
+  },
+  "backend": {
+    "supported_image_types": ["image/png", "image/jpeg", "image/jpg"]
   }
 }
