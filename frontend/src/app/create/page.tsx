@@ -52,10 +52,14 @@ const Dropzone = ({ onDrop }: { onDrop: (acceptedFiles: File[]) => void }) => {
 
 const Create = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null)
+  const containerRef = useRef<HTMLDivElement>(null)
   const [uploadStatus, setUploadStatus] = useState<UploadStatus>(UploadStatus.INITIAL)
   const [palette, setPalette] = useState<Palette>([])
   const [draggingIndex, setDraggingIndex] = useState<number | null>(null)
   const [imageData, setImageData] = useState<string | null>(null)
+  const [imageDimensions, setImageDimensions] = useState<{ width: number; height: number } | null>(
+    null
+  )
 
   const uploadMutation = useMutation({
     mutationFn: postPhoto,
@@ -67,6 +71,24 @@ const Create = () => {
     },
   })
 
+  const drawPaletteCircles = useCallback(
+    (ctx: CanvasRenderingContext2D) => {
+      palette.forEach(swatch => {
+        const x = (swatch.percent_location[0] / 100) * ctx.canvas.width
+        const y = (swatch.percent_location[1] / 100) * ctx.canvas.height
+
+        ctx.beginPath()
+        ctx.arc(x, y, 50, 0, Math.PI * 2)
+        ctx.fillStyle = swatch.color
+        ctx.fill()
+        ctx.strokeStyle = 'white'
+        ctx.lineWidth = 2
+        ctx.stroke()
+      })
+    },
+    [palette]
+  )
+
   const drawCircles = useCallback(() => {
     const canvas = canvasRef.current
     if (!canvas || !imageData) return
@@ -74,28 +96,26 @@ const Create = () => {
     const ctx = canvas.getContext('2d')
     if (!ctx) return
 
-    // Clear canvas and redraw image
-    ctx.clearRect(0, 0, canvas.width, canvas.height)
-    const image = new Image()
-    image.src = imageData
-    image.onload = () => {
-      ctx.drawImage(image, 0, 0, canvas.width, canvas.height)
-
-      // Draw circles
-      palette.forEach(swatch => {
-        const x = (swatch.percent_location[0] / 100) * canvas.width
-        const y = (swatch.percent_location[1] / 100) * canvas.height
-
-        ctx.beginPath()
-        ctx.arc(x, y, 20, 0, Math.PI * 2)
-        ctx.fillStyle = swatch.color
-        ctx.fill()
-        ctx.strokeStyle = 'white'
-        ctx.lineWidth = 2
-        ctx.stroke()
-      })
+    // Only redraw the entire canvas if we don't have a cached image
+    if (!ctx.getImageData(0, 0, canvas.width, canvas.height).data.some(x => x !== 0)) {
+      ctx.clearRect(0, 0, canvas.width, canvas.height)
+      const image = new Image()
+      image.src = imageData
+      image.onload = () => {
+        ctx.drawImage(image, 0, 0, canvas.width, canvas.height)
+        drawPaletteCircles(ctx)
+      }
+    } else {
+      // Clear and redraw the image first
+      ctx.clearRect(0, 0, canvas.width, canvas.height)
+      const image = new Image()
+      image.src = imageData
+      image.onload = () => {
+        ctx.drawImage(image, 0, 0, canvas.width, canvas.height)
+        drawPaletteCircles(ctx)
+      }
     }
-  }, [palette, imageData])
+  }, [, imageData, drawPaletteCircles])
 
   const handleCanvasMouseDown = useCallback(
     (e: React.MouseEvent<HTMLCanvasElement>) => {
@@ -142,7 +162,7 @@ const Create = () => {
         percent_location: [x, y],
       }
       setPalette(newPalette)
-      requestAnimationFrame(drawCircles)
+      drawCircles()
     },
     [draggingIndex, palette, drawCircles]
   )
@@ -164,6 +184,7 @@ const Create = () => {
 
       canvas.width = image.width
       canvas.height = image.height
+      setImageDimensions({ width: image.width, height: image.height })
 
       const ctx = canvas.getContext('2d')
       if (!ctx) return
@@ -190,14 +211,31 @@ const Create = () => {
     <div>
       <h1>Create</h1>
       <Dropzone onDrop={onDrop} />
-      <canvas
-        style={{ width: '400px', height: '400px' }}
-        ref={canvasRef}
-        onMouseDown={handleCanvasMouseDown}
-        onMouseMove={handleCanvasMouseMove}
-        onMouseUp={handleCanvasMouseUp}
-        onMouseLeave={handleCanvasMouseUp}
-      />
+      <div
+        ref={containerRef}
+        style={{
+          width: '100%',
+          maxWidth: '800px',
+          margin: '0 auto',
+          position: 'relative',
+          aspectRatio: imageDimensions
+            ? `${imageDimensions.width} / ${imageDimensions.height}`
+            : '1',
+        }}
+      >
+        <canvas
+          style={{
+            width: '100%',
+            height: '100%',
+            display: 'block',
+          }}
+          ref={canvasRef}
+          onMouseDown={handleCanvasMouseDown}
+          onMouseMove={handleCanvasMouseMove}
+          onMouseUp={handleCanvasMouseUp}
+          onMouseLeave={handleCanvasMouseUp}
+        />
+      </div>
       {uploadStatus === UploadStatus.UPLOADING && <p>Uploading...</p>}
       {uploadStatus === UploadStatus.ERROR && <p>Error uploading photo</p>}
       {uploadStatus === UploadStatus.UPLOADED && <p>Photo uploaded successfully!</p>}
