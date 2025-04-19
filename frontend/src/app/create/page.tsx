@@ -71,24 +71,6 @@ const Create = () => {
     },
   })
 
-  const drawPaletteCircles = useCallback(
-    (ctx: CanvasRenderingContext2D) => {
-      palette.forEach(swatch => {
-        const x = (swatch.percent_location[0] / 100) * ctx.canvas.width
-        const y = (swatch.percent_location[1] / 100) * ctx.canvas.height
-
-        ctx.beginPath()
-        ctx.arc(x, y, 50, 0, Math.PI * 2)
-        ctx.fillStyle = swatch.color
-        ctx.fill()
-        ctx.strokeStyle = 'white'
-        ctx.lineWidth = 2
-        ctx.stroke()
-      })
-    },
-    [palette]
-  )
-
   const drawCircles = useCallback(() => {
     const canvas = canvasRef.current
     if (!canvas || !imageData) return
@@ -96,14 +78,14 @@ const Create = () => {
     const ctx = canvas.getContext('2d')
     if (!ctx) return
 
-    // Clear and redraw the image first
+    // Clear and redraw the image
     ctx.clearRect(0, 0, canvas.width, canvas.height)
     const image = new Image()
     image.src = imageData
     image.onload = () => {
       ctx.drawImage(image, 0, 0, canvas.width, canvas.height)
 
-      // Sample colors at current positions before drawing circles
+      // Sample colors at current positions
       if (draggingIndex !== null) {
         const swatch = palette[draggingIndex]
         const x = (swatch.percent_location[0] / 100) * canvas.width
@@ -118,28 +100,58 @@ const Create = () => {
         }
         setPalette(newPalette)
       }
-
-      drawPaletteCircles(ctx)
     }
-  }, [imageData, drawPaletteCircles, draggingIndex, palette])
+  }, [imageData, draggingIndex, palette])
 
-  const handleCanvasMouseDown = useCallback(
-    (e: React.MouseEvent<HTMLCanvasElement>) => {
+  const handleCanvasMouseMove = useCallback(
+    (e: React.MouseEvent<HTMLDivElement>) => {
+      if (draggingIndex === null) return
+
+      const container = containerRef.current
+      if (!container) return
+
+      const rect = container.getBoundingClientRect()
+      const x = ((e.clientX - rect.left) / rect.width) * 100
+      const y = ((e.clientY - rect.top) / rect.height) * 100
+
+      // Sample color at cursor position
       const canvas = canvasRef.current
       if (!canvas) return
+      const ctx = canvas.getContext('2d')
+      if (!ctx) return
 
-      const rect = canvas.getBoundingClientRect()
       const scaleX = canvas.width / rect.width
       const scaleY = canvas.height / rect.height
-      const x = (e.clientX - rect.left) * scaleX
-      const y = (e.clientY - rect.top) * scaleY
+      const pixelX = (e.clientX - rect.left) * scaleX
+      const pixelY = (e.clientY - rect.top) * scaleY
+      const pixel = ctx.getImageData(pixelX, pixelY, 1, 1).data
+      const newColor = `#${pixel[0].toString(16).padStart(2, '0')}${pixel[1].toString(16).padStart(2, '0')}${pixel[2].toString(16).padStart(2, '0')}`
+
+      const newPalette = [...palette]
+      newPalette[draggingIndex] = {
+        color: newColor,
+        percent_location: [x, y],
+      }
+      setPalette(newPalette)
+    },
+    [draggingIndex, palette]
+  )
+
+  const handleCanvasMouseDown = useCallback(
+    (e: React.MouseEvent<HTMLDivElement>) => {
+      const container = containerRef.current
+      if (!container) return
+
+      const rect = container.getBoundingClientRect()
+      const x = ((e.clientX - rect.left) / rect.width) * 100
+      const y = ((e.clientY - rect.top) / rect.height) * 100
 
       // Check if click is near any circle
       const index = palette.findIndex(swatch => {
-        const circleX = (swatch.percent_location[0] / 100) * canvas.width
-        const circleY = (swatch.percent_location[1] / 100) * canvas.height
+        const circleX = swatch.percent_location[0]
+        const circleY = swatch.percent_location[1]
         const distance = Math.sqrt(Math.pow(x - circleX, 2) + Math.pow(y - circleY, 2))
-        return distance < 20
+        return distance < 5 // 5% threshold for clicking
       })
 
       if (index !== -1) {
@@ -147,30 +159,6 @@ const Create = () => {
       }
     },
     [palette]
-  )
-
-  const handleCanvasMouseMove = useCallback(
-    (e: React.MouseEvent<HTMLCanvasElement>) => {
-      if (draggingIndex === null) return
-
-      const canvas = canvasRef.current
-      if (!canvas) return
-
-      const rect = canvas.getBoundingClientRect()
-      const scaleX = canvas.width / rect.width
-      const scaleY = canvas.height / rect.height
-      const x = (((e.clientX - rect.left) * scaleX) / canvas.width) * 100
-      const y = (((e.clientY - rect.top) * scaleY) / canvas.height) * 100
-
-      const newPalette = [...palette]
-      newPalette[draggingIndex] = {
-        ...newPalette[draggingIndex],
-        percent_location: [x, y],
-      }
-      setPalette(newPalette)
-      drawCircles()
-    },
-    [draggingIndex, palette, drawCircles]
   )
 
   const handleCanvasMouseUp = useCallback(() => {
@@ -228,6 +216,10 @@ const Create = () => {
             ? `${imageDimensions.width} / ${imageDimensions.height}`
             : '1',
         }}
+        onMouseDown={handleCanvasMouseDown}
+        onMouseMove={handleCanvasMouseMove}
+        onMouseUp={handleCanvasMouseUp}
+        onMouseLeave={handleCanvasMouseUp}
       >
         <canvas
           style={{
@@ -236,11 +228,29 @@ const Create = () => {
             display: 'block',
           }}
           ref={canvasRef}
-          onMouseDown={handleCanvasMouseDown}
-          onMouseMove={handleCanvasMouseMove}
-          onMouseUp={handleCanvasMouseUp}
-          onMouseLeave={handleCanvasMouseUp}
         />
+        {palette.map((swatch, index) => (
+          <div
+            key={swatch.color}
+            style={{
+              position: 'absolute',
+              left: `${swatch.percent_location[0]}%`,
+              top: `${swatch.percent_location[1]}%`,
+              transform: 'translate(-50%, -50%)',
+              width: '100px',
+              height: '100px',
+              borderRadius: '50%',
+              backgroundColor: swatch.color,
+              border: '2px solid white',
+              cursor: 'pointer',
+              boxShadow: '0 0 10px rgba(0,0,0,0.3)',
+            }}
+            onMouseDown={e => {
+              e.stopPropagation()
+              setDraggingIndex(index)
+            }}
+          />
+        ))}
       </div>
       {uploadStatus === UploadStatus.UPLOADING && <p>Uploading...</p>}
       {uploadStatus === UploadStatus.ERROR && <p>Error uploading photo</p>}
