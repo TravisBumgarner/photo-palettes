@@ -9,6 +9,7 @@ help:
 	@echo "  make deploy-all   - Deploy all services"
 	@echo "  make deploy-backend - Deploy backend"
 	@echo "  make deploy-frontend - Deploy frontend"
+	@echo "  make sync-shared - Sync shared types for frontend and backend such as supported image types"
 setup:
 	@echo "Setting up project locally..."
 	@if [ ! -d ".venv" ]; then \

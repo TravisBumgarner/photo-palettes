@@ -4,6 +4,7 @@ from typing import List
 
 from pydantic import BaseModel
 
+# Note - Get the json from the shared folder by running `make sync-shared` in the root.
 
 class SyncParams(BaseModel):
     supported_image_types: List[str]
