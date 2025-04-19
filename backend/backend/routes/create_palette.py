@@ -1,11 +1,14 @@
 from fastapi import APIRouter, File, HTTPException, UploadFile
 
+from backend.params import sync_params
+
 # from PIL import Image
 
 router = APIRouter()
 
+
 def validate_request(photo: UploadFile = File(...)):
-    if photo.content_type != "image/png":
+    if photo.content_type not in sync_params.supported_image_types:
         raise HTTPException(status_code=400, detail="Invalid file type")
 
 

@@ -43,3 +43,8 @@ deploy-backend:
 deploy-frontend:
 	@echo "Deploying frontend..."
 	@./scripts/deploy-frontend.sh
+
+sync-shared:
+	@echo "Syncing shared code..."
+	@cp shared/sync_params.json backend/backend/sync_params.json
+	@cp shared/sync_params.json frontend/src/app/sync_params.json

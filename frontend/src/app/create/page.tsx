@@ -4,6 +4,7 @@ import { useMutation } from '@tanstack/react-query'
 import { useCallback, useRef, useState } from 'react'
 import { useDropzone } from 'react-dropzone'
 import { postPhoto } from '../../api/postPhoto'
+import syncParams from '../sync_params.json'
 
 enum UploadStatus {
   INITIAL = 'INITIAL',
@@ -17,7 +18,7 @@ const Dropzone = ({ onDrop }: { onDrop: (acceptedFiles: File[]) => void }) => {
     onDrop,
     maxFiles: 1,
     maxSize: 1024 * 1024 * 5,
-    accept: { 'image/*': ['.png', '.jpg', '.jpeg'] },
+    accept: syncParams.supported_image_types.frontend,
     onDropRejected: fileRejections => {
       alert(fileRejections)
     },
