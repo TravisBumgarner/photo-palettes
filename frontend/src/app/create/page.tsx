@@ -78,30 +78,32 @@ const Create = () => {
     const ctx = canvas.getContext('2d')
     if (!ctx) return
 
-    // Clear and redraw the image
-    ctx.clearRect(0, 0, canvas.width, canvas.height)
-    const image = new Image()
-    image.src = imageData
-    image.onload = () => {
-      ctx.drawImage(image, 0, 0, canvas.width, canvas.height)
-
-      // Sample colors at current positions
-      if (draggingIndex !== null) {
-        const swatch = palette[draggingIndex]
-        const x = (swatch.percent_location[0] / 100) * canvas.width
-        const y = (swatch.percent_location[1] / 100) * canvas.height
-        const pixel = ctx.getImageData(x, y, 1, 1).data
-        const newColor = `#${pixel[0].toString(16).padStart(2, '0')}${pixel[1].toString(16).padStart(2, '0')}${pixel[2].toString(16).padStart(2, '0')}`
-
-        const newPalette = [...palette]
-        newPalette[draggingIndex] = {
-          ...swatch,
-          color: newColor,
-        }
-        setPalette(newPalette)
+    // Only draw the image once
+    if (!ctx.getImageData(0, 0, canvas.width, canvas.height).data.some(x => x !== 0)) {
+      ctx.clearRect(0, 0, canvas.width, canvas.height)
+      const image = new Image()
+      image.src = imageData
+      image.onload = () => {
+        ctx.drawImage(image, 0, 0, canvas.width, canvas.height)
       }
     }
-  }, [imageData, draggingIndex, palette])
+  }, [imageData])
+
+  const sampleColorAtPosition = useCallback((x: number, y: number) => {
+    const canvas = canvasRef.current
+    if (!canvas) return null
+
+    const ctx = canvas.getContext('2d')
+    if (!ctx) return null
+
+    const rect = canvas.getBoundingClientRect()
+    const scaleX = canvas.width / rect.width
+    const scaleY = canvas.height / rect.height
+    const pixelX = x * scaleX
+    const pixelY = y * scaleY
+    const pixel = ctx.getImageData(pixelX, pixelY, 1, 1).data
+    return `#${pixel[0].toString(16).padStart(2, '0')}${pixel[1].toString(16).padStart(2, '0')}${pixel[2].toString(16).padStart(2, '0')}`
+  }, [])
 
   const handleCanvasMouseMove = useCallback(
     (e: React.MouseEvent<HTMLDivElement>) => {
@@ -114,18 +116,8 @@ const Create = () => {
       const x = ((e.clientX - rect.left) / rect.width) * 100
       const y = ((e.clientY - rect.top) / rect.height) * 100
 
-      // Sample color at cursor position
-      const canvas = canvasRef.current
-      if (!canvas) return
-      const ctx = canvas.getContext('2d')
-      if (!ctx) return
-
-      const scaleX = canvas.width / rect.width
-      const scaleY = canvas.height / rect.height
-      const pixelX = (e.clientX - rect.left) * scaleX
-      const pixelY = (e.clientY - rect.top) * scaleY
-      const pixel = ctx.getImageData(pixelX, pixelY, 1, 1).data
-      const newColor = `#${pixel[0].toString(16).padStart(2, '0')}${pixel[1].toString(16).padStart(2, '0')}${pixel[2].toString(16).padStart(2, '0')}`
+      const newColor = sampleColorAtPosition(e.clientX - rect.left, e.clientY - rect.top)
+      if (!newColor) return
 
       const newPalette = [...palette]
       newPalette[draggingIndex] = {
@@ -134,7 +126,7 @@ const Create = () => {
       }
       setPalette(newPalette)
     },
-    [draggingIndex, palette]
+    [draggingIndex, palette, sampleColorAtPosition]
   )
 
   const handleCanvasMouseDown = useCallback(
@@ -237,8 +229,8 @@ const Create = () => {
               left: `${swatch.percent_location[0]}%`,
               top: `${swatch.percent_location[1]}%`,
               transform: 'translate(-50%, -50%)',
-              width: '100px',
-              height: '100px',
+              width: '15px',
+              height: '15px',
               borderRadius: '50%',
               backgroundColor: swatch.color,
               border: '2px solid white',
