@@ -96,26 +96,32 @@ const Create = () => {
     const ctx = canvas.getContext('2d')
     if (!ctx) return
 
-    // Only redraw the entire canvas if we don't have a cached image
-    if (!ctx.getImageData(0, 0, canvas.width, canvas.height).data.some(x => x !== 0)) {
-      ctx.clearRect(0, 0, canvas.width, canvas.height)
-      const image = new Image()
-      image.src = imageData
-      image.onload = () => {
-        ctx.drawImage(image, 0, 0, canvas.width, canvas.height)
-        drawPaletteCircles(ctx)
+    // Clear and redraw the image first
+    ctx.clearRect(0, 0, canvas.width, canvas.height)
+    const image = new Image()
+    image.src = imageData
+    image.onload = () => {
+      ctx.drawImage(image, 0, 0, canvas.width, canvas.height)
+
+      // Sample colors at current positions before drawing circles
+      if (draggingIndex !== null) {
+        const swatch = palette[draggingIndex]
+        const x = (swatch.percent_location[0] / 100) * canvas.width
+        const y = (swatch.percent_location[1] / 100) * canvas.height
+        const pixel = ctx.getImageData(x, y, 1, 1).data
+        const newColor = `#${pixel[0].toString(16).padStart(2, '0')}${pixel[1].toString(16).padStart(2, '0')}${pixel[2].toString(16).padStart(2, '0')}`
+
+        const newPalette = [...palette]
+        newPalette[draggingIndex] = {
+          ...swatch,
+          color: newColor,
+        }
+        setPalette(newPalette)
       }
-    } else {
-      // Clear and redraw the image first
-      ctx.clearRect(0, 0, canvas.width, canvas.height)
-      const image = new Image()
-      image.src = imageData
-      image.onload = () => {
-        ctx.drawImage(image, 0, 0, canvas.width, canvas.height)
-        drawPaletteCircles(ctx)
-      }
+
+      drawPaletteCircles(ctx)
     }
-  }, [imageData, drawPaletteCircles])
+  }, [imageData, drawPaletteCircles, draggingIndex, palette])
 
   const handleCanvasMouseDown = useCallback(
     (e: React.MouseEvent<HTMLCanvasElement>) => {
