@@ -6,6 +6,10 @@ import { useDropzone } from 'react-dropzone'
 import { postPhoto } from '../../api/postPhoto'
 import syncParams from '../../syncParams'
 import { Palette } from '../../types'
+import Loading from '../sharedComponents/Loading'
+
+const WIDTH = 800
+const HEIGHT = 600
 
 enum UploadStatus {
   INITIAL = 'INITIAL',
@@ -30,8 +34,8 @@ const Dropzone = ({ onDrop }: { onDrop: (acceptedFiles: File[]) => void }) => {
   return (
     <div
       style={{
-        width: '400px',
-        height: '100px',
+        width: `${WIDTH}px`,
+        height: `${HEIGHT}px`,
         border: '1px dashed black',
         display: 'flex',
         justifyContent: 'center',
@@ -57,6 +61,7 @@ const Create = () => {
   const [palette, setPalette] = useState<Palette>([])
   const [draggingIndex, setDraggingIndex] = useState<number | null>(null)
   const [imageData, setImageData] = useState<string | null>(null)
+  const [isLoading, setIsLoading] = useState(false)
   const [imageDimensions, setImageDimensions] = useState<{ width: number; height: number } | null>(
     null
   )
@@ -184,24 +189,49 @@ const Create = () => {
 
   const onDrop = useCallback(
     async (acceptedFiles: File[]) => {
+      setIsLoading(true)
       const photo = acceptedFiles[0]
       setPhotoOnCanvas(photo)
       setUploadStatus(UploadStatus.UPLOADING)
       const response = await uploadMutation.mutateAsync(photo)
       setPalette(response.palette)
+      setIsLoading(false)
     },
     [setPhotoOnCanvas, uploadMutation]
   )
 
+  const clearData = useCallback(() => {
+    setImageData(null)
+    setPalette([])
+    setUploadStatus(UploadStatus.INITIAL)
+    canvasRef.current
+      ?.getContext('2d')
+      ?.clearRect(0, 0, canvasRef.current?.width, canvasRef.current?.height)
+  }, [])
+
   return (
     <div>
       <h1>Create</h1>
-      <Dropzone onDrop={onDrop} />
+      {imageData && <button onClick={clearData}>Clear Data</button>}
+      {!isLoading && !imageData && <Dropzone onDrop={onDrop} />}
+      {isLoading && (
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            backgroundColor: 'white',
+          }}
+        >
+          <Loading />
+        </div>
+      )}
       <div
         ref={containerRef}
         style={{
           width: '100%',
-          maxWidth: '800px',
+          maxWidth: `${WIDTH}px`,
+          maxHeight: `${HEIGHT}px`,
           margin: '0 auto',
           position: 'relative',
           aspectRatio: imageDimensions
@@ -244,9 +274,6 @@ const Create = () => {
           />
         ))}
       </div>
-      {uploadStatus === UploadStatus.UPLOADING && <p>Uploading...</p>}
-      {uploadStatus === UploadStatus.ERROR && <p>Error uploading photo</p>}
-      {uploadStatus === UploadStatus.UPLOADED && <p>Photo uploaded successfully!</p>}
       {palette.length > 0 && (
         <div style={{ display: 'flex', flexDirection: 'row', gap: '10px' }}>
           {palette.map(swatch => (
