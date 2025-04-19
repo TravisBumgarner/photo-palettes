@@ -1,4 +1,15 @@
+import { z } from 'zod'
 import { getToken } from '../services/supabase/utils'
+
+const zodResponse = z.object({
+  success: z.boolean(),
+  palette: z.array(
+    z.object({
+      color: z.string(),
+      percent_location: z.tuple([z.number(), z.number()]),
+    })
+  ),
+})
 
 export const postPhoto = async (photo: File) => {
   const token = await getToken()
@@ -12,6 +23,6 @@ export const postPhoto = async (photo: File) => {
       Authorization: `Bearer ${token}`,
     },
   })
-  // TOdo - add types
-  return await response.json()
+  const json = await response.json()
+  return zodResponse.parse(json)
 }

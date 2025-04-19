@@ -1,10 +1,11 @@
 'use client'
 
 import { useMutation } from '@tanstack/react-query'
-import { useCallback, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { useDropzone } from 'react-dropzone'
 import { postPhoto } from '../../api/postPhoto'
 import syncParams from '../../syncParams'
+import { Palette } from '../../types'
 
 enum UploadStatus {
   INITIAL = 'INITIAL',
@@ -18,7 +19,9 @@ const Dropzone = ({ onDrop }: { onDrop: (acceptedFiles: File[]) => void }) => {
     onDrop,
     maxFiles: 1,
     maxSize: 1024 * 1024 * 5,
-    accept: syncParams.supportedImageTypes,
+    accept: {
+      'image/*': [...syncParams.supportedImageTypes],
+    },
     onDropRejected: fileRejections => {
       alert(fileRejections)
     },
@@ -50,6 +53,9 @@ const Dropzone = ({ onDrop }: { onDrop: (acceptedFiles: File[]) => void }) => {
 const Create = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const [uploadStatus, setUploadStatus] = useState<UploadStatus>(UploadStatus.INITIAL)
+  const [palette, setPalette] = useState<Palette>([])
+  const [draggingIndex, setDraggingIndex] = useState<number | null>(null)
+  const [imageData, setImageData] = useState<string | null>(null)
 
   const uploadMutation = useMutation({
     mutationFn: postPhoto,
@@ -60,6 +66,94 @@ const Create = () => {
       setUploadStatus(UploadStatus.ERROR)
     },
   })
+
+  const drawCircles = useCallback(() => {
+    const canvas = canvasRef.current
+    if (!canvas || !imageData) return
+
+    const ctx = canvas.getContext('2d')
+    if (!ctx) return
+
+    // Clear canvas and redraw image
+    ctx.clearRect(0, 0, canvas.width, canvas.height)
+    const image = new Image()
+    image.src = imageData
+    image.onload = () => {
+      ctx.drawImage(image, 0, 0, canvas.width, canvas.height)
+
+      // Draw circles
+      palette.forEach(swatch => {
+        const x = (swatch.percent_location[0] / 100) * canvas.width
+        const y = (swatch.percent_location[1] / 100) * canvas.height
+
+        ctx.beginPath()
+        ctx.arc(x, y, 20, 0, Math.PI * 2)
+        ctx.fillStyle = swatch.color
+        ctx.fill()
+        ctx.strokeStyle = 'white'
+        ctx.lineWidth = 2
+        ctx.stroke()
+      })
+    }
+  }, [palette, imageData])
+
+  const handleCanvasMouseDown = useCallback(
+    (e: React.MouseEvent<HTMLCanvasElement>) => {
+      const canvas = canvasRef.current
+      if (!canvas) return
+
+      const rect = canvas.getBoundingClientRect()
+      const scaleX = canvas.width / rect.width
+      const scaleY = canvas.height / rect.height
+      const x = (e.clientX - rect.left) * scaleX
+      const y = (e.clientY - rect.top) * scaleY
+
+      // Check if click is near any circle
+      const index = palette.findIndex(swatch => {
+        const circleX = (swatch.percent_location[0] / 100) * canvas.width
+        const circleY = (swatch.percent_location[1] / 100) * canvas.height
+        const distance = Math.sqrt(Math.pow(x - circleX, 2) + Math.pow(y - circleY, 2))
+        return distance < 20
+      })
+
+      if (index !== -1) {
+        setDraggingIndex(index)
+      }
+    },
+    [palette]
+  )
+
+  const handleCanvasMouseMove = useCallback(
+    (e: React.MouseEvent<HTMLCanvasElement>) => {
+      if (draggingIndex === null) return
+
+      const canvas = canvasRef.current
+      if (!canvas) return
+
+      const rect = canvas.getBoundingClientRect()
+      const scaleX = canvas.width / rect.width
+      const scaleY = canvas.height / rect.height
+      const x = (((e.clientX - rect.left) * scaleX) / canvas.width) * 100
+      const y = (((e.clientY - rect.top) * scaleY) / canvas.height) * 100
+
+      const newPalette = [...palette]
+      newPalette[draggingIndex] = {
+        ...newPalette[draggingIndex],
+        percent_location: [x, y],
+      }
+      setPalette(newPalette)
+      requestAnimationFrame(drawCircles)
+    },
+    [draggingIndex, palette, drawCircles]
+  )
+
+  const handleCanvasMouseUp = useCallback(() => {
+    setDraggingIndex(null)
+  }, [])
+
+  useEffect(() => {
+    drawCircles()
+  }, [drawCircles])
 
   const setPhotoOnCanvas = useCallback((photo: File) => {
     const image = new Image()
@@ -75,6 +169,7 @@ const Create = () => {
       if (!ctx) return
 
       ctx.drawImage(image, 0, 0, image.width, image.height)
+      setImageData(canvas.toDataURL())
 
       URL.revokeObjectURL(image.src)
     }
@@ -85,7 +180,8 @@ const Create = () => {
       const photo = acceptedFiles[0]
       setPhotoOnCanvas(photo)
       setUploadStatus(UploadStatus.UPLOADING)
-      uploadMutation.mutate(photo)
+      const response = await uploadMutation.mutateAsync(photo)
+      setPalette(response.palette)
     },
     [setPhotoOnCanvas, uploadMutation]
   )
@@ -94,10 +190,36 @@ const Create = () => {
     <div>
       <h1>Create</h1>
       <Dropzone onDrop={onDrop} />
-      <canvas style={{ width: '400px', height: '400px' }} ref={canvasRef} />
+      <canvas
+        style={{ width: '400px', height: '400px' }}
+        ref={canvasRef}
+        onMouseDown={handleCanvasMouseDown}
+        onMouseMove={handleCanvasMouseMove}
+        onMouseUp={handleCanvasMouseUp}
+        onMouseLeave={handleCanvasMouseUp}
+      />
       {uploadStatus === UploadStatus.UPLOADING && <p>Uploading...</p>}
       {uploadStatus === UploadStatus.ERROR && <p>Error uploading photo</p>}
       {uploadStatus === UploadStatus.UPLOADED && <p>Photo uploaded successfully!</p>}
+      {palette.length > 0 && (
+        <div style={{ display: 'flex', flexDirection: 'row', gap: '10px' }}>
+          {palette.map(swatch => (
+            <div
+              key={swatch.color}
+              style={{
+                width: '200px',
+                height: '50px',
+                backgroundColor: swatch.color,
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}
+            >
+              <span style={{ color: 'white' }}>{swatch.color}</span>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   )
 }
