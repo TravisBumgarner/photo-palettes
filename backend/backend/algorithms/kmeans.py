@@ -5,50 +5,40 @@ from fastapi import UploadFile
 from PIL import Image
 from sklearn.cluster import KMeans
 
+from .utils import convert_to_rgb, open_image, rgb_to_hex, scale_image
+
 
 def get_image_colors(photo: UploadFile) -> list:
-    # Read the file content
-    content = photo.file.read()
-    # Create a BytesIO object
-    from io import BytesIO
+    image = open_image(photo)
+    image = scale_image(image, 200)
+    image = convert_to_rgb(image)
 
-    image_bytes = BytesIO(content)
-    # Open the image from bytes
-    image = Image.open(image_bytes)
-    # Convert to RGB if needed
-    if image.mode != "RGB":
-        image = image.convert("RGB")
-    # Resize for faster processing
-    image = image.resize((100, 100))
-    # Convert to numpy array
     img_array = np.array(image)
-    # Reshape for kmeans
     pixels = img_array.reshape(-1, 3)
-    # Run kmeans
     kmeans = KMeans(n_clusters=6, random_state=42)
     kmeans.fit(pixels)
-    # Get the colors
-    colors = kmeans.cluster_centers_.astype(int)
-    # Convert to hex
-    hex_colors = [f"#{color[0]:02x}{color[1]:02x}{color[2]:02x}" for color in colors]
-    # Get the locations
+
+    colors = []
+    for center in kmeans.cluster_centers_:
+        rgb = tuple(int(x) for x in center)
+        colors.append(rgb)
+
+    hex_colors = [rgb_to_hex(color) for color in colors]
+
+    # Find closest pixel to each centroid
+    height, width = img_array.shape[:2]
     locations = []
-    for i in range(6):
-        x = (i % 3) * 33 + 16
-        y = (i // 3) * 33 + 16
+    for center in kmeans.cluster_centers_:
+        # Calculate distance to each pixel
+        distances = np.linalg.norm(pixels - center, axis=1)
+        closest_idx = np.argmin(distances)
+
+        # Convert flat index to x,y coordinates
+        y = (closest_idx // width) / height * 100
+        x = (closest_idx % width) / width * 100
         locations.append([float(x), float(y)])
-    # Return the palette
+
     return [
         {"color": color, "percent_location": loc}
         for color, loc in zip(hex_colors, locations)
     ]
-
-
-def sync_palettes(photo: UploadFile):
-    colors = get_image_colors(photo)
-    return colors
-
-
-if __name__ == "__main__":
-    print("\tRunning sync_palettes")
-    sync_palettes()

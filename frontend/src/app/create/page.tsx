@@ -115,7 +115,7 @@ const Create = () => {
         drawPaletteCircles(ctx)
       }
     }
-  }, [, imageData, drawPaletteCircles])
+  }, [imageData, drawPaletteCircles])
 
   const handleCanvasMouseDown = useCallback(
     (e: React.MouseEvent<HTMLCanvasElement>) => {
