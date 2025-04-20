@@ -1,17 +1,13 @@
 from contextlib import asynccontextmanager
 
 import sentry_sdk
-from fastapi import Depends, FastAPI, Request
-from pydantic import BaseModel, EmailStr
-from sqlalchemy.orm import Session
+from fastapi import FastAPI
 from supabase import Client, create_client
 
 from backend.config import get_config
 from backend.database import engine, models
-from backend.database.deps import get_db
 from backend.middleware import create_auth_middleware, setup_cors
-from backend.middleware.auth import public_routes
-from backend.routes import alpha_signup, ok, whoami, generate_palette, save_palette
+from backend.routes import alpha_signup, generate_palette, ok, save_palette, whoami
 
 config = get_config()
 
@@ -41,9 +37,9 @@ async def lifespan(app: FastAPI):
     # Run shutdown logic here if needed
 
 
-
 app.include_router(ok.router)
 app.include_router(generate_palette.router)
 app.include_router(whoami.router)
 app.include_router(generate_palette.router)
 app.include_router(alpha_signup.router)
+app.include_router(save_palette.router)
