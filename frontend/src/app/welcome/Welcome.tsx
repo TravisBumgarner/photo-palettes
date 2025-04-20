@@ -3,8 +3,9 @@
 import { Box, Typography } from '@mui/material'
 import Image from 'next/image'
 import useGlobalStore from '../../store'
-import AlphaSignup from '../sharedComponents/AlphaSignup'
 import StaticContentWrapper from '../../styles/Shared'
+import AlphaSignup from '../sharedComponents/AlphaSignup'
+
 const Inspired = () => {
   return (
     <Box>
