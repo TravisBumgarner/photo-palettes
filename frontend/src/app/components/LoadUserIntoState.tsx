@@ -1,5 +1,6 @@
 'use client'
 
+import { Box } from '@mui/material'
 import { useEffect } from 'react'
 import { createClient } from '../../services/supabase/client'
 import useGlobalStore from '../../store'
@@ -28,8 +29,8 @@ export function LoadUserIntoStore() {
   }, [setUser, supabase, setIsAppAuthenticating, isAppAuthenticating])
 
   return isAppAuthenticating ? (
-    <div
-      style={{
+    <Box
+      sx={{
         left: 0,
         right: 0,
         top: 0,
@@ -39,6 +40,6 @@ export function LoadUserIntoStore() {
       }}
     >
       <Loading />
-    </div>
+    </Box>
   ) : null
 }

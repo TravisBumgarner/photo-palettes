@@ -1,7 +1,8 @@
 'use client'
 
+import { Box, Button, TextField } from '@mui/material'
 import { useRouter } from 'next/navigation'
-import { useState } from 'react'
+import { useCallback, useState } from 'react'
 import { z } from 'zod'
 import { MINIMUM_PASSWORD_LENGTH } from '../../consts'
 import { login } from '../../services/supabase/actions'
@@ -43,13 +44,39 @@ export default function LoginPage() {
   )
 
   return (
-    <form onSubmit={handleSubmit}>
-      {error && <p style={{ color: 'red' }}>{error}</p>}
-      <label htmlFor="email">Email:</label>
-      <input id="email" name="email" type="email" required />
-      <label htmlFor="password">Password:</label>
-      <input id="password" name="password" type="password" required />
-      <button type="submit">Log in</button>
-    </form>
+    <Box
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        height: '70vh',
+      }}
+    >
+      <form
+        onSubmit={handleSubmit}
+        style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}
+      >
+        {error && <p style={{ color: 'red' }}>{error}</p>}
+        <TextField
+          id="email"
+          name="email"
+          type="email"
+          required
+          placeholder="Enter email"
+          label="Email"
+        />
+        <TextField
+          id="password"
+          name="password"
+          type="password"
+          required
+          placeholder="Enter password"
+        />
+        <Button variant="contained" type="submit">
+          Log in
+        </Button>
+      </form>
+    </Box>
   )
 }

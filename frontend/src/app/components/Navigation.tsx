@@ -1,5 +1,6 @@
 'use client'
 
+import { Box } from '@mui/material'
 import Link from 'next/link'
 import useGlobalStore from '../../store'
 
@@ -22,16 +23,16 @@ const AuthLinks = () => {
 
 const Navigation = () => {
   return (
-    <div
-      style={{
+    <Box
+      sx={{
         display: 'flex',
         flexDirection: 'row',
         justifyContent: 'space-between',
         margin: `10px 20px`,
       }}
     >
-      <div
-        style={{
+      <Box
+        sx={{
           display: 'flex',
           flexDirection: 'row',
           gap: '14px',
@@ -39,19 +40,17 @@ const Navigation = () => {
       >
         <Link href="/">Home</Link>
         <AuthLinks />
-      </div>
-      <div
-        style={{
+      </Box>
+      <Box
+        sx={{
           display: 'flex',
           flexDirection: 'row',
           gap: '14px',
         }}
       >
         <Link href="/donations">Donate</Link>
-        <Link href="/privacy">Privacy Policy</Link>
-        <Link href="/tos">Terms of Service</Link>
-      </div>
-    </div>
+      </Box>
+    </Box>
   )
 }
 

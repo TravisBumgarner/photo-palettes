@@ -1,37 +1,30 @@
 'use client'
 
+import { Box, Typography } from '@mui/material'
 import Image from 'next/image'
 import useGlobalStore from '../../store'
+import StaticContentWrapper from '../../styles/Shared'
 import AlphaSignup from '../sharedComponents/AlphaSignup'
-const linkStyle = {
-  color: '#bd4e85',
-  textDecoration: 'none',
-  '&:hover': {
-    textDecoration: 'underline',
-  },
-}
 
 const Inspired = () => {
   return (
-    <div>
-      <h2 style={{ textAlign: 'center' }}>Follow the Journey</h2>
+    <Box>
+      <Typography variant="h2" style={{ textAlign: 'center' }}>
+        Follow the Journey
+      </Typography>
       <ul style={{ listStyleType: 'none', padding: 0, textAlign: 'center' }}>
         <li>
-          <a style={linkStyle} target="_blank" href="https://discord.com/invite/J8jwMxEEff">
+          <a target="_blank" href="https://discord.com/invite/J8jwMxEEff">
             Join the Chat on Discord
           </a>
         </li>
         <li>
-          <a
-            style={linkStyle}
-            target="_blank"
-            href="https://bsky.app/profile/sillysideprojects.bsky.social"
-          >
+          <a target="_blank" href="https://bsky.app/profile/sillysideprojects.bsky.social">
             Connect on Bluesky
           </a>
         </li>
       </ul>
-    </div>
+    </Box>
   )
 }
 
@@ -39,54 +32,45 @@ const Welcome = () => {
   const user = useGlobalStore(state => state.user)
 
   return (
-    <div
-      style={{
-        display: 'flex',
-        flexDirection: 'column',
-        gap: '20px',
-        width: '100%',
-        maxWidth: '800px',
-        margin: '0px auto',
-        padding: '20px',
-        boxSizing: 'border-box',
-        fontSize: '30px',
-        color: '#222',
-      }}
-    >
-      <div>
-        <h1>Welcome {user?.email ? user?.email : 'to Photo Palettes!'}</h1>
-        <p>A social platform for generating color palettes from photos.</p>
-        <p>
+    <StaticContentWrapper>
+      <Box>
+        <Typography variant="h1">
+          Welcome {user?.email ? user?.email : 'to Photo Palettes!'}
+        </Typography>
+        <Typography variant="body1">
+          A social platform for generating color palettes from photos.
+        </Typography>
+        <Typography variant="body1">
           Inspired by{' '}
-          <a style={linkStyle} target="_blank" href="https://seis.pointlessprojects.com">
+          <a target="_blank" href="https://seis.pointlessprojects.com">
             Seis Colores / Six Colors
           </a>
           . Check out some of the examples below.
-        </p>
-        <p>
+        </Typography>
+        <Typography variant="body1">
           - Travis Bumgarner (
-          <a style={linkStyle} target="_blank" href="https://www.linkedin.com/in/travisbumgarner/">
+          <a target="_blank" href="https://www.linkedin.com/in/travisbumgarner/">
             LinkedIn
           </a>
           ,&nbsp;
-          <a style={linkStyle} target="_blank" href="https://travisbumgarner.dev">
+          <a target="_blank" href="https://travisbumgarner.dev">
             Portfolio
           </a>
           )
-        </p>
-      </div>
-      <div style={{ width: '100%', aspectRatio: 16 / 9, position: 'relative' }}>
+        </Typography>
+      </Box>
+      <Box sx={{ width: '100%', aspectRatio: 16 / 9, position: 'relative' }}>
         <Image fill alt="color palette 1" src="/landing_page/1.png" />
-      </div>
-      <div style={{ width: '100%', aspectRatio: 16 / 9, position: 'relative' }}>
+      </Box>
+      <Box style={{ width: '100%', aspectRatio: 16 / 9, position: 'relative' }}>
         <Image fill alt="color palette 1" src="/landing_page/2.png" />
-      </div>
-      <div style={{ width: '100%', aspectRatio: 16 / 9, position: 'relative' }}>
+      </Box>
+      <Box sx={{ width: '100%', aspectRatio: 16 / 9, position: 'relative' }}>
         <Image fill alt="color palette 1" src="/landing_page/3.png" />
-      </div>
+      </Box>
       <AlphaSignup />
       <Inspired />
-    </div>
+    </StaticContentWrapper>
   )
 }
 
