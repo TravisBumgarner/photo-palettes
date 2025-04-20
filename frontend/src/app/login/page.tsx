@@ -55,7 +55,7 @@ export default function LoginPage() {
     >
       <form
         onSubmit={handleSubmit}
-        style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}
+        style={{ display: 'flex', flexDirection: 'column', gap: '10px', width: '400px' }}
       >
         {error && <p style={{ color: 'red' }}>{error}</p>}
         <TextField
@@ -65,6 +65,7 @@ export default function LoginPage() {
           required
           placeholder="Enter email"
           label="Email"
+          fullWidth
         />
         <TextField
           id="password"
@@ -72,8 +73,9 @@ export default function LoginPage() {
           type="password"
           required
           placeholder="Enter password"
+          fullWidth
         />
-        <Button variant="contained" type="submit">
+        <Button variant="contained" type="submit" fullWidth>
           Log in
         </Button>
       </form>

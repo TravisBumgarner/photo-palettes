@@ -1,5 +1,9 @@
+import os
+
 import pytest
 import requests
+
+from .utils import get_auth_headers
 
 BASE_URL = "http://localhost:8000"
 
@@ -34,9 +38,26 @@ def test_whoami_unauthorized():
 
 
 def test_whoami_authorized():
-    # This is a mock token - in real tests you'd want to generate a real one
-    headers = {"Authorization": "Bearer foobar"}
-    response = requests.get(f"{BASE_URL}/whoami", headers=headers)
-    assert response.status_code == 401  # Should still be 401 because token is invalid
-    assert "error" in response.json()
-    assert response.json()["error"] == "Unauthorized"
+    response = requests.get(f"{BASE_URL}/whoami", headers=get_auth_headers())
+    assert response.status_code == 200
+    assert "message" in response.json()
+
+
+def test_generate_palette_file_too_large():
+    # Create a 11MB file
+    test_file_path = "test_large_image.jpg"
+    with open(test_file_path, "wb") as f:
+        f.write(os.urandom(11 * 1024 * 1024))  # 11MB
+
+    try:
+        with open(test_file_path, "rb") as f:
+            files = {"photo": ("test.jpg", f, "image/jpeg")}
+            response = requests.post(
+                f"{BASE_URL}/generate-palette", files=files, headers=get_auth_headers()
+            )
+
+        assert response.status_code == 413
+        assert "error" in response.json()
+        assert "File too large" in response.json()["error"]
+    finally:
+        os.remove(test_file_path)

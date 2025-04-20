@@ -73,3 +73,6 @@ uvicorn==0.34.0
 watchfiles==1.0.5
 websockets==14.2
 yarl==1.19.0
+pillow==11.1.0
+numpy==2.2.4
+scikit-learn==1.6.1
