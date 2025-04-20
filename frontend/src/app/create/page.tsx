@@ -5,6 +5,7 @@ import { useMutation } from '@tanstack/react-query'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { generatePalette } from '../../api/generatePalette'
 import { savePalette } from '../../api/savePalette'
+import { logger } from '../../services/logging'
 import { Palette } from '../../types'
 import Loading from '../sharedComponents/Loading'
 import DraggableSwatch from './components/DraggableSwatch'
@@ -37,6 +38,7 @@ const Create = () => {
       setUploadStatus(UploadStatus.UPLOADED)
     },
     onError: () => {
+      logger.error('Error generating palette')
       setUploadStatus(UploadStatus.ERROR)
     },
   })
@@ -47,6 +49,7 @@ const Create = () => {
       setUploadStatus(UploadStatus.UPLOADED)
     },
     onError: () => {
+      logger.error('Error saving palette')
       setUploadStatus(UploadStatus.ERROR)
     },
   })
