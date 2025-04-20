@@ -5,10 +5,12 @@ const DraggableSwatch = ({
   swatch,
   index,
   handleSetDraggingIndex,
+  isHovered,
 }: {
   swatch: Palette[number]
   index: number
   handleSetDraggingIndex: (index: number) => void
+  isHovered: boolean
 }) => {
   const handleMouseDown = useCallback(() => {
     handleSetDraggingIndex(index)
@@ -25,7 +27,7 @@ const DraggableSwatch = ({
         height: '15px',
         borderRadius: '50%',
         backgroundColor: swatch.color,
-        border: '2px solid white',
+        border: isHovered ? '2px solid white' : '2px solid green',
         cursor: 'pointer',
         boxShadow: '0 0 10px rgba(0,0,0,0.3)',
       }}

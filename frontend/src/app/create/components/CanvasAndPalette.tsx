@@ -5,6 +5,45 @@ import { Palette } from '../../../types'
 import { HEIGHT, WIDTH } from '../consts'
 import DraggableSwatch from './DraggableSwatch'
 
+const ReadonlySwatch = ({
+  swatch,
+  index,
+  handleMouseEnterCallback,
+  handleMouseLeaveCallback,
+}: {
+  swatch: Palette[number]
+  index: number
+  handleMouseEnterCallback: (index: number) => void
+  handleMouseLeaveCallback: () => void
+}) => {
+  const handleMouseEnter = useCallback(() => {
+    handleMouseEnterCallback(index)
+  }, [index, handleMouseEnterCallback])
+
+  const handleMouseLeave = useCallback(() => {
+    handleMouseLeaveCallback()
+  }, [handleMouseLeaveCallback])
+
+  return (
+    <div
+      key={swatch.color}
+      style={{
+        width: '75px',
+        height: '25px',
+        backgroundColor: swatch.color,
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        fontSize: '12px',
+      }}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+    >
+      <span style={{ color: 'white' }}>{swatch.color}</span>
+    </div>
+  )
+}
+
 const CanvasAndPalette = ({
   palette,
   handlePaletteChange,
@@ -17,7 +56,7 @@ const CanvasAndPalette = ({
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const containerRef = useRef<HTMLDivElement>(null)
   const [draggingIndex, setDraggingIndex] = useState<number | null>(null)
-  // const [imageData, setImageData] = useState<string | null>(null)
+  const [hoveringIndex, setHoveringIndex] = useState<number | null>(null)
   const [imageDimensions, setImageDimensions] = useState<{ width: number; height: number } | null>(
     null
   )
@@ -120,6 +159,14 @@ const CanvasAndPalette = ({
     }
   }, [photo, setPhotoOnCanvas])
 
+  const handleMouseEnter = useCallback((index: number) => {
+    setHoveringIndex(index)
+  }, [])
+
+  const handleMouseLeave = useCallback(() => {
+    setHoveringIndex(null)
+  }, [])
+
   return (
     <>
       <div
@@ -152,26 +199,20 @@ const CanvasAndPalette = ({
             swatch={swatch}
             index={index}
             handleSetDraggingIndex={handleSetDraggingIndex}
+            isHovered={hoveringIndex === index}
           />
         ))}
       </div>
       {palette.length > 0 && (
         <div style={{ display: 'flex', flexDirection: 'row' }}>
-          {palette.map(swatch => (
-            <div
+          {palette.map((swatch, index) => (
+            <ReadonlySwatch
               key={swatch.color}
-              style={{
-                width: '75px',
-                height: '25px',
-                backgroundColor: swatch.color,
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                fontSize: '12px',
-              }}
-            >
-              <span style={{ color: 'white' }}>{swatch.color}</span>
-            </div>
+              swatch={swatch}
+              index={index}
+              handleMouseEnterCallback={handleMouseEnter}
+              handleMouseLeaveCallback={handleMouseLeave}
+            />
           ))}
         </div>
       )}
