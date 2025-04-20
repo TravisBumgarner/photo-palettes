@@ -25,7 +25,7 @@ sentry_sdk.init(
 
 
 # Setup middleware
-MAX_UPLOAD_SIZE = 0.5 * 1024 * 1024  # 10 MB
+MAX_UPLOAD_SIZE = 10 * 1024 * 1024  # 10 MB
 app.add_middleware(LimitUploadSizeMiddleware, max_upload_size=MAX_UPLOAD_SIZE)
 app.middleware("http")(create_auth_middleware(supabase))
 setup_cors(app, config.environment)
