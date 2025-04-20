@@ -11,12 +11,12 @@ const zodResponse = z.object({
   ),
 })
 
-export const postPhoto = async (photo: File) => {
+export const generatePalette = async (photo: File) => {
   const token = await getToken()
 
   const formData = new FormData()
   formData.append('photo', photo)
-  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/create-palette`, {
+  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/generate-palette`, {
     method: 'POST',
     body: formData,
     headers: {

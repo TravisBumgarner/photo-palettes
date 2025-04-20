@@ -10,7 +10,10 @@ const AuthLinks = () => {
   return (
     <>
       {user ? (
-        <Link href="/logout">Logout</Link>
+        <>
+          <Link href="/create">Create</Link>
+          <Link href="/logout">Logout</Link>
+        </>
       ) : (
         <>
           <Link href="/login">Login</Link>

@@ -108,7 +108,7 @@ export default function SignupPage() {
     >
       <form
         onSubmit={handleSubmit}
-        style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}
+        style={{ display: 'flex', flexDirection: 'column', gap: '10px', width: '400px' }}
       >
         {error && <p style={{ color: 'red' }}>{error}</p>}
         <TextField
@@ -120,6 +120,7 @@ export default function SignupPage() {
           onChange={handleInvitationKeyChange}
           placeholder="Enter invitation key"
           label="Invitation Key"
+          fullWidth
         />
         <TextField
           id="email"
@@ -130,6 +131,7 @@ export default function SignupPage() {
           onChange={handleEmailChange}
           placeholder="Enter email"
           label="Email"
+          fullWidth
         />
         <TextField
           id="password"
@@ -140,6 +142,7 @@ export default function SignupPage() {
           onChange={handlePasswordChange}
           placeholder="Enter password"
           label="Password"
+          fullWidth
         />
         <TextField
           id="repeatPassword"
@@ -150,11 +153,13 @@ export default function SignupPage() {
           onChange={handleRepeatPasswordChange}
           placeholder="Enter password again"
           label="Repeat Password"
+          fullWidth
         />
         <Button
           variant="contained"
           disabled={!invitationKey || !password || !repeatPassword || !email}
           type="submit"
+          fullWidth
         >
           Sign up
         </Button>

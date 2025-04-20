@@ -17,3 +17,8 @@ make nuke-docker
 
 {/* ProtonPass appears to be injecting stuff that's causing issues with this form. Suppress those warnings. */}
 <form suppressHydrationWarning>
+
+
+Every time I install a new package with Docker and React I get Module not found: Can't resolve 'react-dropzone'
+docker compose exec frontend sh
+npm install react-dropzone

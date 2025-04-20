@@ -1,9 +1,11 @@
 'use client'
 
+import { Button } from '@mui/material'
 import { useMutation } from '@tanstack/react-query'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { useDropzone } from 'react-dropzone'
-import { postPhoto } from '../../api/postPhoto'
+import { generatePalette } from '../../api/generatePalette'
+import { savePalette } from '../../api/savePalette'
 import syncParams from '../../syncParams'
 import { Palette } from '../../types'
 import Loading from '../sharedComponents/Loading'
@@ -99,8 +101,18 @@ const Create = () => {
     null
   )
 
-  const uploadMutation = useMutation({
-    mutationFn: postPhoto,
+  const generatePaletteMutation = useMutation({
+    mutationFn: generatePalette,
+    onSuccess: () => {
+      setUploadStatus(UploadStatus.UPLOADED)
+    },
+    onError: () => {
+      setUploadStatus(UploadStatus.ERROR)
+    },
+  })
+
+  const savePaletteMutation = useMutation({
+    mutationFn: savePalette,
     onSuccess: () => {
       setUploadStatus(UploadStatus.UPLOADED)
     },
@@ -224,17 +236,25 @@ const Create = () => {
     setDraggingIndex(index)
   }, [])
 
+  const handleSavePalette = useCallback(() => {
+    savePaletteMutation.mutate({
+      palette,
+      paletteId: 'new',
+      name: 'My Palette',
+    })
+  }, [palette, savePaletteMutation])
+
   const onDrop = useCallback(
     async (acceptedFiles: File[]) => {
       setIsLoading(true)
       const photo = acceptedFiles[0]
       setPhotoOnCanvas(photo)
       setUploadStatus(UploadStatus.UPLOADING)
-      const response = await uploadMutation.mutateAsync(photo)
+      const response = await generatePaletteMutation.mutateAsync(photo)
       setPalette(response.palette)
       setIsLoading(false)
     },
-    [setPhotoOnCanvas, uploadMutation]
+    [setPhotoOnCanvas, generatePaletteMutation]
   )
 
   const clearData = useCallback(() => {
@@ -314,6 +334,9 @@ const Create = () => {
               <span style={{ color: 'white' }}>{swatch.color}</span>
             </div>
           ))}
+          <Button variant="contained" onClick={handleSavePalette}>
+            Save Palette
+          </Button>
         </div>
       )}
     </div>
