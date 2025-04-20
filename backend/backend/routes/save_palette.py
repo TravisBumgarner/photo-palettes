@@ -1,13 +1,13 @@
 from typing import List
 
 from fastapi import APIRouter, Depends, HTTPException, Request
-from PIL import Image
 from pydantic import BaseModel, Field, validator
 from sqlalchemy.orm import Session
 
 from backend.database.deps import get_db
 from backend.database.models import Palette, PaletteColor
 from backend.utils.auth import user_owns_resource
+from backend.utils.logger import log_error
 
 router = APIRouter()
 
@@ -83,6 +83,6 @@ async def save_palette(
         }
 
     except Exception as e:
-        print("ruda_error", e)
+        log_error(e)
         db.rollback()
         raise HTTPException(status_code=500, detail=str(e))

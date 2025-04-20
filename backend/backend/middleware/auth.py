@@ -1,13 +1,9 @@
-import logging
-
 from fastapi import Request
 from fastapi.responses import JSONResponse
 from supabase import Client
 
 from backend.database.queries import get_or_create_user
-
-logging.basicConfig(level=logging.DEBUG)
-logger = logging.getLogger(__name__)
+from backend.utils.logger import log_error
 
 # Added from main.py
 public_routes = {"/"}
@@ -23,10 +19,8 @@ def create_auth_middleware(supabase: Client):
             return await call_next(request)
 
         auth_header = request.headers.get("authorization", "")
-        logger.debug(f"Auth header: {auth_header}")
 
         token = auth_header.replace("Bearer ", "")
-        logger.debug(f"Token: {token}")
 
         if not token:
             return JSONResponse(
@@ -59,7 +53,7 @@ def create_auth_middleware(supabase: Client):
 
             print("setting", request.state)
         except Exception as e:
-            logger.error(f"Auth error: {str(e)}")
+            log_error(e)
             return JSONResponse(
                 status_code=401,
                 content={
