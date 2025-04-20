@@ -3,90 +3,19 @@
 import { Button } from '@mui/material'
 import { useMutation } from '@tanstack/react-query'
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { useDropzone } from 'react-dropzone'
 import { generatePalette } from '../../api/generatePalette'
 import { savePalette } from '../../api/savePalette'
-import syncParams from '../../syncParams'
 import { Palette } from '../../types'
 import Loading from '../sharedComponents/Loading'
-
-const WIDTH = 800
-const HEIGHT = 600
+import DraggableSwatch from './components/DraggableSwatch'
+import Dropzone from './components/Dropzone'
+import { HEIGHT, WIDTH } from './consts'
 
 enum UploadStatus {
   INITIAL = 'INITIAL',
   UPLOADING = 'UPLOADING',
   UPLOADED = 'UPLOADED',
   ERROR = 'ERROR',
-}
-
-const DraggableSwatch = ({
-  swatch,
-  index,
-  handleSetDraggingIndex,
-}: {
-  swatch: Palette[number]
-  index: number
-  handleSetDraggingIndex: (index: number) => void
-}) => {
-  const handleMouseDown = useCallback(() => {
-    handleSetDraggingIndex(index)
-  }, [handleSetDraggingIndex, index])
-
-  return (
-    <div
-      style={{
-        position: 'absolute',
-        left: `${swatch.percent_location[0]}%`,
-        top: `${swatch.percent_location[1]}%`,
-        transform: 'translate(-50%, -50%)',
-        width: '15px',
-        height: '15px',
-        borderRadius: '50%',
-        backgroundColor: swatch.color,
-        border: '2px solid white',
-        cursor: 'pointer',
-        boxShadow: '0 0 10px rgba(0,0,0,0.3)',
-      }}
-      onMouseDown={handleMouseDown}
-    />
-  )
-}
-
-const Dropzone = ({ onDrop }: { onDrop: (acceptedFiles: File[]) => void }) => {
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({
-    onDrop,
-    maxFiles: 1,
-    maxSize: 1024 * 1024 * 5,
-    accept: {
-      'image/*': [...syncParams.supportedImageTypes],
-    },
-    onDropRejected: fileRejections => {
-      alert(fileRejections)
-    },
-  })
-
-  return (
-    <div
-      style={{
-        width: `${WIDTH}px`,
-        height: `${HEIGHT}px`,
-        border: '1px dashed black',
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        cursor: 'pointer',
-      }}
-      {...getRootProps()}
-    >
-      <input {...getInputProps()} />
-      {isDragActive ? (
-        <p>Drop the files here ...</p>
-      ) : (
-        <p>Drag &apos;n&apos; drop some files here, or click to select files</p>
-      )}
-    </div>
-  )
 }
 
 const Create = () => {
