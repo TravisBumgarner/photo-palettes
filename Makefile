@@ -3,13 +3,14 @@
 # Default target
 help:
 	@echo "Available commands:"
-	@echo "  make setup        - Set up the project with Docker"
+	@echo "  make bootstrap    - Set up the project with Docker"
 	@echo "  make up           - Start all services"
 	@echo "  make down         - Stop all services"
 	@echo "  make deploy-all   - Deploy all services"
 	@echo "  make deploy-backend - Deploy backend"
 	@echo "  make deploy-frontend - Deploy frontend"
 	@echo "  make sync-shared - Sync shared types for frontend and backend such as supported image types"
+	
 setup:
 	@echo "Setting up project locally..."
 	@if [ ! -d ".venv" ]; then \
@@ -23,15 +24,27 @@ setup:
 	@echo "Local setup complete!"
 	@ cd ..
 	@docker compose up --build
+	@echo "  make up-detached  - Start all services in detached mode, logs launched as separate process"
+	@echo "  make deploy-all   - Deploy all services"
+	@echo "  make deploy-backend - Deploy backend"
+	@echo "  make deploy-frontend - Deploy frontend"
+	@echo "  make nuke-docker - Remove all docker containers, volumes, and images"
+
+bootstrap:
+	@chmod +x scripts/bootstrap.sh
+	@./scripts/bootstrap.sh
 
 up:
 	@echo "Starting services..."
-	@echo "Backend: http://localhost:8000"
-	@echo "Frontend: http://localhost:3000"
 	@docker compose up --build
 
 down:
 	@docker compose down
+	
+up-detached:
+	@echo "Starting services..."
+	@docker compose up --build -d
+	@docker compose logs -f
 
 deploy-all:
 	@echo "Deploying all services..."
@@ -49,3 +62,9 @@ sync-shared:
 	@echo "Syncing shared code..."
 	@cp shared/sync_params.json backend/backend/sync_params.json
 	@cp shared/sync_params.json frontend/src/syncParams/sync_params.json
+	
+nuke-docker:
+	@echo "Nuking docker..."
+	@docker compose down --volumes --remove-orphans
+	@docker compose rm -f
+	@docker system prune -a --volumes -f

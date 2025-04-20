@@ -1,3 +1,5 @@
+import { Typography } from '@mui/material'
+import StaticContentWrapper from '../../styles/Shared'
 interface TableProps {
   items: Array<{
     item: string
@@ -5,17 +7,11 @@ interface TableProps {
   }>
 }
 
-const linkStyle = {
-  color: '#bd4e85',
-  textDecoration: 'none',
-  '&:hover': {
-    textDecoration: 'underline',
-  },
-}
-
 const Table: React.FC<TableProps> = ({ items }) => {
   return (
-    <table style={{ border: '1px solid var(--foreground)', padding: '10px' }}>
+    <table
+      style={{ border: '1px solid var(--foreground)', padding: '10px', color: 'var(--foreground)' }}
+    >
       <thead>
         <tr>
           <th>Item</th>
@@ -53,32 +49,19 @@ const Donations = () => {
   const yearlyCost = monthlyCost * 12
 
   return (
-    <div
-      style={{
-        display: 'flex',
-        flexDirection: 'column',
-        gap: '20px',
-        width: '100%',
-        maxWidth: '800px',
-        margin: '0px auto',
-        padding: '20px',
-        boxSizing: 'border-box',
-        fontSize: '30px',
-        color: '#222',
-      }}
-    >
-      <h1>Donations</h1>
-      <p>
+    <StaticContentWrapper>
+      <Typography variant="h1">Donate</Typography>
+      <Typography variant="body1">
         The project currently costs ${monthlyCost}/month or ${yearlyCost}/year to run. Below is a
         breakdown. At this point the costs are manageable for me. I have seen projects like this
         fall apart because of costs. If you would like to support the project, you can do so by
         donating.
-      </p>
-      <a style={linkStyle} href="https://www.patreon.com/c/photopalettes/membership">
+      </Typography>
+      <a href="https://www.patreon.com/c/photopalettes/membership">
         Support the project on Patreon
       </a>
       <Table items={items} />
-    </div>
+    </StaticContentWrapper>
   )
 }
 

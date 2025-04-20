@@ -41,7 +41,9 @@ async def lifespan(app: FastAPI):
     # Run shutdown logic here if needed
 
 
+
 app.include_router(ok.router)
 app.include_router(create_palette.router)
 app.include_router(whoami.router)
 app.include_router(create_palette.router)
+app.include_router(alpha_signup.router)

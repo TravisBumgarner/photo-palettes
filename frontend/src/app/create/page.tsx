@@ -18,6 +18,39 @@ enum UploadStatus {
   ERROR = 'ERROR',
 }
 
+const DraggableSwatch = ({
+  swatch,
+  index,
+  handleSetDraggingIndex,
+}: {
+  swatch: Palette[number]
+  index: number
+  handleSetDraggingIndex: (index: number) => void
+}) => {
+  const handleMouseDown = useCallback(() => {
+    handleSetDraggingIndex(index)
+  }, [handleSetDraggingIndex, index])
+
+  return (
+    <div
+      style={{
+        position: 'absolute',
+        left: `${swatch.percent_location[0]}%`,
+        top: `${swatch.percent_location[1]}%`,
+        transform: 'translate(-50%, -50%)',
+        width: '15px',
+        height: '15px',
+        borderRadius: '50%',
+        backgroundColor: swatch.color,
+        border: '2px solid white',
+        cursor: 'pointer',
+        boxShadow: '0 0 10px rgba(0,0,0,0.3)',
+      }}
+      onMouseDown={handleMouseDown}
+    />
+  )
+}
+
 const Dropzone = ({ onDrop }: { onDrop: (acceptedFiles: File[]) => void }) => {
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
@@ -57,7 +90,7 @@ const Dropzone = ({ onDrop }: { onDrop: (acceptedFiles: File[]) => void }) => {
 const Create = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const containerRef = useRef<HTMLDivElement>(null)
-  const [uploadStatus, setUploadStatus] = useState<UploadStatus>(UploadStatus.INITIAL)
+  const [_uploadStatus, setUploadStatus] = useState<UploadStatus>(UploadStatus.INITIAL)
   const [palette, setPalette] = useState<Palette>([])
   const [draggingIndex, setDraggingIndex] = useState<number | null>(null)
   const [imageData, setImageData] = useState<string | null>(null)
@@ -187,6 +220,10 @@ const Create = () => {
     }
   }, [])
 
+  const handleSetDraggingIndex = useCallback((index: number) => {
+    setDraggingIndex(index)
+  }, [])
+
   const onDrop = useCallback(
     async (acceptedFiles: File[]) => {
       setIsLoading(true)
@@ -252,25 +289,11 @@ const Create = () => {
           ref={canvasRef}
         />
         {palette.map((swatch, index) => (
-          <div
+          <DraggableSwatch
             key={swatch.color}
-            style={{
-              position: 'absolute',
-              left: `${swatch.percent_location[0]}%`,
-              top: `${swatch.percent_location[1]}%`,
-              transform: 'translate(-50%, -50%)',
-              width: '15px',
-              height: '15px',
-              borderRadius: '50%',
-              backgroundColor: swatch.color,
-              border: '2px solid white',
-              cursor: 'pointer',
-              boxShadow: '0 0 10px rgba(0,0,0,0.3)',
-            }}
-            onMouseDown={e => {
-              e.stopPropagation()
-              setDraggingIndex(index)
-            }}
+            swatch={swatch}
+            index={index}
+            handleSetDraggingIndex={handleSetDraggingIndex}
           />
         ))}
       </div>

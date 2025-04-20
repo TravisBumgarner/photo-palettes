@@ -1,0 +1,16 @@
+repos:
+  - repo: local
+    hooks:
+      - id: check-backend
+        name: Check Backend
+        entry: ./scripts/check-backend.sh
+        language: script
+        pass_filenames: false
+        files: ^backend/
+
+      - id: check-frontend
+        name: Check Frontend
+        entry: ./scripts/check-frontend.sh
+        language: script
+        pass_filenames: false
+        files: ^frontend/
