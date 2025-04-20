@@ -4,7 +4,7 @@ import { Palette } from '../types'
 
 const zodResponse = z.object({
   success: z.boolean(),
-  paletteId: z.string(),
+  palette_id: z.string(),
 })
 
 export const savePalette = async ({

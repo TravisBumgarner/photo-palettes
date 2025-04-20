@@ -8,7 +8,7 @@ const Dropzone = ({ onDrop }: { onDrop: (acceptedFiles: File[]) => void }) => {
     maxFiles: 1,
     maxSize: 1024 * 1024 * 5,
     accept: {
-      'image/*': ['image/png', 'image/jpeg', 'image/jpg'],
+      'image/*': ['.png', '.jpg', '.jpeg'],
     },
     onDropRejected: fileRejections => {
       alert(fileRejections)
@@ -20,7 +20,7 @@ const Dropzone = ({ onDrop }: { onDrop: (acceptedFiles: File[]) => void }) => {
       style={{
         width: `${WIDTH}px`,
         height: `${HEIGHT}px`,
-        border: '1px dashed black',
+        border: '1px dashed green',
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
