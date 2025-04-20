@@ -15,7 +15,9 @@ const linkStyle = {
 
 const Table: React.FC<TableProps> = ({ items }) => {
   return (
-    <table style={{ border: '1px solid var(--foreground)', padding: '10px' }}>
+    <table
+      style={{ border: '1px solid var(--foreground)', padding: '10px', color: 'var(--foreground)' }}
+    >
       <thead>
         <tr>
           <th>Item</th>
