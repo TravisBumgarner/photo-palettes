@@ -5,4 +5,7 @@ export interface State {
   setUser: (user: User | null) => void
   isAppAuthenticating: boolean
   setIsAppAuthenticating: (isAppAuthenticating: boolean) => void
+  alerts: string[]
+  getAndRemoveNextAlert: () => string | null
+  addAlert: (alert: string) => void
 }
