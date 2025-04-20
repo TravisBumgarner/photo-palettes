@@ -32,6 +32,10 @@ const baseThemeOptions: ThemeOptions = {
         },
         a: {
           textDecoration: 'none',
+          color: '#bd4e85',
+          '&:hover': {
+            textDecoration: 'underline',
+          },
         },
       },
     },

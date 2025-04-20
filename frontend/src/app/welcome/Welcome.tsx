@@ -4,14 +4,7 @@ import { Box, Typography } from '@mui/material'
 import Image from 'next/image'
 import useGlobalStore from '../../store'
 import AlphaSignup from '../sharedComponents/AlphaSignup'
-const linkStyle = {
-  color: '#bd4e85',
-  textDecoration: 'none',
-  '&:hover': {
-    textDecoration: 'underline',
-  },
-}
-
+import StaticContentWrapper from '../../styles/Shared'
 const Inspired = () => {
   return (
     <Box>
@@ -20,16 +13,12 @@ const Inspired = () => {
       </Typography>
       <ul style={{ listStyleType: 'none', padding: 0, textAlign: 'center' }}>
         <li>
-          <a style={linkStyle} target="_blank" href="https://discord.com/invite/J8jwMxEEff">
+          <a target="_blank" href="https://discord.com/invite/J8jwMxEEff">
             Join the Chat on Discord
           </a>
         </li>
         <li>
-          <a
-            style={linkStyle}
-            target="_blank"
-            href="https://bsky.app/profile/sillysideprojects.bsky.social"
-          >
+          <a target="_blank" href="https://bsky.app/profile/sillysideprojects.bsky.social">
             Connect on Bluesky
           </a>
         </li>
@@ -42,19 +31,7 @@ const Welcome = () => {
   const user = useGlobalStore(state => state.user)
 
   return (
-    <Box
-      sx={{
-        display: 'flex',
-        flexDirection: 'column',
-        gap: '30px',
-        width: '100%',
-        maxWidth: '800px',
-        margin: '0px auto',
-        padding: '20px',
-        boxSizing: 'border-box',
-        fontSize: '30px',
-      }}
-    >
+    <StaticContentWrapper>
       <Box>
         <Typography variant="h1">
           Welcome {user?.email ? user?.email : 'to Photo Palettes!'}
@@ -64,18 +41,18 @@ const Welcome = () => {
         </Typography>
         <Typography variant="body1">
           Inspired by{' '}
-          <a style={linkStyle} target="_blank" href="https://seis.pointlessprojects.com">
+          <a target="_blank" href="https://seis.pointlessprojects.com">
             Seis Colores / Six Colors
           </a>
           . Check out some of the examples below.
         </Typography>
         <Typography variant="body1">
           - Travis Bumgarner (
-          <a style={linkStyle} target="_blank" href="https://www.linkedin.com/in/travisbumgarner/">
+          <a target="_blank" href="https://www.linkedin.com/in/travisbumgarner/">
             LinkedIn
           </a>
           ,&nbsp;
-          <a style={linkStyle} target="_blank" href="https://travisbumgarner.dev">
+          <a target="_blank" href="https://travisbumgarner.dev">
             Portfolio
           </a>
           )
@@ -92,7 +69,7 @@ const Welcome = () => {
       </Box>
       <AlphaSignup />
       <Inspired />
-    </Box>
+    </StaticContentWrapper>
   )
 }
 

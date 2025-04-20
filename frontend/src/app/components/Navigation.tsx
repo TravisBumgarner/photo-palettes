@@ -49,8 +49,6 @@ const Navigation = () => {
         }}
       >
         <Link href="/donations">Donate</Link>
-        <Link href="/privacy">Privacy Policy</Link>
-        <Link href="/tos">Terms of Service</Link>
       </Box>
     </Box>
   )

@@ -1,8 +1,9 @@
-import { Box, Typography } from '@mui/material'
+import { Typography } from '@mui/material'
+import StaticContentWrapper from '../../styles/Shared'
 
 const TermsOfService = () => {
   return (
-    <Box>
+    <StaticContentWrapper>
       <Typography variant="h1">Terms of Service</Typography>
       <Typography variant="body1">
         <em>Last updated: April 17, 2025</em>
@@ -75,7 +76,7 @@ const TermsOfService = () => {
         If you have questions or concerns, contact us at{' '}
         <a href="mailto:support@photopalettes.com">support@photopalettes.com</a>.
       </Typography>
-    </Box>
+    </StaticContentWrapper>
   )
 }
 

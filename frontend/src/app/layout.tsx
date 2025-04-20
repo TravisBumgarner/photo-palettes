@@ -5,8 +5,10 @@ import localFont from 'next/font/local'
 import QueryProvider from '../providers/QueryProvider'
 import AppThemeProvider from '../styles/Theme'
 import AlertsManager from './components/AlertsManager'
+import Footer from './components/Footer'
 import { LoadUserIntoStore } from './components/LoadUserIntoState'
 import Navigation from './components/Navigation'
+import RenderModal from './sharedComponents/Modal'
 
 const satoshi = localFont({
   src: [
@@ -44,7 +46,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <AlertsManager />
             <Navigation />
             <QueryProvider>{children}</QueryProvider>
-            {/* <RenderModal /> */}
+            <RenderModal />
+            <Footer />
           </AppThemeProvider>
         </AppRouterCacheProvider>
       </body>
