@@ -30,9 +30,9 @@ const Dropzone = ({ onDrop }: { onDrop: (acceptedFiles: File[]) => void }) => {
     >
       <input {...getInputProps()} />
       {isDragActive ? (
-        <p>Drop the files here ...</p>
+        <p>Drop photo here ...</p>
       ) : (
-        <p>Drag &apos;n&apos; drop some files here, or click to select files</p>
+        <p>Drag and drop photo or click to select photo</p>
       )}
     </div>
   )

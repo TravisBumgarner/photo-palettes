@@ -1,6 +1,6 @@
 'use client'
 
-import { Button } from '@mui/material'
+import { Box, Button } from '@mui/material'
 import { useMutation } from '@tanstack/react-query'
 import { useCallback, useState } from 'react'
 import { generatePalette } from '../../api/generatePalette'
@@ -10,6 +10,7 @@ import { Palette } from '../../types'
 import Loading from '../sharedComponents/Loading'
 import CanvasAndPalette from './components/CanvasAndPalette'
 import Dropzone from './components/Dropzone'
+import { WIDTH } from './consts'
 
 enum UploadStatus {
   INITIAL = 'INITIAL',
@@ -49,11 +50,11 @@ const Create = () => {
     [generatePaletteMutation]
   )
 
-  // const clearData = useCallback(() => {
-  //   setPalette([])
-  //   setUploadStatus(UploadStatus.INITIAL)
-  //   setIsLoading(false)
-  // }, [])
+  const handleClearPalette = useCallback(() => {
+    setPalette([])
+    setUploadStatus(UploadStatus.INITIAL)
+    setPhoto(null)
+  }, [])
 
   const savePaletteMutation = useMutation({
     mutationFn: savePalette,
@@ -82,36 +83,40 @@ const Create = () => {
   return (
     <div>
       <h1>Create</h1>
-      {uploadStatus === UploadStatus.INITIAL && <Dropzone onDrop={onDrop} />}
-      {uploadStatus === UploadStatus.UPLOADING && (
-        <div
-          style={{
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            backgroundColor: 'white',
-          }}
-        >
-          <Loading />
-        </div>
-      )}
-      {uploadStatus === UploadStatus.ERROR && (
-        <div>
-          <p>Error</p>
-        </div>
-      )}
-      {uploadStatus === UploadStatus.UPLOADED && (
-        <>
-          <CanvasAndPalette
-            palette={palette}
-            handlePaletteChange={handlePaletteChange}
-            photo={photo}
-          />
-          <Button variant="contained" onClick={handleSavePalette}>
-            Save Palette
-          </Button>
-        </>
-      )}
+      <Box
+        sx={{
+          margin: '0 auto',
+          minHeight: '70vh',
+          width: WIDTH,
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          flexDirection: 'column',
+        }}
+      >
+        {uploadStatus === UploadStatus.INITIAL && <Dropzone onDrop={onDrop} />}
+        {uploadStatus === UploadStatus.UPLOADING && <Loading />}
+        {uploadStatus === UploadStatus.ERROR && (
+          <div>
+            <p>Error</p>
+          </div>
+        )}
+        {uploadStatus === UploadStatus.UPLOADED && (
+          <Box>
+            <CanvasAndPalette
+              palette={palette}
+              handlePaletteChange={handlePaletteChange}
+              photo={photo}
+            />
+            <Button variant="contained" onClick={handleClearPalette}>
+              Clear Palette
+            </Button>
+            <Button variant="contained" onClick={handleSavePalette}>
+              Save Palette
+            </Button>
+          </Box>
+        )}
+      </Box>
     </div>
   )
 }

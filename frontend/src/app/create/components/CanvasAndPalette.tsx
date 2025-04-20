@@ -128,7 +128,6 @@ const CanvasAndPalette = ({
           width: '100%',
           maxWidth: `${WIDTH}px`,
           maxHeight: `${HEIGHT}px`,
-          margin: '0 auto',
           position: 'relative',
           aspectRatio: imageDimensions
             ? `${imageDimensions.width} / ${imageDimensions.height}`
@@ -157,17 +156,18 @@ const CanvasAndPalette = ({
         ))}
       </div>
       {palette.length > 0 && (
-        <div style={{ display: 'flex', flexDirection: 'row', gap: '10px' }}>
+        <div style={{ display: 'flex', flexDirection: 'row' }}>
           {palette.map(swatch => (
             <div
               key={swatch.color}
               style={{
-                width: '200px',
-                height: '50px',
+                width: '75px',
+                height: '25px',
                 backgroundColor: swatch.color,
                 display: 'flex',
                 justifyContent: 'center',
                 alignItems: 'center',
+                fontSize: '12px',
               }}
             >
               <span style={{ color: 'white' }}>{swatch.color}</span>
