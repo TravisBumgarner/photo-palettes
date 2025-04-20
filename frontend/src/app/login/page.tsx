@@ -16,28 +16,31 @@ export default function LoginPage() {
   const router = useRouter()
   const setIsAppAuthenticating = useGlobalStore(state => state.setIsAppAuthenticating)
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-    const formData = new FormData(e.target as HTMLFormElement)
-    const result = LoginSchema.safeParse({
-      email: formData.get('email') as string,
-      password: formData.get('password') as string,
-    })
+  const handleSubmit = useCallback(
+    async (e: React.FormEvent<HTMLFormElement>) => {
+      e.preventDefault()
+      const formData = new FormData(e.target as HTMLFormElement)
+      const result = LoginSchema.safeParse({
+        email: formData.get('email') as string,
+        password: formData.get('password') as string,
+      })
 
-    if (!result.success) {
-      setError(result.error.message)
-      return
-    }
+      if (!result.success) {
+        setError(result.error.message)
+        return
+      }
 
-    const response = await login(formData)
-    if (response.success) {
-      setIsAppAuthenticating(true)
-      router.push('/')
-    } else {
-      setError(response.error)
-      router.push('/error')
-    }
-  }
+      const response = await login(formData)
+      if (response.success) {
+        setIsAppAuthenticating(true)
+        router.push('/')
+      } else {
+        setError(response.error)
+        router.push('/error')
+      }
+    },
+    [router, setIsAppAuthenticating]
+  )
 
   return (
     <form onSubmit={handleSubmit}>

@@ -10,18 +10,8 @@ help:
 	@echo "  make deploy-frontend - Deploy frontend"
 	@echo "  make nuke-docker - Remove all docker containers, volumes, and images"
 setup:
-	@echo "Setting up project locally..."
-	@if [ ! -d ".venv" ]; then \
-		echo "Creating virtual environment..."; \
-		python -m venv .venv; \
-	fi
-	@echo "Installing backend dependencies..."
-	@. .venv/bin/activate && cd backend && pip install -r requirements.txt
-	@echo "Installing frontend dependencies..."
-	@cd frontend && npm install
-	@echo "Local setup complete!"
-	@ cd ..
-	@docker compose up --build
+	@chmod +x scripts/bootstrap.sh
+	@./scripts/bootstrap.sh
 
 up:
 	@echo "Starting services..."

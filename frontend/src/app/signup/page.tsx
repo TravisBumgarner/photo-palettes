@@ -1,7 +1,7 @@
 'use client'
 
 import { useRouter } from 'next/navigation'
-import { ChangeEvent, useState } from 'react'
+import { ChangeEvent, useCallback, useState } from 'react'
 import { z } from 'zod'
 import { MINIMUM_PASSWORD_LENGTH } from '../../consts'
 import { signup } from '../../services/supabase/actions'
@@ -25,52 +25,75 @@ export default function SignupPage() {
   const router = useRouter()
   const setIsAppAuthenticating = useGlobalStore(state => state.setIsAppAuthenticating)
 
-  const handlePasswordChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const newPassword = e.target.value
-    setPassword(newPassword)
-  }
+  const handlePasswordChange = useCallback(
+    (e: ChangeEvent<HTMLInputElement>) => {
+      const newPassword = e.target.value
+      setPassword(newPassword)
+    },
+    [setPassword]
+  )
 
-  const handleRepeatPasswordChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const newRepeatPassword = e.target.value
-    setRepeatPassword(newRepeatPassword)
-  }
+  const handleRepeatPasswordChange = useCallback(
+    (e: ChangeEvent<HTMLInputElement>) => {
+      const newRepeatPassword = e.target.value
+      setRepeatPassword(newRepeatPassword)
+    },
+    [setRepeatPassword]
+  )
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
+  const handleSubmit = useCallback(
+    async (e: React.FormEvent<HTMLFormElement>) => {
+      e.preventDefault()
 
-    if (invitationKey !== SUPER_SECRET_INVITATION_KEY) {
-      setError('Invalid invitation key')
-      return
-    }
-
-    if (password !== repeatPassword) {
-      setError('Passwords do not match')
-      return
-    }
-
-    const result = SignupSchema.safeParse({ email, password, repeatPassword })
-    if (!result.success) {
-      setError(result.error.message)
-      return
-    }
-
-    const formData = new FormData()
-    formData.append('email', email)
-    formData.append('password', password)
-
-    try {
-      const response = await signup(formData)
-      if (response.success) {
-        setIsAppAuthenticating(true)
-        alert('Check your email for a confirmation.')
-        router.push('/')
-      } else {
-        setError(response.error)
+      if (invitationKey !== SUPER_SECRET_INVITATION_KEY) {
+        setError('Invalid invitation key')
+        return
       }
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'An error occurred during signup')
-    }
-  }
+
+      if (password !== repeatPassword) {
+        setError('Passwords do not match')
+        return
+      }
+
+      const result = SignupSchema.safeParse({ email, password, repeatPassword })
+      if (!result.success) {
+        setError(result.error.message)
+        return
+      }
+
+      const formData = new FormData()
+      formData.append('email', email)
+      formData.append('password', password)
+
+      try {
+        const response = await signup(formData)
+        if (response.success) {
+          setIsAppAuthenticating(true)
+          alert('Check your email for a confirmation.')
+          router.push('/')
+        } else {
+          setError(response.error)
+        }
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'An error occurred during signup')
+      }
+    },
+    [email, password, repeatPassword, invitationKey, router, setIsAppAuthenticating]
+  )
+
+  const handleInvitationKeyChange = useCallback(
+    (e: ChangeEvent<HTMLInputElement>) => {
+      setInvitationKey(e.target.value)
+    },
+    [setInvitationKey]
+  )
+
+  const handleEmailChange = useCallback(
+    (e: ChangeEvent<HTMLInputElement>) => {
+      setEmail(e.target.value)
+    },
+    [setEmail]
+  )
 
   return (
     <form onSubmit={handleSubmit}>
@@ -82,7 +105,7 @@ export default function SignupPage() {
         type="text"
         required
         value={invitationKey}
-        onChange={e => setInvitationKey(e.target.value)}
+        onChange={handleInvitationKeyChange}
       />
       <label htmlFor="email">Email:</label>
       <input
@@ -91,7 +114,7 @@ export default function SignupPage() {
         type="email"
         required
         value={email}
-        onChange={e => setEmail(e.target.value)}
+        onChange={handleEmailChange}
       />
       <label htmlFor="password">Password:</label>
       <input
