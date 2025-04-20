@@ -1,3 +1,4 @@
+import { AppRouterCacheProvider } from '@mui/material-nextjs/v15-appRouter'
 import { GoogleAnalytics } from '@next/third-parties/google'
 import type { Metadata } from 'next'
 import localFont from 'next/font/local'
@@ -37,10 +38,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <GoogleAnalytics gaId="G-ZC6BZFH3W8" />
       </head>
       <body>
-        <LoadUserIntoStore />
-        <AlertsManager />
-        <Navigation />
-        <QueryProvider>{children}</QueryProvider>
+        <AppRouterCacheProvider>
+          <LoadUserIntoStore />
+          <AlertsManager />
+          <Navigation />
+          <QueryProvider>{children}</QueryProvider>
+        </AppRouterCacheProvider>
       </body>
     </html>
   )

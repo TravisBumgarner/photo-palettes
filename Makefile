@@ -8,6 +8,7 @@ help:
 	@echo "  make deploy-all   - Deploy all services"
 	@echo "  make deploy-backend - Deploy backend"
 	@echo "  make deploy-frontend - Deploy frontend"
+	@echo "  make nuke-docker - Remove all docker containers, volumes, and images"
 setup:
 	@echo "Setting up project locally..."
 	@if [ ! -d ".venv" ]; then \
@@ -39,3 +40,9 @@ deploy-backend:
 deploy-frontend:
 	@echo "Deploying frontend..."
 	@./scripts/deploy-frontend.sh
+
+nuke-docker:
+	@echo "Nuking docker..."
+	@docker compose down --volumes --remove-orphans
+	@docker compose rm -f
+	@docker system prune -a --volumes -f
