@@ -261,6 +261,7 @@ const Create = () => {
     setImageData(null)
     setPalette([])
     setUploadStatus(UploadStatus.INITIAL)
+    setIsLoading(false)
     canvasRef.current
       ?.getContext('2d')
       ?.clearRect(0, 0, canvasRef.current?.width, canvasRef.current?.height)
