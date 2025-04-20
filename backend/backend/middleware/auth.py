@@ -23,6 +23,7 @@ def create_auth_middleware(supabase: Client):
         token = auth_header.replace("Bearer ", "")
 
         if not token:
+            log_error(Exception("No token provided"))
             return JSONResponse(
                 status_code=401,
                 content={"error": "Unauthorized", "message": "No token provided"},
@@ -34,6 +35,7 @@ def create_auth_middleware(supabase: Client):
 
             user_info = getattr(auth, "user", None)
             if not user_info or not getattr(user_info, "email", None):
+                log_error(Exception("User email is missing"))
                 return JSONResponse(
                     status_code=401,
                     content={
