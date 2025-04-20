@@ -5,6 +5,7 @@ help:
 	@echo "Available commands:"
 	@echo "  make bootstrap    - Set up the project with Docker"
 	@echo "  make up           - Start all services"
+	@echo "  make up-detached  - Start all services in detached mode, logs launched as separate process"
 	@echo "  make deploy-all   - Deploy all services"
 	@echo "  make deploy-backend - Deploy backend"
 	@echo "  make deploy-frontend - Deploy frontend"
@@ -16,9 +17,12 @@ bootstrap:
 
 up:
 	@echo "Starting services..."
-	@echo "Backend: http://localhost:8000"
-	@echo "Frontend: http://localhost:3000"
 	@docker compose up --build
+
+up-detached:
+	@echo "Starting services..."
+	@docker compose up --build -d
+	@docker compose logs -f
 
 deploy-all:
 	@echo "Deploying all services..."
