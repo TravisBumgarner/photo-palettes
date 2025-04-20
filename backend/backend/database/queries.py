@@ -1,7 +1,7 @@
 from datetime import datetime
 
 from backend.database.engine import SessionLocal
-from backend.database.models import Palette, User
+from backend.database.models import Palette, User, AlphaSignup
 
 
 def get_user_by_user_id(user_id: str) -> User | None:
@@ -42,3 +42,10 @@ def get_or_create_user(auth_id: str, email: str, display_name: str) -> User:
 def get_palette_by_id(palette_id: str) -> Palette | None:
     session = SessionLocal()
     return session.query(Palette).filter(Palette.id == palette_id).first()
+
+def insert_alpha_signup(email: str) -> AlphaSignup:
+    session = SessionLocal()
+    alpha_signup = AlphaSignup(email=email)
+    session.add(alpha_signup)
+    session.commit()
+    return alpha_signup
