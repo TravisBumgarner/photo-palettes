@@ -7,6 +7,7 @@ from supabase import Client, create_client
 from backend.config import get_config
 from backend.database import engine, models
 from backend.middleware import create_auth_middleware, setup_cors
+from backend.middleware.filesize import LimitUploadSizeMiddleware
 from backend.routes import alpha_signup, generate_palette, ok, save_palette, whoami
 
 config = get_config()
@@ -24,6 +25,8 @@ sentry_sdk.init(
 
 
 # Setup middleware
+MAX_UPLOAD_SIZE = 0.5 * 1024 * 1024  # 10 MB
+app.add_middleware(LimitUploadSizeMiddleware, max_upload_size=MAX_UPLOAD_SIZE)
 app.middleware("http")(create_auth_middleware(supabase))
 setup_cors(app, config.environment)
 
