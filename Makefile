@@ -9,7 +9,6 @@ help:
 	@echo "  make deploy-all   - Deploy all services"
 	@echo "  make deploy-backend - Deploy backend"
 	@echo "  make deploy-frontend - Deploy frontend"
-	@echo "  make sync-shared - Sync shared types for frontend and backend such as supported image types"
 	
 setup:
 	@echo "Setting up project locally..."
@@ -58,11 +57,6 @@ deploy-frontend:
 	@echo "Deploying frontend..."
 	@./scripts/deploy-frontend.sh
 
-sync-shared:
-	@echo "Syncing shared code..."
-	@cp shared/sync_params.json backend/backend/sync_params.json
-	@cp shared/sync_params.json frontend/src/syncParams/sync_params.json
-	
 nuke-docker:
 	@echo "Nuking docker..."
 	@docker compose down --volumes --remove-orphans

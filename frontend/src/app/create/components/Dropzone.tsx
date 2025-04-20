@@ -1,6 +1,5 @@
 import { useDropzone } from 'react-dropzone'
 
-import syncParams from '../../../syncParams'
 import { HEIGHT, WIDTH } from '../consts'
 
 const Dropzone = ({ onDrop }: { onDrop: (acceptedFiles: File[]) => void }) => {
@@ -9,7 +8,7 @@ const Dropzone = ({ onDrop }: { onDrop: (acceptedFiles: File[]) => void }) => {
     maxFiles: 1,
     maxSize: 1024 * 1024 * 5,
     accept: {
-      'image/*': [...syncParams.supportedImageTypes],
+      'image/*': ['image/png', 'image/jpeg', 'image/jpg'],
     },
     onDropRejected: fileRejections => {
       alert(fileRejections)

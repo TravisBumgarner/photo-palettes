@@ -1,6 +1,5 @@
 from io import BytesIO
 
-import numpy as np
 from fastapi import UploadFile
 from PIL import Image
 
