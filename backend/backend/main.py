@@ -60,8 +60,3 @@ def alpha_signup(request: AlphaSignupRequest):
     db.add(models.AlphaSignup(email=request.email))
     db.commit()
     return {"message": "Alpha signup successful"}
-
-
-@app.get("/whoami")
-async def whoami(request: Request):
-    return {"message": "Hello, " + request.state.user.email}

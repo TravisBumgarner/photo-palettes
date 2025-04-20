@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { ChangeEvent, useCallback, useState } from 'react'
 import { z } from 'zod'
 import { alphaSignup } from '../../api/alphaSignup'
 import { logger } from '../../services/logging'
@@ -9,7 +9,7 @@ const formValidation = z.object({
 const AlphaSignup = () => {
   const [email, setEmail] = useState('')
 
-  const handleSubmit = async () => {
+  const handleSubmit = useCallback(async () => {
     const validationResult = formValidation.safeParse({ email })
     if (!validationResult.success) {
       alert('Please enter a valid email address.')
@@ -23,7 +23,14 @@ const AlphaSignup = () => {
       logger.error('Error signing up', error)
       alert('An error occurred while signing up. Please try again.')
     }
-  }
+  }, [email])
+
+  const handleEmailChange = useCallback(
+    (e: ChangeEvent<HTMLInputElement>) => {
+      setEmail(e.target.value)
+    },
+    [setEmail]
+  )
 
   return (
     <>
@@ -46,7 +53,7 @@ const AlphaSignup = () => {
           type="email"
           placeholder="Enter your email"
           value={email}
-          onChange={e => setEmail(e.target.value)}
+          onChange={handleEmailChange}
         />
         <button
           style={{
