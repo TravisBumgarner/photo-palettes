@@ -1,5 +1,6 @@
 'use client'
 
+import { Box, Typography } from '@mui/material'
 import Image from 'next/image'
 import useGlobalStore from '../../store'
 import AlphaSignup from '../sharedComponents/AlphaSignup'
@@ -13,8 +14,10 @@ const linkStyle = {
 
 const Inspired = () => {
   return (
-    <div>
-      <h2 style={{ textAlign: 'center' }}>Follow the Journey</h2>
+    <Box>
+      <Typography variant="h2" style={{ textAlign: 'center' }}>
+        Follow the Journey
+      </Typography>
       <ul style={{ listStyleType: 'none', padding: 0, textAlign: 'center' }}>
         <li>
           <a style={linkStyle} target="_blank" href="https://discord.com/invite/J8jwMxEEff">
@@ -31,7 +34,7 @@ const Inspired = () => {
           </a>
         </li>
       </ul>
-    </div>
+    </Box>
   )
 }
 
@@ -39,31 +42,34 @@ const Welcome = () => {
   const user = useGlobalStore(state => state.user)
 
   return (
-    <div
-      style={{
+    <Box
+      sx={{
         display: 'flex',
         flexDirection: 'column',
-        gap: '20px',
+        gap: '30px',
         width: '100%',
         maxWidth: '800px',
         margin: '0px auto',
         padding: '20px',
         boxSizing: 'border-box',
         fontSize: '30px',
-        color: '#222',
       }}
     >
-      <div>
-        <h1>Welcome {user?.email ? user?.email : 'to Photo Palettes!'}</h1>
-        <p>A social platform for generating color palettes from photos.</p>
-        <p>
+      <Box>
+        <Typography variant="h1">
+          Welcome {user?.email ? user?.email : 'to Photo Palettes!'}
+        </Typography>
+        <Typography variant="body1">
+          A social platform for generating color palettes from photos.
+        </Typography>
+        <Typography variant="body1">
           Inspired by{' '}
           <a style={linkStyle} target="_blank" href="https://seis.pointlessprojects.com">
             Seis Colores / Six Colors
           </a>
           . Check out some of the examples below.
-        </p>
-        <p>
+        </Typography>
+        <Typography variant="body1">
           - Travis Bumgarner (
           <a style={linkStyle} target="_blank" href="https://www.linkedin.com/in/travisbumgarner/">
             LinkedIn
@@ -73,20 +79,20 @@ const Welcome = () => {
             Portfolio
           </a>
           )
-        </p>
-      </div>
-      <div style={{ width: '100%', aspectRatio: 16 / 9, position: 'relative' }}>
+        </Typography>
+      </Box>
+      <Box sx={{ width: '100%', aspectRatio: 16 / 9, position: 'relative' }}>
         <Image fill alt="color palette 1" src="/landing_page/1.png" />
-      </div>
-      <div style={{ width: '100%', aspectRatio: 16 / 9, position: 'relative' }}>
+      </Box>
+      <Box style={{ width: '100%', aspectRatio: 16 / 9, position: 'relative' }}>
         <Image fill alt="color palette 1" src="/landing_page/2.png" />
-      </div>
-      <div style={{ width: '100%', aspectRatio: 16 / 9, position: 'relative' }}>
+      </Box>
+      <Box sx={{ width: '100%', aspectRatio: 16 / 9, position: 'relative' }}>
         <Image fill alt="color palette 1" src="/landing_page/3.png" />
-      </div>
+      </Box>
       <AlphaSignup />
       <Inspired />
-    </div>
+    </Box>
   )
 }
 

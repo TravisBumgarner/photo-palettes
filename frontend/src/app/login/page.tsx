@@ -1,7 +1,7 @@
 'use client'
 
 import { useRouter } from 'next/navigation'
-import { useState } from 'react'
+import { useCallback, useState } from 'react'
 import { z } from 'zod'
 import { MINIMUM_PASSWORD_LENGTH } from '../../consts'
 import { login } from '../../services/supabase/actions'

@@ -3,12 +3,11 @@ import { GoogleAnalytics } from '@next/third-parties/google'
 import type { Metadata } from 'next'
 import localFont from 'next/font/local'
 import QueryProvider from '../providers/QueryProvider'
-
+import AppThemeProvider from '../styles/Theme'
 import AlertsManager from './components/AlertsManager'
 import { LoadUserIntoStore } from './components/LoadUserIntoState'
 import Navigation from './components/Navigation'
-import './globals.css'
-import RenderModal from './sharedComponents/Modal/Modal'
+
 const satoshi = localFont({
   src: [
     {
@@ -40,11 +39,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </head>
       <body>
         <AppRouterCacheProvider>
-          <LoadUserIntoStore />
-          <AlertsManager />
-          <Navigation />
-          <QueryProvider>{children}</QueryProvider>
-          <RenderModal />
+          <AppThemeProvider>
+            <LoadUserIntoStore />
+            <AlertsManager />
+            <Navigation />
+            <QueryProvider>{children}</QueryProvider>
+            {/* <RenderModal /> */}
+          </AppThemeProvider>
         </AppRouterCacheProvider>
       </body>
     </html>

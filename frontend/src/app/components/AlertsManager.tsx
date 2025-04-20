@@ -1,5 +1,6 @@
 'use client'
 
+import { Box } from '@mui/material'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import useGlobalStore from '../../store'
 
@@ -75,8 +76,8 @@ const AlertsManager = () => {
   if (visibleAlerts.length === 0) return null
 
   return (
-    <div
-      style={{
+    <Box
+      sx={{
         display: 'flex',
         flexDirection: 'row',
         gap: 8,
@@ -90,7 +91,7 @@ const AlertsManager = () => {
       {visibleAlerts.map(alert => (
         <Alert key={alert.id} {...alert} handleClose={handleClose} />
       ))}
-    </div>
+    </Box>
   )
 }
 

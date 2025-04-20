@@ -13,3 +13,7 @@ No idea if this was actually the solution. Made some other improvements to docke
 ```
 make nuke-docker
 ```
+
+
+{/* ProtonPass appears to be injecting stuff that's causing issues with this form. Suppress those warnings. */}
+<form suppressHydrationWarning>

@@ -4,7 +4,7 @@ import { useRouter } from 'next/navigation'
 import { useEffect } from 'react'
 import { logout } from '../../services/supabase/actions'
 import useGlobalStore from '../../store'
-
+import { Box } from '@mui/material'
 export default function LogoutPage() {
   const router = useRouter()
   const setUser = useGlobalStore(state => state.setUser)
@@ -20,5 +20,5 @@ export default function LogoutPage() {
     logoutUser()
   }, [router, setUser])
 
-  return <div>Logging out...</div>
+  return <Box>Logging out...</Box>
 }
