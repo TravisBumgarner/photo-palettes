@@ -4,6 +4,8 @@ from fastapi import Request
 from fastapi.responses import JSONResponse
 from supabase import Client
 
+from backend.database.queries import get_or_create_user
+
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
 
@@ -34,11 +36,28 @@ def create_auth_middleware(supabase: Client):
 
         try:
             auth = supabase.auth.get_user(token)
-            request.state.user = auth.user
-            request.state.user_id = auth.user.id
             supabase.postgrest.auth(token)
-            logger.debug(f"Auth successful for user: {auth.user.email}")
 
+            user_info = getattr(auth, "user", None)
+            if not user_info or not getattr(user_info, "email", None):
+                return JSONResponse(
+                    status_code=401,
+                    content={
+                        "error": "Unauthorized",
+                        "message": "User email is missing",
+                    },
+                )
+
+            user = get_or_create_user(
+                auth_id=user_info.id,
+                email=user_info.email,
+                display_name="foobar",
+            )
+
+            request.state.auth_id = user_info.id
+            request.state.user_id = user.id
+
+            print("setting", request.state)
         except Exception as e:
             logger.error(f"Auth error: {str(e)}")
             return JSONResponse(

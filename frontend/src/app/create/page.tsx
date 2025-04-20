@@ -259,6 +259,7 @@ const Create = () => {
 
   const clearData = useCallback(() => {
     setImageData(null)
+    setIsLoading(false)
     setPalette([])
     setUploadStatus(UploadStatus.INITIAL)
     canvasRef.current

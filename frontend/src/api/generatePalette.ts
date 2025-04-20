@@ -24,5 +24,6 @@ export const generatePalette = async (photo: File) => {
     },
   })
   const json = await response.json()
+  console.log('ruda', json)
   return zodResponse.parse(json)
 }

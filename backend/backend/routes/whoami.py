@@ -4,4 +4,4 @@ router = APIRouter()
 
 @router.get("/whoami")
 async def whoami(request: Request):
-    return {"message": "Hello, " + request.state.user.email}
+    return {"message": "Hello, " + request.state.user_id}

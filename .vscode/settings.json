@@ -3,5 +3,8 @@
     "**/.next": true
   },
   "editor.formatOnSave": true,
-  "editor.defaultFormatter": "esbenp.prettier-vscode"
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "python.analysis.typeCheckingMode": "basic",
+  "python.linting.mypyEnabled": true,
+  "python.defaultInterpreterPath": "./backend/.venv-backend/bin/python"
 }

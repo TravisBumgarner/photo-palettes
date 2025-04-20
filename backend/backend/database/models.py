@@ -1,12 +1,12 @@
+import uuid
 from datetime import datetime
 from typing import List
-import uuid
 
 from sqlalchemy import DateTime, ForeignKey, Integer, String
-from .types import Cube
-from sqlalchemy.orm import Mapped, mapped_column, relationship
+from sqlalchemy.orm import Mapped, RelationshipProperty, mapped_column, relationship
 
 from .engine import Base
+from .types import Cube
 
 
 class AlphaSignup(Base):
@@ -25,6 +25,7 @@ class User(Base):
     email: Mapped[str] = mapped_column(String, unique=True)
     display_name: Mapped[str] = mapped_column(String)
     created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.now)
+
 
 class PaletteColor(Base):
     __tablename__ = "palette_colors"
@@ -46,6 +47,7 @@ class PaletteColor(Base):
 # FROM palette_colors
 # WHERE cube(array[255, 187, 204]) <-> rgb_cube < 50;
 
+
 class Palette(Base):
     __tablename__ = "palettes"
 
@@ -54,5 +56,7 @@ class Palette(Base):
     created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.now)
     name: Mapped[str] = mapped_column(String)
     image_url: Mapped[str] = mapped_column(String)
-    
-    colors: Mapped[List["PaletteColor"]] = relationship("PaletteColor", back_populates="palette")
+
+    colors: Mapped[List["PaletteColor"]] = relationship(
+        "PaletteColor", back_populates="palette"
+    )

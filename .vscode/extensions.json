@@ -1,0 +1,9 @@
+{
+    "recommendations": [
+      "dbaeumer.vscode-eslint",         // ESLint
+      "esbenp.prettier-vscode",         // Prettier
+      "ms-python.python",               // Python
+      "charliermarsh.ruff",             // Ruff
+      "matangover.mypy"                 // Mypy
+    ]
+  }
