@@ -1,6 +1,6 @@
 from typing import List
 
-from fastapi import APIRouter, Depends, File, HTTPException, UploadFile
+from fastapi import APIRouter, Depends, HTTPException, Request
 from PIL import Image
 from pydantic import BaseModel, Field, validator
 from sqlalchemy.orm import Session
@@ -35,22 +35,29 @@ def hex_to_rgb(hex_str: str) -> tuple[int, int, int]:
 
 
 @router.post("/save-palette")
-async def save_palette(request: PaletteRequest, db: Session = Depends(get_db)):
+async def save_palette(
+    request: Request, palette_request: PaletteRequest, db: Session = Depends(get_db)
+):
+    print("ruda", request)
+    print("ruda_request", palette_request)
     try:
         palette = (
             db.query(Palette)
             .filter(Palette.user_id == request.state.user_id)
-            .filter(Palette.id == request.palette_id)
+            .filter(Palette.id == palette_request.palette_id)
             .first()
         )
         if not palette:
             raise HTTPException(status_code=400, detail="No palette found")
 
-        palette.name = request.name
-        palette.hex_colors = request.hex_colors
-        palette.image_url = request.image_url
+        palette.name = palette_request.name
+        palette.image_url = palette_request.image_url
 
-        for hex_color in request.hex_colors:
+        # Clear existing colors
+        palette.colors = []
+
+        # Add new colors
+        for hex_color in palette_request.hex_colors:
             r, g, b = hex_to_rgb(hex_color)
             palette.colors.append(
                 PaletteColor(
@@ -70,5 +77,6 @@ async def save_palette(request: PaletteRequest, db: Session = Depends(get_db)):
         }
 
     except Exception as e:
+        print("ruda_error", e)
         db.rollback()
         raise HTTPException(status_code=500, detail=str(e))

@@ -18,15 +18,22 @@ export const savePalette = async ({
 }) => {
   const token = await getToken()
 
-  const formData = new FormData()
-  formData.append('palette', JSON.stringify(palette))
-  formData.append('paletteId', paletteId)
-  formData.append('name', name)
+  // Extract hex colors from palette
+  const hexColors = palette.map(swatch => swatch.color)
+
+  // Create the request body
+  const requestBody = {
+    name: name,
+    hex_colors: hexColors,
+    image_url: 'uploaded_image', // This should be the actual image URL
+    palette_id: paletteId,
+  }
+
   const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/save-palette`, {
     method: 'POST',
-    body: formData,
+    body: JSON.stringify(requestBody),
     headers: {
-      'Content-Type': 'multipart/form-data',
+      'Content-Type': 'application/json',
       Authorization: `Bearer ${token}`,
     },
   })

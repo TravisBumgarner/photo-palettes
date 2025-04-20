@@ -1,3 +1,4 @@
 - [ ] Setup backend for max file size
 - [ ] Write tests for max file size
 - [ ] Need a way to save photos to somewhere. And also, need a place to temporarily save the photo? Or maybe not?
+- [ ]  Audit every api endpoint with validation. 

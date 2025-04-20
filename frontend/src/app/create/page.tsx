@@ -100,6 +100,7 @@ const Create = () => {
   const [imageDimensions, setImageDimensions] = useState<{ width: number; height: number } | null>(
     null
   )
+  const [paletteId, setPaletteId] = useState<string | null>(null)
 
   const generatePaletteMutation = useMutation({
     mutationFn: generatePalette,
@@ -237,12 +238,13 @@ const Create = () => {
   }, [])
 
   const handleSavePalette = useCallback(() => {
+    if (!paletteId) return
     savePaletteMutation.mutate({
       palette,
-      paletteId: 'new',
+      paletteId,
       name: 'My Palette',
     })
-  }, [palette, savePaletteMutation])
+  }, [palette, paletteId, savePaletteMutation])
 
   const onDrop = useCallback(
     async (acceptedFiles: File[]) => {
@@ -252,6 +254,7 @@ const Create = () => {
       setUploadStatus(UploadStatus.UPLOADING)
       const response = await generatePaletteMutation.mutateAsync(photo)
       setPalette(response.palette)
+      setPaletteId(response.palette_id)
       setIsLoading(false)
     },
     [setPhotoOnCanvas, generatePaletteMutation]

@@ -3,6 +3,7 @@ import { getToken } from '../services/supabase/utils'
 
 const zodResponse = z.object({
   success: z.boolean(),
+  palette_id: z.string(),
   palette: z.array(
     z.object({
       color: z.string(),
