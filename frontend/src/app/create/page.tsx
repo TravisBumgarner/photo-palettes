@@ -2,7 +2,7 @@
 
 import { Button } from '@mui/material'
 import { useMutation } from '@tanstack/react-query'
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useRef, useState } from 'react'
 import { generatePalette } from '../../api/generatePalette'
 import { savePalette } from '../../api/savePalette'
 import { logger } from '../../services/logging'
@@ -53,25 +53,6 @@ const Create = () => {
       setUploadStatus(UploadStatus.ERROR)
     },
   })
-
-  const drawCircles = useCallback(() => {
-    const canvas = canvasRef.current
-    if (!canvas || !imageData) return
-
-    const ctx = canvas.getContext('2d')
-    if (!ctx) return
-
-    // Only draw the image once
-    if (!ctx.getImageData(0, 0, canvas.width, canvas.height).data.some(x => x !== 0)) {
-      ctx.clearRect(0, 0, canvas.width, canvas.height)
-      const image = new Image()
-      image.src = imageData
-      image.onload = () => {
-        ctx.drawImage(image, 0, 0, canvas.width, canvas.height)
-      }
-    }
-  }, [imageData])
-
   const sampleColorAtPosition = useCallback((x: number, y: number) => {
     const canvas = canvasRef.current
     if (!canvas) return null
@@ -139,10 +120,6 @@ const Create = () => {
   const handleCanvasMouseUp = useCallback(() => {
     setDraggingIndex(null)
   }, [])
-
-  useEffect(() => {
-    drawCircles()
-  }, [drawCircles])
 
   const setPhotoOnCanvas = useCallback((photo: File) => {
     const image = new Image()
