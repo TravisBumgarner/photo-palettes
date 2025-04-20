@@ -21,8 +21,6 @@ const AuthLinks = () => {
 }
 
 const Navigation = () => {
-  const addAlert = useGlobalStore(state => state.addAlert)
-
   return (
     <div
       style={{
@@ -32,7 +30,6 @@ const Navigation = () => {
         margin: `10px 20px`,
       }}
     >
-      <button onClick={() => addAlert('Hello, world!')}>Add Alert</button>
       <div
         style={{
           display: 'flex',
