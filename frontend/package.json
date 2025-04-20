@@ -11,6 +11,11 @@
     "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,css,scss,md}\""
   },
   "dependencies": {
+    "@emotion/cache": "^11.14.0",
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.0",
+    "@mui/material": "^7.0.2",
+    "@mui/material-nextjs": "^7.0.2",
     "@next/third-parties": "^15.3.0",
     "@sentry/nextjs": "^9.13.0",
     "@supabase/ssr": "^0.6.1",

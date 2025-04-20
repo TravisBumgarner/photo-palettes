@@ -1,12 +1,14 @@
+import { AppRouterCacheProvider } from '@mui/material-nextjs/v15-appRouter'
 import { GoogleAnalytics } from '@next/third-parties/google'
 import type { Metadata } from 'next'
 import localFont from 'next/font/local'
 import QueryProvider from '../providers/QueryProvider'
+
 import AlertsManager from './components/AlertsManager'
 import { LoadUserIntoStore } from './components/LoadUserIntoState'
 import Navigation from './components/Navigation'
 import './globals.css'
-
+import RenderModal from './sharedComponents/Modal/Modal'
 const satoshi = localFont({
   src: [
     {
@@ -37,10 +39,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <GoogleAnalytics gaId="G-ZC6BZFH3W8" />
       </head>
       <body>
-        <LoadUserIntoStore />
-        <AlertsManager />
-        <Navigation />
-        <QueryProvider>{children}</QueryProvider>
+        <AppRouterCacheProvider>
+          <LoadUserIntoStore />
+          <AlertsManager />
+          <Navigation />
+          <QueryProvider>{children}</QueryProvider>
+          <RenderModal />
+        </AppRouterCacheProvider>
       </body>
     </html>
   )

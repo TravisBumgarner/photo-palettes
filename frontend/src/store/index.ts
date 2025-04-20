@@ -1,6 +1,7 @@
 import { User } from '@supabase/supabase-js'
 import { create } from 'zustand'
 import { devtools } from 'zustand/middleware'
+import { ActiveModal } from '../app/sharedComponents/Modal/Modal.types'
 import { State } from './types'
 
 const useGlobalStore = create<State>()(
@@ -20,6 +21,8 @@ const useGlobalStore = create<State>()(
         return nextAlert
       },
       addAlert: alert => set(state => ({ alerts: [...state.alerts, alert] })),
+      activeModal: null,
+      setActiveModal: (activeModal: ActiveModal | null) => set({ activeModal }),
     }),
     {
       name: 'store',
