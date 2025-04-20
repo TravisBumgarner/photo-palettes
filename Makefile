@@ -3,13 +3,14 @@
 # Default target
 help:
 	@echo "Available commands:"
-	@echo "  make setup        - Set up the project with Docker"
+	@echo "  make bootstrap    - Set up the project with Docker"
 	@echo "  make up           - Start all services"
 	@echo "  make deploy-all   - Deploy all services"
 	@echo "  make deploy-backend - Deploy backend"
 	@echo "  make deploy-frontend - Deploy frontend"
 	@echo "  make nuke-docker - Remove all docker containers, volumes, and images"
-setup:
+
+bootstrap:
 	@chmod +x scripts/bootstrap.sh
 	@./scripts/bootstrap.sh
 
