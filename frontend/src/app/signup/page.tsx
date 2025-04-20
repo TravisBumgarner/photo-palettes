@@ -1,5 +1,6 @@
 'use client'
 
+import { Box, Button, TextField } from '@mui/material'
 import { useRouter } from 'next/navigation'
 import { ChangeEvent, useCallback, useState } from 'react'
 import { z } from 'zod'
@@ -96,47 +97,68 @@ export default function SignupPage() {
   )
 
   return (
-    <form onSubmit={handleSubmit}>
-      {error && <p style={{ color: 'red' }}>{error}</p>}
-      <label htmlFor="invitationKey">Invitation Key:</label>
-      <input
-        id="invitationKey"
-        name="invitationKey"
-        type="text"
-        required
-        value={invitationKey}
-        onChange={handleInvitationKeyChange}
-      />
-      <label htmlFor="email">Email:</label>
-      <input
-        id="email"
-        name="email"
-        type="email"
-        required
-        value={email}
-        onChange={handleEmailChange}
-      />
-      <label htmlFor="password">Password:</label>
-      <input
-        id="password"
-        name="password"
-        type="password"
-        required
-        value={password}
-        onChange={handlePasswordChange}
-      />
-      <label htmlFor="repeatPassword">Repeat Password:</label>
-      <input
-        id="repeatPassword"
-        name="repeatPassword"
-        type="password"
-        required
-        value={repeatPassword}
-        onChange={handleRepeatPasswordChange}
-      />
-      <button disabled={!invitationKey || !password || !repeatPassword || !email} type="submit">
-        Sign up
-      </button>
-    </form>
+    <Box
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        height: '70vh',
+      }}
+    >
+      <form
+        onSubmit={handleSubmit}
+        style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}
+      >
+        {error && <p style={{ color: 'red' }}>{error}</p>}
+        <TextField
+          id="invitationKey"
+          name="invitationKey"
+          type="text"
+          required
+          value={invitationKey}
+          onChange={handleInvitationKeyChange}
+          placeholder="Enter invitation key"
+          label="Invitation Key"
+        />
+        <TextField
+          id="email"
+          name="email"
+          type="email"
+          required
+          value={email}
+          onChange={handleEmailChange}
+          placeholder="Enter email"
+          label="Email"
+        />
+        <TextField
+          id="password"
+          name="password"
+          type="password"
+          required
+          value={password}
+          onChange={handlePasswordChange}
+          placeholder="Enter password"
+          label="Password"
+        />
+        <TextField
+          id="repeatPassword"
+          name="repeatPassword"
+          type="password"
+          required
+          value={repeatPassword}
+          onChange={handleRepeatPasswordChange}
+          placeholder="Enter password again"
+          label="Repeat Password"
+        />
+        <Button
+          variant="contained"
+          disabled={!invitationKey || !password || !repeatPassword || !email}
+          type="submit"
+        >
+          Sign up
+        </Button>
+      </form>
+    </Box>
   )
 }
