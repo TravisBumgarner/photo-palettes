@@ -10,7 +10,10 @@ const AuthLinks = () => {
   return (
     <>
       {user ? (
-        <Link href="/logout">Logout</Link>
+        <>
+          <Link href="/create">Create</Link>
+          <Link href="/logout">Logout</Link>
+        </>
       ) : (
         <>
           <Link href="/login">Login</Link>
@@ -48,6 +51,12 @@ const Navigation = () => {
           gap: '14px',
         }}
       >
+        <Link target="_blank" href="https://discord.com/invite/J8jwMxEEff">
+          Discord
+        </Link>
+        <Link target="_blank" href="https://bsky.app/profile/sillysideprojects.bsky.social">
+          Bluesky
+        </Link>
         <Link href="/donations">Donate</Link>
       </Box>
     </Box>
