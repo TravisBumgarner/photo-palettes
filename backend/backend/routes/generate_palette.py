@@ -1,3 +1,7 @@
+import io
+import os
+import uuid
+
 from fastapi import APIRouter, Depends, File, HTTPException, Request, UploadFile
 from sqlalchemy.orm import Session
 
@@ -19,15 +23,33 @@ async def generate_palette(
 ):
     validate_request(photo)
 
-    colors = get_image_colors(photo)
+    # Read the file content once
+    photo_content = await photo.read()
 
+    # Create a BytesIO object for get_image_colors
+    photo_bytes = io.BytesIO(photo_content)
+    colors = get_image_colors(photo_bytes)
+
+    id = uuid.uuid4()
+    filename = f"{id}.{photo.filename.split('.')[-1]}"
     palette = Palette(
+        id=id,
         name="",
         user_id=request.state.user_id,
-        image_url=photo.filename,
+        image_url=filename,
     )
+
     db.add(palette)
     db.commit()
+
+    # Save the original content using absolute path
+    uploads_dir = os.path.join(
+        os.path.dirname(os.path.dirname(os.path.dirname(__file__))), "uploads"
+    )
+    os.makedirs(uploads_dir, exist_ok=True)
+    file_path = os.path.join(uploads_dir, filename)
+    with open(file_path, "wb") as f:
+        f.write(photo_content)
 
     return {
         "success": True,

@@ -1,7 +1,9 @@
+import os
 from contextlib import asynccontextmanager
 
 import sentry_sdk
 from fastapi import FastAPI
+from fastapi.staticfiles import StaticFiles
 from supabase import Client, create_client
 
 from backend.config import get_config
@@ -36,6 +38,11 @@ MAX_UPLOAD_SIZE = 10 * 1024 * 1024  # 10 MB
 app.add_middleware(LimitUploadSizeMiddleware, max_upload_size=MAX_UPLOAD_SIZE)
 app.middleware("http")(create_auth_middleware(supabase))
 setup_cors(app, config.environment)
+
+# Mount the uploads directory for static file serving
+uploads_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), "uploads")
+os.makedirs(uploads_dir, exist_ok=True)
+app.mount("/uploads", StaticFiles(directory=uploads_dir), name="uploads")
 
 
 @asynccontextmanager

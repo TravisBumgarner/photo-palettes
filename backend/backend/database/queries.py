@@ -1,3 +1,4 @@
+import uuid
 from datetime import datetime
 from typing import List
 
@@ -40,9 +41,9 @@ def get_or_create_user(auth_id: str, email: str, display_name: str) -> User:
     return user
 
 
-def get_palette_by_id(palette_id: str) -> Palette | None:
-    session = SessionLocal()
-    return session.query(Palette).filter(Palette.id == palette_id).first()
+# def get_palette_by_id(palette_id: str) -> Palette | None:
+#     session = SessionLocal()
+#     return session.query(Palette).filter(Palette.id == palette_id).first()
 
 
 def insert_alpha_signup(email: str) -> AlphaSignup:

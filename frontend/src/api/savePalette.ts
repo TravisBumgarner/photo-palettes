@@ -25,7 +25,6 @@ export const savePalette = async ({
   const requestBody = {
     name: name,
     hex_colors: hexColors,
-    image_url: 'uploaded_image', // This should be the actual image URL
     palette_id: paletteId,
   }
 

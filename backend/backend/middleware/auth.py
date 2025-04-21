@@ -1,3 +1,5 @@
+import uuid
+
 from fastapi import Request
 from fastapi.responses import JSONResponse
 from supabase import Client
@@ -11,16 +13,22 @@ public_routes = {"/"}
 
 def create_auth_middleware(supabase: Client):
     async def add_authentication(request: Request, call_next):
+        print("ruda", request.url.path)
+        is_whitelisted = request.url.path in public_routes
+        is_public_media = request.url.path.startswith("/uploads/")
+        print("ruda", is_whitelisted, is_public_media)
 
-        if request.url.path in public_routes:
+        if is_whitelisted or is_public_media:
             return await call_next(request)
 
         if request.method == "OPTIONS":
             return await call_next(request)
 
         auth_header = request.headers.get("authorization", "")
+        print("rudaauthheader", auth_header)
 
         token = auth_header.replace("Bearer ", "")
+        print("rudatoken", token)
 
         if not token:
             log_error(Exception("No token provided"))
@@ -50,8 +58,8 @@ def create_auth_middleware(supabase: Client):
                 display_name="foobar",
             )
 
-            request.state.auth_id = user_info.id
-            request.state.user_id = user.id
+            request.state.auth_id = str(user_info.id)
+            request.state.user_id = str(user.id)
 
             print("setting", request.state)
         except Exception as e:

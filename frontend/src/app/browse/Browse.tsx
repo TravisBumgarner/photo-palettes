@@ -3,8 +3,8 @@
 import { Box, Grid, Typography } from '@mui/material'
 import { useQuery } from '@tanstack/react-query'
 import { getPalettes } from '../../api/getPalettes'
+import config from '../../config'
 import Loading from '../sharedComponents/Loading'
-
 const Browse = () => {
   const { data, isLoading, error } = useQuery({
     queryKey: ['palettes'],
@@ -44,7 +44,7 @@ const Browse = () => {
             >
               <Box
                 component="img"
-                src={palette.image_url}
+                src={`${config.apiUrl}/uploads/${palette.image_url}`}
                 alt={palette.name}
                 sx={{
                   width: '100%',

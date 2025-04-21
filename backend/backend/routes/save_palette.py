@@ -15,7 +15,6 @@ router = APIRouter()
 class PaletteRequest(BaseModel):
     name: str = Field(..., min_length=1, max_length=100)
     hex_colors: List[str] = Field(..., min_items=1, max_items=6)
-    image_url: str = Field(..., min_length=1)
     palette_id: str = Field(..., min_length=1)
 
     @validator("hex_colors")
@@ -57,7 +56,6 @@ async def save_palette(
             raise HTTPException(status_code=400, detail="No palette found")
 
         palette.name = palette_request.name
-        palette.image_url = palette_request.image_url
 
         # Clear existing colors
         palette.colors = []

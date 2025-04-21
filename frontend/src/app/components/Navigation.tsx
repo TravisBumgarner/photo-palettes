@@ -11,11 +11,13 @@ const AuthLinks = () => {
     <>
       {user ? (
         <>
+          <Link href="/">Browse</Link>
           <Link href="/create">Create</Link>
           <Link href="/logout">Logout</Link>
         </>
       ) : (
         <>
+          <Link href="/">Home</Link>
           <Link href="/login">Login</Link>
           <Link href="/signup">Signup</Link>
         </>
@@ -41,7 +43,6 @@ const Navigation = () => {
           gap: '14px',
         }}
       >
-        <Link href="/">Home</Link>
         <AuthLinks />
       </Box>
       <Box

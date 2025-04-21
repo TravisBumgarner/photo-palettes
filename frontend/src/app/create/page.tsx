@@ -2,10 +2,12 @@
 
 import { Box, Button } from '@mui/material'
 import { useMutation } from '@tanstack/react-query'
+import { useRouter } from 'next/navigation'
 import { useCallback, useState } from 'react'
 import { generatePalette } from '../../api/generatePalette'
 import { savePalette } from '../../api/savePalette'
 import { logger } from '../../services/logging'
+import useGlobalStore from '../../store'
 import { Palette } from '../../types'
 import Loading from '../sharedComponents/Loading'
 import CanvasAndPalette from './components/CanvasAndPalette'
@@ -23,8 +25,9 @@ const Create = () => {
   const [uploadStatus, setUploadStatus] = useState<UploadStatus>(UploadStatus.INITIAL)
   const [palette, setPalette] = useState<Palette>([])
   const [photo, setPhoto] = useState<File | null>(null)
-
+  const addAlert = useGlobalStore(state => state.addAlert)
   const [paletteId, setPaletteId] = useState<string | null>(null)
+  const router = useRouter()
 
   const generatePaletteMutation = useMutation({
     mutationFn: generatePalette,
@@ -67,14 +70,19 @@ const Create = () => {
     },
   })
 
-  const handleSavePalette = useCallback(() => {
+  const handleSavePalette = useCallback(async () => {
     if (!paletteId) return
-    savePaletteMutation.mutate({
+
+    await savePaletteMutation.mutate({
       palette,
       paletteId,
       name: 'My Palette',
     })
-  }, [palette, paletteId, savePaletteMutation])
+
+    addAlert('Niceee')
+
+    router.push('/')
+  }, [palette, paletteId, savePaletteMutation, addAlert, router])
 
   const handlePaletteChange = useCallback((palette: Palette) => {
     setPalette(palette)
