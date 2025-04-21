@@ -1,7 +1,8 @@
 from datetime import datetime
+from typing import List
 
 from backend.database.engine import SessionLocal
-from backend.database.models import Palette, User, AlphaSignup
+from backend.database.models import AlphaSignup, Palette, User
 
 
 def get_user_by_user_id(user_id: str) -> User | None:
@@ -43,9 +44,15 @@ def get_palette_by_id(palette_id: str) -> Palette | None:
     session = SessionLocal()
     return session.query(Palette).filter(Palette.id == palette_id).first()
 
+
 def insert_alpha_signup(email: str) -> AlphaSignup:
     session = SessionLocal()
     alpha_signup = AlphaSignup(email=email)
     session.add(alpha_signup)
     session.commit()
     return alpha_signup
+
+
+def get_all_palettes() -> List[Palette]:
+    session = SessionLocal()
+    return session.query(Palette).all()

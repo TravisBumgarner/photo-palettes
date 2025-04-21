@@ -8,7 +8,14 @@ from backend.config import get_config
 from backend.database import engine, models
 from backend.middleware import create_auth_middleware, setup_cors
 from backend.middleware.filesize import LimitUploadSizeMiddleware
-from backend.routes import alpha_signup, generate_palette, ok, save_palette, whoami
+from backend.routes import (
+    alpha_signup,
+    generate_palette,
+    get_palettes,
+    ok,
+    save_palette,
+    whoami,
+)
 
 config = get_config()
 
@@ -46,3 +53,4 @@ app.include_router(whoami.router)
 app.include_router(generate_palette.router)
 app.include_router(alpha_signup.router)
 app.include_router(save_palette.router)
+app.include_router(get_palettes.router)
