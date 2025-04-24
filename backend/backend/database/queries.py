@@ -2,7 +2,7 @@ from datetime import datetime
 from typing import List
 
 from backend.database.engine import SessionLocal
-from backend.database.models import AlphaSignup, AppUser, Palette
+from backend.database.models import AlphaSignup, AppUser, ModerationStatus, Palette
 
 
 def get_app_user_by_app_user_id(app_user_id: str) -> AppUser | None:
@@ -48,6 +48,20 @@ def insert_alpha_signup(email: str) -> AlphaSignup:
     return alpha_signup
 
 
-def get_all_palettes() -> List[Palette]:
+def get_moderated_palettes() -> List[Palette]:
     session = SessionLocal()
-    return session.query(Palette).all()
+    return (
+        session.query(Palette).filter(Palette.moderation_status == ModerationStatus.APPROVED).all()
+    )
+
+
+def get_unmoderated_palettes() -> List[Palette]:
+    session = SessionLocal()
+    return (
+        session.query(Palette).filter(Palette.moderation_status == ModerationStatus.PENDING).all()
+    )
+
+
+def get_palette_by_id(palette_id: str) -> Palette | None:
+    session = SessionLocal()
+    return session.query(Palette).filter(Palette.id == palette_id).first()

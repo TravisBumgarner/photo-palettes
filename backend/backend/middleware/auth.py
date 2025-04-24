@@ -2,6 +2,7 @@ from fastapi import Request
 from fastapi.responses import JSONResponse
 from supabase import Client
 
+from backend.database.models import PermissionLevel
 from backend.database.queries import get_or_create_app_user
 from backend.utils.logger import log_error
 
@@ -12,6 +13,7 @@ public_routes = {"/"}
 class AuthState:
     auth_id: str
     app_user_id: str
+    permission_level: PermissionLevel
 
 
 class RequestWithAuthState(Request):
@@ -63,6 +65,7 @@ def create_auth_middleware(supabase: Client):
 
             request.state.auth_id = str(auth_user.id)
             request.state.app_user_id = str(app_user.id)
+            request.state.permission_level = app_user.permission_level
 
         except Exception as e:
             log_error(e)

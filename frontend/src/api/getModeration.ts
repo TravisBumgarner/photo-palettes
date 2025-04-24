@@ -22,10 +22,10 @@ const zodResponse = z.object({
   ),
 })
 
-export const getPalettes = async () => {
+export const getModeration = async () => {
   const token = await getToken()
 
-  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/palettes`, {
+  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/moderation`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',

@@ -17,6 +17,7 @@ export const generatePalette = async (photo: File) => {
 
   const formData = new FormData()
   formData.append('photo', photo)
+  formData.append('extension', photo.name.split('.').pop() || '')
   const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/generate-palette`, {
     method: 'POST',
     body: formData,

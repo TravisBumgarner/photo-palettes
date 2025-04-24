@@ -10,3 +10,9 @@ export enum PermissionLevel {
   MODERATOR = 2,
   ADMIN = 5,
 }
+
+export enum ModerationStatus {
+  PENDING = 0,
+  APPROVED = 1,
+  REJECTED = 2,
+}

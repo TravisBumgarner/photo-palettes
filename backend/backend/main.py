@@ -14,6 +14,7 @@ from backend.routes import (
     alpha_signup,
     generate_palette,
     get_me,
+    get_moderation,
     get_palettes,
     ok,
     save_palette,
@@ -61,3 +62,4 @@ app.include_router(alpha_signup.router)
 app.include_router(save_palette.router)
 app.include_router(get_palettes.router)
 app.include_router(get_me.router)
+app.include_router(get_moderation.router)

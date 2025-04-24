@@ -2,7 +2,7 @@ import io
 import os
 import uuid
 
-from fastapi import APIRouter, Depends, File, HTTPException, UploadFile
+from fastapi import APIRouter, Depends, File, Form, HTTPException, UploadFile
 from sqlalchemy.orm import Session
 
 from backend.algorithms.kmeans import get_image_colors
@@ -22,6 +22,7 @@ def validate_request(photo: UploadFile = File(...)):
 async def generate_palette(
     request: RequestWithAuthState,
     photo: UploadFile = File(...),
+    extension: str = Form(...),
     db: Session = Depends(get_db),
 ):
     validate_request(photo)
@@ -33,8 +34,8 @@ async def generate_palette(
     photo_bytes = io.BytesIO(photo_content)
     colors = get_image_colors(photo_bytes)
 
-    id = uuid.uuid4()
-    filename = f"{id}.{photo.filename.split('.')[-1]}"
+    id = str(uuid.uuid4())
+    filename = f"{id}.{extension}"
     palette = Palette(
         id=id,
         name="",
