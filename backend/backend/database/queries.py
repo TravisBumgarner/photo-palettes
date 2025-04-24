@@ -1,47 +1,47 @@
+import uuid
 from datetime import datetime
+from typing import List
+
+from sqlalchemy.orm import joinedload
 
 from backend.database.engine import SessionLocal
-from backend.database.models import Palette, User, AlphaSignup
+from backend.database.models import AlphaSignup, AppUser, ModerationStatus, Palette
 
 
-def get_user_by_user_id(user_id: str) -> User | None:
+def get_app_user_by_app_user_id(app_user_id: uuid.UUID) -> AppUser | None:
     session = SessionLocal()
 
-    return session.query(User).filter(User.id == user_id).first()
+    return session.query(AppUser).filter(AppUser.id == app_user_id).first()
 
 
-def get_user_by_auth_id(auth_id: str) -> User | None:
+def get_app_user_by_auth_id(auth_id: uuid.UUID) -> AppUser | None:
     session = SessionLocal()
 
-    return session.query(User).filter(User.auth_id == auth_id).first()
+    return session.query(AppUser).filter(AppUser.auth_id == auth_id).first()
 
 
-def insert_user(auth_id: str, email: str, display_name: str) -> User:
+def insert_app_user(auth_id: uuid.UUID, email: str, display_name: str) -> AppUser:
     session = SessionLocal()
 
-    user = User(
+    app_user = AppUser(
         auth_id=auth_id,
         email=email,
         display_name=display_name,
         created_at=datetime.now(),
     )
 
-    session.add(user)
+    session.add(app_user)
     session.commit()
-    session.refresh(user)
-    return user
+    session.refresh(app_user)
+    return app_user
 
 
-def get_or_create_user(auth_id: str, email: str, display_name: str) -> User:
-    user = get_user_by_auth_id(auth_id)
-    if not user:
-        user = insert_user(auth_id, email, display_name)
-    return user
+def get_or_create_app_user(auth_id: uuid.UUID, email: str, display_name: str) -> AppUser:
+    app_user = get_app_user_by_auth_id(auth_id)
+    if not app_user:
+        app_user = insert_app_user(auth_id, email, display_name)
+    return app_user
 
-
-def get_palette_by_id(palette_id: str) -> Palette | None:
-    session = SessionLocal()
-    return session.query(Palette).filter(Palette.id == palette_id).first()
 
 def insert_alpha_signup(email: str) -> AlphaSignup:
     session = SessionLocal()
@@ -49,3 +49,65 @@ def insert_alpha_signup(email: str) -> AlphaSignup:
     session.add(alpha_signup)
     session.commit()
     return alpha_signup
+
+
+def get_moderated_palettes() -> List[Palette]:
+    session = SessionLocal()
+    return (
+        session.query(Palette).filter(Palette.moderation_status == ModerationStatus.APPROVED).all()
+    )
+
+
+def get_unmoderated_palettes() -> List[Palette]:
+    session = SessionLocal()
+    return (
+        session.query(Palette)
+        .filter(
+            (Palette.moderation_status == ModerationStatus.AWAITING_MODERATION)
+            | (Palette.moderation_status == ModerationStatus.AWAITING_SUBMISSION)
+        )
+        .all()
+    )
+
+
+def get_palette_by_id(palette_id: uuid.UUID) -> Palette | None:
+    session = SessionLocal()
+    return (
+        session.query(Palette)
+        .options(joinedload(Palette.colors))
+        .filter(Palette.id == palette_id)
+        .first()
+    )
+
+
+def update_palette_moderation_status(palette_id: uuid.UUID, moderation_status: ModerationStatus):
+    session = SessionLocal()
+    palette = session.query(Palette).filter(Palette.id == palette_id).first()
+    if not palette:
+        raise ValueError("Palette not found")
+    palette.moderation_status = moderation_status
+    session.commit()
+    session.refresh(palette)
+    return palette
+
+
+def update_palette(palette_id: uuid.UUID, **kwargs):
+    session = SessionLocal()
+    palette = session.query(Palette).filter(Palette.id == palette_id).first()
+    if not palette:
+        raise ValueError("Palette not found")
+
+    # Handle colors separately if present
+    if "colors" in kwargs:
+        colors = kwargs.pop("colors")
+        for color in colors:
+            print("adding color", color)
+            session.add(color)
+
+    # Handle other attributes
+    for key, value in kwargs.items():
+        setattr(palette, key, value)
+
+    session.commit()
+    session.refresh(palette)
+    return palette

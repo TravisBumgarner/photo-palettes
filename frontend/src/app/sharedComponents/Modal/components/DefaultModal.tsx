@@ -34,7 +34,7 @@ const Modal: FC<ActiveModal> = ({ children, hideCloseButton = false }) => {
           maxWidth: '90%',
           display: 'flex',
           flexDirection: 'column',
-          backgroundColor: 'var(--background)',
+          backgroundColor: 'white',
           padding: '20px',
           borderRadius: '10px',
         }}

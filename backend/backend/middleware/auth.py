@@ -1,18 +1,33 @@
+import uuid
+
 from fastapi import Request
 from fastapi.responses import JSONResponse
 from supabase import Client
 
-from backend.database.queries import get_or_create_user
+from backend.database.models import PermissionLevel
+from backend.database.queries import get_or_create_app_user
 from backend.utils.logger import log_error
 
 # Added from main.py
 public_routes = {"/"}
 
 
-def create_auth_middleware(supabase: Client):
-    async def add_authentication(request: Request, call_next):
+class AuthState:
+    auth_id: uuid.UUID
+    app_user_id: uuid.UUID
+    permission_level: PermissionLevel
 
-        if request.url.path in public_routes:
+
+class RequestWithAuthState(Request):
+    state: AuthState
+
+
+def create_auth_middleware(supabase: Client):
+    async def add_authentication(request: RequestWithAuthState, call_next):
+        is_whitelisted = request.url.path in public_routes
+        is_public_media = request.url.path.startswith("/uploads/")
+
+        if is_whitelisted or is_public_media:
             return await call_next(request)
 
         if request.method == "OPTIONS":
@@ -23,6 +38,7 @@ def create_auth_middleware(supabase: Client):
         token = auth_header.replace("Bearer ", "")
 
         if not token:
+            log_error(Exception("No token provided"))
             return JSONResponse(
                 status_code=401,
                 content={"error": "Unauthorized", "message": "No token provided"},
@@ -32,8 +48,9 @@ def create_auth_middleware(supabase: Client):
             auth = supabase.auth.get_user(token)
             supabase.postgrest.auth(token)
 
-            user_info = getattr(auth, "user", None)
-            if not user_info or not getattr(user_info, "email", None):
+            auth_user = getattr(auth, "user", None)
+            if not auth_user or not getattr(auth_user, "email", None):
+                log_error(Exception("User email is missing"))
                 return JSONResponse(
                     status_code=401,
                     content={
@@ -42,16 +59,16 @@ def create_auth_middleware(supabase: Client):
                     },
                 )
 
-            user = get_or_create_user(
-                auth_id=user_info.id,
-                email=user_info.email,
+            app_user = get_or_create_app_user(
+                auth_id=uuid.UUID(auth_user.id),
+                email=auth_user.email,
                 display_name="foobar",
             )
 
-            request.state.auth_id = user_info.id
-            request.state.user_id = user.id
+            request.state.auth_id = uuid.UUID(auth_user.id)
+            request.state.app_user_id = app_user.id
+            request.state.permission_level = app_user.permission_level
 
-            print("setting", request.state)
         except Exception as e:
             log_error(e)
             return JSONResponse(

@@ -1,71 +1,62 @@
+import uuid
 from typing import List
 
-from fastapi import APIRouter, Depends, HTTPException, Request
-from pydantic import BaseModel, Field, validator
-from sqlalchemy.orm import Session
+from fastapi import APIRouter, HTTPException
+from pydantic import BaseModel, Field, field_validator
 
-from backend.database.deps import get_db
-from backend.database.models import Palette, PaletteColor
-from backend.utils.auth import user_owns_resource
+from backend.database.models import ModerationStatus, Palette, PaletteColor
+from backend.database.queries import get_palette_by_id, update_palette
+from backend.middleware.auth import RequestWithAuthState
 from backend.utils.logger import log_error
+from backend.utils.pushover import send_notification
 
 router = APIRouter()
 
 
 class PaletteRequest(BaseModel):
     name: str = Field(..., min_length=1, max_length=100)
-    hex_colors: List[str] = Field(..., min_items=1, max_items=6)
-    image_url: str = Field(..., min_length=1)
+    hex_colors: List[str] = Field(..., min_length=1, max_length=6)
     palette_id: str = Field(..., min_length=1)
 
-    @validator("hex_colors")
+    @field_validator("hex_colors")
     def validate_hex_colors(cls, v):
         if len(v) != len(set(v)):
             raise ValueError("Duplicate hex colors")
         for hex_color in v:
             try:
                 hex_to_rgb(hex_color)
-            except ValueError:
-                raise ValueError(f"Invalid hex color: {hex_color}")
+            except ValueError as e:
+                raise ValueError(f"Invalid hex color: {hex_color}") from e
         return v
 
 
 def hex_to_rgb(hex_str: str) -> tuple[int, int, int]:
     hex_str = hex_str.lstrip("#")
-    return tuple(int(hex_str[i : i + 2], 16) for i in (0, 2, 4))
+    return (int(hex_str[0:2], 16), int(hex_str[2:4], 16), int(hex_str[4:6], 16))
 
 
-def validate_request(request: Request, palette_request: PaletteRequest):
-    if not user_owns_resource(request, palette_request):
+def validate_request(request: RequestWithAuthState, palette: Palette):
+    if not palette.app_user_id == request.state.app_user_id:
         raise HTTPException(status_code=400, detail="User does not own resource")
 
 
 @router.post("/save-palette")
 async def save_palette(
-    request: Request, palette_request: PaletteRequest, db: Session = Depends(get_db)
+    request: RequestWithAuthState,
+    palette_request: PaletteRequest,
 ):
-
     try:
-        palette = (
-            db.query(Palette)
-            .filter(Palette.user_id == request.state.user_id)
-            .filter(Palette.id == palette_request.palette_id)
-            .first()
-        )
+        palette = get_palette_by_id(uuid.UUID(palette_request.palette_id))
 
         if not palette:
             raise HTTPException(status_code=400, detail="No palette found")
 
-        palette.name = palette_request.name
-        palette.image_url = palette_request.image_url
+        validate_request(request, palette)
 
-        # Clear existing colors
-        palette.colors = []
-
-        # Add new colors
+        colors = []
         for hex_color in palette_request.hex_colors:
             r, g, b = hex_to_rgb(hex_color)
-            palette.colors.append(
+            colors.append(
                 PaletteColor(
                     hex=hex_color,
                     r=r,
@@ -76,7 +67,14 @@ async def save_palette(
                 )
             )
 
-        db.commit()
+        update_palette(
+            palette.id,
+            name=palette_request.name,
+            moderation_status=ModerationStatus.AWAITING_MODERATION,
+            colors=colors,
+        )
+
+        send_notification(f"New palette submitted: {palette_request.name}")
         return {
             "success": True,
             "palette_id": palette.id,
@@ -84,5 +82,4 @@ async def save_palette(
 
     except Exception as e:
         log_error(e)
-        db.rollback()
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail=str(e)) from e

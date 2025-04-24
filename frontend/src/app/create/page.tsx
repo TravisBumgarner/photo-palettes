@@ -2,12 +2,15 @@
 
 import { Box, Button } from '@mui/material'
 import { useMutation } from '@tanstack/react-query'
+import { useRouter } from 'next/navigation'
 import { useCallback, useState } from 'react'
 import { generatePalette } from '../../api/generatePalette'
 import { savePalette } from '../../api/savePalette'
 import { logger } from '../../services/logging'
-import { Palette } from '../../types'
+import useGlobalStore from '../../store'
+import { TPalette } from '../../types'
 import Loading from '../sharedComponents/Loading'
+import { ModalID } from '../sharedComponents/Modal/Modal.consts'
 import CanvasAndPalette from './components/CanvasAndPalette'
 import Dropzone from './components/Dropzone'
 import { WIDTH } from './consts'
@@ -21,10 +24,11 @@ enum UploadStatus {
 
 const Create = () => {
   const [uploadStatus, setUploadStatus] = useState<UploadStatus>(UploadStatus.INITIAL)
-  const [palette, setPalette] = useState<Palette>([])
+  const [palette, setPalette] = useState<TPalette>([])
   const [photo, setPhoto] = useState<File | null>(null)
-
+  const router = useRouter()
   const [paletteId, setPaletteId] = useState<string | null>(null)
+  const setActiveModal = useGlobalStore(state => state.setActiveModal)
 
   const generatePaletteMutation = useMutation({
     mutationFn: generatePalette,
@@ -67,17 +71,33 @@ const Create = () => {
     },
   })
 
-  const handleSavePalette = useCallback(() => {
+  const handleSavePalette = useCallback(async () => {
     if (!paletteId) return
-    savePaletteMutation.mutate({
+
+    await savePaletteMutation.mutate({
       palette,
       paletteId,
       name: 'My Palette',
     })
-  }, [palette, paletteId, savePaletteMutation])
 
-  const handlePaletteChange = useCallback((palette: Palette) => {
+    setActiveModal({
+      id: ModalID.ConfirmationModal,
+      confirmationCallback: () => {
+        router.push(`/palette/${paletteId}`)
+      },
+      title: 'Thanks for your submission!',
+      body: 'Once it is approved, it will be added to the site.',
+    })
+  }, [palette, paletteId, savePaletteMutation, setActiveModal, router])
+
+  const handlePaletteChange = useCallback((palette: TPalette) => {
     setPalette(palette)
+  }, [])
+
+  const handleTryAgain = useCallback(() => {
+    setUploadStatus(UploadStatus.INITIAL)
+    setPalette([])
+    setPhoto(null)
   }, [])
 
   return (
@@ -99,6 +119,7 @@ const Create = () => {
         {uploadStatus === UploadStatus.ERROR && (
           <div>
             <p>Error</p>
+            <button onClick={handleTryAgain}>Try again</button>
           </div>
         )}
         {uploadStatus === UploadStatus.UPLOADED && (

@@ -1,5 +1,3 @@
-import os
-
 from supabase import create_client
 
 from backend.config import get_config
