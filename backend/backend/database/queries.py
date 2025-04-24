@@ -65,3 +65,14 @@ def get_unmoderated_palettes() -> List[Palette]:
 def get_palette_by_id(palette_id: str) -> Palette | None:
     session = SessionLocal()
     return session.query(Palette).filter(Palette.id == palette_id).first()
+
+
+def update_palette_moderation_status(palette_id: str, moderation_status: ModerationStatus):
+    session = SessionLocal()
+    palette = session.query(Palette).filter(Palette.id == palette_id).first()
+    if not palette:
+        raise ValueError("Palette not found")
+    palette.moderation_status = moderation_status
+    session.commit()
+    session.refresh(palette)
+    return palette

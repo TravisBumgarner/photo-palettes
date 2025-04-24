@@ -1,7 +1,7 @@
 'use client'
 
 import useGlobalStore from '../../store'
-import { PermissionLevel } from '../../types'
+import { EPermissionLevel } from '../../types'
 
 const Profile = () => {
   const appUserDetails = useGlobalStore(state => state.appUserDetails)
@@ -17,7 +17,7 @@ const Profile = () => {
       <p>Display Name: {appUserDetails.displayName}</p>
       <p>Email: {appUserDetails.email}</p>
       <p>User ID: {appUserDetails.id}</p>
-      <p>Permission Level: {PermissionLevel[appUserDetails.permissionLevel]}</p>
+      <p>Permission Level: {EPermissionLevel[appUserDetails.permissionLevel]}</p>
       <p>Auth ID: {authId}</p>
     </div>
   )

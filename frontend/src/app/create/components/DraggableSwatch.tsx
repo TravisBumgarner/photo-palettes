@@ -1,5 +1,5 @@
 import { useCallback } from 'react'
-import { Palette } from '../../../types'
+import { TPalette } from '../../../types'
 
 const DraggableSwatch = ({
   swatch,
@@ -7,7 +7,7 @@ const DraggableSwatch = ({
   handleSetDraggingIndex,
   isHovered,
 }: {
-  swatch: Palette[number]
+  swatch: TPalette[number]
   index: number
   handleSetDraggingIndex: (index: number) => void
   isHovered: boolean

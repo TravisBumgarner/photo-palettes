@@ -25,4 +25,4 @@ def user_is_admin(request: RequestWithAuthState) -> bool:
 
 
 def user_is_moderator(request: RequestWithAuthState) -> bool:
-    return request.state.permission_level == PermissionLevel.MODERATOR
+    return request.state.permission_level in {PermissionLevel.MODERATOR, PermissionLevel.ADMIN}

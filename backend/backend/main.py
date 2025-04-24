@@ -16,6 +16,7 @@ from backend.routes import (
     get_me,
     get_moderation,
     get_palettes,
+    moderate,
     ok,
     save_palette,
 )
@@ -63,3 +64,4 @@ app.include_router(save_palette.router)
 app.include_router(get_palettes.router)
 app.include_router(get_me.router)
 app.include_router(get_moderation.router)
+app.include_router(moderate.router)

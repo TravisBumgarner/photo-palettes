@@ -1,6 +1,6 @@
 import { z } from 'zod'
 import { getToken } from '../services/supabase/utils'
-import { Palette } from '../types'
+import { TPalette } from '../types'
 
 const zodResponse = z.object({
   success: z.boolean(),
@@ -12,7 +12,7 @@ export const savePalette = async ({
   paletteId,
   name,
 }: {
-  palette: Palette
+  palette: TPalette
   paletteId: string
   name: string
 }) => {

@@ -1,8 +1,10 @@
 - [x] Setup backend for max file size
 - [x] Write tests for max file size
-- [ ] Need a way to save photos to somewhere. And also, need a place to temporarily save the photo? Or maybe not?
+- [x] Need a way to save photos to somewhere. And also, need a place to temporarily save the photo? Or maybe not?
 - [x] Audit every api endpoint with validation.
 - [ ] use uuid type in db.
 - [ ] Your upload is pending.
 - [ ] Your upload was rejected. for x.
 - [ ] Ability to moderate after uploaded.
+- [ ] need to refactor routes and just everything. Ugh.
+- [ ] Figure out long loading time on nextjs server

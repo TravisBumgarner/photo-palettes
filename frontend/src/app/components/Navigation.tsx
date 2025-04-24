@@ -3,7 +3,7 @@
 import { Box } from '@mui/material'
 import Link from 'next/link'
 import useGlobalStore from '../../store'
-import { PermissionLevel } from '../../types'
+import { EPermissionLevel } from '../../types'
 
 const AuthLinks = () => {
   const appUserDetails = useGlobalStore(state => state.appUserDetails)
@@ -28,10 +28,10 @@ const AuthLinks = () => {
   if (!appUserDetails) {
     availableRoutes = [...availableRoutes, ...routes.loggedOut]
   } else {
-    if (appUserDetails.permissionLevel >= PermissionLevel.MEMBER) {
+    if (appUserDetails.permissionLevel >= EPermissionLevel.MEMBER) {
       availableRoutes = [...availableRoutes, ...routes.member]
     }
-    if (appUserDetails.permissionLevel >= PermissionLevel.MODERATOR) {
+    if (appUserDetails.permissionLevel >= EPermissionLevel.MODERATOR) {
       availableRoutes = [...availableRoutes, ...routes.moderator]
     }
   }
