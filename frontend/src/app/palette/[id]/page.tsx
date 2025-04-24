@@ -1,7 +1,6 @@
 'use client'
 
 import { useQuery } from '@tanstack/react-query'
-import Image from 'next/image'
 import { useParams } from 'next/navigation'
 import { getPaletteById } from '../../../api/getPaletteById'
 import { EModerationStatus } from '../../../types'
@@ -25,7 +24,8 @@ const PalettePage = () => {
       )}
       <>
         <h1>{data.palette.name}</h1>
-        <Image
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
           style={{ maxWidth: '900px', maxHeight: '900px' }}
           src={`${process.env.NEXT_PUBLIC_API_URL}/uploads/${data.palette.image_url}`}
           alt="Palette"

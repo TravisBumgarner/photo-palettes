@@ -89,3 +89,25 @@ def update_palette_moderation_status(palette_id: uuid.UUID, moderation_status: M
     session.commit()
     session.refresh(palette)
     return palette
+
+
+def update_palette(palette_id: uuid.UUID, **kwargs):
+    session = SessionLocal()
+    palette = session.query(Palette).filter(Palette.id == palette_id).first()
+    if not palette:
+        raise ValueError("Palette not found")
+
+    # Handle colors separately if present
+    if "colors" in kwargs:
+        colors = kwargs.pop("colors")
+        for color in colors:
+            print("adding color", color)
+            session.add(color)
+
+    # Handle other attributes
+    for key, value in kwargs.items():
+        setattr(palette, key, value)
+
+    session.commit()
+    session.refresh(palette)
+    return palette
