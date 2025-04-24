@@ -1,4 +1,4 @@
-import { User } from '@supabase/supabase-js'
+import { User as AuthDetails } from '@supabase/supabase-js'
 import { create } from 'zustand'
 import { devtools } from 'zustand/middleware'
 import { ActiveModal } from '../app/sharedComponents/Modal/Modal.types'
@@ -7,9 +7,9 @@ import { State } from './types'
 const useGlobalStore = create<State>()(
   devtools(
     (set, get) => ({
-      user: undefined,
+      authDetails: undefined,
       isAppAuthenticating: true,
-      setUser: (user: User | null) => set({ user }),
+      setAuthDetails: (authDetails: AuthDetails | null) => set({ authDetails }),
       setIsAppAuthenticating: (isAppAuthenticating: boolean) => set({ isAppAuthenticating }),
       alerts: [],
       getAndRemoveNextAlert: () => {

@@ -8,7 +8,7 @@ import Loading from '../sharedComponents/Loading'
 
 export function LoadUserIntoStore() {
   const supabase = createClient()
-  const setUser = useGlobalStore(state => state.setUser)
+  const setAuthDetails = useGlobalStore(state => state.setAuthDetails)
   const isAppAuthenticating = useGlobalStore(state => state.isAppAuthenticating)
   const setIsAppAuthenticating = useGlobalStore(state => state.setIsAppAuthenticating)
 
@@ -21,12 +21,12 @@ export function LoadUserIntoStore() {
       const {
         data: { user },
       } = await supabase.auth.getUser()
-      setUser(user)
+      setAuthDetails(user)
       setIsAppAuthenticating(false)
     }
 
     loadUser()
-  }, [setUser, supabase, setIsAppAuthenticating, isAppAuthenticating])
+  }, [setAuthDetails, supabase, setIsAppAuthenticating, isAppAuthenticating])
 
   return isAppAuthenticating ? (
     <Box

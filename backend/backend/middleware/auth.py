@@ -59,7 +59,7 @@ def create_auth_middleware(supabase: Client):
             )
 
             request.state.auth_id = str(user_info.id)
-            request.state.user_id = str(user.id)
+            request.state.authDetails_id = str(user.id)
 
             print("setting", request.state)
         except Exception as e:

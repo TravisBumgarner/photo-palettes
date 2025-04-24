@@ -3,3 +3,6 @@
 - [ ] Need a way to save photos to somewhere. And also, need a place to temporarily save the photo? Or maybe not?
 - [x] Audit every api endpoint with validation.
 - [ ] use uuid type in db.
+- [ ] Your upload is pending.
+- [ ] Your upload was rejected. for x.
+- [ ] Ability to moderate after uploaded.

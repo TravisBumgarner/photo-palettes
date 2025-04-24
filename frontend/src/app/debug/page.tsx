@@ -5,7 +5,7 @@ import config from '../../config'
 import { getToken } from '../../services/supabase/utils'
 
 const Debug = () => {
-  const [user, setUser] = useState<unknown>(null)
+  const [user, setAuthDetails] = useState<unknown>(null)
 
   const handleWhoAmI = useCallback(async () => {
     const token = await getToken()
@@ -17,9 +17,9 @@ const Debug = () => {
     })
       .then(res => res.json())
       .then(data => {
-        setUser(data)
+        setAuthDetails(data)
       })
-  }, [setUser])
+  }, [setAuthDetails])
 
   return (
     <div>

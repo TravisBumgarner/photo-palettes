@@ -5,9 +5,9 @@ import Browse from './browse/Browse'
 import Welcome from './welcome/Welcome'
 
 const Home = () => {
-  const user = useGlobalStore(state => state.user)
+  const authDetails = useGlobalStore(state => state.authDetails)
 
-  return user ? <Browse /> : <Welcome />
+  return authDetails ? <Browse /> : <Welcome />
 }
 
 export default Home

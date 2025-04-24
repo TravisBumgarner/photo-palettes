@@ -35,7 +35,7 @@ async def generate_palette(
     palette = Palette(
         id=id,
         name="",
-        user_id=request.state.user_id,
+        user_id=request.state.authDetails_id,
         image_url=filename,
     )
 

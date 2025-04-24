@@ -1,24 +1,24 @@
 'use client'
 
+import { Box } from '@mui/material'
 import { useRouter } from 'next/navigation'
 import { useEffect } from 'react'
 import { logout } from '../../services/supabase/actions'
 import useGlobalStore from '../../store'
-import { Box } from '@mui/material'
 export default function LogoutPage() {
   const router = useRouter()
-  const setUser = useGlobalStore(state => state.setUser)
+  const setAuthDetails = useGlobalStore(state => state.setAuthDetails)
 
   useEffect(() => {
     const logoutUser = async () => {
-      setUser(null)
+      setAuthDetails(null)
       const response = await logout()
       if (response?.success) {
         router.push('/')
       }
     }
     logoutUser()
-  }, [router, setUser])
+  }, [router, setAuthDetails])
 
   return <Box>Logging out...</Box>
 }

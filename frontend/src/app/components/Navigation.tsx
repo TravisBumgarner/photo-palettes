@@ -5,11 +5,11 @@ import Link from 'next/link'
 import useGlobalStore from '../../store'
 
 const AuthLinks = () => {
-  const user = useGlobalStore(state => state.user)
+  const authDetails = useGlobalStore(state => state.authDetails)
 
   return (
     <>
-      {user ? (
+      {authDetails ? (
         <>
           <Link href="/">Browse</Link>
           <Link href="/create">Create</Link>

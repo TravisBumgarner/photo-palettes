@@ -1,9 +1,9 @@
-import { User } from '@supabase/supabase-js'
+import { User as AuthDetails } from '@supabase/supabase-js'
 import { ActiveModal } from '../app/sharedComponents/Modal/Modal.types'
 
 export interface State {
-  user: User | null
-  setUser: (user: User | null) => void
+  authDetails: AuthDetails | null
+  setAuthDetails: (authDetails: AuthDetails | null) => void
   isAppAuthenticating: boolean
   setIsAppAuthenticating: (isAppAuthenticating: boolean) => void
   alerts: string[]
