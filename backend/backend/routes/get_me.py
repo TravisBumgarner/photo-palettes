@@ -1,20 +1,21 @@
-from fastapi import APIRouter, Request
+from fastapi import APIRouter
 
-from backend.database.queries import get_user_by_auth_id
+from backend.database.queries import get_app_user_by_auth_id
+from backend.middleware.auth import RequestWithAuthState
 
 router = APIRouter()
 
 
 @router.get("/me")
-async def me(request: Request):
-    user = get_user_by_auth_id(request.state.auth_id)
+async def me(request: RequestWithAuthState):
+    app_user = get_app_user_by_auth_id(request.state.auth_id)
 
-    if user is None:
+    if app_user is None:
         return None
 
     return {
-        "id": user.id,
-        "email": user.email,
-        "display_name": user.display_name,
-        "permission_level": user.permission_level,
+        "id": app_user.id,
+        "email": app_user.email,
+        "display_name": app_user.display_name,
+        "permission_level": app_user.permission_level,
     }

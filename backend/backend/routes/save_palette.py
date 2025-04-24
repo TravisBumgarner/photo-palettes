@@ -1,11 +1,12 @@
 from typing import List
 
-from fastapi import APIRouter, Depends, HTTPException, Request
+from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel, Field, validator
 from sqlalchemy.orm import Session
 
 from backend.database.deps import get_db
 from backend.database.models import Palette, PaletteColor
+from backend.middleware.auth import RequestWithAuthState
 from backend.utils.auth import user_owns_resource
 from backend.utils.logger import log_error
 
@@ -34,20 +35,21 @@ def hex_to_rgb(hex_str: str) -> tuple[int, int, int]:
     return tuple(int(hex_str[i : i + 2], 16) for i in (0, 2, 4))
 
 
-def validate_request(request: Request, palette_request: PaletteRequest):
+def validate_request(request: RequestWithAuthState, palette_request: PaletteRequest):
     if not user_owns_resource(request, palette_request):
         raise HTTPException(status_code=400, detail="User does not own resource")
 
 
 @router.post("/save-palette")
 async def save_palette(
-    request: Request, palette_request: PaletteRequest, db: Session = Depends(get_db)
+    request: RequestWithAuthState,
+    palette_request: PaletteRequest,
+    db: Session = Depends(get_db),
 ):
-
     try:
         palette = (
             db.query(Palette)
-            .filter(Palette.user_id == request.state.authId_id)
+            .filter(Palette.app_user_id == request.state.app_user_id)
             .filter(Palette.id == palette_request.palette_id)
             .first()
         )

@@ -1,8 +1,8 @@
-from fastapi import Request
+from backend.middleware.auth import RequestWithAuthState
 
 
-def user_owns_resource(request: Request, resource: dict) -> bool:
-    if request.state.authId_id is None:
+def user_owns_resource(request: RequestWithAuthState, resource: dict) -> bool:
+    if request.state.app_user_id is None:
         return False
 
-    return request.state.authId_id == resource.user_id
+    return request.state.app_user_id == resource.app_user_id

@@ -2,12 +2,13 @@ import io
 import os
 import uuid
 
-from fastapi import APIRouter, Depends, File, HTTPException, Request, UploadFile
+from fastapi import APIRouter, Depends, File, HTTPException, UploadFile
 from sqlalchemy.orm import Session
 
 from backend.algorithms.kmeans import get_image_colors
 from backend.database.deps import get_db
 from backend.database.models import Palette
+from backend.middleware.auth import RequestWithAuthState
 
 router = APIRouter()
 
@@ -19,7 +20,9 @@ def validate_request(photo: UploadFile = File(...)):
 
 @router.post("/generate-palette")
 async def generate_palette(
-    request: Request, photo: UploadFile = File(...), db: Session = Depends(get_db)
+    request: RequestWithAuthState,
+    photo: UploadFile = File(...),
+    db: Session = Depends(get_db),
 ):
     validate_request(photo)
 
@@ -35,7 +38,7 @@ async def generate_palette(
     palette = Palette(
         id=id,
         name="",
-        user_id=request.state.authId_id,
+        app_user_id=request.state.app_user_id,
         image_url=filename,
     )
 

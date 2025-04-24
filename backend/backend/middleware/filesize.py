@@ -1,6 +1,7 @@
-from fastapi import Request
 from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.responses import JSONResponse
+
+from backend.middleware.auth import RequestWithAuthState
 
 
 class LimitUploadSizeMiddleware(BaseHTTPMiddleware):
@@ -8,7 +9,7 @@ class LimitUploadSizeMiddleware(BaseHTTPMiddleware):
         super().__init__(app)
         self.max_upload_size = max_upload_size  # bytes
 
-    async def dispatch(self, request: Request, call_next):
+    async def dispatch(self, request: RequestWithAuthState, call_next):
         content_length = request.headers.get("content-length")
         if content_length and int(content_length) > self.max_upload_size:
             return JSONResponse(content={"error": "File too large"}, status_code=413)

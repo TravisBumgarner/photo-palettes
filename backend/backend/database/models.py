@@ -24,8 +24,8 @@ class AlphaSignup(Base):
     created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.now)
 
 
-class User(Base):
-    __tablename__ = "users"
+class AppUser(Base):
+    __tablename__ = "app_users"
 
     id: Mapped[str] = mapped_column(primary_key=True, default=lambda: str(uuid.uuid4()))
     auth_id: Mapped[str] = mapped_column(String, unique=True)
@@ -63,7 +63,7 @@ class Palette(Base):
     __tablename__ = "palettes"
 
     id: Mapped[str] = mapped_column(primary_key=True, default=lambda: str(uuid.uuid4()))
-    user_id: Mapped[str] = mapped_column(String, ForeignKey("users.id"))
+    app_user_id: Mapped[str] = mapped_column(String, ForeignKey("app_users.id"))
     created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.now)
     name: Mapped[str] = mapped_column(String)
     image_url: Mapped[str] = mapped_column(String)
@@ -71,7 +71,7 @@ class Palette(Base):
     colors: Mapped[List["PaletteColor"]] = relationship(
         "PaletteColor", back_populates="palette"
     )
-    user: Mapped["User"] = relationship("User", back_populates="palettes")
+    user: Mapped["AppUser"] = relationship("AppUser", back_populates="palettes")
     moderation_status: Mapped[ModerationStatus] = mapped_column(
         Integer, default=ModerationStatus.PENDING
     )

@@ -1,21 +1,18 @@
-import json
-
 import numpy as np
-from fastapi import UploadFile
 from PIL import Image
 from sklearn.cluster import KMeans
 
-from .utils import convert_to_rgb, open_image, rgb_to_hex, scale_image
+from .utils import convert_to_rgb, rgb_to_hex, scale_image
 
 
-def get_image_colors(photo_content: bytes) -> list:
+def get_image_colors(photo_content: bytes, num_colors: int = 6) -> list:
     image = Image.open(photo_content)
     image = scale_image(image, 200)
     image = convert_to_rgb(image)
 
     img_array = np.array(image)
     pixels = img_array.reshape(-1, 3)
-    kmeans = KMeans(n_clusters=6, random_state=42)
+    kmeans = KMeans(n_clusters=num_colors, random_state=42)
     kmeans.fit(pixels)
 
     colors = []
@@ -47,9 +44,7 @@ def get_image_colors(photo_content: bytes) -> list:
             # Calculate distance to each selected point
             spatial_distances = np.zeros(len(pixels))
             for i in range(len(selected_indices)):
-                dist = np.sqrt(
-                    (y_coords - selected_y[i]) ** 2 + (x_coords - selected_x[i]) ** 2
-                )
+                dist = np.sqrt((y_coords - selected_y[i]) ** 2 + (x_coords - selected_x[i]) ** 2)
                 spatial_distances = np.maximum(spatial_distances, dist)
 
             # Normalize spatial distances
@@ -70,7 +65,4 @@ def get_image_colors(photo_content: bytes) -> list:
         x = (closest_idx % width) / width * 100
         locations.append([float(x), float(y)])
 
-    return [
-        {"color": color, "percent_location": loc}
-        for color, loc in zip(hex_colors, locations)
-    ]
+    return [{"color": color, "percent_location": loc} for color, loc in zip(hex_colors, locations)]
