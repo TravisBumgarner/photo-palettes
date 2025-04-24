@@ -6,7 +6,7 @@
 - [x] Your upload is pending.
 - [x] Your upload was rejected. for x.
 - [x] Ability to moderate after uploaded.
-- [ ] Moderation Status -1 for awaiting submission. 
+- [x] Moderation Status -1 for awaiting submission. 
 - [ ] need to refactor routes and just everything. Ugh.
 - [ ] Figure out long loading time on nextjs server
 - [ ] Set up branching for file saves development and production
