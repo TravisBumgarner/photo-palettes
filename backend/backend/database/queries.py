@@ -1,3 +1,4 @@
+import uuid
 from datetime import datetime
 from typing import List
 
@@ -7,19 +8,19 @@ from backend.database.engine import SessionLocal
 from backend.database.models import AlphaSignup, AppUser, ModerationStatus, Palette
 
 
-def get_app_user_by_app_user_id(app_user_id: str) -> AppUser | None:
+def get_app_user_by_app_user_id(app_user_id: uuid.UUID) -> AppUser | None:
     session = SessionLocal()
 
     return session.query(AppUser).filter(AppUser.id == app_user_id).first()
 
 
-def get_app_user_by_auth_id(auth_id: str) -> AppUser | None:
+def get_app_user_by_auth_id(auth_id: uuid.UUID) -> AppUser | None:
     session = SessionLocal()
 
     return session.query(AppUser).filter(AppUser.auth_id == auth_id).first()
 
 
-def insert_app_user(auth_id: str, email: str, display_name: str) -> AppUser:
+def insert_app_user(auth_id: uuid.UUID, email: str, display_name: str) -> AppUser:
     session = SessionLocal()
 
     app_user = AppUser(
@@ -35,7 +36,7 @@ def insert_app_user(auth_id: str, email: str, display_name: str) -> AppUser:
     return app_user
 
 
-def get_or_create_app_user(auth_id: str, email: str, display_name: str) -> AppUser:
+def get_or_create_app_user(auth_id: uuid.UUID, email: str, display_name: str) -> AppUser:
     app_user = get_app_user_by_auth_id(auth_id)
     if not app_user:
         app_user = insert_app_user(auth_id, email, display_name)
@@ -64,7 +65,7 @@ def get_unmoderated_palettes() -> List[Palette]:
     )
 
 
-def get_palette_by_id(palette_id: str) -> Palette | None:
+def get_palette_by_id(palette_id: uuid.UUID) -> Palette | None:
     session = SessionLocal()
     return (
         session.query(Palette)
@@ -74,7 +75,7 @@ def get_palette_by_id(palette_id: str) -> Palette | None:
     )
 
 
-def update_palette_moderation_status(palette_id: str, moderation_status: ModerationStatus):
+def update_palette_moderation_status(palette_id: uuid.UUID, moderation_status: ModerationStatus):
     session = SessionLocal()
     palette = session.query(Palette).filter(Palette.id == palette_id).first()
     if not palette:

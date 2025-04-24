@@ -1,3 +1,5 @@
+import uuid
+
 from fastapi import Request
 from fastapi.responses import JSONResponse
 from supabase import Client
@@ -11,8 +13,8 @@ public_routes = {"/"}
 
 
 class AuthState:
-    auth_id: str
-    app_user_id: str
+    auth_id: uuid.UUID
+    app_user_id: uuid.UUID
     permission_level: PermissionLevel
 
 
@@ -58,13 +60,13 @@ def create_auth_middleware(supabase: Client):
                 )
 
             app_user = get_or_create_app_user(
-                auth_id=auth_user.id,
+                auth_id=uuid.UUID(auth_user.id),
                 email=auth_user.email,
                 display_name="foobar",
             )
 
-            request.state.auth_id = str(auth_user.id)
-            request.state.app_user_id = str(app_user.id)
+            request.state.auth_id = uuid.UUID(auth_user.id)
+            request.state.app_user_id = app_user.id
             request.state.permission_level = app_user.permission_level
 
         except Exception as e:
