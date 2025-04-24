@@ -5,6 +5,7 @@ const zodResponse = z.object({
   success: z.boolean(),
   palettes: z.array(
     z.object({
+      moderation_status: z.number(),
       id: z.string(),
       name: z.string(),
       image_url: z.string(),

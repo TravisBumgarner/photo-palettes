@@ -12,7 +12,8 @@ export enum EPermissionLevel {
 }
 
 export enum EModerationStatus {
-  PENDING = 0,
+  AWAITING_SUBMISSION = -1,
+  AWAITING_MODERATION = 0,
   APPROVED = 1,
   REJECTED = 2,
 }

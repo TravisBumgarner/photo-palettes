@@ -3,8 +3,12 @@
 - [x] Need a way to save photos to somewhere. And also, need a place to temporarily save the photo? Or maybe not?
 - [x] Audit every api endpoint with validation.
 - [x] use uuid type in db.
-- [ ] Your upload is pending.
-- [ ] Your upload was rejected. for x.
-- [ ] Ability to moderate after uploaded.
+- [x] Your upload is pending.
+- [x] Your upload was rejected. for x.
+- [x] Ability to moderate after uploaded.
+- [ ] Moderation Status -1 for awaiting submission. 
 - [ ] need to refactor routes and just everything. Ugh.
 - [ ] Figure out long loading time on nextjs server
+- [ ] Set up branching for file saves development and production
+- [ ] Remove query code from routes. 
+- [ ] Resolve all python errors.

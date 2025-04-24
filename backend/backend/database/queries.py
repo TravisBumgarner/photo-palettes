@@ -61,7 +61,12 @@ def get_moderated_palettes() -> List[Palette]:
 def get_unmoderated_palettes() -> List[Palette]:
     session = SessionLocal()
     return (
-        session.query(Palette).filter(Palette.moderation_status == ModerationStatus.PENDING).all()
+        session.query(Palette)
+        .filter(
+            (Palette.moderation_status == ModerationStatus.AWAITING_MODERATION)
+            | (Palette.moderation_status == ModerationStatus.AWAITING_SUBMISSION)
+        )
+        .all()
     )
 
 

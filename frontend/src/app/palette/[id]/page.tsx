@@ -1,10 +1,10 @@
 'use client'
 
 import { useQuery } from '@tanstack/react-query'
+import Image from 'next/image'
 import { useParams } from 'next/navigation'
 import { getPaletteById } from '../../../api/getPaletteById'
 import { EModerationStatus } from '../../../types'
-
 const PalettePage = () => {
   const params = useParams()
   const paletteId = params.id as string
@@ -20,12 +20,12 @@ const PalettePage = () => {
 
   return (
     <div>
-      {data.palette.moderation_status === EModerationStatus.PENDING && (
+      {data.palette.moderation_status === EModerationStatus.AWAITING_MODERATION && (
         <p>This palette is pending approval.</p>
       )}
       <>
         <h1>{data.palette.name}</h1>
-        <img
+        <Image
           style={{ maxWidth: '900px', maxHeight: '900px' }}
           src={`${process.env.NEXT_PUBLIC_API_URL}/uploads/${data.palette.image_url}`}
           alt="Palette"

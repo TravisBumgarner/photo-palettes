@@ -19,6 +19,7 @@ def get_palettes():
         "success": True,
         "palettes": [
             {
+                "moderation_status": palette.moderation_status,
                 "id": palette.id,
                 "name": palette.name,
                 "image_url": palette.image_url,

@@ -54,7 +54,8 @@ class PaletteColor(Base):
 
 
 class ModerationStatus(IntEnum):
-    PENDING = 0
+    AWAITING_SUBMISSION = -1
+    AWAITING_MODERATION = 0
     APPROVED = 1
     REJECTED = 2
 
@@ -71,5 +72,5 @@ class Palette(Base):
     colors: Mapped[List["PaletteColor"]] = relationship("PaletteColor", back_populates="palette")
     user: Mapped["AppUser"] = relationship("AppUser", back_populates="palettes")
     moderation_status: Mapped[ModerationStatus] = mapped_column(
-        Integer, default=ModerationStatus.PENDING
+        Integer, default=ModerationStatus.AWAITING_SUBMISSION
     )
