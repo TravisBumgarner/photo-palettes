@@ -10,6 +10,7 @@ from backend.database.queries import get_palette_by_id
 from backend.middleware.auth import RequestWithAuthState
 from backend.utils.auth import user_owns_resource
 from backend.utils.logger import log_error
+from backend.utils.pushover import send_notification
 
 router = APIRouter()
 
@@ -47,7 +48,6 @@ async def save_palette(
     palette_request: PaletteRequest,
     db: Session = Depends(get_db),
 ):
-    print("ruda", palette_request)
     try:
         palette = get_palette_by_id(palette_request.palette_id)
 
@@ -70,7 +70,7 @@ async def save_palette(
             db.add(new_color)
 
         db.commit()
-
+        send_notification(f"New palette submitted: {palette_request.name}")
         return {
             "success": True,
             "palette_id": palette.id,

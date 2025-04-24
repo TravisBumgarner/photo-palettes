@@ -9,6 +9,12 @@ class BaseServiceSettings(BaseSettings):
     model_config = SettingsConfigDict(env_file=".env", extra="ignore")
 
 
+class PushoverSettings(BaseServiceSettings):
+    model_config = SettingsConfigDict(env_prefix="PUSHOVER_")
+    app_token: str
+    user_token: str
+
+
 class SupabaseSettings(BaseServiceSettings):
     model_config = SettingsConfigDict(env_prefix="SUPABASE_")
     url: str
@@ -19,7 +25,7 @@ class Config(BaseSettings):
     environment: str
     database_url: str
     supabase: SupabaseSettings = Field(default_factory=SupabaseSettings)
-
+    pushover: PushoverSettings = Field(default_factory=PushoverSettings)
     model_config = SettingsConfigDict(env_file=".env", extra="ignore")
 
     # SqlAlchemy expects postgresql://, but postgres:// is what we get from Heroku.
@@ -30,7 +36,7 @@ class Config(BaseSettings):
         return v
 
 
-@lru_cache()
+@lru_cache
 def get_config() -> Config:
     try:
         return Config()
