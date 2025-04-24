@@ -83,7 +83,7 @@ const Create = () => {
     setActiveModal({
       id: ModalID.ConfirmationModal,
       confirmationCallback: () => {
-        router.push('/')
+        router.push(`/palette/${paletteId}`)
       },
       title: 'Thanks for your submission!',
       body: 'Once it is approved, it will be added to the site.',

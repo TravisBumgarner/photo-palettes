@@ -2,6 +2,7 @@
 
 import { Box, Grid, Typography } from '@mui/material'
 import { useQuery } from '@tanstack/react-query'
+import Link from 'next/link'
 import { getPalettes } from '../../api/getPalettes'
 import config from '../../config'
 import Loading from '../sharedComponents/Loading'
@@ -32,46 +33,48 @@ const Browse = () => {
       </Typography>
       <Grid container spacing={3}>
         {data?.palettes.map(palette => (
-          <div key={palette.id}>
-            <Box
-              sx={{
-                border: '1px solid',
-                borderColor: 'divider',
-                borderRadius: 1,
-                p: 2,
-                height: '100%',
-              }}
-            >
+          <Link href={`/palette/${palette.id}`} key={palette.id}>
+            <div>
               <Box
-                component="img"
-                src={`${config.apiUrl}/uploads/${palette.image_url}`}
-                alt={palette.name}
                 sx={{
-                  width: '100%',
-                  height: 200,
-                  objectFit: 'cover',
+                  border: '1px solid',
+                  borderColor: 'divider',
                   borderRadius: 1,
-                  mb: 2,
+                  p: 2,
+                  height: '100%',
                 }}
-              />
-              <Typography variant="h6" sx={{ mb: 1 }}>
-                {palette.name}
-              </Typography>
-              <Box sx={{ display: 'flex', gap: 1 }}>
-                {palette.colors.map(color => (
-                  <Box
-                    key={color.id}
-                    sx={{
-                      width: 30,
-                      height: 30,
-                      backgroundColor: color.hex,
-                      borderRadius: '50%',
-                    }}
-                  />
-                ))}
+              >
+                <Box
+                  component="img"
+                  src={`${config.apiUrl}/uploads/${palette.image_url}`}
+                  alt={palette.name}
+                  sx={{
+                    width: '100%',
+                    height: 200,
+                    objectFit: 'cover',
+                    borderRadius: 1,
+                    mb: 2,
+                  }}
+                />
+                <Typography variant="h6" sx={{ mb: 1 }}>
+                  {palette.name}
+                </Typography>
+                <Box sx={{ display: 'flex', gap: 1 }}>
+                  {palette.colors.map(color => (
+                    <Box
+                      key={color.id}
+                      sx={{
+                        width: 30,
+                        height: 30,
+                        backgroundColor: color.hex,
+                        borderRadius: '50%',
+                      }}
+                    />
+                  ))}
+                </Box>
               </Box>
-            </Box>
-          </div>
+            </div>
+          </Link>
         ))}
       </Grid>
     </Box>

@@ -15,6 +15,7 @@ from backend.routes import (
     generate_palette,
     get_me,
     get_moderation,
+    get_palette,
     get_palettes,
     moderate,
     ok,
@@ -50,8 +51,7 @@ app.mount("/uploads", StaticFiles(directory=uploads_dir), name="uploads")
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     # Run startup logic here
-    async with engine.begin() as conn:
-        await conn.run_sync(models.Base.metadata.create_all)
+    models.Base.metadata.create_all(bind=engine)
     yield
     # Run shutdown logic here if needed
 
@@ -65,3 +65,4 @@ app.include_router(get_palettes.router)
 app.include_router(get_me.router)
 app.include_router(get_moderation.router)
 app.include_router(moderate.router)
+app.include_router(get_palette.router)
