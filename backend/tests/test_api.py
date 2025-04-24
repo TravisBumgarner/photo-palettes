@@ -30,17 +30,20 @@ def test_root_endpoint():
     assert response.json() == {"message": "Hello, World!"}
 
 
-def test_whoami_unauthorized():
-    response = requests.get(f"{BASE_URL}/whoami")
+def test_me_unauthorized():
+    response = requests.get(f"{BASE_URL}/me")
     assert response.status_code == 401
     assert "error" in response.json()
     assert response.json()["error"] == "Unauthorized"
 
 
-def test_whoami_authorized():
-    response = requests.get(f"{BASE_URL}/whoami", headers=get_auth_headers())
+def test_me_authorized():
+    response = requests.get(f"{BASE_URL}/me", headers=get_auth_headers())
     assert response.status_code == 200
-    assert "message" in response.json()
+    assert "permission_level" in response.json()
+    assert "display_name" in response.json()
+    assert "email" in response.json()
+    assert "id" in response.json()
 
 
 def test_generate_palette_file_too_large():

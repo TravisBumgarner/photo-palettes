@@ -4,6 +4,7 @@ import { Box, Button, TextField } from '@mui/material'
 import { useRouter } from 'next/navigation'
 import { ChangeEvent, useCallback, useState } from 'react'
 import { z } from 'zod'
+import config from '../../config'
 import { MINIMUM_PASSWORD_LENGTH } from '../../consts'
 import { signup } from '../../services/supabase/actions'
 import useGlobalStore from '../../store'
@@ -22,7 +23,9 @@ export default function SignupPage() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [repeatPassword, setRepeatPassword] = useState('')
-  const [invitationKey, setInvitationKey] = useState('')
+  const [invitationKey, setInvitationKey] = useState(
+    config.environment === 'production' ? '' : SUPER_SECRET_INVITATION_KEY
+  )
   const router = useRouter()
   const setIsAppAuthenticating = useGlobalStore(state => state.setIsAppAuthenticating)
 
