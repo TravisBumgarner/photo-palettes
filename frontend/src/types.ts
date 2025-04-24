@@ -4,3 +4,9 @@ export type Swatch = {
 }
 
 export type Palette = Swatch[]
+
+export enum PermissionLevel {
+  MEMBER = 0,
+  MODERATOR = 2,
+  ADMIN = 5,
+}

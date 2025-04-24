@@ -3,25 +3,46 @@
 import { Box } from '@mui/material'
 import Link from 'next/link'
 import useGlobalStore from '../../store'
+import { PermissionLevel } from '../../types'
 
 const AuthLinks = () => {
-  const authDetails = useGlobalStore(state => state.authDetails)
+  const appUserDetails = useGlobalStore(state => state.appUserDetails)
+
+  const routes = {
+    public: [{ key: 'home', href: '/', label: 'Home' }],
+    loggedOut: [
+      { key: 'login', href: '/login', label: 'Login' },
+      { key: 'signup', href: '/signup', label: 'Signup' },
+    ],
+    member: [
+      { key: 'browse', href: '/', label: 'Browse' },
+      { key: 'create', href: '/create', label: 'Create' },
+      { key: 'logout', href: '/logout', label: 'Logout' },
+      { key: 'profile', href: '/profile', label: 'Profile' },
+    ],
+    moderator: [{ key: 'moderation', href: '/moderation', label: 'Moderation' }],
+  }
+
+  let availableRoutes = [...routes.public]
+
+  if (!appUserDetails) {
+    availableRoutes = [...availableRoutes, ...routes.loggedOut]
+  } else {
+    if (appUserDetails.permissionLevel >= PermissionLevel.MEMBER) {
+      availableRoutes = [...availableRoutes, ...routes.member]
+    }
+    if (appUserDetails.permissionLevel >= PermissionLevel.MODERATOR) {
+      availableRoutes = [...availableRoutes, ...routes.moderator]
+    }
+  }
 
   return (
     <>
-      {authDetails ? (
-        <>
-          <Link href="/">Browse</Link>
-          <Link href="/create">Create</Link>
-          <Link href="/logout">Logout</Link>
-        </>
-      ) : (
-        <>
-          <Link href="/">Home</Link>
-          <Link href="/login">Login</Link>
-          <Link href="/signup">Signup</Link>
-        </>
-      )}
+      {availableRoutes.map(route => (
+        <Link key={route.key} href={route.href}>
+          {route.label}
+        </Link>
+      ))}
     </>
   )
 }

@@ -2,15 +2,17 @@
 
 import { Box } from '@mui/material'
 import { useEffect } from 'react'
+import { getMe } from '../../api/getMe'
 import { createClient } from '../../services/supabase/client'
 import useGlobalStore from '../../store'
 import Loading from '../sharedComponents/Loading'
 
 export function LoadUserIntoStore() {
   const supabase = createClient()
-  const setAuthDetails = useGlobalStore(state => state.setAuthDetails)
+  const setAuthId = useGlobalStore(state => state.setAuthId)
   const isAppAuthenticating = useGlobalStore(state => state.isAppAuthenticating)
   const setIsAppAuthenticating = useGlobalStore(state => state.setIsAppAuthenticating)
+  const setAppUserDetails = useGlobalStore(state => state.setAppUserDetails)
 
   useEffect(() => {
     if (!isAppAuthenticating) {
@@ -21,12 +23,24 @@ export function LoadUserIntoStore() {
       const {
         data: { user },
       } = await supabase.auth.getUser()
-      setAuthDetails(user)
+      setAuthId(user?.id ?? null)
+
+      const userDetails = await getMe()
+
+      if (userDetails) {
+        setAppUserDetails({
+          permissionLevel: userDetails.permission_level,
+          displayName: userDetails.display_name,
+          email: userDetails.email,
+          id: userDetails.id,
+        })
+      }
+
       setIsAppAuthenticating(false)
     }
 
     loadUser()
-  }, [setAuthDetails, supabase, setIsAppAuthenticating, isAppAuthenticating])
+  }, [setAuthId, supabase, setIsAppAuthenticating, isAppAuthenticating, setAppUserDetails])
 
   return isAppAuthenticating ? (
     <Box

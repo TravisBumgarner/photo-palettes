@@ -47,7 +47,7 @@ async def save_palette(
     try:
         palette = (
             db.query(Palette)
-            .filter(Palette.user_id == request.state.authDetails_id)
+            .filter(Palette.user_id == request.state.authId_id)
             .filter(Palette.id == palette_request.palette_id)
             .first()
         )
