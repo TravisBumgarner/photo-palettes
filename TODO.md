@@ -17,3 +17,4 @@
 - [ ] Set up branching for file saves development and production
 - [ ] Remove query code from routes.
 - [ ] Resolve all python errors.
+- [ ] Is my success/fail on the backend good? Should I be sending back error numbers instead?

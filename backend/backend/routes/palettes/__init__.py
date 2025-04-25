@@ -9,4 +9,5 @@ from . import (
     get_by_id,
     get_list_moderated,
     get_list_unmoderated,
+    moderate,
 )

@@ -12,7 +12,7 @@ from backend.utils.logger import log_error
 config = get_config()
 
 # Added from main.py
-public_routes = {"/"}
+public_routes = {"/", "/alpha/signup"}
 
 
 if config.environment == "development":
