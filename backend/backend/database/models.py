@@ -3,7 +3,6 @@ from datetime import datetime
 from enum import IntEnum
 from typing import List
 
-# backend/backend/routes/palettes/models.py
 from sqlalchemy import UUID, DateTime, ForeignKey, Integer, String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
