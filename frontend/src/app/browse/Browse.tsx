@@ -3,7 +3,7 @@
 import { Box, Grid, Typography } from '@mui/material'
 import { useQuery } from '@tanstack/react-query'
 import Link from 'next/link'
-import { getPalettes } from '../../api/getPalettes'
+import { getPalettes } from '../../api/palettes/getList'
 import config from '../../config'
 import Loading from '../sharedComponents/Loading'
 

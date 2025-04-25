@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException
 
-from backend.database.queries import get_unmoderated_palettes
+from backend.database.queries.palettes import get_unmoderated_palettes
 from backend.middleware.auth import RequestWithAuthState
 from backend.utils.auth import user_is_admin, user_is_moderator
 

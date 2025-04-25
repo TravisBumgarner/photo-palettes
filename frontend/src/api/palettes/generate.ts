@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { getToken } from '../services/supabase/utils'
+import { getToken } from '../../services/supabase/utils'
 
 const zodResponse = z.object({
   success: z.boolean(),
@@ -18,7 +18,7 @@ export const generatePalette = async (photo: File) => {
   const formData = new FormData()
   formData.append('photo', photo)
   formData.append('extension', photo.name.split('.').pop() || '')
-  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/generate-palette`, {
+  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/palette/generate`, {
     method: 'POST',
     body: formData,
     headers: {

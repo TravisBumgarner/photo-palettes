@@ -1,6 +1,6 @@
 import { z } from 'zod'
-import { getToken } from '../services/supabase/utils'
-import { TPalette } from '../types'
+import { getToken } from '../../services/supabase/utils'
+import { TPalette } from '../../types'
 
 const zodResponse = z.object({
   success: z.boolean(),
@@ -28,7 +28,7 @@ export const savePalette = async ({
     palette_id: paletteId,
   }
 
-  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/save-palette`, {
+  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/palettes/create`, {
     method: 'POST',
     body: JSON.stringify(requestBody),
     headers: {

@@ -2,7 +2,7 @@
 
 import { useQuery } from '@tanstack/react-query'
 import { useParams } from 'next/navigation'
-import { getPaletteById } from '../../../api/getPaletteById'
+import { getPaletteById } from '../../../api/palettes/getById'
 import { EModerationStatus } from '../../../types'
 const PalettePage = () => {
   const params = useParams()

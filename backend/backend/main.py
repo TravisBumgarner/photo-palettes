@@ -12,14 +12,11 @@ from backend.middleware import create_auth_middleware, setup_cors
 from backend.middleware.filesize import LimitUploadSizeMiddleware
 from backend.routes import (
     alpha_signup,
-    generate_palette,
     get_me,
     get_moderation,
-    get_palette,
-    get_palettes,
     moderate,
     ok,
-    save_palette,
+    palettes,
 )
 
 config = get_config()
@@ -57,12 +54,8 @@ async def lifespan(app: FastAPI):
 
 
 app.include_router(ok.router)
-app.include_router(generate_palette.router)
-app.include_router(generate_palette.router)
 app.include_router(alpha_signup.router)
-app.include_router(save_palette.router)
-app.include_router(get_palettes.router)
 app.include_router(get_me.router)
 app.include_router(get_moderation.router)
 app.include_router(moderate.router)
-app.include_router(get_palette.router)
+app.include_router(palettes.palettes_router, prefix="/palettes")

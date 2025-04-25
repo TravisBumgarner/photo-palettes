@@ -1,16 +1,10 @@
 import { z } from 'zod'
-import { getToken } from '../services/supabase/utils'
-import { EModerationStatus } from '../types'
+import { getToken } from '../../services/supabase/utils'
 
-const zodResponse = z.discriminatedUnion('success', [
-  z.object({
-    success: z.literal(false),
-    error: z.string(),
-  }),
-  z.object({
-    success: z.literal(true),
-    palette: z.object({
-      moderation_status: z.nativeEnum(EModerationStatus),
+const zodResponse = z.object({
+  success: z.boolean(),
+  palettes: z.array(
+    z.object({
       id: z.string(),
       name: z.string(),
       image_url: z.string(),
@@ -24,14 +18,14 @@ const zodResponse = z.discriminatedUnion('success', [
           b: z.number(),
         })
       ),
-    }),
-  }),
-])
+    })
+  ),
+})
 
-export const getPaletteById = async (id: string) => {
+export const getPalettes = async () => {
   const token = await getToken()
 
-  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/palette/${id}`, {
+  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/palettes`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
@@ -39,6 +33,5 @@ export const getPaletteById = async (id: string) => {
     },
   })
   const json = await response.json()
-
   return zodResponse.parse(json)
 }

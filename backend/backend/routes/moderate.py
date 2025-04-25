@@ -1,8 +1,10 @@
+import uuid
+
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 
 from backend.database.models import ModerationStatus
-from backend.database.queries import update_palette_moderation_status
+from backend.database.queries.palettes import update_palette_moderation_status
 from backend.middleware.auth import RequestWithAuthState
 from backend.utils.auth import user_is_moderator
 
@@ -10,7 +12,7 @@ router = APIRouter()
 
 
 class ModerateRequest(BaseModel):
-    palette_id: str
+    palette_id: uuid.UUID
     status: ModerationStatus
 
 

@@ -1,29 +1,27 @@
 import io
-import os
 import uuid
 
-from fastapi import APIRouter, Depends, File, Form, HTTPException, UploadFile
-from sqlalchemy.orm import Session
+from fastapi import HTTPException, UploadFile
 
 from backend.algorithms.kmeans import get_image_colors
-from backend.database.deps import get_db
 from backend.database.models import Palette
+from backend.database.queries.palettes import create_palette
 from backend.middleware.auth import RequestWithAuthState
+from backend.utils.photos import save_photo
 
-router = APIRouter()
+from . import palettes_router
 
 
-def validate_request(photo: UploadFile = File(...)):
+def validate_request(photo: UploadFile):
     if photo.content_type not in ["image/png", "image/jpeg", "image/jpg"]:
         raise HTTPException(status_code=400, detail="Invalid file type")
 
 
-@router.post("/generate-palette")
+@palettes_router.post("/generate")
 async def generate_palette(
     request: RequestWithAuthState,
-    photo: UploadFile = File(...),
-    extension: str = Form(...),
-    db: Session = Depends(get_db),
+    photo: UploadFile,
+    extension: str,
 ):
     validate_request(photo)
 
@@ -43,17 +41,9 @@ async def generate_palette(
         image_url=filename,
     )
 
-    db.add(palette)
-    db.commit()
+    create_palette(palette)
 
-    # Save the original content using absolute path
-    uploads_dir = os.path.join(
-        os.path.dirname(os.path.dirname(os.path.dirname(__file__))), "uploads"
-    )
-    os.makedirs(uploads_dir, exist_ok=True)
-    file_path = os.path.join(uploads_dir, filename)
-    with open(file_path, "wb") as f:
-        f.write(photo_content)
+    save_photo(photo_content, filename)
 
     return {
         "success": True,
