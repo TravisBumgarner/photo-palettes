@@ -30,8 +30,10 @@ export default function SignupPage() {
   const router = useRouter()
   const setIsAppAuthenticating = useGlobalStore(state => state.setIsAppAuthenticating)
   const addAlert = useGlobalStore(state => state.addAlert)
+
   const handlePasswordChange = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
+      setError(null)
       const newPassword = e.target.value
       setPassword(newPassword)
     },
@@ -40,6 +42,7 @@ export default function SignupPage() {
 
   const handleRepeatPasswordChange = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
+      setError(null)
       const newRepeatPassword = e.target.value
       setRepeatPassword(newRepeatPassword)
     },
@@ -88,6 +91,7 @@ export default function SignupPage() {
 
   const handleInvitationKeyChange = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
+      setError(null)
       setInvitationKey(e.target.value)
     },
     [setInvitationKey]
@@ -95,6 +99,7 @@ export default function SignupPage() {
 
   const handleEmailChange = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
+      setError(null)
       setEmail(e.target.value)
     },
     [setEmail]
