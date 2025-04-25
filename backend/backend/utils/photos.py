@@ -1,31 +1,40 @@
 import os
 
 from backend.config import get_config
+from backend.services.cloudinary import get_image_from_cloudinary, save_image_to_cloudinary
 
 config = get_config()
 
+DEVELOPMENT_UPLOADS_DIR = "uploads"
+DEVELOPMENT_UPLOADS_PREFIX = f"/{DEVELOPMENT_UPLOADS_DIR}"
+PRODUCTION_UPLOADS_PREFIX = "cloudinary:"
 
-def get_uploads_dir():
-    return os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), "uploads")
+
+def get_development_uploads_dir():
+    return os.path.join(
+        os.path.dirname(os.path.dirname(os.path.dirname(__file__))), DEVELOPMENT_UPLOADS_DIR
+    )
 
 
-def save_photo(photo: bytes, filename: str) -> str:
-    if not config.is_production:
-        uploads_dir = get_uploads_dir()
+def save_photo(photo: bytes, id: str, extension: str) -> str:
+    if config.is_production:
+        result = save_image_to_cloudinary(photo, id)
+        return f"{PRODUCTION_UPLOADS_PREFIX}/{result}"
+    else:
+        filename = f"{id}.{extension}"
+        uploads_dir = get_development_uploads_dir()
         os.makedirs(uploads_dir, exist_ok=True)
         file_path = os.path.join(uploads_dir, filename)
         with open(file_path, "wb") as f:
             f.write(photo)
-        return f"/uploads/{filename}"
-    else:
-        raise Exception("Photo upload is not allowed in this environment")
+        return f"{DEVELOPMENT_UPLOADS_PREFIX}/{filename}"
 
 
-def get_photo(filename: str) -> bytes:
-    if not config.is_production:
-        uploads_dir = get_uploads_dir()
-        file_path = os.path.join(uploads_dir, filename)
-        with open(file_path, "rb") as f:
-            return f.read()
-    else:
-        raise Exception("Photo upload is not allowed in this environment")
+def get_photo_path(photo_details: str) -> str:
+    # More so for development, this will return images from cloudinary and local storage depending
+    # on the prefix and not the environment.
+    if photo_details.startswith(PRODUCTION_UPLOADS_PREFIX):
+        public_id = photo_details.replace(PRODUCTION_UPLOADS_PREFIX, "")
+        return get_image_from_cloudinary(public_id)
+
+    return f"http://localhost:8000{photo_details}"

@@ -2,6 +2,7 @@ from backend.database.models import ModerationStatus
 from backend.database.queries.palettes import get_palettes_by_moderation_status
 from backend.middleware.auth import RequestWithAuthState
 from backend.utils.auth import user_is_moderator
+from backend.utils.photos import get_photo_path
 
 from . import palettes_router
 
@@ -23,6 +24,8 @@ def get_list_as_moderator(request: RequestWithAuthState, status: ModerationStatu
         return validation_error
 
     palettes = get_palettes_by_moderation_status(status)
+    for palette in palettes:
+        palette.photo_details = get_photo_path(palette.photo_details)
     return {
         "success": True,
         "palettes": palettes,

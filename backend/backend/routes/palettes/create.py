@@ -7,9 +7,9 @@ from pydantic import BaseModel
 from backend.database.models import ModerationStatus, Palette, PaletteColor
 from backend.database.queries.palettes import get_palette_by_id, update_palette
 from backend.middleware.auth import RequestWithAuthState
+from backend.services.logger import log_error
 from backend.utils.auth import user_is_moderator
 from backend.utils.colors import hex_to_rgb
-from backend.utils.logging import log_error
 from backend.utils.notifications import send_notification
 
 from . import palettes_router

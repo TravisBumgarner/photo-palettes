@@ -68,7 +68,7 @@ const PalettePage = () => {
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           style={{ maxWidth: '100%', maxHeight: '900px' }}
-          src={`${process.env.NEXT_PUBLIC_API_URL}/uploads/${data.palette.image_url}`}
+          src={data.palette.photo_details}
           alt="Palette"
         />
         <div style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap', gap: '10px' }}>

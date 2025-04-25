@@ -1,6 +1,6 @@
 from backend.database.queries.users import get_app_user_by_auth_id
 from backend.middleware.auth import RequestWithAuthState
-from backend.utils.logger import log_error
+from backend.services.logger import log_error
 
 from . import users_router
 

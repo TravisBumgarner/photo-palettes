@@ -1,8 +1,8 @@
-"""user-and-color-palette
+"""user-and-color-palettes
 
-Revision ID: f713e2d1e00f
+Revision ID: 18e4248220b4
 Revises: 73a7c71ec391
-Create Date: 2025-04-24 22:12:37.328067
+Create Date: 2025-04-25 20:25:06.382322
 
 """
 
@@ -20,7 +20,7 @@ class Cube(UserDefinedType):
 
 
 # revision identifiers, used by Alembic.
-revision: str = "f713e2d1e00f"
+revision: str = "18e4248220b4"
 down_revision: Union[str, None] = "73a7c71ec391"
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
@@ -47,7 +47,7 @@ def upgrade() -> None:
         sa.Column("app_user_id", sa.Uuid(), nullable=False),
         sa.Column("created_at", sa.DateTime(), nullable=False),
         sa.Column("name", sa.String(), nullable=False),
-        sa.Column("image_url", sa.String(), nullable=False),
+        sa.Column("photo_details", sa.String(), nullable=False),
         sa.Column("moderation_status", sa.Integer(), nullable=False),
         sa.ForeignKeyConstraint(
             ["app_user_id"],

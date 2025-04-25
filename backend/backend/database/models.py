@@ -67,7 +67,7 @@ class Palette(Base):
     app_user_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("app_users.id"))
     created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.now)
     name: Mapped[str] = mapped_column(String)
-    image_url: Mapped[str] = mapped_column(String)
+    photo_details: Mapped[str] = mapped_column(String)
 
     colors: Mapped[List["PaletteColor"]] = relationship("PaletteColor", back_populates="palette")
     user: Mapped["AppUser"] = relationship("AppUser", back_populates="palettes")

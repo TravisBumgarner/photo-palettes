@@ -1,5 +1,4 @@
 import { Box, Typography } from '@mui/material'
-import config from '../../config'
 import { TPaletteAndColors } from '../../types'
 
 const PaletteThumbnail = ({ palette }: { palette: TPaletteAndColors }) => {
@@ -17,7 +16,7 @@ const PaletteThumbnail = ({ palette }: { palette: TPaletteAndColors }) => {
     >
       <Box
         component="img"
-        src={`${config.apiUrl}/uploads/${palette.image_url}`}
+        src={palette.photo_details}
         alt={palette.name}
         sx={{
           width: '100%',
