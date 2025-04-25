@@ -68,7 +68,7 @@ const PalettePage = () => {
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           style={{ maxWidth: '100%', maxHeight: '900px' }}
-          src={data.palette.photo_details}
+          src={data.palette.photo_url}
           alt="Palette"
         />
         <div style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap', gap: '10px' }}>

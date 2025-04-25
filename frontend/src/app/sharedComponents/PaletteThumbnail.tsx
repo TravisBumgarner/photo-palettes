@@ -16,7 +16,7 @@ const PaletteThumbnail = ({ palette }: { palette: TPaletteAndColors }) => {
     >
       <Box
         component="img"
-        src={palette.photo_details}
+        src={palette.photo_url}
         alt={palette.name}
         sx={{
           width: '100%',

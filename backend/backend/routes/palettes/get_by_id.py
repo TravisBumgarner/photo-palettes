@@ -2,9 +2,9 @@ from uuid import UUID
 
 from backend.database.queries.palettes import get_palette_by_id
 from backend.middleware.auth import RequestWithAuthState
-from backend.utils.photos import get_photo_path
 
 from . import palettes_router
+from .response_models import PaletteColorResponse, PaletteResponse
 
 
 @palettes_router.get("/id/{palette_id}")
@@ -17,8 +17,17 @@ async def get_by_id(request: RequestWithAuthState, palette_id: str):
             "error": "Palette not found",
         }
 
-    palette.photo_details = get_photo_path(palette.photo_details)
     return {
         "success": True,
-        "palette": palette,
+        "palette": PaletteResponse(
+            id=palette.id,
+            name=palette.name,
+            created_at=palette.created_at,
+            photo_url=palette.photo_url,
+            colors=[
+                PaletteColorResponse(id=color.id, hex=color.hex, r=color.r, g=color.g, b=color.b)
+                for color in palette.colors
+            ],
+            moderation_status=palette.moderation_status,
+        ),
     }

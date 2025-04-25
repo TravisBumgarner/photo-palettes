@@ -13,7 +13,7 @@ const zodResponse = z.discriminatedUnion('success', [
       moderation_status: z.nativeEnum(EModerationStatus),
       id: z.string(),
       name: z.string(),
-      photo_details: z.string(),
+      photo_url: z.string(),
       created_at: z.string(),
       colors: z.array(
         z.object({
