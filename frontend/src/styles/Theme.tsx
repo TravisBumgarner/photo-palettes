@@ -65,7 +65,7 @@ const baseThemeOptions: ThemeOptions = {
 // Light theme
 const lightTheme = createTheme({
   ...baseThemeOptions,
-palette: {
+  palette: {
     mode: 'light',
     background: {
       default: PALETTE.grayscale[50],

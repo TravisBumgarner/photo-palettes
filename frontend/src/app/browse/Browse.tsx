@@ -1,6 +1,6 @@
 'use client'
 
-import { Box, Grid } from '@mui/material'
+import { Box } from '@mui/material'
 import { useQuery } from '@tanstack/react-query'
 import { useEffect } from 'react'
 import { getPalettes } from '../../api/palettes/getListModerated'
@@ -35,13 +35,20 @@ const Browse = () => {
 
   return (
     <Box sx={{ margin: '20px 0' }}>
-      <Grid container spacing={3}>
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: 'row',
+          flexWrap: 'wrap',
+          gap: '20px',
+        }}
+      >
         {data?.palettes.map(palette => (
           <Link href={`/palette/${palette.id}`} key={palette.id} hideUnderline>
             <PaletteThumbnail palette={palette} />
           </Link>
         ))}
-      </Grid>
+      </Box>
     </Box>
   )
 }

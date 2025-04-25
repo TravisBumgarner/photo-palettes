@@ -41,16 +41,18 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <GoogleAnalytics gaId="G-ZC6BZFH3W8" />
       </head>
       <body>
-        <AppRouterCacheProvider>
-          <AppThemeProvider>
-            <LoadUserIntoStore />
-            <AlertsManager />
-            <Navigation />
-            <QueryProvider>{children}</QueryProvider>
-            <RenderModal />
-            <Footer />
-          </AppThemeProvider>
-        </AppRouterCacheProvider>
+        <div id="root">
+          <AppRouterCacheProvider>
+            <AppThemeProvider>
+              <LoadUserIntoStore />
+              <AlertsManager />
+              <Navigation />
+              <QueryProvider>{children}</QueryProvider>
+              <RenderModal />
+              <Footer />
+            </AppThemeProvider>
+          </AppRouterCacheProvider>
+        </div>
       </body>
     </html>
   )

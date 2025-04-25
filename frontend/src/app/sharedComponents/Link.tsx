@@ -19,7 +19,7 @@ const Link = ({
     <NextLink
       target={target}
       style={{
-        color: isDarkTheme ? PALETTE.secondary[400] : PALETTE.secondary[800],
+        color: isDarkTheme ? PALETTE.grayscale[400] : PALETTE.grayscale[800],
         textDecoration: hideUnderline ? 'none' : 'underline',
       }}
       href={href}
