@@ -3,18 +3,5 @@
     "**/.next": true
   },
   "editor.formatOnSave": true,
-  "editor.defaultFormatter": "esbenp.prettier-vscode",
-  "ruff.enable": true,
-  "ruff.organizeImports": true,
-  "ruff.fixAll": true,
-  "mypy.dmypyExecutable": "./backend/.venv-backend/bin/dmypy",
-  "[python]": {
-    "editor.defaultFormatter": "charliermarsh.ruff",
-    "editor.formatOnSave": true,
-    "editor.codeActionsOnSave": {
-      "source.fixAll": "always",
-      "source.organizeImports": "always"
-    }
-  },
-  "python.analysis.typeCheckingMode": "basic"
+  "editor.defaultFormatter": "esbenp.prettier-vscode"
 }

@@ -8,7 +8,6 @@ import AlertsManager from './components/AlertsManager'
 import Footer from './components/Footer'
 import { LoadUserIntoStore } from './components/LoadUserIntoState'
 import Navigation from './components/Navigation'
-import './global.css'
 import RenderModal from './sharedComponents/Modal'
 
 const satoshi = localFont({

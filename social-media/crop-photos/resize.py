@@ -40,7 +40,7 @@ def process_images():
         shutil.rmtree(outdir)
     os.makedirs(outdir)
     if not os.path.exists(indir):
-
+        print(f"Input directory '{indir}' does not exist.")
         return
     for fname in os.listdir(indir):
         base, ext = os.path.splitext(fname)

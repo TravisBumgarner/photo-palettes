@@ -14,16 +14,6 @@ No idea if this was actually the solution. Made some other improvements to docke
 make nuke-docker
 ```
 
-{/_ ProtonPass appears to be injecting stuff that's causing issues with this form. Suppress those warnings. _/}
 
+{/* ProtonPass appears to be injecting stuff that's causing issues with this form. Suppress those warnings. */}
 <form suppressHydrationWarning>
-
-Every time I install a new package with Docker and React I get Module not found: Can't resolve 'react-dropzone'
-docker compose exec frontend sh
-npm install react-dropzone
-
-Every time I install a new package with Docker and React I get Module not found: Can't resolve 'react-dropzone'
-docker compose exec frontend sh
-npm install react-dropzone
-
-HOT RELOADING BACKEND - WatchFiles doesn't see all new files in backend.
