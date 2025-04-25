@@ -3,7 +3,7 @@ import os
 import pytest
 import requests
 
-from .utils import get_auth_headers
+from .utils import get_user_auth_headers
 
 BASE_URL = "http://localhost:8000"
 
@@ -38,7 +38,7 @@ def test_me_unauthorized():
 
 
 def test_me_authorized():
-    response = requests.get(f"{BASE_URL}/users/me", headers=get_auth_headers())
+    response = requests.get(f"{BASE_URL}/users/me", headers=get_user_auth_headers())
     assert response.status_code == 200
     assert "permission_level" in response.json()
     assert "display_name" in response.json()
@@ -59,7 +59,7 @@ def test_generate_palette_file_too_large():
             response = requests.post(
                 f"{BASE_URL}/generate-palette",
                 files=files,
-                headers=get_auth_headers(),
+                headers=get_user_auth_headers(),
                 data={"extension": extension},
             )
 
