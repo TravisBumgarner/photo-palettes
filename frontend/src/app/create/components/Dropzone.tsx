@@ -1,5 +1,6 @@
 import { useDropzone } from 'react-dropzone'
 
+import { PALETTE } from '../../../styles/Theme'
 import { HEIGHT, WIDTH } from '../consts'
 
 const Dropzone = ({ onDrop }: { onDrop: (acceptedFiles: File[]) => void }) => {
@@ -20,7 +21,7 @@ const Dropzone = ({ onDrop }: { onDrop: (acceptedFiles: File[]) => void }) => {
       style={{
         width: `${WIDTH}px`,
         height: `${HEIGHT}px`,
-        border: '1px dashed green',
+        border: `1px dashed ${PALETTE.primary[500]}`,
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',

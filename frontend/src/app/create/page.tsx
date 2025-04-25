@@ -113,7 +113,6 @@ const Create = () => {
 
   return (
     <div>
-      <h1>Create</h1>
       <Box
         sx={{
           margin: '0 auto',
@@ -131,19 +130,34 @@ const Create = () => {
           <ErrorMessage error="Error generating palette" callback={handleTryAgain} />
         )}
         {uploadStatus === UploadStatus.UPLOADED && (
-          <Box>
+          <Box sx={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
             <CanvasAndPalette
               palette={palette}
               handlePaletteChange={handlePaletteChange}
               photo={photo}
             />
-            <TextField label="Title" value={name} onChange={handleNameChange} />
-            <Button variant="contained" onClick={handleClearPalette}>
-              Clear Palette
-            </Button>
-            <Button disabled={!name} variant="contained" onClick={handleSavePalette}>
-              Save Palette
-            </Button>
+            <TextField
+              variant="outlined"
+              fullWidth
+              label="Title"
+              value={name}
+              onChange={handleNameChange}
+            />
+            <Box
+              sx={{
+                display: 'flex',
+                flexDirection: 'row',
+                gap: '10px',
+                justifyContent: 'flex-end',
+              }}
+            >
+              <Button variant="outlined" onClick={handleClearPalette}>
+                Clear Palette
+              </Button>
+              <Button disabled={!name} variant="contained" onClick={handleSavePalette}>
+                Save Palette
+              </Button>
+            </Box>
           </Box>
         )}
       </Box>

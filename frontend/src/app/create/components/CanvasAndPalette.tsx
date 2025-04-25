@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { TPalette } from '../../../types'
+import { getContrastColor } from '../../../utils'
 import { HEIGHT, WIDTH } from '../consts'
 import DraggableSwatch from './DraggableSwatch'
 
@@ -28,8 +29,8 @@ const ReadonlySwatch = ({
     <div
       key={swatch.color}
       style={{
-        width: '75px',
-        height: '25px',
+        flexGrow: 1,
+        height: '50px',
         backgroundColor: swatch.color,
         display: 'flex',
         justifyContent: 'center',
@@ -39,7 +40,9 @@ const ReadonlySwatch = ({
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
-      <span style={{ color: 'white' }}>{swatch.color}</span>
+      <span style={{ color: getContrastColor(swatch.color), fontSize: '20px' }}>
+        {swatch.color}
+      </span>
     </div>
   )
 }
@@ -74,8 +77,11 @@ const CanvasAndPalette = ({
     const rect = canvas.getBoundingClientRect()
     const scaleX = canvas.width / rect.width
     const scaleY = canvas.height / rect.height
-    const pixelX = x * scaleX
-    const pixelY = y * scaleY
+
+    // Clamp to canvas dimensions
+    const pixelX = Math.max(0, Math.min(canvas.width - 1, x * scaleX))
+    const pixelY = Math.max(0, Math.min(canvas.height - 1, y * scaleY))
+
     const pixel = ctx.getImageData(pixelX, pixelY, 1, 1).data
     return `#${pixel[0].toString(16).padStart(2, '0')}${pixel[1].toString(16).padStart(2, '0')}${pixel[2].toString(16).padStart(2, '0')}`
   }, [])
@@ -88,10 +94,15 @@ const CanvasAndPalette = ({
       if (!container) return
 
       const rect = container.getBoundingClientRect()
-      const x = ((e.clientX - rect.left) / rect.width) * 100
-      const y = ((e.clientY - rect.top) / rect.height) * 100
 
-      const newColor = sampleColorAtPosition(e.clientX - rect.left, e.clientY - rect.top)
+      // Clamp coordinates to container bounds
+      const x = Math.max(0, Math.min(100, ((e.clientX - rect.left) / rect.width) * 100))
+      const y = Math.max(0, Math.min(100, ((e.clientY - rect.top) / rect.height) * 100))
+
+      const newColor = sampleColorAtPosition(
+        Math.max(0, Math.min(rect.width, e.clientX - rect.left)),
+        Math.max(0, Math.min(rect.height, e.clientY - rect.top))
+      )
       if (!newColor) return
 
       const newPalette = [...palette]
@@ -195,11 +206,11 @@ const CanvasAndPalette = ({
         />
         {palette.map((swatch, index) => (
           <DraggableSwatch
-            key={swatch.color}
+            isHovered={hoveringIndex === index}
+            key={`${swatch.color}-${index}`}
             swatch={swatch}
             index={index}
             handleSetDraggingIndex={handleSetDraggingIndex}
-            isHovered={hoveringIndex === index}
           />
         ))}
       </div>
@@ -207,7 +218,7 @@ const CanvasAndPalette = ({
         <div style={{ display: 'flex', flexDirection: 'row' }}>
           {palette.map((swatch, index) => (
             <ReadonlySwatch
-              key={swatch.color}
+              key={`${swatch.color}-${index}`}
               swatch={swatch}
               index={index}
               handleMouseEnterCallback={handleMouseEnter}

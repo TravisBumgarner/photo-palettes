@@ -1,7 +1,9 @@
-import { Box } from '@mui/material'
+import { Box, IconButton } from '@mui/material'
 import MUIModal from '@mui/material/Modal'
 import { useCallback, type FC } from 'react'
+import { IoMdClose } from 'react-icons/io'
 import useGlobalStore from '../../../../store'
+import { PALETTE } from '../../../../styles/Theme'
 
 interface ActiveModal {
   children: React.ReactNode | React.ReactNode[]
@@ -11,9 +13,13 @@ interface ActiveModal {
 const Modal: FC<ActiveModal> = ({ children, hideCloseButton = false }) => {
   const { activeModal, setActiveModal } = useGlobalStore()
 
-  const handleClose = useCallback(() => {
-    setActiveModal(null)
-  }, [setActiveModal])
+  const handleClose = useCallback(
+    (_event: unknown, reason?: string) => {
+      if (reason === 'backdropClick') return
+      setActiveModal(null)
+    },
+    [setActiveModal]
+  )
 
   return (
     <MUIModal
@@ -22,11 +28,12 @@ const Modal: FC<ActiveModal> = ({ children, hideCloseButton = false }) => {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        backgroundColor: 'var(--foreground)',
+        backgroundColor: `${PALETTE.grayscale[500]}`,
       }}
       open={activeModal !== null}
       onClose={handleClose}
       disableRestoreFocus={true}
+      disableEscapeKeyDown={true}
     >
       <Box
         sx={{
@@ -34,14 +41,16 @@ const Modal: FC<ActiveModal> = ({ children, hideCloseButton = false }) => {
           maxWidth: '90%',
           display: 'flex',
           flexDirection: 'column',
-          backgroundColor: 'white',
+          backgroundColor: PALETTE.grayscale[900],
           padding: '20px',
           borderRadius: '10px',
         }}
       >
         {!hideCloseButton && (
           <Box sx={{ display: 'flex', justifyContent: 'flex-end', paddingBottom: '20px' }}>
-            <button onClick={handleClose}>&times;</button>
+            <IconButton component="button" onClick={handleClose}>
+              <IoMdClose size={24} />
+            </IconButton>
           </Box>
         )}
         {children}
