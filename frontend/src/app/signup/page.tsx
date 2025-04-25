@@ -29,7 +29,7 @@ export default function SignupPage() {
   )
   const router = useRouter()
   const setIsAppAuthenticating = useGlobalStore(state => state.setIsAppAuthenticating)
-
+  const addAlert = useGlobalStore(state => state.addAlert)
   const handlePasswordChange = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
       const newPassword = e.target.value
@@ -74,7 +74,7 @@ export default function SignupPage() {
         const response = await signup(formData)
         if (response.success) {
           setIsAppAuthenticating(true)
-          alert('Check your email for a confirmation.')
+          addAlert('Check your email for a confirmation.')
           router.push('/')
         } else {
           setError(response.error)
@@ -83,7 +83,7 @@ export default function SignupPage() {
         setError(err instanceof Error ? err.message : 'An error occurred during signup')
       }
     },
-    [email, password, repeatPassword, invitationKey, router, setIsAppAuthenticating]
+    [email, password, repeatPassword, invitationKey, router, setIsAppAuthenticating, addAlert]
   )
 
   const handleInvitationKeyChange = useCallback(

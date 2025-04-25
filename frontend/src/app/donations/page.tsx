@@ -1,5 +1,6 @@
 import { Typography } from '@mui/material'
 import StaticContentWrapper from '../../styles/Shared'
+import { PALETTE } from '../../styles/Theme'
 interface TableProps {
   items: Array<{
     item: string
@@ -10,7 +11,11 @@ interface TableProps {
 const Table: React.FC<TableProps> = ({ items }) => {
   return (
     <table
-      style={{ border: '1px solid var(--foreground)', padding: '10px', color: 'var(--foreground)' }}
+      style={{
+        border: `1px solid ${PALETTE.grayscale[900]}`,
+        padding: '10px',
+        color: PALETTE.grayscale[900],
+      }}
     >
       <thead>
         <tr>

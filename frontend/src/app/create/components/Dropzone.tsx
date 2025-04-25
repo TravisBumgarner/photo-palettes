@@ -1,9 +1,12 @@
 import { useDropzone } from 'react-dropzone'
 
+import useGlobalStore from '../../../store'
 import { PALETTE } from '../../../styles/Theme'
 import { HEIGHT, WIDTH } from '../consts'
 
 const Dropzone = ({ onDrop }: { onDrop: (acceptedFiles: File[]) => void }) => {
+  const addAlert = useGlobalStore(state => state.addAlert)
+
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
     maxFiles: 1,
@@ -12,7 +15,7 @@ const Dropzone = ({ onDrop }: { onDrop: (acceptedFiles: File[]) => void }) => {
       'image/*': ['.png', '.jpg', '.jpeg'],
     },
     onDropRejected: fileRejections => {
-      alert(fileRejections)
+      addAlert(fileRejections.map(rejection => rejection.errors[0].message).join(', '))
     },
   })
 
