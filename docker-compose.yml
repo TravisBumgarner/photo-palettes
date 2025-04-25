@@ -24,7 +24,6 @@ services:
       - "3000:3000"
     volumes:
       - ./frontend:/app
-      - node_modules:/app/node_modules
 
     environment:
       - NEXT_PUBLIC_ENVIRONMENT=development
@@ -47,6 +46,3 @@ services:
       interval: 5s
       timeout: 5s
       retries: 5
-
-volumes:
-  node_modules:

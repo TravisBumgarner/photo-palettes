@@ -7,4 +7,3 @@ npm-debug.log*
 README.md
 .dockerignore
 Dockerfile 
-package-lock.json

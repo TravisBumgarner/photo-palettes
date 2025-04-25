@@ -26,26 +26,23 @@ const PaletteThumbnail = ({ palette }: { palette: TPaletteAndColors }) => {
           objectPosition: 'center',
         }}
       />
-      {palette.name && (
-        <Typography variant="h6" sx={{ mb: 1 }}>
-          {palette.name}
-        </Typography>
-      )}
+
       {palette.colors.length > 0 && (
-        <Box sx={{ display: 'flex', gap: 1 }}>
+        <Box sx={{ display: 'flex' }}>
           {palette.colors.map(color => (
             <Box
               key={color.id}
               sx={{
-                width: 30,
+                flexGrow: 1,
                 height: 30,
                 backgroundColor: color.hex,
-                borderRadius: '50%',
               }}
             />
           ))}
         </Box>
       )}
+
+      {palette.name && <Typography variant="h6">{palette.name}</Typography>}
     </Box>
   )
 }

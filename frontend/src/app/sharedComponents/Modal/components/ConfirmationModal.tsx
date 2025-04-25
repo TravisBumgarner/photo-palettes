@@ -37,7 +37,7 @@ const ConfirmationModal = ({
   }, [confirmationCallback, setActiveModal])
 
   return (
-    <DefaultModal>
+    <DefaultModal hideCloseButton>
       <Box sx={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
         <Typography variant="h6">{title}</Typography>
         <Typography variant="body1">{body}</Typography>
