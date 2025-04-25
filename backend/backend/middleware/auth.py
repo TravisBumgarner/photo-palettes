@@ -7,7 +7,7 @@ from supabase import Client
 from backend.config import get_config
 from backend.database.models import PermissionLevel
 from backend.database.queries.users import get_or_create_app_user
-from backend.utils.logger import log_error
+from backend.services.logger import log_error
 
 config = get_config()
 

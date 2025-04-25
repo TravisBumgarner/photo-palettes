@@ -42,6 +42,7 @@ const Modal: FC<ActiveModal> = ({ children, hideCloseButton = false }) => {
           display: 'flex',
           flexDirection: 'column',
           backgroundColor: PALETTE.grayscale[900],
+          color: PALETTE.grayscale[50],
           padding: '20px',
           borderRadius: '10px',
         }}

@@ -29,6 +29,6 @@ export type TPaletteColor = {
 export type TPaletteAndColors = {
   id: string
   name: string
-  image_url: string
+  photo_url: string
   colors: TPaletteColor[]
 }

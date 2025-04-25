@@ -4,13 +4,16 @@ import uuid
 from fastapi import Form, UploadFile
 
 from backend.algorithms.kmeans import get_image_colors
+from backend.config import get_config
 from backend.database.models import Palette
 from backend.database.queries.palettes import create_palette
 from backend.middleware.auth import RequestWithAuthState
-from backend.utils.logger import log_error
+from backend.services.logger import log_error
 from backend.utils.photos import save_photo
 
 from . import palettes_router
+
+config = get_config()
 
 
 def validate_request(photo: UploadFile):
@@ -42,17 +45,17 @@ async def generate(
         colors = get_image_colors(photo_bytes)
 
         id = str(uuid.uuid4())
-        filename = f"{id}.{extension}"
+
+        photo_details = save_photo(photo_content, id, extension)
+
         palette = Palette(
             id=id,
             name="",
             app_user_id=request.state.app_user_id,
-            image_url=filename,
+            photo_details=photo_details,
         )
 
         create_palette(palette)
-
-        save_photo(photo_content, filename)
 
         return {
             "success": True,
