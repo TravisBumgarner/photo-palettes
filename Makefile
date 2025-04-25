@@ -22,12 +22,7 @@ setup:
 	@cd frontend && npm install
 	@echo "Local setup complete!"
 	@ cd ..
-	@docker compose up --build
-	@echo "  make up-detached  - Start all services in detached mode, logs launched as separate process"
-	@echo "  make deploy-all   - Deploy all services"
-	@echo "  make deploy-backend - Deploy backend"
-	@echo "  make deploy-frontend - Deploy frontend"
-	@echo "  make nuke-docker - Remove all docker containers, volumes, and images"
+	@docker compose up --build --watch
 
 bootstrap:
 	@chmod +x scripts/bootstrap.sh
@@ -35,15 +30,10 @@ bootstrap:
 
 up:
 	@echo "Starting services..."
-	@docker compose up --build
+	@docker compose up --build --watch
 
 down:
 	@docker compose down
-	
-up-detached:
-	@echo "Starting services..."
-	@docker compose up --build -d
-	@docker compose logs -f
 
 deploy-all:
 	@echo "Deploying all services..."
