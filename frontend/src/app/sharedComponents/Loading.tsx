@@ -17,7 +17,7 @@ const Loading = () => {
           }}
           transition={{
             rotate: {
-              duration: 0.5,
+              duration: 4,
               ease: 'linear',
               repeat: Infinity,
             },

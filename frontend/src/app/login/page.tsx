@@ -7,7 +7,6 @@ import { z } from 'zod'
 import { MINIMUM_PASSWORD_LENGTH } from '../../consts'
 import { login } from '../../services/supabase/actions'
 import useGlobalStore from '../../store'
-
 const LoginSchema = z.object({
   email: z.string().email(),
   password: z.string().min(MINIMUM_PASSWORD_LENGTH),
@@ -56,7 +55,7 @@ export default function LoginPage() {
     >
       <form
         onSubmit={handleSubmit}
-        style={{ display: 'flex', flexDirection: 'column', gap: '10px', width: '400px' }}
+        style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}
       >
         {error && <p style={{ color: 'red' }}>{error}</p>}
         <TextField
@@ -66,8 +65,6 @@ export default function LoginPage() {
           required
           placeholder="Enter email"
           label="Email"
-          autoComplete="email"
-          fullWidth
         />
         <TextField
           id="password"
@@ -75,11 +72,8 @@ export default function LoginPage() {
           type="password"
           required
           placeholder="Enter password"
-          label="Password"
-          autoComplete="current-password"
-          fullWidth
         />
-        <Button variant="contained" type="submit" fullWidth>
+        <Button variant="contained" type="submit">
           Log in
         </Button>
       </form>

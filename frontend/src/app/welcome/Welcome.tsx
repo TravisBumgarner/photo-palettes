@@ -29,13 +29,13 @@ const Inspired = () => {
 }
 
 const Welcome = () => {
-  const appUserDetails = useGlobalStore(state => state.appUserDetails)
+  const user = useGlobalStore(state => state.user)
 
   return (
     <StaticContentWrapper>
       <Box>
         <Typography variant="h1">
-          Welcome {appUserDetails ? appUserDetails.displayName : 'to Photo Palettes!'}
+          Welcome {user?.email ? user?.email : 'to Photo Palettes!'}
         </Typography>
         <Typography variant="body1">
           A social platform for generating color palettes from photos.

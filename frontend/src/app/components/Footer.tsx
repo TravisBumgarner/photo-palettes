@@ -1,7 +1,7 @@
 'use client'
 
 import { Box } from '@mui/material'
-import Link from '../sharedComponents/Link'
+import Link from 'next/link'
 
 const Footer = () => {
   return (
@@ -10,29 +10,15 @@ const Footer = () => {
         display: 'flex',
         flexDirection: 'row',
         justifyContent: 'space-between',
-        margin: `20px 0`,
+        margin: `20px 20px`,
       }}
     >
+      <Box></Box>
       <Box
         sx={{
           display: 'flex',
           flexDirection: 'row',
-          gap: '20px',
-        }}
-      >
-        <Link target="_blank" href="https://discord.com/invite/J8jwMxEEff">
-          Discord
-        </Link>
-        <Link target="_blank" href="https://bsky.app/profile/sillysideprojects.bsky.social">
-          Bluesky
-        </Link>
-        <Link href="/donations">Donate</Link>
-      </Box>
-      <Box
-        sx={{
-          display: 'flex',
-          flexDirection: 'row',
-          gap: '20px',
+          gap: '14px',
         }}
       >
         <Link href="/privacy">Privacy Policy</Link>
