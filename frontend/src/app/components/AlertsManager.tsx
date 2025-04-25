@@ -20,10 +20,10 @@ const Alert = ({
     <div
       key={id}
       style={{
-        border: `2px solid ${PALETTE.secondary[500]}`,
+        border: `2px solid ${PALETTE.secondary[900]}`,
         textAlign: 'center',
         color: PALETTE.grayscale[900],
-        backgroundColor: PALETTE.grayscale[50],
+        backgroundColor: PALETTE.secondary[400],
         padding: '16px 16px 16px 8px',
         borderRadius: 8,
         position: 'relative',
