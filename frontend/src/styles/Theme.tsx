@@ -50,13 +50,22 @@ const baseThemeOptions: ThemeOptions = {
     body1: {
       fontSize: '24px',
     },
+    h1: {
+      fontSize: '48px',
+    },
+    h2: {
+      fontSize: '36px',
+    },
+    h3: {
+      fontSize: '24px',
+    },
   },
 }
 
 // Light theme
 const lightTheme = createTheme({
   ...baseThemeOptions,
-  palette: {
+palette: {
     mode: 'light',
     background: {
       default: PALETTE.grayscale[50],

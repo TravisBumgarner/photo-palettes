@@ -32,6 +32,10 @@ up:
 	@echo "Starting services..."
 	@docker compose up --build --watch
 
+up-clear-cache:
+	@docker compose build --no-cache
+	@docker compose up --watch
+
 down:
 	@docker compose down
 

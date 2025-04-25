@@ -38,7 +38,6 @@ const PalettePage = () => {
         <InfoMessage info="This palette is pending approval." />
       )}
       <Box sx={{ maxWidth: '1000px' }}>
-        <h1>{data.palette.name}</h1>
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           style={{ maxWidth: '100%', maxHeight: '900px' }}
@@ -64,6 +63,7 @@ const PalettePage = () => {
             </Box>
           ))}
         </div>
+        <Typography variant="h1">{data.palette.name}</Typography>
       </Box>
     </Box>
   )
