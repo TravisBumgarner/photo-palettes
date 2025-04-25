@@ -2,16 +2,8 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 
-def setup_cors(app: FastAPI, environment: str):
-    if environment == "development":
-        app.add_middleware(
-            CORSMiddleware,
-            allow_origins=["*"],
-            allow_credentials=True,
-            allow_methods=["*"],
-            allow_headers=["*"],
-        )
-    elif environment == "production":
+def setup_cors(app: FastAPI, is_production: bool):
+    if is_production:
         app.add_middleware(
             CORSMiddleware,
             allow_origins=[
@@ -23,4 +15,10 @@ def setup_cors(app: FastAPI, environment: str):
             allow_headers=["*"],
         )
     else:
-        raise ValueError("Invalid environment - " + environment)
+        app.add_middleware(
+            CORSMiddleware,
+            allow_origins=["*"],
+            allow_credentials=True,
+            allow_methods=["*"],
+            allow_headers=["*"],
+        )

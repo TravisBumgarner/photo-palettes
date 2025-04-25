@@ -5,7 +5,12 @@
 set -e
 
 echo "Checking frontend..."
+cd frontend
+
 echo "Linting..."
-cd frontend && npm run lint
+npm run lint
+
+echo "Type checking..."
+npm run typecheck
 
 

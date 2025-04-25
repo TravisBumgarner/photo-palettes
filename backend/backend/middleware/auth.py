@@ -1,32 +1,52 @@
-import logging
+import uuid
 
 from fastapi import Request
 from fastapi.responses import JSONResponse
 from supabase import Client
 
-logging.basicConfig(level=logging.DEBUG)
-logger = logging.getLogger(__name__)
+from backend.config import get_config
+from backend.database.models import PermissionLevel
+from backend.database.queries.users import get_or_create_app_user
+from backend.utils.logger import log_error
+
+config = get_config()
 
 # Added from main.py
-public_routes = {"/"}
+public_routes = {"/", "/alpha/signup"}
+
+
+if not config.is_production:
+    public_routes.add("/docs")
+    public_routes.add("/openapi.json")
+
+
+class AuthState:
+    auth_id: uuid.UUID
+    app_user_id: uuid.UUID
+    permission_level: PermissionLevel
+
+
+class RequestWithAuthState(Request):
+    state: AuthState
 
 
 def create_auth_middleware(supabase: Client):
-    async def add_authentication(request: Request, call_next):
+    async def add_authentication(request: RequestWithAuthState, call_next):
+        is_whitelisted = request.url.path in public_routes
+        is_public_media = request.url.path.startswith("/uploads/")
 
-        if request.url.path in public_routes:
+        if is_whitelisted or is_public_media:
             return await call_next(request)
 
         if request.method == "OPTIONS":
             return await call_next(request)
 
         auth_header = request.headers.get("authorization", "")
-        logger.debug(f"Auth header: {auth_header}")
 
         token = auth_header.replace("Bearer ", "")
-        logger.debug(f"Token: {token}")
 
         if not token:
+            log_error(Exception("No token provided"))
             return JSONResponse(
                 status_code=401,
                 content={"error": "Unauthorized", "message": "No token provided"},
@@ -34,13 +54,31 @@ def create_auth_middleware(supabase: Client):
 
         try:
             auth = supabase.auth.get_user(token)
-            request.state.user = auth.user
-            request.state.user_id = auth.user.id
             supabase.postgrest.auth(token)
-            logger.debug(f"Auth successful for user: {auth.user.email}")
+
+            auth_user = getattr(auth, "user", None)
+            if not auth_user or not getattr(auth_user, "email", None):
+                log_error(Exception("User email is missing"))
+                return JSONResponse(
+                    status_code=401,
+                    content={
+                        "error": "Unauthorized",
+                        "message": "User email is missing",
+                    },
+                )
+
+            app_user = get_or_create_app_user(
+                auth_id=uuid.UUID(auth_user.id),
+                email=auth_user.email,
+                display_name="foobar",
+            )
+
+            request.state.auth_id = uuid.UUID(auth_user.id)
+            request.state.app_user_id = app_user.id
+            request.state.permission_level = app_user.permission_level
 
         except Exception as e:
-            logger.error(f"Auth error: {str(e)}")
+            log_error(e)
             return JSONResponse(
                 status_code=401,
                 content={

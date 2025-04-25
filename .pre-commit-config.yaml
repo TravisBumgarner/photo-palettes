@@ -7,10 +7,11 @@ repos:
         language: script
         pass_filenames: false
         files: ^backend/
-
+        verbose: true
       - id: check-frontend
         name: Check Frontend
         entry: ./scripts/check-frontend.sh
         language: script
         pass_filenames: false
         files: ^frontend/
+        verbose: true

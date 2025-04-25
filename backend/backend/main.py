@@ -1,17 +1,16 @@
+import os
 from contextlib import asynccontextmanager
 
 import sentry_sdk
-from fastapi import Depends, FastAPI, Form, Request
-from pydantic import BaseModel, EmailStr
-from sqlalchemy import select
-from sqlalchemy.orm import Session
+from fastapi import FastAPI
+from fastapi.staticfiles import StaticFiles
 from supabase import Client, create_client
 
 from backend.config import get_config
 from backend.database import engine, models
-from backend.database.deps import get_db
 from backend.middleware import create_auth_middleware, setup_cors
-from backend.middleware.auth import public_routes
+from backend.middleware.filesize import LimitUploadSizeMiddleware
+from backend.routes import alpha, ok, palettes, users
 
 config = get_config()
 
@@ -28,35 +27,26 @@ sentry_sdk.init(
 
 
 # Setup middleware
+MAX_UPLOAD_SIZE = 10 * 1024 * 1024  # 10 MB
+app.add_middleware(LimitUploadSizeMiddleware, max_upload_size=MAX_UPLOAD_SIZE)
 app.middleware("http")(create_auth_middleware(supabase))
-setup_cors(app, config.environment)
+setup_cors(app, config.is_production)
+
+# Mount the uploads directory for static file serving
+uploads_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), "uploads")
+os.makedirs(uploads_dir, exist_ok=True)
+app.mount("/uploads", StaticFiles(directory=uploads_dir), name="uploads")
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     # Run startup logic here
-    async with engine.begin() as conn:
-        await conn.run_sync(models.Base.metadata.create_all)
+    models.Base.metadata.create_all(bind=engine)
     yield
     # Run shutdown logic here if needed
 
 
-@app.get("/")
-def read_root():
-    return {"message": "Hello, World!"}
-
-
-ALPHA_SIGNUP_ROUTE = "/alpha-signup"
-public_routes.add(ALPHA_SIGNUP_ROUTE)
-
-
-class AlphaSignupRequest(BaseModel):
-    email: EmailStr
-
-
-@app.post(ALPHA_SIGNUP_ROUTE)
-def alpha_signup(request: AlphaSignupRequest):
-    db = next(get_db())
-    db.add(models.AlphaSignup(email=request.email))
-    db.commit()
-    return {"message": "Alpha signup successful"}
+app.include_router(ok.router)
+app.include_router(alpha.alpha_router, prefix="/alpha")
+app.include_router(users.users_router, prefix="/users")
+app.include_router(palettes.palettes_router, prefix="/palettes")

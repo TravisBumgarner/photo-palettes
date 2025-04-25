@@ -5,11 +5,24 @@ help:
 	@echo "Available commands:"
 	@echo "  make bootstrap    - Set up the project with Docker"
 	@echo "  make up           - Start all services"
-	@echo "  make up-detached  - Start all services in detached mode, logs launched as separate process"
+	@echo "  make down         - Stop all services"
 	@echo "  make deploy-all   - Deploy all services"
 	@echo "  make deploy-backend - Deploy backend"
 	@echo "  make deploy-frontend - Deploy frontend"
-	@echo "  make nuke-docker - Remove all docker containers, volumes, and images"
+	
+setup:
+	@echo "Setting up project locally..."
+	@if [ ! -d ".venv" ]; then \
+		echo "Creating virtual environment..."; \
+		python -m venv .venv; \
+	fi
+	@echo "Installing backend dependencies..."
+	@. .venv/bin/activate && cd backend && pip install -r requirements.txt
+	@echo "Installing frontend dependencies..."
+	@cd frontend && npm install
+	@echo "Local setup complete!"
+	@ cd ..
+	@docker compose up --build --watch
 
 bootstrap:
 	@chmod +x scripts/bootstrap.sh
@@ -17,12 +30,14 @@ bootstrap:
 
 up:
 	@echo "Starting services..."
-	@docker compose up --build
+	@docker compose up --build --watch
 
-up-detached:
-	@echo "Starting services..."
-	@docker compose up --build -d
-	@docker compose logs -f
+up-clear-cache:
+	@docker compose build --no-cache
+	@docker compose up --watch
+
+down:
+	@docker compose down
 
 deploy-all:
 	@echo "Deploying all services..."

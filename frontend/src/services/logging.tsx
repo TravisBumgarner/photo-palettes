@@ -7,11 +7,11 @@ export const logger = {
     console.log(message)
   },
   error: (...args: (string | Error | unknown)[]) => {
-    if (config.environment === 'development') {
+    if (config.is_production) {
+      Sentry.captureException(JSON.stringify(args))
+    } else {
       // eslint-disable-next-line no-console
       console.error(args.map(arg => JSON.stringify(arg)).join(' '))
-    } else {
-      Sentry.captureException(JSON.stringify(args))
     }
   },
 }

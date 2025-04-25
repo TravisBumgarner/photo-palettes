@@ -2,15 +2,17 @@
 
 import { Box } from '@mui/material'
 import { useEffect } from 'react'
+import { getMe } from '../../api/getMe'
 import { createClient } from '../../services/supabase/client'
 import useGlobalStore from '../../store'
 import Loading from '../sharedComponents/Loading'
 
 export function LoadUserIntoStore() {
   const supabase = createClient()
-  const setUser = useGlobalStore(state => state.setUser)
+  const setAuthId = useGlobalStore(state => state.setAuthId)
   const isAppAuthenticating = useGlobalStore(state => state.isAppAuthenticating)
   const setIsAppAuthenticating = useGlobalStore(state => state.setIsAppAuthenticating)
+  const setAppUserDetails = useGlobalStore(state => state.setAppUserDetails)
 
   useEffect(() => {
     if (!isAppAuthenticating) {
@@ -21,12 +23,19 @@ export function LoadUserIntoStore() {
       const {
         data: { user },
       } = await supabase.auth.getUser()
-      setUser(user)
+      setAuthId(user?.id ?? null)
+
+      const userDetails = await getMe()
+
+      if (userDetails.success) {
+        setAppUserDetails(userDetails)
+      }
+
       setIsAppAuthenticating(false)
     }
 
     loadUser()
-  }, [setUser, supabase, setIsAppAuthenticating, isAppAuthenticating])
+  }, [setAuthId, supabase, setIsAppAuthenticating, isAppAuthenticating, setAppUserDetails])
 
   return isAppAuthenticating ? (
     <Box
@@ -36,7 +45,8 @@ export function LoadUserIntoStore() {
         top: 0,
         bottom: 0,
         position: 'fixed',
-        background: 'var(--background)',
+        backgroundColor: 'white',
+        zIndex: 1000,
       }}
     >
       <Loading />

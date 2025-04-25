@@ -4,9 +4,11 @@ import { Box, Button, TextField } from '@mui/material'
 import { useRouter } from 'next/navigation'
 import { ChangeEvent, useCallback, useState } from 'react'
 import { z } from 'zod'
+import config from '../../config'
 import { MINIMUM_PASSWORD_LENGTH } from '../../consts'
 import { signup } from '../../services/supabase/actions'
 import useGlobalStore from '../../store'
+
 const SignupSchema = z.object({
   email: z.string().email(),
   password: z.string().min(MINIMUM_PASSWORD_LENGTH),
@@ -22,7 +24,9 @@ export default function SignupPage() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [repeatPassword, setRepeatPassword] = useState('')
-  const [invitationKey, setInvitationKey] = useState('')
+  const [invitationKey, setInvitationKey] = useState(
+    config.is_production ? '' : SUPER_SECRET_INVITATION_KEY
+  )
   const router = useRouter()
   const setIsAppAuthenticating = useGlobalStore(state => state.setIsAppAuthenticating)
 
@@ -108,7 +112,7 @@ export default function SignupPage() {
     >
       <form
         onSubmit={handleSubmit}
-        style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}
+        style={{ display: 'flex', flexDirection: 'column', gap: '10px', width: '400px' }}
       >
         {error && <p style={{ color: 'red' }}>{error}</p>}
         <TextField
@@ -120,6 +124,8 @@ export default function SignupPage() {
           onChange={handleInvitationKeyChange}
           placeholder="Enter invitation key"
           label="Invitation Key"
+          fullWidth
+          autoComplete="off"
         />
         <TextField
           id="email"
@@ -130,6 +136,8 @@ export default function SignupPage() {
           onChange={handleEmailChange}
           placeholder="Enter email"
           label="Email"
+          fullWidth
+          autoComplete="email"
         />
         <TextField
           id="password"
@@ -140,6 +148,8 @@ export default function SignupPage() {
           onChange={handlePasswordChange}
           placeholder="Enter password"
           label="Password"
+          fullWidth
+          autoComplete="new-password"
         />
         <TextField
           id="repeatPassword"
@@ -150,11 +160,14 @@ export default function SignupPage() {
           onChange={handleRepeatPasswordChange}
           placeholder="Enter password again"
           label="Repeat Password"
+          fullWidth
+          autoComplete="new-password"
         />
         <Button
           variant="contained"
           disabled={!invitationKey || !password || !repeatPassword || !email}
           type="submit"
+          fullWidth
         >
           Sign up
         </Button>
