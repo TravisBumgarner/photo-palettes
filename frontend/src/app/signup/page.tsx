@@ -124,6 +124,7 @@ export default function SignupPage() {
           placeholder="Enter invitation key"
           label="Invitation Key"
           fullWidth
+          autoComplete="off"
         />
         <TextField
           id="email"
@@ -135,6 +136,7 @@ export default function SignupPage() {
           placeholder="Enter email"
           label="Email"
           fullWidth
+          autoComplete="email"
         />
         <TextField
           id="password"
@@ -146,6 +148,7 @@ export default function SignupPage() {
           placeholder="Enter password"
           label="Password"
           fullWidth
+          autoComplete="new-password"
         />
         <TextField
           id="repeatPassword"
@@ -157,6 +160,7 @@ export default function SignupPage() {
           placeholder="Enter password again"
           label="Repeat Password"
           fullWidth
+          autoComplete="new-password"
         />
         <Button
           variant="contained"

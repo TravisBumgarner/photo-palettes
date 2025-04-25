@@ -50,7 +50,8 @@ export function LoadUserIntoStore() {
         top: 0,
         bottom: 0,
         position: 'fixed',
-        background: 'var(--background)',
+        backgroundColor: 'white',
+        zIndex: 1000,
       }}
     >
       <Loading />

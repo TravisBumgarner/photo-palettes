@@ -65,6 +65,7 @@ export default function LoginPage() {
           required
           placeholder="Enter email"
           label="Email"
+          autoComplete="email"
           fullWidth
         />
         <TextField
@@ -73,6 +74,8 @@ export default function LoginPage() {
           type="password"
           required
           placeholder="Enter password"
+          label="Password"
+          autoComplete="current-password"
           fullWidth
         />
         <Button variant="contained" type="submit" fullWidth>

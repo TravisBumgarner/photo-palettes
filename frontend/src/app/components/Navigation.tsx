@@ -9,7 +9,7 @@ const AuthLinks = () => {
   const appUserDetails = useGlobalStore(state => state.appUserDetails)
 
   const routes = {
-    public: [{ key: 'home', href: '/', label: 'Home' }],
+    public: [] as { key: string; href: string; label: string }[],
     loggedOut: [
       { key: 'login', href: '/login', label: 'Login' },
       { key: 'signup', href: '/signup', label: 'Signup' },

@@ -6,6 +6,7 @@ import Link from 'next/link'
 import { getPalettes } from '../../api/getPalettes'
 import config from '../../config'
 import Loading from '../sharedComponents/Loading'
+
 const Browse = () => {
   const { data, isLoading, error } = useQuery({
     queryKey: ['palettes'],
