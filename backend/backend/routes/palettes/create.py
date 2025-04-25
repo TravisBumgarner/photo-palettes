@@ -35,9 +35,14 @@ async def create(
         palette = get_palette_by_id(uuid.UUID(palette_request.palette_id))
 
         if not palette:
-            raise HTTPException(status_code=400, detail="No palette found")
+            return {
+                "success": False,
+                "error": "No palette found",
+            }
 
-        validate_request(request, palette)
+        validation_error = validate_request(request, palette)
+        if validation_error:
+            return validation_error
 
         colors = []
         for hex_color in palette_request.hex_colors:

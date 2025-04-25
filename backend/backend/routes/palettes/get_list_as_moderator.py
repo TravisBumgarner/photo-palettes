@@ -20,11 +20,11 @@ def validate_request(request: RequestWithAuthState):
 
 @palettes_router.get("/moderator/{status}")
 def get_list_as_moderator(request: RequestWithAuthState, status: ModerationStatus):
-    try:
-        validation_error = validate_request(request)
-        if validation_error:
-            return validation_error
+    validation_error = validate_request(request)
+    if validation_error:
+        return validation_error
 
+    try:
         palettes = get_palettes_by_moderation_status(status)
 
         return {
