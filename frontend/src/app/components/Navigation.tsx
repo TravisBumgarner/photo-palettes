@@ -2,9 +2,11 @@
 
 import { GiHamburgerMenu } from 'react-icons/gi'
 
-import { Box, IconButton, Menu, MenuItem } from '@mui/material'
+import { Box, IconButton, Menu, MenuItem, Typography } from '@mui/material'
+import NextLink from 'next/link'
 import { useCallback, useState } from 'react'
 import useGlobalStore from '../../store'
+import { PALETTE } from '../../styles/Theme'
 import { EPermissionLevel } from '../../types'
 import Link from '../sharedComponents/Link'
 
@@ -49,6 +51,8 @@ const AuthLinks = ({ onClose }: { onClose: () => void }) => {
 }
 
 const Navigation = () => {
+  const appUserDetails = useGlobalStore(state => state.appUserDetails)
+
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
   const open = Boolean(anchorEl)
 
@@ -67,6 +71,7 @@ const Navigation = () => {
         flexDirection: 'row',
         justifyContent: 'space-between',
         margin: `10px 0`,
+        alignItems: 'center',
       }}
     >
       <Box
@@ -79,7 +84,28 @@ const Navigation = () => {
         <Link href="/">Photo Palettes</Link>
       </Box>
       <Box sx={{ display: 'flex', flexDirection: 'row', gap: '14px' }}>
-        <Link href="/create">Create</Link>
+        <Typography>Feedback:</Typography>
+        <Link target="_blank" href="https://discord.com/invite/J8jwMxEEff">
+          Discord
+        </Link>
+        <Link target="_blank" href="https://bsky.app/profile/sillysideprojects.bsky.social">
+          Bluesky
+        </Link>
+      </Box>
+      <Box sx={{ display: 'flex', flexDirection: 'row', gap: '14px' }}>
+        {appUserDetails && (
+          <NextLink
+            style={{
+              backgroundColor: PALETTE.secondary[400],
+              color: PALETTE.grayscale[900],
+              padding: '10px',
+              borderRadius: 10,
+            }}
+            href="/create"
+          >
+            Create
+          </NextLink>
+        )}
         <IconButton
           aria-label="menu"
           aria-controls={open ? 'navigation-menu' : undefined}
