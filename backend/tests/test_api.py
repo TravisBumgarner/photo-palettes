@@ -31,14 +31,14 @@ def test_root_endpoint():
 
 
 def test_me_unauthorized():
-    response = requests.get(f"{BASE_URL}/me")
+    response = requests.get(f"{BASE_URL}/users/me")
     assert response.status_code == 401
     assert "error" in response.json()
     assert response.json()["error"] == "Unauthorized"
 
 
 def test_me_authorized():
-    response = requests.get(f"{BASE_URL}/me", headers=get_auth_headers())
+    response = requests.get(f"{BASE_URL}/users/me", headers=get_auth_headers())
     assert response.status_code == 200
     assert "permission_level" in response.json()
     assert "display_name" in response.json()
@@ -55,8 +55,12 @@ def test_generate_palette_file_too_large():
     try:
         with open(test_file_path, "rb") as f:
             files = {"photo": ("test.jpg", f, "image/jpeg")}
+            extension = "jpg"
             response = requests.post(
-                f"{BASE_URL}/generate-palette", files=files, headers=get_auth_headers()
+                f"{BASE_URL}/generate-palette",
+                files=files,
+                headers=get_auth_headers(),
+                data={"extension": extension},
             )
 
         assert response.status_code == 413

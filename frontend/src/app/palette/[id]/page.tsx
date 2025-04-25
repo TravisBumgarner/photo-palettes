@@ -2,8 +2,14 @@
 
 import { useQuery } from '@tanstack/react-query'
 import { useParams } from 'next/navigation'
-import { getPaletteById } from '../../../api/getPaletteById'
+import { useEffect } from 'react'
+import { getPaletteById } from '../../../api/palettes/getById'
+import { logger } from '../../../services/logging'
 import { EModerationStatus } from '../../../types'
+import ErrorMessage from '../../sharedComponents/ErrorMessage'
+import InfoMessage from '../../sharedComponents/InfoMessage'
+import Loading from '../../sharedComponents/Loading'
+
 const PalettePage = () => {
   const params = useParams()
   const paletteId = params.id as string
@@ -11,16 +17,23 @@ const PalettePage = () => {
   const { data, isLoading, error } = useQuery({
     queryKey: ['palette', paletteId],
     queryFn: () => getPaletteById(paletteId),
+    retry: false,
   })
 
-  if (isLoading) return <div>Loading...</div>
-  if (error) return <div>Error: {(error as Error).message}</div>
-  if (!data?.success) return <div>Error: {data?.error}</div>
+  useEffect(() => {
+    if (error) logger.error(error)
+  }, [error])
+
+  if (isLoading || !data) return <Loading />
+
+  if (error) return <ErrorMessage />
+
+  if (!data.success) return <ErrorMessage error={data.error} />
 
   return (
     <div>
       {data.palette.moderation_status === EModerationStatus.AWAITING_MODERATION && (
-        <p>This palette is pending approval.</p>
+        <InfoMessage info="This palette is pending approval." />
       )}
       <>
         <h1>{data.palette.name}</h1>

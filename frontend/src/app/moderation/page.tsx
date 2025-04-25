@@ -3,11 +3,12 @@
 import { Box, Button, Typography } from '@mui/material'
 import { useQuery } from '@tanstack/react-query'
 import { useCallback, useEffect, useMemo } from 'react'
-import { getModeration } from '../../api/getModeration'
 import { moderatePalette } from '../../api/moderatePalette'
+import { getModeration } from '../../api/palettes/getListUnmoderated'
 import config from '../../config'
 import { logger } from '../../services/logging'
 import { EModerationStatus, TPaletteAndColors } from '../../types'
+import ErrorMessage from '../sharedComponents/ErrorMessage'
 import Loading from '../sharedComponents/Loading'
 
 const Empty = ({ type }: { type: 'awaiting-moderation' | 'awaiting-submission' }) => {
@@ -121,31 +122,33 @@ const Moderation = () => {
   }, [error])
 
   const awaitingModeration = useMemo(() => {
-    const filteredPalettes = data?.palettes.filter(
+    if (!data?.success) return []
+
+    const filteredPalettes = data.palettes.filter(
       palette => palette.moderation_status === EModerationStatus.AWAITING_MODERATION
     )
     return filteredPalettes || []
   }, [data])
 
   const awaitingSubmission = useMemo(() => {
-    const filteredPalettes = data?.palettes.filter(
+    if (!data?.success) return []
+
+    const filteredPalettes = data.palettes.filter(
       palette => palette.moderation_status === EModerationStatus.AWAITING_SUBMISSION
     )
     return filteredPalettes || []
   }, [data])
 
-  if (isLoading) {
+  if (isLoading || !data) {
     return <Loading />
   }
 
   if (error) {
-    return (
-      <Box sx={{ p: 3 }}>
-        <Typography variant="h5" color="error">
-          Error loading palettes. Please try again later.
-        </Typography>
-      </Box>
-    )
+    return <ErrorMessage />
+  }
+
+  if (!data.success) {
+    return <ErrorMessage error={data.error} />
   }
 
   return (

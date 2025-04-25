@@ -27,13 +27,8 @@ export function LoadUserIntoStore() {
 
       const userDetails = await getMe()
 
-      if (userDetails) {
-        setAppUserDetails({
-          permissionLevel: userDetails.permission_level,
-          displayName: userDetails.display_name,
-          email: userDetails.email,
-          id: userDetails.id,
-        })
+      if (userDetails.success) {
+        setAppUserDetails(userDetails)
       }
 
       setIsAppAuthenticating(false)

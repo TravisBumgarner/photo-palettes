@@ -3,28 +3,34 @@
 import { Box, Grid, Typography } from '@mui/material'
 import { useQuery } from '@tanstack/react-query'
 import Link from 'next/link'
-import { getPalettes } from '../../api/getPalettes'
+import { useEffect } from 'react'
+import { getPalettes } from '../../api/palettes/getListModerated'
 import config from '../../config'
+import { logger } from '../../services/logging'
+import ErrorMessage from '../sharedComponents/ErrorMessage'
 import Loading from '../sharedComponents/Loading'
 
 const Browse = () => {
   const { data, isLoading, error } = useQuery({
     queryKey: ['palettes'],
     queryFn: getPalettes,
+    retry: false,
   })
 
-  if (isLoading) {
+  useEffect(() => {
+    if (error) logger.error(error)
+  }, [error])
+
+  if (isLoading || !data) {
     return <Loading />
   }
 
   if (error) {
-    return (
-      <Box sx={{ p: 3 }}>
-        <Typography variant="h5" color="error">
-          Error loading palettes. Please try again later.
-        </Typography>
-      </Box>
-    )
+    return <ErrorMessage />
+  }
+
+  if (!data.success) {
+    return <ErrorMessage error={data.error} />
   }
 
   return (

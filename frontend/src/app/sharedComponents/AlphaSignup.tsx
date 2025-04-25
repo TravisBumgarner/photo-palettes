@@ -3,6 +3,7 @@ import { ChangeEvent, useCallback, useState } from 'react'
 import { z } from 'zod'
 import { alphaSignup } from '../../api/alphaSignup'
 import { logger } from '../../services/logging'
+
 const formValidation = z.object({
   email: z.string().email(),
 })

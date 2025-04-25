@@ -7,6 +7,7 @@ import { z } from 'zod'
 import { MINIMUM_PASSWORD_LENGTH } from '../../consts'
 import { login } from '../../services/supabase/actions'
 import useGlobalStore from '../../store'
+
 const LoginSchema = z.object({
   email: z.string().email(),
   password: z.string().min(MINIMUM_PASSWORD_LENGTH),

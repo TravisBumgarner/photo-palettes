@@ -2,7 +2,6 @@ import { User } from '@supabase/supabase-js'
 import { ActiveModal } from '../app/sharedComponents/Modal/Modal.types'
 
 export interface AppUserDetails {
-  username: string
   permissionLevel: number
   displayName: string
   email: string
@@ -14,7 +13,7 @@ export interface State {
   isAppAuthenticating: boolean
   setIsAppAuthenticating: (isAppAuthenticating: boolean) => void
   appUserDetails: AppUserDetails | null
-  setAppUserDetails: (appUserDetails: unknown | null) => void
+  setAppUserDetails: (appUserDetails: AppUserDetails | null) => void
   alerts: string[]
   getAndRemoveNextAlert: () => string | null
   addAlert: (alert: string) => void
