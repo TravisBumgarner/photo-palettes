@@ -1,9 +1,10 @@
 import os
+import uuid
 
 import pytest
 import requests
 
-from .utils import get_auth_headers
+from .utils import get_moderator_auth_headers, get_user_auth_headers
 
 BASE_URL = "http://localhost:8000"
 
@@ -38,12 +39,13 @@ def test_me_unauthorized():
 
 
 def test_me_authorized():
-    response = requests.get(f"{BASE_URL}/users/me", headers=get_auth_headers())
+    response = requests.get(f"{BASE_URL}/users/me", headers=get_user_auth_headers())
     assert response.status_code == 200
     assert "permission_level" in response.json()
     assert "display_name" in response.json()
     assert "email" in response.json()
     assert "id" in response.json()
+    assert response.json()["email"] == os.getenv("TEST_USER_EMAIL")
 
 
 def test_generate_palette_file_too_large():
@@ -59,7 +61,7 @@ def test_generate_palette_file_too_large():
             response = requests.post(
                 f"{BASE_URL}/generate-palette",
                 files=files,
-                headers=get_auth_headers(),
+                headers=get_user_auth_headers(),
                 data={"extension": extension},
             )
 
@@ -68,3 +70,27 @@ def test_generate_palette_file_too_large():
         assert "File too large" in response.json()["error"]
     finally:
         os.remove(test_file_path)
+
+
+def test_moderate_palette():
+    palette_id = str(uuid.uuid4())
+
+    response = requests.post(
+        f"{BASE_URL}/palettes/moderate",
+        headers={**get_moderator_auth_headers(), "Content-Type": "application/json"},
+        json={"palette_id": palette_id, "status": 2},
+    )
+    # Status code 400 means the user is not a moderator. The test will fail for other reasons because palette doesn't exist.
+    assert response.status_code != 400
+
+
+def test_moderate_palette_unauthorized():
+    palette_id = str(uuid.uuid4())
+
+    response = requests.post(
+        f"{BASE_URL}/palettes/moderate",
+        headers={**get_user_auth_headers(), "Content-Type": "application/json"},
+        json={"palette_id": palette_id, "status": 2},
+    )
+    # Status code 400 means the user is not a moderator. The test will fail for other reasons because palette doesn't exist.
+    assert response.status_code == 400
