@@ -2,10 +2,9 @@ from backend.database.models import ModerationStatus
 from backend.database.queries.palettes import get_palettes_by_moderation_status
 from backend.middleware.auth import RequestWithAuthState
 from backend.utils.auth import user_is_moderator
-from backend.utils.photos import get_photo_path
 
 from . import palettes_router
-from .response_models import PaletteColorResponse, PaletteResponse
+from .response_models import map_palette_array_to_response
 
 
 def validate_request(request: RequestWithAuthState):
@@ -28,24 +27,5 @@ def get_list_as_moderator(request: RequestWithAuthState, status: ModerationStatu
 
     return {
         "success": True,
-        "palettes": [
-            PaletteResponse(
-                id=palette.id,
-                name=palette.name,
-                photo_url=get_photo_path(palette.photo_details),
-                created_at=palette.created_at,
-                colors=[
-                    PaletteColorResponse(
-                        id=color.id,
-                        hex=color.hex,
-                        r=color.r,
-                        g=color.g,
-                        b=color.b,
-                    )
-                    for color in palette.colors
-                ],
-                moderation_status=palette.moderation_status,
-            )
-            for palette in palettes
-        ],
+        "palettes": map_palette_array_to_response(palettes),
     }
