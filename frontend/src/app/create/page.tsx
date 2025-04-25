@@ -4,11 +4,12 @@ import { Box, Button } from '@mui/material'
 import { useMutation } from '@tanstack/react-query'
 import { useRouter } from 'next/navigation'
 import { useCallback, useState } from 'react'
-import { generatePalette } from '../../api/palettes/generate'
 import { savePalette } from '../../api/palettes/create'
+import { generatePalette } from '../../api/palettes/generate'
 import { logger } from '../../services/logging'
 import useGlobalStore from '../../store'
 import { TPalette } from '../../types'
+import ErrorMessage from '../sharedComponents/ErrorMessage'
 import Loading from '../sharedComponents/Loading'
 import { ModalID } from '../sharedComponents/Modal/Modal.consts'
 import CanvasAndPalette from './components/CanvasAndPalette'
@@ -47,9 +48,13 @@ const Create = () => {
       const photo = acceptedFiles[0]
       setPhoto(photo)
       const response = await generatePaletteMutation.mutateAsync(photo)
-      setPalette(response.palette)
-      setPaletteId(response.palette_id)
-      setUploadStatus(UploadStatus.UPLOADED)
+      if (response.success) {
+        setPalette(response.palette)
+        setPaletteId(response.palette_id)
+        setUploadStatus(UploadStatus.UPLOADED)
+      } else {
+        setUploadStatus(UploadStatus.ERROR)
+      }
     },
     [generatePaletteMutation]
   )
@@ -117,10 +122,7 @@ const Create = () => {
         {uploadStatus === UploadStatus.INITIAL && <Dropzone onDrop={onDrop} />}
         {uploadStatus === UploadStatus.UPLOADING && <Loading />}
         {uploadStatus === UploadStatus.ERROR && (
-          <div>
-            <p>Error</p>
-            <button onClick={handleTryAgain}>Try again</button>
-          </div>
+          <ErrorMessage error="Error generating palette" callback={handleTryAgain} />
         )}
         {uploadStatus === UploadStatus.UPLOADED && (
           <Box>

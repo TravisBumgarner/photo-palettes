@@ -8,6 +8,7 @@ import config from '../../config'
 import { MINIMUM_PASSWORD_LENGTH } from '../../consts'
 import { signup } from '../../services/supabase/actions'
 import useGlobalStore from '../../store'
+
 const SignupSchema = z.object({
   email: z.string().email(),
   password: z.string().min(MINIMUM_PASSWORD_LENGTH),
