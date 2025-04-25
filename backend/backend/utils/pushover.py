@@ -6,7 +6,7 @@ config = get_config()
 
 
 def send_notification(message: str) -> bool:
-    if not config.environment == "production":
+    if not config.is_production:
         return True
 
     try:

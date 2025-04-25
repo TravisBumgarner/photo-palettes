@@ -25,7 +25,7 @@ export default function SignupPage() {
   const [password, setPassword] = useState('')
   const [repeatPassword, setRepeatPassword] = useState('')
   const [invitationKey, setInvitationKey] = useState(
-    config.environment === 'production' ? '' : SUPER_SECRET_INVITATION_KEY
+    config.is_production ? '' : SUPER_SECRET_INVITATION_KEY
   )
   const router = useRouter()
   const setIsAppAuthenticating = useGlobalStore(state => state.setIsAppAuthenticating)
