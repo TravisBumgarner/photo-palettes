@@ -25,7 +25,9 @@ const PalettePage = () => {
   }, [error])
 
   if (isLoading || !data) return <Loading />
+
   if (error) return <ErrorMessage />
+
   if (!data.success) return <ErrorMessage error={data.error} />
 
   return (

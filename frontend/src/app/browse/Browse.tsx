@@ -7,6 +7,7 @@ import { useEffect } from 'react'
 import { getPalettes } from '../../api/palettes/getListModerated'
 import config from '../../config'
 import { logger } from '../../services/logging'
+import ErrorMessage from '../sharedComponents/ErrorMessage'
 import Loading from '../sharedComponents/Loading'
 
 const Browse = () => {
@@ -20,18 +21,16 @@ const Browse = () => {
     if (error) logger.error(error)
   }, [error])
 
-  if (isLoading) {
+  if (isLoading || !data) {
     return <Loading />
   }
 
-  if (error || !data?.success) {
-    return (
-      <Box sx={{ p: 3 }}>
-        <Typography variant="h5" color="error">
-          Error loading palettes. Please try again later.
-        </Typography>
-      </Box>
-    )
+  if (error) {
+    return <ErrorMessage />
+  }
+
+  if (!data?.success) {
+    return <ErrorMessage error={data.error} />
   }
 
   return (
