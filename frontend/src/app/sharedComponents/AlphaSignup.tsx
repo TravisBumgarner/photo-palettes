@@ -3,6 +3,7 @@ import { ChangeEvent, useCallback, useState } from 'react'
 import { z } from 'zod'
 import { alphaSignup } from '../../api/alphaSignup'
 import { logger } from '../../services/logging'
+import useGlobalStore from '../../store'
 
 const formValidation = z.object({
   email: z.string().email(),
@@ -10,22 +11,23 @@ const formValidation = z.object({
 
 const AlphaSignup = () => {
   const [email, setEmail] = useState('')
+  const addAlert = useGlobalStore(state => state.addAlert)
 
   const handleSubmit = useCallback(async () => {
     const validationResult = formValidation.safeParse({ email })
     if (!validationResult.success) {
-      alert('Please enter a valid email address.')
+      addAlert('Please enter a valid email address.')
       return
     }
     try {
       await alphaSignup(email)
-      alert('Thank you for signing up!')
+      addAlert('Thank you for signing up!')
       setEmail('')
     } catch (error) {
       logger.error('Error signing up', error)
-      alert('An error occurred while signing up. Please try again.')
+      addAlert('An error occurred while signing up. Please try again.')
     }
-  }, [email])
+  }, [email, addAlert])
 
   const handleEmailChange = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
