@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { TPalette } from '../../../types'
+import { getContrastColor } from '../../../utils'
 import { HEIGHT, WIDTH } from '../consts'
 import DraggableSwatch from './DraggableSwatch'
 
@@ -28,8 +29,8 @@ const ReadonlySwatch = ({
     <div
       key={swatch.color}
       style={{
-        width: '75px',
-        height: '25px',
+        flexGrow: 1,
+        height: '50px',
         backgroundColor: swatch.color,
         display: 'flex',
         justifyContent: 'center',
@@ -39,7 +40,9 @@ const ReadonlySwatch = ({
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
-      <span style={{ color: 'white' }}>{swatch.color}</span>
+      <span style={{ color: getContrastColor(swatch.color), fontSize: '20px' }}>
+        {swatch.color}
+      </span>
     </div>
   )
 }
@@ -56,7 +59,7 @@ const CanvasAndPalette = ({
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const containerRef = useRef<HTMLDivElement>(null)
   const [draggingIndex, setDraggingIndex] = useState<number | null>(null)
-  const [hoveringIndex, setHoveringIndex] = useState<number | null>(null)
+  const [_hoveringIndex, setHoveringIndex] = useState<number | null>(null)
   const [imageDimensions, setImageDimensions] = useState<{ width: number; height: number } | null>(
     null
   )
@@ -199,7 +202,6 @@ const CanvasAndPalette = ({
             swatch={swatch}
             index={index}
             handleSetDraggingIndex={handleSetDraggingIndex}
-            isHovered={hoveringIndex === index}
           />
         ))}
       </div>
