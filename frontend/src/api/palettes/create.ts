@@ -13,7 +13,7 @@ const zodResponse = z.discriminatedUnion('success', [
   }),
 ])
 
-export const savePalette = async ({
+export const createPalette = async ({
   palette,
   paletteId,
   name,
@@ -29,7 +29,7 @@ export const savePalette = async ({
 
   // Create the request body
   const requestBody = {
-    name: name,
+    name,
     hex_colors: hexColors,
     palette_id: paletteId,
   }
