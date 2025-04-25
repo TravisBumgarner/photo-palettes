@@ -33,7 +33,7 @@ const PalettePage = () => {
   if (!data.success) return <ErrorMessage error={data.error} />
 
   return (
-    <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+    <Box sx={{ display: 'flex', justifyContent: 'center', flexDirection: 'column' }}>
       {data.palette.moderation_status === EModerationStatus.AWAITING_MODERATION && (
         <InfoMessage info="This palette is pending approval." />
       )}

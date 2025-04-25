@@ -59,7 +59,7 @@ const CanvasAndPalette = ({
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const containerRef = useRef<HTMLDivElement>(null)
   const [draggingIndex, setDraggingIndex] = useState<number | null>(null)
-  const [_hoveringIndex, setHoveringIndex] = useState<number | null>(null)
+  const [hoveringIndex, setHoveringIndex] = useState<number | null>(null)
   const [imageDimensions, setImageDimensions] = useState<{ width: number; height: number } | null>(
     null
   )
@@ -91,10 +91,15 @@ const CanvasAndPalette = ({
       if (!container) return
 
       const rect = container.getBoundingClientRect()
-      const x = ((e.clientX - rect.left) / rect.width) * 100
-      const y = ((e.clientY - rect.top) / rect.height) * 100
 
-      const newColor = sampleColorAtPosition(e.clientX - rect.left, e.clientY - rect.top)
+      // Clamp coordinates to container bounds
+      const x = Math.max(0, Math.min(100, ((e.clientX - rect.left) / rect.width) * 100))
+      const y = Math.max(0, Math.min(100, ((e.clientY - rect.top) / rect.height) * 100))
+
+      const newColor = sampleColorAtPosition(
+        Math.max(0, Math.min(rect.width, e.clientX - rect.left)),
+        Math.max(0, Math.min(rect.height, e.clientY - rect.top))
+      )
       if (!newColor) return
 
       const newPalette = [...palette]
@@ -198,7 +203,8 @@ const CanvasAndPalette = ({
         />
         {palette.map((swatch, index) => (
           <DraggableSwatch
-            key={swatch.color}
+            isHovered={hoveringIndex === index}
+            key={`${swatch.color}-${index}`}
             swatch={swatch}
             index={index}
             handleSetDraggingIndex={handleSetDraggingIndex}
@@ -209,7 +215,7 @@ const CanvasAndPalette = ({
         <div style={{ display: 'flex', flexDirection: 'row' }}>
           {palette.map((swatch, index) => (
             <ReadonlySwatch
-              key={swatch.color}
+              key={`${swatch.color}-${index}`}
               swatch={swatch}
               index={index}
               handleMouseEnterCallback={handleMouseEnter}
