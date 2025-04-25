@@ -21,7 +21,7 @@ def validate_request(request: RequestWithAuthState):
     if not user_is_moderator(request):
         log_error(
             PermissionError(
-                f"User {request.user.id} is not a moderator but attempted to moderate a palette"
+                f"User {request.state.app_user_id} is not a moderator but attempted to moderate a palette"
             )
         )
         raise HTTPException(status_code=400, detail="User is not a moderator")
