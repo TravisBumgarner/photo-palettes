@@ -1,60 +1,19 @@
 import uuid
-from datetime import datetime
 from typing import List
 
 from sqlalchemy.orm import joinedload
 
 from backend.database.engine import SessionLocal
-from backend.database.models import AlphaSignup, AppUser, ModerationStatus, Palette
-
-
-def get_app_user_by_app_user_id(app_user_id: uuid.UUID) -> AppUser | None:
-    session = SessionLocal()
-
-    return session.query(AppUser).filter(AppUser.id == app_user_id).first()
-
-
-def get_app_user_by_auth_id(auth_id: uuid.UUID) -> AppUser | None:
-    session = SessionLocal()
-
-    return session.query(AppUser).filter(AppUser.auth_id == auth_id).first()
-
-
-def insert_app_user(auth_id: uuid.UUID, email: str, display_name: str) -> AppUser:
-    session = SessionLocal()
-
-    app_user = AppUser(
-        auth_id=auth_id,
-        email=email,
-        display_name=display_name,
-        created_at=datetime.now(),
-    )
-
-    session.add(app_user)
-    session.commit()
-    session.refresh(app_user)
-    return app_user
-
-
-def get_or_create_app_user(auth_id: uuid.UUID, email: str, display_name: str) -> AppUser:
-    app_user = get_app_user_by_auth_id(auth_id)
-    if not app_user:
-        app_user = insert_app_user(auth_id, email, display_name)
-    return app_user
-
-
-def insert_alpha_signup(email: str) -> AlphaSignup:
-    session = SessionLocal()
-    alpha_signup = AlphaSignup(email=email)
-    session.add(alpha_signup)
-    session.commit()
-    return alpha_signup
+from backend.database.models import ModerationStatus, Palette
 
 
 def get_moderated_palettes() -> List[Palette]:
     session = SessionLocal()
     return (
-        session.query(Palette).filter(Palette.moderation_status == ModerationStatus.APPROVED).all()
+        session.query(Palette)
+        .options(joinedload(Palette.colors))
+        .filter(Palette.moderation_status == ModerationStatus.APPROVED)
+        .all()
     )
 
 
@@ -62,6 +21,7 @@ def get_unmoderated_palettes() -> List[Palette]:
     session = SessionLocal()
     return (
         session.query(Palette)
+        .options(joinedload(Palette.colors))
         .filter(
             (Palette.moderation_status == ModerationStatus.AWAITING_MODERATION)
             | (Palette.moderation_status == ModerationStatus.AWAITING_SUBMISSION)
@@ -91,6 +51,14 @@ def update_palette_moderation_status(palette_id: uuid.UUID, moderation_status: M
     return palette
 
 
+def create_palette(palette: Palette):
+    session = SessionLocal()
+    session.add(palette)
+    session.commit()
+    session.refresh(palette)
+    return palette
+
+
 def update_palette(palette_id: uuid.UUID, **kwargs):
     session = SessionLocal()
     palette = session.query(Palette).filter(Palette.id == palette_id).first()
@@ -111,3 +79,13 @@ def update_palette(palette_id: uuid.UUID, **kwargs):
     session.commit()
     session.refresh(palette)
     return palette
+
+
+def get_palettes_by_user_id(app_user_id: uuid.UUID) -> List[Palette]:
+    session = SessionLocal()
+    return (
+        session.query(Palette)
+        .options(joinedload(Palette.colors))
+        .filter(Palette.app_user_id == app_user_id)
+        .all()
+    )

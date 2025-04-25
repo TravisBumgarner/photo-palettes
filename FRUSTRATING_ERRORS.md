@@ -25,3 +25,5 @@ npm install react-dropzone
 Every time I install a new package with Docker and React I get Module not found: Can't resolve 'react-dropzone'
 docker compose exec frontend sh
 npm install react-dropzone
+
+HOT RELOADING BACKEND - WatchFiles doesn't see all new files in backend.

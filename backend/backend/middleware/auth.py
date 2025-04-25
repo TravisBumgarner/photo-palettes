@@ -4,12 +4,20 @@ from fastapi import Request
 from fastapi.responses import JSONResponse
 from supabase import Client
 
+from backend.config import get_config
 from backend.database.models import PermissionLevel
-from backend.database.queries import get_or_create_app_user
+from backend.database.queries.users import get_or_create_app_user
 from backend.utils.logger import log_error
 
+config = get_config()
+
 # Added from main.py
-public_routes = {"/"}
+public_routes = {"/", "/alpha/signup"}
+
+
+if config.environment == "development":
+    public_routes.add("/docs")
+    public_routes.add("/openapi.json")
 
 
 class AuthState:

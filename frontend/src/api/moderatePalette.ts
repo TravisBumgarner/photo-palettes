@@ -3,7 +3,7 @@ import { EModerationStatus } from '../types'
 
 export const moderatePalette = async (paletteId: string, status: EModerationStatus) => {
   const token = await getToken()
-  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/moderate`, {
+  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/palettes/moderate`, {
     method: 'POST',
     body: JSON.stringify({ palette_id: paletteId, status }),
     headers: {

@@ -6,9 +6,15 @@
 - [x] Your upload is pending.
 - [x] Your upload was rejected. for x.
 - [x] Ability to moderate after uploaded.
-- [x] Moderation Status -1 for awaiting submission. 
+- [x] Moderation Status -1 for awaiting submission.
+- [ ] Let users build without algo. Maybe default colors to be at 33% left to right and 33% top to bottom. Math might be wrong. 
+- [ ] Cleanup routes
+- [ ] Cleanup frontend routes. 
+- [ ] Write more tests. 
 - [ ] need to refactor routes and just everything. Ugh.
-- [ ] Figure out long loading time on nextjs server
+- [x] Figure out long loading time on nextjs server
+- [ ] Hook up naming palettes.
 - [ ] Set up branching for file saves development and production
-- [ ] Remove query code from routes. 
+- [ ] Remove query code from routes.
 - [ ] Resolve all python errors.
+- [ ] Is my success/fail on the backend good? Should I be sending back error numbers instead?

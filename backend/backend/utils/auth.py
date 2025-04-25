@@ -20,9 +20,5 @@ def user_owns_resource(
     return request.state.app_user_id == app_user_id
 
 
-def user_is_admin(request: RequestWithAuthState) -> bool:
-    return request.state.permission_level == PermissionLevel.ADMIN
-
-
 def user_is_moderator(request: RequestWithAuthState) -> bool:
     return request.state.permission_level in {PermissionLevel.MODERATOR, PermissionLevel.ADMIN}
