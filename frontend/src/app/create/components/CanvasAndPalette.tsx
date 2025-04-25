@@ -77,8 +77,11 @@ const CanvasAndPalette = ({
     const rect = canvas.getBoundingClientRect()
     const scaleX = canvas.width / rect.width
     const scaleY = canvas.height / rect.height
-    const pixelX = x * scaleX
-    const pixelY = y * scaleY
+
+    // Clamp to canvas dimensions
+    const pixelX = Math.max(0, Math.min(canvas.width - 1, x * scaleX))
+    const pixelY = Math.max(0, Math.min(canvas.height - 1, y * scaleY))
+
     const pixel = ctx.getImageData(pixelX, pixelY, 1, 1).data
     return `#${pixel[0].toString(16).padStart(2, '0')}${pixel[1].toString(16).padStart(2, '0')}${pixel[2].toString(16).padStart(2, '0')}`
   }, [])
