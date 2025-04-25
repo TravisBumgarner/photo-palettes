@@ -29,7 +29,7 @@ const Browse = () => {
     return <ErrorMessage />
   }
 
-  if (!data?.success) {
+  if (!data.success) {
     return <ErrorMessage error={data.error} />
   }
 
