@@ -31,6 +31,7 @@ class Config(BaseSettings):
     database_url: str = Field(default="postgresql://localhost:5432/photo_palettes")
     supabase: SupabaseSettings = Field(default_factory=lambda: SupabaseSettings())
     pushover: PushoverSettings = Field(default_factory=lambda: PushoverSettings())
+    cloudinary_url: str = Field(default="")
     model_config = SettingsConfigDict(env_file=".env", extra="ignore")
 
     # SqlAlchemy expects postgresql://, but postgres:// is what we get from Heroku.

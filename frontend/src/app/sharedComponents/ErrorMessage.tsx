@@ -2,11 +2,11 @@ import { Box, Button, Typography } from '@mui/material'
 
 const ErrorMessage = ({ error, callback }: { error?: string; callback?: () => void }) => {
   return (
-    <Box sx={{ p: 3 }}>
+    <Box sx={{ padding: '10px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
       <Typography variant="h5" color="error">
         {error ? error : 'Something went wrong :('}
-        {callback && <Button onClick={callback}>Try again</Button>}
       </Typography>
+      {callback && <Button onClick={callback}>Try again</Button>}
     </Box>
   )
 }

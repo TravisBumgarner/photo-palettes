@@ -1,6 +1,6 @@
 'use client'
 
-import { Box, Button, TextField } from '@mui/material'
+import { Box, Button, TextField, Typography } from '@mui/material'
 import { useMutation } from '@tanstack/react-query'
 import { useRouter } from 'next/navigation'
 import { useCallback, useState } from 'react'
@@ -21,6 +21,8 @@ enum UploadStatus {
   UPLOADING = 'UPLOADING',
   UPLOADED = 'UPLOADED',
   ERROR = 'ERROR',
+  SUBMITTING = 'SUBMITTING',
+  SUBMITTED = 'SUBMITTED',
 }
 
 const Create = () => {
@@ -84,21 +86,27 @@ const Create = () => {
 
   const handleSavePalette = useCallback(async () => {
     if (!paletteId) return
+    setUploadStatus(UploadStatus.SUBMITTING)
 
-    await createPaletteMutation.mutate({
+    const response = await createPaletteMutation.mutateAsync({
       palette,
       paletteId,
       name,
     })
 
-    setActiveModal({
-      id: ModalID.ConfirmationModal,
-      confirmationCallback: () => {
-        router.push(`/palette/${paletteId}`)
-      },
-      title: 'Thanks for your submission!',
-      body: 'Once it is approved, it will be added to the site.',
-    })
+    if (response.success) {
+      setActiveModal({
+        id: ModalID.ConfirmationModal,
+        confirmationCallback: () => {
+          router.push(`/palette/${paletteId}`)
+        },
+        title: 'Thanks for your submission!',
+        body: 'Once it is approved, it will be added to the site.',
+      })
+      setUploadStatus(UploadStatus.SUBMITTED)
+    } else {
+      setUploadStatus(UploadStatus.ERROR)
+    }
   }, [palette, paletteId, createPaletteMutation, setActiveModal, router, name])
 
   const handlePaletteChange = useCallback((palette: TPalette) => {
@@ -129,7 +137,7 @@ const Create = () => {
         {uploadStatus === UploadStatus.ERROR && (
           <ErrorMessage error="Error generating palette" callback={handleTryAgain} />
         )}
-        {uploadStatus === UploadStatus.UPLOADED && (
+        {(uploadStatus === UploadStatus.UPLOADED || uploadStatus === UploadStatus.SUBMITTING) && (
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
             <CanvasAndPalette
               palette={palette}
@@ -154,10 +162,19 @@ const Create = () => {
               <Button variant="outlined" onClick={handleClearPalette}>
                 Clear Palette
               </Button>
-              <Button disabled={!name} variant="contained" onClick={handleSavePalette}>
+              <Button
+                disabled={!name || uploadStatus === UploadStatus.SUBMITTING}
+                variant="contained"
+                onClick={handleSavePalette}
+              >
                 Save Palette
               </Button>
             </Box>
+          </Box>
+        )}
+        {uploadStatus === UploadStatus.SUBMITTED && (
+          <Box>
+            <Typography>Palette submitted</Typography>
           </Box>
         )}
       </Box>

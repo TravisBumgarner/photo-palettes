@@ -6,6 +6,8 @@ from typing import List
 from sqlalchemy import UUID, DateTime, ForeignKey, Integer, String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
+from backend.utils.photos import get_photo_path
+
 from .engine import Base
 from .types import Cube
 
@@ -28,7 +30,7 @@ class AppUser(Base):
     __tablename__ = "app_users"
 
     id: Mapped[uuid.UUID] = mapped_column(primary_key=True, default=uuid.uuid4)
-    auth_id: Mapped[uuid.UUID] = mapped_column(UUID, unique=True)
+    auth_id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), unique=True)
     email: Mapped[str] = mapped_column(String, unique=True)
     display_name: Mapped[str] = mapped_column(String)
     created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.now)
@@ -67,10 +69,14 @@ class Palette(Base):
     app_user_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("app_users.id"))
     created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.now)
     name: Mapped[str] = mapped_column(String)
-    image_url: Mapped[str] = mapped_column(String)
+    photo_details: Mapped[str] = mapped_column(String)
 
     colors: Mapped[List["PaletteColor"]] = relationship("PaletteColor", back_populates="palette")
     user: Mapped["AppUser"] = relationship("AppUser", back_populates="palettes")
     moderation_status: Mapped[ModerationStatus] = mapped_column(
         Integer, default=ModerationStatus.AWAITING_SUBMISSION
     )
+
+    @property
+    def photo_url(self) -> str:
+        return get_photo_path(self.photo_details)

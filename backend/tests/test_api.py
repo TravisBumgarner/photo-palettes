@@ -93,4 +93,5 @@ def test_moderate_palette_unauthorized():
         json={"palette_id": palette_id, "status": 2},
     )
     # Status code 400 means the user is not a moderator. The test will fail for other reasons because palette doesn't exist.
-    assert response.status_code == 400
+    assert response.json()["success"] == False
+    assert response.json()["error"] == "User is not a moderator"
