@@ -1,5 +1,6 @@
 import { z } from 'zod'
 import { getToken } from '../../services/supabase/utils'
+import { EModerationStatus } from '../../types'
 
 const zodResponse = z.discriminatedUnion('success', [
   z.object({
@@ -29,10 +30,10 @@ const zodResponse = z.discriminatedUnion('success', [
   }),
 ])
 
-export const getModeration = async () => {
+export const getListAsModerator = async (status: EModerationStatus) => {
   const token = await getToken()
 
-  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/palettes/unmoderated`, {
+  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/palettes/moderator/${status}`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
