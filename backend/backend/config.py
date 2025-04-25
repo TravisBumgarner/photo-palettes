@@ -22,7 +22,12 @@ class SupabaseSettings(BaseServiceSettings):
 
 
 class Config(BaseSettings):
-    environment: str = Field(default="production")
+    environment: str = Field(default="development")
+
+    @property
+    def is_production(self) -> bool:
+        return self.environment.lower() == "production"
+
     database_url: str = Field(default="postgresql://localhost:5432/photo_palettes")
     supabase: SupabaseSettings = Field(default_factory=lambda: SupabaseSettings())
     pushover: PushoverSettings = Field(default_factory=lambda: PushoverSettings())
