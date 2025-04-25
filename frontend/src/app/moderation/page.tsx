@@ -18,8 +18,8 @@ const Empty = ({ type }: { type: string }) => (
       height: '200px',
       display: 'flex',
       justifyContent: 'center',
-      alignItems: 'center',
       border: '1px solid black',
+      alignItems: 'center',
       borderRadius: '10px',
     }}
   >
@@ -28,31 +28,42 @@ const Empty = ({ type }: { type: string }) => (
 )
 
 const tabs = [
-  { label: 'Awaiting Moderation' },
-  { label: 'Awaiting Submission' },
-  { label: 'Rejected' },
+  { label: 'Awaiting Moderation', status: EModerationStatus.AWAITING_MODERATION },
+  { label: 'Awaiting Submission', status: EModerationStatus.AWAITING_SUBMISSION },
+  { label: 'Rejected', status: EModerationStatus.REJECTED },
 ]
 
 const PaletteThumbnailWithModeration = ({
   palette,
   refetch,
+  moderationStatus,
 }: {
   palette: TPaletteAndColors
   refetch: () => void
+  moderationStatus: EModerationStatus
 }) => {
   const [isFetching, setIsFetching] = useState(false)
 
-  const handleApprove = useCallback(() => {
+  const handleApprove = useCallback(async () => {
     setIsFetching(true)
-    moderatePalette(palette.id, EModerationStatus.APPROVED)
-    refetch()
-    setIsFetching(false)
+    try {
+      await moderatePalette(palette.id, EModerationStatus.APPROVED)
+      await refetch()
+    } finally {
+      // This shouldn't matter since refetch will clear it out.
+      setIsFetching(false)
+    }
   }, [palette.id, refetch])
 
-  const handleReject = useCallback(() => {
+  const handleReject = useCallback(async () => {
     setIsFetching(true)
-    moderatePalette(palette.id, EModerationStatus.REJECTED)
-    refetch()
+    try {
+      await moderatePalette(palette.id, EModerationStatus.REJECTED)
+      await refetch()
+    } finally {
+      // This shouldn't matter since refetch will clear it out.
+      setIsFetching(false)
+    }
   }, [palette.id, refetch])
 
   const handleDelete = useCallback(() => {
@@ -65,13 +76,26 @@ const PaletteThumbnailWithModeration = ({
     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
       <PaletteThumbnail palette={palette} />
       <Box sx={{ display: 'flex', gap: 2, justifyContent: 'space-between' }}>
-        <Button disabled={isFetching} onClick={handleApprove}>
+        <Button
+          disabled={isFetching || moderationStatus === EModerationStatus.AWAITING_SUBMISSION}
+          onClick={handleApprove}
+        >
           Approve
         </Button>
-        <Button disabled={isFetching} onClick={handleReject}>
+        <Button
+          disabled={
+            isFetching ||
+            moderationStatus === EModerationStatus.AWAITING_SUBMISSION ||
+            moderationStatus === EModerationStatus.REJECTED
+          }
+          onClick={handleReject}
+        >
           Reject
         </Button>
-        <Button disabled={isFetching} onClick={handleDelete}>
+        <Button
+          disabled={isFetching || moderationStatus === EModerationStatus.AWAITING_MODERATION}
+          onClick={handleDelete}
+        >
           Delete
         </Button>
       </Box>
@@ -82,8 +106,8 @@ const PaletteThumbnailWithModeration = ({
 const Moderation = () => {
   const [tab, setTab] = useState(0)
   const { data, isLoading, error, refetch } = useQuery({
-    queryKey: ['moderation', tab],
-    queryFn: () => getListAsModerator(tab),
+    queryKey: ['moderation', tabs[tab].status],
+    queryFn: () => getListAsModerator(tabs[tab].status),
     retry: false,
   })
 
@@ -108,7 +132,12 @@ const Moderation = () => {
     return (
       <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2 }}>
         {data.palettes.map(palette => (
-          <PaletteThumbnailWithModeration key={palette.id} palette={palette} refetch={refetch} />
+          <PaletteThumbnailWithModeration
+            key={palette.id}
+            palette={palette}
+            refetch={refetch}
+            moderationStatus={tabs[tab].status}
+          />
         ))}
       </Box>
     )
