@@ -10,7 +10,10 @@ from backend.database.models import ModerationStatus, Palette
 def get_moderated_palettes() -> List[Palette]:
     session = SessionLocal()
     return (
-        session.query(Palette).filter(Palette.moderation_status == ModerationStatus.APPROVED).all()
+        session.query(Palette)
+        .options(joinedload(Palette.colors))
+        .filter(Palette.moderation_status == ModerationStatus.APPROVED)
+        .all()
     )
 
 
@@ -18,6 +21,7 @@ def get_unmoderated_palettes() -> List[Palette]:
     session = SessionLocal()
     return (
         session.query(Palette)
+        .options(joinedload(Palette.colors))
         .filter(
             (Palette.moderation_status == ModerationStatus.AWAITING_MODERATION)
             | (Palette.moderation_status == ModerationStatus.AWAITING_SUBMISSION)

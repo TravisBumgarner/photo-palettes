@@ -3,8 +3,10 @@
 import { Box, Grid, Typography } from '@mui/material'
 import { useQuery } from '@tanstack/react-query'
 import Link from 'next/link'
+import { useEffect } from 'react'
 import { getPalettes } from '../../api/palettes/getList'
 import config from '../../config'
+import { logger } from '../../services/logging'
 import Loading from '../sharedComponents/Loading'
 
 const Browse = () => {
@@ -13,11 +15,15 @@ const Browse = () => {
     queryFn: getPalettes,
   })
 
+  useEffect(() => {
+    if (error) logger.error(error)
+  }, [error])
+
   if (isLoading) {
     return <Loading />
   }
 
-  if (error) {
+  if (error || !data?.success) {
     return (
       <Box sx={{ p: 3 }}>
         <Typography variant="h5" color="error">
