@@ -1,11 +1,13 @@
 'use client'
 
+import { Box, Typography } from '@mui/material'
 import { useQuery } from '@tanstack/react-query'
 import { useParams } from 'next/navigation'
 import { useEffect } from 'react'
 import { getPaletteById } from '../../../api/palettes/getById'
 import { logger } from '../../../services/logging'
 import { EModerationStatus } from '../../../types'
+import { getContrastColor } from '../../../utils'
 import ErrorMessage from '../../sharedComponents/ErrorMessage'
 import InfoMessage from '../../sharedComponents/InfoMessage'
 import Loading from '../../sharedComponents/Loading'
@@ -31,34 +33,39 @@ const PalettePage = () => {
   if (!data.success) return <ErrorMessage error={data.error} />
 
   return (
-    <div>
+    <Box sx={{ display: 'flex', justifyContent: 'center' }}>
       {data.palette.moderation_status === EModerationStatus.AWAITING_MODERATION && (
         <InfoMessage info="This palette is pending approval." />
       )}
-      <>
+      <Box sx={{ maxWidth: '1000px' }}>
         <h1>{data.palette.name}</h1>
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
-          style={{ maxWidth: '900px', maxHeight: '900px' }}
+          style={{ maxWidth: '100%', maxHeight: '900px' }}
           src={`${process.env.NEXT_PUBLIC_API_URL}/uploads/${data.palette.image_url}`}
           alt="Palette"
         />
         <div style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap', gap: '10px' }}>
           {data.palette.colors.map((color: { id: string; hex: string }) => (
-            <div
+            <Box
               key={color.id}
               style={{
                 backgroundColor: color.hex,
-                width: '100px',
-                height: '100px',
+                height: '75px',
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                flexGrow: 1,
               }}
             >
-              {color.hex}
-            </div>
+              <Typography variant="body1" color={getContrastColor(color.hex)}>
+                {color.hex}
+              </Typography>
+            </Box>
           ))}
         </div>
-      </>
-    </div>
+      </Box>
+    </Box>
   )
 }
 

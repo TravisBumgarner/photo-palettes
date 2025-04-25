@@ -2,11 +2,11 @@
 
 import { Box, Grid, Typography } from '@mui/material'
 import { useQuery } from '@tanstack/react-query'
-import Link from 'next/link'
 import { useEffect } from 'react'
 import { getPalettes } from '../../api/palettes/getListModerated'
 import { logger } from '../../services/logging'
 import ErrorMessage from '../sharedComponents/ErrorMessage'
+import Link from '../sharedComponents/Link'
 import Loading from '../sharedComponents/Loading'
 import PaletteThumbnail from '../sharedComponents/PaletteThumbnail'
 
@@ -40,7 +40,7 @@ const Browse = () => {
       </Typography>
       <Grid container spacing={3}>
         {data?.palettes.map(palette => (
-          <Link href={`/palette/${palette.id}`} key={palette.id}>
+          <Link href={`/palette/${palette.id}`} key={palette.id} hideUnderline>
             <PaletteThumbnail palette={palette} />
           </Link>
         ))}

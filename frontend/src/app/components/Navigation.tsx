@@ -1,9 +1,9 @@
 'use client'
 
 import { Box } from '@mui/material'
-import Link from 'next/link'
 import useGlobalStore from '../../store'
 import { EPermissionLevel } from '../../types'
+import Link from '../sharedComponents/Link'
 
 const AuthLinks = () => {
   const appUserDetails = useGlobalStore(state => state.appUserDetails)

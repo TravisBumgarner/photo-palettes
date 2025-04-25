@@ -1,7 +1,7 @@
 'use client'
 
 import { Box } from '@mui/material'
-import Link from 'next/link'
+import Link from '../sharedComponents/Link'
 
 const Footer = () => {
   return (
