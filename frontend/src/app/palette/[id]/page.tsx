@@ -1,16 +1,43 @@
 'use client'
 
-import { Box, Typography } from '@mui/material'
+import { Box, Button, Typography } from '@mui/material'
 import { useQuery } from '@tanstack/react-query'
 import { useParams } from 'next/navigation'
-import { useEffect } from 'react'
+import { useCallback, useEffect } from 'react'
+import { moderatePalette } from '../../../api/moderatePalette'
 import { getPaletteById } from '../../../api/palettes/getById'
 import { logger } from '../../../services/logging'
-import { EModerationStatus } from '../../../types'
+import useGlobalStore from '../../../store'
+import { EModerationStatus, EPermissionLevel } from '../../../types'
 import { getContrastColor } from '../../../utils'
 import ErrorMessage from '../../sharedComponents/ErrorMessage'
 import InfoMessage from '../../sharedComponents/InfoMessage'
 import Loading from '../../sharedComponents/Loading'
+
+const ModerationPanel = ({ paletteId }: { paletteId: string }) => {
+  const appUserDetails = useGlobalStore(state => state.appUserDetails)
+  const addAlert = useGlobalStore(state => state.addAlert)
+  const handleReject = useCallback(async () => {
+    const response = await moderatePalette(paletteId, EModerationStatus.REJECTED)
+    if (response.success) {
+      addAlert('Palette rejected')
+    } else {
+      addAlert(response.error)
+    }
+  }, [paletteId, addAlert])
+  if (!appUserDetails) return null
+
+  if (appUserDetails.permissionLevel >= EPermissionLevel.MODERATOR) {
+    return (
+      <Box sx={{ display: 'flex', flexDirection: 'row', gap: '10px', border: '4px solid red' }}>
+        <Typography>Moderation Panel</Typography>
+        <Button onClick={handleReject}>Reject</Button>
+      </Box>
+    )
+  }
+
+  return <Box></Box>
+}
 
 const PalettePage = () => {
   const params = useParams()
@@ -64,6 +91,7 @@ const PalettePage = () => {
           ))}
         </div>
         <Typography variant="h1">{data.palette.name}</Typography>
+        <ModerationPanel paletteId={paletteId} />
       </Box>
     </Box>
   )

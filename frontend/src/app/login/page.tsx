@@ -2,7 +2,7 @@
 
 import { Box, Button, TextField } from '@mui/material'
 import { useRouter } from 'next/navigation'
-import { useCallback, useState } from 'react'
+import { ChangeEvent, useCallback, useState } from 'react'
 import { z } from 'zod'
 import { MINIMUM_PASSWORD_LENGTH } from '../../consts'
 import { login } from '../../services/supabase/actions'
@@ -15,8 +15,20 @@ const LoginSchema = z.object({
 
 export default function LoginPage() {
   const [error, setError] = useState<string | null>(null)
+  const [password, setPassword] = useState('')
+  const [email, setEmail] = useState('')
   const router = useRouter()
   const setIsAppAuthenticating = useGlobalStore(state => state.setIsAppAuthenticating)
+
+  const handleEmailChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
+    setError(null)
+    setEmail(e.target.value)
+  }, [])
+
+  const handlePasswordChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
+    setError(null)
+    setPassword(e.target.value)
+  }, [])
 
   const handleSubmit = useCallback(
     async (e: React.FormEvent<HTMLFormElement>) => {
@@ -68,6 +80,8 @@ export default function LoginPage() {
           label="Email"
           autoComplete="email"
           fullWidth
+          value={email}
+          onChange={handleEmailChange}
         />
         <TextField
           id="password"
@@ -78,6 +92,8 @@ export default function LoginPage() {
           label="Password"
           autoComplete="current-password"
           fullWidth
+          value={password}
+          onChange={handlePasswordChange}
         />
         <Button variant="contained" type="submit" fullWidth>
           Log in
