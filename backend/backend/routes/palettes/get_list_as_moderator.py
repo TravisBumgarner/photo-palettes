@@ -1,4 +1,5 @@
-from backend.database.queries.palettes import get_unmoderated_palettes
+from backend.database.models import ModerationStatus
+from backend.database.queries.palettes import get_palettes_by_moderation_status
 from backend.middleware.auth import RequestWithAuthState
 from backend.utils.auth import user_is_moderator
 
@@ -15,13 +16,13 @@ def validate_request(request: RequestWithAuthState):
     return None
 
 
-@palettes_router.get("/unmoderated")
-def get_list_unmoderated(request: RequestWithAuthState):
+@palettes_router.get("/moderator/{status}")
+def get_list_as_moderator(request: RequestWithAuthState, status: ModerationStatus):
     validation_error = validate_request(request)
     if validation_error:
         return validation_error
 
-    palettes = get_unmoderated_palettes()
+    palettes = get_palettes_by_moderation_status(status)
     return {
         "success": True,
         "palettes": palettes,
