@@ -8,36 +8,8 @@ import { useMemo } from 'react'
 // Base theme options shared between light and dark
 const baseThemeOptions: ThemeOptions = {
   typography: {
-    fontFamily: '"Satoshi", Arial, Helvetica, sans-serif',
     body1: {
       fontSize: '24px',
-    },
-  },
-  components: {
-    MuiCssBaseline: {
-      styleOverrides: {
-        '@font-face': {
-          fontFamily: 'Satoshi',
-          src: "url('/fonts/Satoshi-Variable.woff2') format('woff2'), url('/fonts/Satoshi-Variable.woff') format('woff'), url('/fonts/Satoshi-Variable.ttf') format('ttf')",
-          fontWeight: 400,
-          fontStyle: 'normal',
-          fontDisplay: 'swap',
-        },
-        'html, body': {
-          maxWidth: '100vw',
-          padding: '20px',
-          overflowX: 'hidden',
-          WebkitFontSmoothing: 'antialiased',
-          MozOsxFontSmoothing: 'grayscale',
-        },
-        a: {
-          textDecoration: 'none',
-          color: '#bd4e85',
-          '&:hover': {
-            textDecoration: 'underline',
-          },
-        },
-      },
     },
   },
 }
