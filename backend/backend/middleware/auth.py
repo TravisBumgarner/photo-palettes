@@ -15,7 +15,7 @@ config = get_config()
 public_routes = {"/", "/alpha/signup"}
 
 
-if config.environment == "development":
+if not config.is_production:
     public_routes.add("/docs")
     public_routes.add("/openapi.json")
 

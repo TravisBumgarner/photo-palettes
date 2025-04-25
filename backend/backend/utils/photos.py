@@ -6,13 +6,11 @@ config = get_config()
 
 
 def get_uploads_dir():
-    return os.path.join(
-        os.path.dirname(os.path.dirname(os.path.dirname(__file__))), "uploads"
-    )
+    return os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), "uploads")
 
 
 def save_photo(photo: bytes, filename: str) -> str:
-    if config.environment == "development":
+    if not config.is_production:
         uploads_dir = get_uploads_dir()
         os.makedirs(uploads_dir, exist_ok=True)
         file_path = os.path.join(uploads_dir, filename)
@@ -24,7 +22,7 @@ def save_photo(photo: bytes, filename: str) -> str:
 
 
 def get_photo(filename: str) -> bytes:
-    if config.environment == "development":
+    if not config.is_production:
         uploads_dir = get_uploads_dir()
         file_path = os.path.join(uploads_dir, filename)
         with open(file_path, "rb") as f:
