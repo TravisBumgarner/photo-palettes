@@ -4,7 +4,7 @@
 
 - Every endpoint should have a Zod discriminated union response keyed off of `success`.
 
-```typescript
+````typescript
 const zodResponse = z.discriminatedUnion('success', [
   z.object({
     success: z.literal(true),
@@ -22,10 +22,12 @@ const zodResponse = z.discriminatedUnion('success', [
 useEffect(() => {
     if (error) logger.error(error)
 }, [error])
-```
+````
 
 ## Backend
 
+- Import the router from **init**.py
+- Import the router back into **init**.py
 - Every endpoint should have a try-except block.
 
 ```python
