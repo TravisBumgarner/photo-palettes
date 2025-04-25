@@ -11,14 +11,14 @@ async def get_list_moderated(request: RequestWithAuthState):
     try:
         palettes = get_moderated_palettes()
 
+        return {
+            "success": True,
+            "palettes": map_palette_array_to_response(palettes),
+        }
+
     except Exception as error:
         log_error(error)
         return {
             "success": False,
             "error": "Failed to get moderated palettes",
         }
-
-    return {
-        "success": True,
-        "palettes": map_palette_array_to_response(palettes),
-    }

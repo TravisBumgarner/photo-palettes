@@ -1,6 +1,5 @@
 import uuid
 
-from fastapi import HTTPException
 from pydantic import BaseModel
 
 from backend.database.models import ModerationStatus
@@ -24,7 +23,10 @@ def validate_request(request: RequestWithAuthState):
                 f"User {request.state.app_user_id} is not a moderator but attempted to moderate a palette"
             )
         )
-        raise HTTPException(status_code=400, detail="User is not a moderator")
+        return {
+            "success": False,
+            "error": "User is not a moderator",
+        }
 
 
 @palettes_router.post("/moderate")
@@ -32,8 +34,15 @@ async def moderate(
     request: RequestWithAuthState,
     moderate_request: ModerateRequest,
 ):
-    validate_request(request)
+    validation_error = validate_request(request)
+    if validation_error:
+        return validation_error
 
-    update_palette_moderation_status(moderate_request.palette_id, moderate_request.status)
+    try:
+        update_palette_moderation_status(moderate_request.palette_id, moderate_request.status)
 
-    return {"success": True}
+        return {"success": True}
+
+    except Exception as e:
+        log_error(e)
+        return {"success": False, "error": "Failed to moderate palette"}

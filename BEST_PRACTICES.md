@@ -29,6 +29,8 @@ useEffect(() => {
 - Import the router from **init**.py
 - Import the router back into **init**.py
 - Every endpoint should have a try-except block.
+- Every endpoint should log errors using the logger.
+- Return no data with errors.
 
 ```python
 try:
