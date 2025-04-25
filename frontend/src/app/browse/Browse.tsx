@@ -4,7 +4,7 @@ import { Box, Grid, Typography } from '@mui/material'
 import { useQuery } from '@tanstack/react-query'
 import Link from 'next/link'
 import { useEffect } from 'react'
-import { getPalettes } from '../../api/palettes/getList'
+import { getPalettes } from '../../api/palettes/getListModerated'
 import config from '../../config'
 import { logger } from '../../services/logging'
 import Loading from '../sharedComponents/Loading'
@@ -13,6 +13,7 @@ const Browse = () => {
   const { data, isLoading, error } = useQuery({
     queryKey: ['palettes'],
     queryFn: getPalettes,
+    retry: false,
   })
 
   useEffect(() => {

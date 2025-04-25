@@ -6,7 +6,7 @@ from . import palettes_router
 
 
 @palettes_router.get("/")
-async def get_palettes(request: RequestWithAuthState):
+async def get_list_moderated(request: RequestWithAuthState):
     try:
         palettes = get_moderated_palettes()
     except Exception as error:

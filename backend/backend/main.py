@@ -13,7 +13,6 @@ from backend.middleware.filesize import LimitUploadSizeMiddleware
 from backend.routes import (
     alpha_signup,
     get_me,
-    get_moderation,
     moderate,
     ok,
     palettes,
@@ -56,6 +55,5 @@ async def lifespan(app: FastAPI):
 app.include_router(ok.router)
 app.include_router(alpha_signup.router)
 app.include_router(get_me.router)
-app.include_router(get_moderation.router)
 app.include_router(moderate.router)
 app.include_router(palettes.palettes_router, prefix="/palettes")

@@ -7,7 +7,7 @@ from pydantic import BaseModel
 from backend.database.models import ModerationStatus, Palette, PaletteColor
 from backend.database.queries.palettes import get_palette_by_id, update_palette
 from backend.middleware.auth import RequestWithAuthState
-from backend.utils.auth import user_is_admin, user_is_moderator
+from backend.utils.auth import user_is_moderator
 from backend.utils.colors import hex_to_rgb
 from backend.utils.logging import log_error
 from backend.utils.notifications import send_notification
@@ -22,16 +22,12 @@ class PaletteRequest(BaseModel):
 
 
 def validate_request(request: RequestWithAuthState, palette: Palette):
-    if not (
-        user_is_admin(request)
-        or user_is_moderator(request)
-        or request.state.app_user_id == palette.app_user_id
-    ):
+    if not (user_is_moderator(request) or request.state.app_user_id == palette.app_user_id):
         raise HTTPException(status_code=400, detail="User does not own resource")
 
 
 @palettes_router.post("/create")
-async def create_palette(
+async def create(
     request: RequestWithAuthState,
     palette_request: PaletteRequest,
 ):
@@ -72,4 +68,7 @@ async def create_palette(
 
     except Exception as e:
         log_error(e)
-        raise HTTPException(status_code=500, detail=str(e)) from e
+        return {
+            "success": False,
+            "error": "Failed to create palette",
+        }

@@ -2,10 +2,16 @@ import { z } from 'zod'
 import { getToken } from '../../services/supabase/utils'
 import { TPalette } from '../../types'
 
-const zodResponse = z.object({
-  success: z.boolean(),
-  palette_id: z.string(),
-})
+const zodResponse = z.discriminatedUnion('success', [
+  z.object({
+    success: z.literal(true),
+    palette_id: z.string(),
+  }),
+  z.object({
+    success: z.literal(false),
+    error: z.string(),
+  }),
+])
 
 export const savePalette = async ({
   palette,
