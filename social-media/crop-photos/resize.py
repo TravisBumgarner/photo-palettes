@@ -51,11 +51,7 @@ def process_images():
         shutil.rmtree(outdir)
     os.makedirs(outdir)
     if not os.path.exists(indir):
-<<<<<<< Updated upstream
-        print(f"Input directory '{indir}' does not exist.")
-=======
         print(f"Input directory '{indir}' does not exist")
->>>>>>> Stashed changes
         return
 
     print(f"Looking for images in '{indir}'")
