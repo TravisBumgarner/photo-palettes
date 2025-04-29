@@ -1,5 +1,16 @@
+import { z } from 'zod'
 import { getToken } from '../services/supabase/utils'
 import { EModerationStatus } from '../types'
+
+const zodResponse = z.discriminatedUnion('success', [
+  z.object({
+    success: z.literal(true),
+  }),
+  z.object({
+    success: z.literal(false),
+    error: z.string(),
+  }),
+])
 
 export const moderatePalette = async (paletteId: string, status: EModerationStatus) => {
   const token = await getToken()
@@ -13,5 +24,5 @@ export const moderatePalette = async (paletteId: string, status: EModerationStat
   })
 
   const data = await response.json()
-  return data
+  return zodResponse.parse(data)
 }
