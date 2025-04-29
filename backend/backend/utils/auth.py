@@ -1,3 +1,4 @@
+import uuid
 from typing import Any, Dict, Union
 
 from pydantic import BaseModel
@@ -17,8 +18,19 @@ def user_owns_resource(
     else:
         app_user_id = getattr(resource, "app_user_id", None)
 
-    return request.state.app_user_id == app_user_id
+    if app_user_id is None:
+        return False
+
+    # Convert both to UUID for comparison
+    try:
+        request_user_id = uuid.UUID(str(request.state.app_user_id))
+        resource_user_id = uuid.UUID(str(app_user_id))
+        return request_user_id == resource_user_id
+    except (ValueError, TypeError):
+        return False
 
 
 def user_is_moderator(request: RequestWithAuthState) -> bool:
+    if not request.state.app_user_id or not request.state.permission_level:
+        return False
     return request.state.permission_level in {PermissionLevel.MODERATOR, PermissionLevel.ADMIN}

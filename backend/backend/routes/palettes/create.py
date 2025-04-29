@@ -8,9 +8,9 @@ from backend.database.models import ModerationStatus, Palette, PaletteColor
 from backend.database.queries.palettes import get_palette_by_id, update_palette
 from backend.middleware.auth import RequestWithAuthState
 from backend.services.logger import log_error
+from backend.services.pushover import send_pushover_notification
 from backend.utils.auth import user_is_moderator
 from backend.utils.colors import hex_to_rgb
-from backend.utils.notifications import send_notification
 
 from . import palettes_router
 
@@ -65,7 +65,7 @@ async def create(
             colors=colors,
         )
 
-        send_notification(f"New palette submitted: {palette_request.name}")
+        send_pushover_notification(f"New palette submitted: {palette_request.name}")
         return {
             "success": True,
             "palette_id": palette.id,
