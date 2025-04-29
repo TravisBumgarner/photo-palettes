@@ -6,8 +6,6 @@ from backend.config import get_config
 
 config = get_config()
 
-print("config", config)
-
 # Configuration
 
 

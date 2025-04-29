@@ -5,8 +5,9 @@ from backend.config import get_config
 config = get_config()
 
 
-def send_notification(message: str) -> bool:
+def send_pushover_notification(message: str) -> bool:
     if not config.is_production:
+        print("Pushover: ", message)
         return True
 
     try:
