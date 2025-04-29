@@ -1,1 +1,0 @@
-./scripts/deploy-frontend.sh && ./scripts/deploy-backend.sh
