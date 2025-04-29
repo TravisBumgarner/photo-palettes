@@ -9,3 +9,6 @@ __pycache__/
 *.pyz
 .pytest_cache/
 uploads/
+
+.dmypy.json
+.mypy_cache/
