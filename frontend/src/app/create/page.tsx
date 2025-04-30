@@ -173,8 +173,9 @@ const Create = () => {
           </Box>
         )}
         {uploadStatus === UploadStatus.SUBMITTED && (
-          <Box>
+          <Box sx={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
             <Typography>Palette submitted</Typography>
+            <Loading />
           </Box>
         )}
       </Box>

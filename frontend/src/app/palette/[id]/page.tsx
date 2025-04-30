@@ -67,7 +67,7 @@ const PalettePage = () => {
       <Box sx={{ maxWidth: '1000px' }}>
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
-          style={{ maxWidth: '100%', maxHeight: '900px' }}
+          style={{ maxWidth: '100%', maxHeight: '70vh', margin: '0 auto', display: 'block' }}
           src={data.palette.photo_url}
           alt="Palette"
         />
