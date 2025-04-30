@@ -6,6 +6,7 @@ palettes_router = APIRouter()
 from . import (
     create,
     generate,
+    get_by_app_user_id,
     get_by_id,
     get_list_as_moderator,
     get_list_moderated,

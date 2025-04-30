@@ -88,7 +88,7 @@ def get_palettes_by_app_user_id(
             session.query(Palette)
             .options(joinedload(Palette.colors))
             .filter(Palette.app_user_id == app_user_id)
-            .filter(Palette.moderation_status == ModerationStatus.APPROVED)
+            # .filter(Palette.moderation_status == ModerationStatus.APPROVED)
             .all()
         )
     else:
@@ -96,6 +96,5 @@ def get_palettes_by_app_user_id(
             session.query(Palette)
             .options(joinedload(Palette.colors))
             .filter(Palette.app_user_id == app_user_id)
-            .filter(Palette.moderation_status == ModerationStatus.APPROVED)
             .all()
         )
