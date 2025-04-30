@@ -23,8 +23,8 @@ const DraggableSwatch = ({
     <Box
       sx={{
         position: 'absolute',
-        left: `${swatch.percent_location[0]}%`,
-        top: `${swatch.percent_location[1]}%`,
+        left: `${swatch.percentLocation[0]}%`,
+        top: `${swatch.percentLocation[1]}%`,
         transform: 'translate(-50%, -50%)',
         width: '15px',
         height: '15px',

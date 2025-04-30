@@ -4,11 +4,11 @@ import { getToken } from '../../services/supabase/utils'
 const zodResponse = z.discriminatedUnion('success', [
   z.object({
     success: z.literal(true),
-    palette_id: z.string(),
+    paletteId: z.string(),
     palette: z.array(
       z.object({
         color: z.string(),
-        percent_location: z.tuple([z.number(), z.number()]),
+        percentLocation: z.tuple([z.number(), z.number()]),
       })
     ),
   }),

@@ -61,14 +61,14 @@ const PalettePage = () => {
 
   return (
     <Box sx={{ display: 'flex', justifyContent: 'center', flexDirection: 'column' }}>
-      {data.palette.moderation_status === EModerationStatus.AWAITING_MODERATION && (
+      {data.palette.moderationStatus === EModerationStatus.AWAITING_MODERATION && (
         <InfoMessage info="This palette is pending approval." />
       )}
       <Box sx={{ maxWidth: '1000px' }}>
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           style={{ maxWidth: '100%', maxHeight: '900px' }}
-          src={data.palette.photo_url}
+          src={data.palette.photoUrl}
           alt="Palette"
         />
         <div style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap', gap: '10px' }}>

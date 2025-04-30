@@ -53,7 +53,7 @@ const Create = () => {
       const response = await generatePaletteMutation.mutateAsync(photo)
       if (response.success) {
         setPalette(response.palette)
-        setPaletteId(response.palette_id)
+        setPaletteId(response.paletteId)
         setUploadStatus(UploadStatus.UPLOADED)
       } else {
         setUploadStatus(UploadStatus.ERROR)

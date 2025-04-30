@@ -78,7 +78,7 @@ def update_palette(palette_id: uuid.UUID, **kwargs):
     return palette
 
 
-def get_palettes_by_user_id(app_user_id: uuid.UUID) -> List[Palette]:
+def get_palettes_by_app_user_id(app_user_id: uuid.UUID) -> List[Palette]:
     session = SessionLocal()
     return (
         session.query(Palette)

@@ -1,26 +1,11 @@
 import { z } from 'zod'
 import { getToken } from '../../services/supabase/utils'
+import { zodPalette } from '../types'
 
 const zodResponse = z.discriminatedUnion('success', [
   z.object({
     success: z.literal(true),
-    palettes: z.array(
-      z.object({
-        id: z.string(),
-        name: z.string(),
-        photo_url: z.string(),
-        created_at: z.string(),
-        colors: z.array(
-          z.object({
-            id: z.string(),
-            hex: z.string(),
-            r: z.number(),
-            g: z.number(),
-            b: z.number(),
-          })
-        ),
-      })
-    ),
+    palettes: z.array(zodPalette),
   }),
   z.object({
     success: z.literal(false),

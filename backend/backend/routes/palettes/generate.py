@@ -60,7 +60,7 @@ async def generate(
         return {
             "success": True,
             "palette": colors,
-            "palette_id": palette.id,
+            "paletteId": palette.id,
         }
     except Exception as error:
         log_error(error)

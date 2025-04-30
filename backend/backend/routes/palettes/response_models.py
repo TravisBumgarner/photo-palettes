@@ -18,18 +18,18 @@ class PaletteColorResponse(BaseModel):
 class PaletteResponse(BaseModel):
     id: UUID
     name: str
-    created_at: datetime
-    photo_url: str
+    createdAt: datetime
+    photoUrl: str
     colors: List[PaletteColorResponse]
-    moderation_status: int
+    moderationStatus: int
 
 
 def map_palette_to_response(palette: Palette) -> PaletteResponse:
     return PaletteResponse(
         id=palette.id,
         name=palette.name,
-        created_at=palette.created_at,
-        photo_url=palette.photo_url,
+        createdAt=palette.created_at,
+        photoUrl=palette.photo_url,
         colors=[
             PaletteColorResponse(
                 id=color.id,
@@ -40,7 +40,7 @@ def map_palette_to_response(palette: Palette) -> PaletteResponse:
             )
             for color in palette.colors
         ],
-        moderation_status=palette.moderation_status,
+        moderationStatus=palette.moderation_status,
     )
 
 

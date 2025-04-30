@@ -5,7 +5,7 @@ import { TPalette } from '../../types'
 const zodResponse = z.discriminatedUnion('success', [
   z.object({
     success: z.literal(true),
-    palette_id: z.string(),
+    paletteId: z.string(),
   }),
   z.object({
     success: z.literal(false),
