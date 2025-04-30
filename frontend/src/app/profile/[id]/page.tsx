@@ -2,14 +2,14 @@
 
 import { Box, Tab, Tabs, Typography } from '@mui/material'
 import { useQuery } from '@tanstack/react-query'
+import { useParams } from 'next/navigation'
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import { getListAsModerator } from '../../api/palettes/getListAsModerator'
-import { logger } from '../../services/logging'
-import useGlobalStore from '../../store'
-import { EModerationStatus } from '../../types'
-import ErrorMessage from '../sharedComponents/ErrorMessage'
-import Loading from '../sharedComponents/Loading'
-import PaletteThumbnail from '../sharedComponents/PaletteThumbnail'
+import { getListAsModerator } from '../../../api/palettes/getListAsModerator'
+import { logger } from '../../../services/logging'
+import { EModerationStatus } from '../../../types'
+import ErrorMessage from '../../sharedComponents/ErrorMessage'
+import Loading from '../../sharedComponents/Loading'
+import PaletteThumbnail from '../../sharedComponents/PaletteThumbnail'
 
 const Empty = ({ type }: { type: string }) => (
   <Box
@@ -33,15 +33,15 @@ const tabs = [
   { label: 'Rejected', status: EModerationStatus.REJECTED },
 ]
 
-const Moderation = () => {
+const Profile = () => {
   const [tab, setTab] = useState(0)
   const { data, isLoading, error, refetch } = useQuery({
     queryKey: ['moderation', tabs[tab].status],
     queryFn: () => getListAsModerator(tabs[tab].status),
     retry: false,
   })
-  const appUserDetails = useGlobalStore(state => state.appUserDetails)
-  const authId = useGlobalStore(state => state.authId)
+  const params = useParams()
+  const appUserId = params.id as string
 
   useEffect(() => {
     if (error) logger.error(error)
@@ -70,13 +70,9 @@ const Moderation = () => {
     )
   }, [data, error, isLoading, tab])
 
-  if (!appUserDetails || !authId) {
-    return <div>Not logged in</div>
-  }
-
   return (
     <Box sx={{ p: 3 }}>
-      <Typography variant="h1">Hello {appUserDetails.email}</Typography>
+      <Typography variant="h1">User: {appUserId}</Typography>
       <Tabs value={tab} onChange={handleTabChange} sx={{ mb: 3 }}>
         {tabs.map((t, i) => (
           <Tab key={i} label={t.label} />
@@ -87,4 +83,4 @@ const Moderation = () => {
   )
 }
 
-export default Moderation
+export default Profile

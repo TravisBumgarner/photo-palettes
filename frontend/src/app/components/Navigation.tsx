@@ -20,7 +20,7 @@ const AuthLinks = ({ onClose }: { onClose: () => void }) => {
       { key: 'signup', href: '/signup', label: 'Signup' },
     ],
     member: [
-      { key: 'profile', href: '/profile', label: 'Profile' },
+      { key: 'profile', href: `/profile/${appUserDetails?.id}`, label: 'Profile' },
       { key: 'logout', href: '/logout', label: 'Logout' },
     ],
     moderator: [{ key: 'moderation', href: '/moderation', label: 'Moderation' }],
