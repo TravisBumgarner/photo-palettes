@@ -69,6 +69,11 @@ const ROUTES: Record<string, TRoute> = {
     href: '/tos',
     label: 'Terms of Service',
   },
+  voting: {
+    key: 'voting',
+    href: '/voting',
+    label: 'New Features',
+  },
 }
 
 const DropdownLinks = ({ onClose }: { onClose: () => void }) => {
@@ -76,12 +81,21 @@ const DropdownLinks = ({ onClose }: { onClose: () => void }) => {
 
   const routeKeys = useMemo(() => {
     if (!appUserDetails)
-      return ['home', 'login', 'signup', 'feedback', 'privacyPolicy', 'termsOfService'] as const
+      return [
+        'home',
+        'login',
+        'signup',
+        'feedback',
+        'voting',
+        'privacyPolicy',
+        'termsOfService',
+      ] as const
 
     if (appUserDetails.permissionLevel >= EPermissionLevel.MODERATOR)
       return [
         'home',
         'create',
+        'voting',
         'moderation',
         'profile',
         'feedback',
@@ -93,6 +107,7 @@ const DropdownLinks = ({ onClose }: { onClose: () => void }) => {
     return [
       'home',
       'create',
+      'voting',
       'profile',
       'feedback',
       'logout',

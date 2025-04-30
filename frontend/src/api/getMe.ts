@@ -1,31 +1,19 @@
 import { z } from 'zod'
 import { getToken } from '../services/supabase/utils'
 
-const zodResponse = z
-  .discriminatedUnion('success', [
-    z.object({
-      success: z.literal(true),
-      permission_level: z.number(),
-      display_name: z.string(),
-      email: z.string(),
-      id: z.string(),
-    }),
-    z.object({
-      success: z.literal(false),
-      error: z.string(),
-    }),
-  ])
-  .transform(obj =>
-    obj.success
-      ? {
-          success: true,
-          permissionLevel: obj.permission_level,
-          displayName: obj.display_name,
-          email: obj.email,
-          id: obj.id,
-        }
-      : obj
-  )
+const zodResponse = z.discriminatedUnion('success', [
+  z.object({
+    success: z.literal(true),
+    permissionLevel: z.number(),
+    displayName: z.string(),
+    email: z.string(),
+    id: z.string(),
+  }),
+  z.object({
+    success: z.literal(false),
+    error: z.string(),
+  }),
+])
 
 export const getMe = async () => {
   const token = await getToken()
@@ -45,5 +33,6 @@ export const getMe = async () => {
   })
 
   const json = await response.json()
+
   return zodResponse.parse(json)
 }

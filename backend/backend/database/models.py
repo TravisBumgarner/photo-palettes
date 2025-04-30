@@ -80,3 +80,34 @@ class Palette(Base):
     @property
     def photo_url(self) -> str:
         return get_photo_path(self.photo_details)
+
+
+class FeatureRequestStatus(IntEnum):
+    PENDING = 0
+    APPROVED = 1
+    REJECTED = 2
+
+
+class FeatureRequestVote(Base):
+    __tablename__ = "feature_request_votes"
+
+    id: Mapped[uuid.UUID] = mapped_column(primary_key=True, default=uuid.uuid4)
+    request_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("feature_requests.id"))
+    app_user_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("app_users.id"))
+
+    request: Mapped["FeatureRequest"] = relationship("FeatureRequest", back_populates="votes")
+
+
+class FeatureRequest(Base):
+    __tablename__ = "feature_requests"
+
+    id: Mapped[uuid.UUID] = mapped_column(primary_key=True, default=uuid.uuid4)
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.now)
+    title: Mapped[str] = mapped_column(String)
+    description: Mapped[str] = mapped_column(String)
+    status: Mapped[FeatureRequestStatus] = mapped_column(
+        Integer, default=FeatureRequestStatus.PENDING
+    )
+    votes: Mapped[List["FeatureRequestVote"]] = relationship(
+        "FeatureRequestVote", back_populates="request"
+    )
