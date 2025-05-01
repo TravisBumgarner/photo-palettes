@@ -10,15 +10,7 @@ import { PALETTE } from '../../styles/Theme'
 import { EPermissionLevel } from '../../types'
 import Link from '../sharedComponents/Link'
 
-type TRoute = {
-  key: string
-  href: string
-  label: string
-  permissionLevel?: EPermissionLevel
-  showWhenLoggedIn?: boolean
-}
-
-const ROUTES: Record<string, TRoute> = {
+const ROUTES = {
   home: {
     key: 'home',
     href: '/',
@@ -69,51 +61,51 @@ const ROUTES: Record<string, TRoute> = {
     href: '/tos',
     label: 'Terms of Service',
   },
-  voting: {
-    key: 'voting',
-    href: '/voting',
-    label: 'New Features',
+  featureRequests: {
+    key: 'featureRequests',
+    href: '/feature_requests',
+    label: 'Feature Requests',
   },
 }
 
 const DropdownLinks = ({ onClose }: { onClose: () => void }) => {
   const appUserDetails = useGlobalStore(state => state.appUserDetails)
 
-  const routeKeys = useMemo(() => {
+  const routeKeys = useMemo((): (keyof typeof ROUTES)[] => {
     if (!appUserDetails)
       return [
         'home',
         'login',
         'signup',
         'feedback',
-        'voting',
+        'featureRequests',
         'privacyPolicy',
         'termsOfService',
-      ] as const
+      ]
 
     if (appUserDetails.permissionLevel >= EPermissionLevel.MODERATOR)
       return [
         'home',
         'create',
-        'voting',
+        'featureRequests',
         'moderation',
         'profile',
         'feedback',
         'logout',
         'privacyPolicy',
         'termsOfService',
-      ] as const
+      ]
 
     return [
       'home',
       'create',
-      'voting',
+      'featureRequests',
       'profile',
       'feedback',
       'logout',
       'privacyPolicy',
       'termsOfService',
-    ] as const
+    ]
   }, [appUserDetails])
 
   return (

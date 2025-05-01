@@ -37,11 +37,14 @@ def get_votes() -> List[FeatureRequest]:
     return session.query(FeatureRequest).options(joinedload(FeatureRequest.votes)).all()
 
 
-def get_votes_by_app_user_id(app_user_id: uuid.UUID) -> List[FeatureRequestVote]:
+def has_user_voted(request_id: uuid.UUID, app_user_id: uuid.UUID) -> bool:
     session = SessionLocal()
     return (
         session.query(FeatureRequestVote)
-        .options(joinedload(FeatureRequestVote.request))
-        .filter(FeatureRequestVote.app_user_id == app_user_id)
-        .all()
+        .filter(
+            FeatureRequestVote.request_id == request_id,
+            FeatureRequestVote.app_user_id == app_user_id,
+        )
+        .count()
+        > 0
     )

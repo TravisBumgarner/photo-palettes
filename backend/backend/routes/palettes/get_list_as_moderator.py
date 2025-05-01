@@ -5,7 +5,7 @@ from backend.services.logger import log_error
 from backend.utils.auth import user_is_moderator
 
 from . import palettes_router
-from .response_models import map_palette_array_to_response
+from .palette_response_models import map_palette_array_to_response
 
 
 def validate_request(request: RequestWithAuthState):

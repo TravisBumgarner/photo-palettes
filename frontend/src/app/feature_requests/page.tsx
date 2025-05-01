@@ -1,0 +1,166 @@
+'use client'
+
+import { Box, Button, TextField, Typography } from '@mui/material'
+import { useMutation, useQuery } from '@tanstack/react-query'
+import React, { useCallback, useState } from 'react'
+import addFeatureRequest from '../../api/featureRequests/addFeatureRequest'
+import getFeatureRequests from '../../api/featureRequests/getFeatureRequests'
+import upvoteFeatureRequest from '../../api/featureRequests/upvoteFeatureRequst'
+import useGlobalStore from '../../store'
+import { EPermissionLevel, TFeatureRequest } from '../../types'
+import Link from '../sharedComponents/Link'
+
+const FeatureRequestCard = ({
+  featureRequest,
+  readonly,
+  refetch,
+}: {
+  featureRequest: TFeatureRequest
+  readonly: boolean
+  refetch: () => void
+}) => {
+  const appUserDetails = useGlobalStore(store => store.appUserDetails)
+  const { mutate, isPending, isSuccess } = useMutation({
+    mutationFn: (featureRequestId: string) => upvoteFeatureRequest(featureRequestId),
+    onSuccess: () => {
+      refetch()
+    },
+  })
+
+  const handleClick = useCallback(() => {
+    if (readonly) return
+
+    mutate(featureRequest.id)
+  }, [mutate, featureRequest.id, readonly])
+
+  return (
+    <Box
+      sx={{
+        border: '2px solid black',
+        padding: 2,
+        borderRadius: '10px',
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+      }}
+    >
+      <Box>
+        <Typography variant="h2">{featureRequest.title}</Typography>
+        <Typography variant="body1">{featureRequest.description}</Typography>
+      </Box>
+      <Box sx={{ display: 'flex', flexDirection: 'row', gap: 2 }}>
+        <Typography variant="body1">Votes: {featureRequest.votes.length}</Typography>
+        {!readonly && (
+          <Button
+            disabled={
+              isPending || isSuccess || featureRequest.votes.includes(appUserDetails?.id || '')
+            }
+            onClick={handleClick}
+            variant="contained"
+            color="primary"
+          >
+            {isPending ? 'Upvoting...' : 'Upvote'}
+          </Button>
+        )}
+      </Box>
+    </Box>
+  )
+}
+
+const NewFeatureSubmission = ({ refetch }: { refetch: () => void }) => {
+  const [title, setTitle] = useState('')
+  const [description, setDescription] = useState('')
+  const addAlert = useGlobalStore(store => store.addAlert)
+
+  const { mutateAsync, isPending } = useMutation({
+    mutationFn: () => addFeatureRequest(title, description),
+    onSuccess: () => {
+      addAlert('Feature request submitted')
+      setTitle('')
+      setDescription('')
+      refetch()
+    },
+  })
+
+  const handleSubmitFeatureRequest = useCallback(async () => {
+    await mutateAsync()
+  }, [mutateAsync])
+
+  const handleTitleChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    setTitle(e.target.value)
+  }, [])
+
+  const handleDescriptionChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    setDescription(e.target.value)
+  }, [])
+
+  return (
+    <Box
+      sx={{
+        border: '2px solid black',
+        padding: 2,
+        borderRadius: '10px',
+      }}
+    >
+      <Typography variant="h2">Moderators Only</Typography>
+      <Box sx={{ display: 'flex', flexDirection: 'row', gap: 2, alignItems: 'center' }}>
+        <Typography variant="body1">Add</Typography>
+        <TextField label="Title" value={title} onChange={handleTitleChange} />
+        <TextField
+          sx={{ flexGrow: 1 }}
+          label="Description"
+          value={description}
+          onChange={handleDescriptionChange}
+        />
+        <Button
+          disabled={title === '' || description === '' || isPending}
+          onClick={handleSubmitFeatureRequest}
+        >
+          {isPending ? 'Submitting...' : 'Submit'}
+        </Button>
+      </Box>
+    </Box>
+  )
+}
+
+const Voting = () => {
+  const appUserDetails = useGlobalStore(store => store.appUserDetails)
+
+  const { data, isLoading, error, refetch } = useQuery({
+    queryKey: ['feature-requests'],
+    queryFn: getFeatureRequests,
+  })
+
+  if (isLoading) {
+    return <Box>Loading...</Box>
+  }
+
+  if (error || !data?.success) {
+    return <Box>Error: {error?.message}</Box>
+  }
+
+  return (
+    <Box>
+      <Typography variant="h1">Voting</Typography>
+      <Typography variant="body1">
+        Want to discuss or suggest a feature? <Link href="/feedback">Click here</Link>
+      </Typography>
+      {appUserDetails && appUserDetails?.permissionLevel >= EPermissionLevel.MODERATOR && (
+        <NewFeatureSubmission refetch={refetch} />
+      )}
+      <Box sx={{ marginTop: 2, display: 'flex', flexDirection: 'column', gap: 2 }}>
+        {data.featureRequests.map(featureRequest => (
+          <FeatureRequestCard
+            readonly={!appUserDetails}
+            key={featureRequest.id}
+            featureRequest={featureRequest}
+            refetch={refetch}
+          />
+        ))}
+      </Box>
+    </Box>
+  )
+}
+
+export default Voting

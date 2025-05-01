@@ -44,4 +44,5 @@ export type TFeatureRequest = {
   title: string
   description: string
   status: EFeatureRequestStatus
+  votes: string[]
 }

@@ -3,7 +3,16 @@ import { NextResponse, type NextRequest } from 'next/server'
 import config from '../../config'
 
 // List of public routes that don't require authentication
-const publicRoutes = ['/', '/login', '/signup', '/auth', '/privacy', '/tos', '/donations']
+const publicRoutes = [
+  '/',
+  '/login',
+  '/signup',
+  '/auth',
+  '/privacy',
+  '/tos',
+  '/donations',
+  '/feature_requests',
+]
 
 // Check if a path is in the public routes list
 const isPublicRoute = (path: string) => {
