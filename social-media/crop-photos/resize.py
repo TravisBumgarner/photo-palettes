@@ -1,6 +1,7 @@
 import os
 import shutil
-from PIL import Image, UnidentifiedImageError, ImageChops
+
+from PIL import Image, ImageChops, UnidentifiedImageError
 
 IMG_EXTS = {".png", ".jpg", ".jpeg", ".bmp", ".gif", ".tiff"}
 CROP = 300
@@ -40,7 +41,6 @@ def process_images():
         shutil.rmtree(outdir)
     os.makedirs(outdir)
     if not os.path.exists(indir):
-
         return
     for fname in os.listdir(indir):
         base, ext = os.path.splitext(fname)
@@ -55,7 +55,6 @@ def process_images():
         img = pad_to_square_with_min_padding(img, min_pad=30)
         outname = os.path.join(outdir, fname)
         img.save(outname)
-        print(f"Saved {outname}")
 
 
 if __name__ == "__main__":

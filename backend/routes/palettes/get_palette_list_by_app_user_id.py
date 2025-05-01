@@ -14,14 +14,11 @@ async def get_by_app_user_id(
     request: RequestWithAuthState, app_user_id: str, status: ModerationStatus
 ):
     try:
-        print("request.state??", request.state.app_user_id)
         # If user is not logged in, they are viewing another user's palettes.
         if not getattr(request.state, "app_user_id", None):
             is_viewing_other_user = True
         else:
             is_viewing_other_user = request.state.app_user_id != UUID(app_user_id)
-
-        print("is_viewing_other_user", is_viewing_other_user)
 
         # If the user is viewing another user's palettes, only show approved palettes.
         if is_viewing_other_user:

@@ -66,7 +66,6 @@ def update_palette(palette_id: uuid.UUID, **kwargs):
     if "colors" in kwargs:
         colors = kwargs.pop("colors")
         for color in colors:
-            print("adding color", color)
             session.add(color)
 
     # Handle other attributes

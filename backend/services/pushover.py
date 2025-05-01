@@ -1,13 +1,13 @@
 import requests
 
 from config import get_config
+from services.logger import log_error
 
 config = get_config()
 
 
 def send_pushover_notification(message: str) -> bool:
     if not config.is_production:
-        print("Pushover: ", message)
         return True
 
     try:
@@ -22,5 +22,5 @@ def send_pushover_notification(message: str) -> bool:
         response.raise_for_status()
         return True
     except Exception as e:
-        print(f"Error sending notification: {e}")
+        log_error(e, "send_pushover_notification")
         return False
