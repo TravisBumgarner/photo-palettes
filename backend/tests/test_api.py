@@ -95,3 +95,24 @@ def test_moderate_palette_unauthorized():
     # Status code 400 means the user is not a moderator. The test will fail for other reasons because palette doesn't exist.
     assert response.json()["success"] == False
     assert response.json()["error"] == "User is not a moderator"
+
+
+def test_feature_requests():
+    create_response = requests.post(
+        f"{BASE_URL}/feature-requests",
+        headers={**get_moderator_auth_headers(), "Content-Type": "application/json"},
+        json={"title": "Test Feature Request", "description": "Test Description"},
+    )
+    assert create_response.status_code == 200
+    assert "featureRequestId" in create_response.json()
+
+    feature_request_id = create_response.json()["featureRequestId"]
+
+    upvote_response = requests.post(
+        f"{BASE_URL}/feature-requests/upvote",
+        headers={**get_user_auth_headers(), "Content-Type": "application/json"},
+        json={"feature_request_id": feature_request_id},
+    )
+    assert upvote_response.status_code == 200
+    assert "featureRequestId" in upvote_response.json()
+    assert upvote_response.json()["featureRequestId"] == feature_request_id
