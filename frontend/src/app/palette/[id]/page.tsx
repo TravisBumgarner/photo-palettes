@@ -64,6 +64,9 @@ const PalettePage = () => {
       {data.palette.moderationStatus === EModerationStatus.AWAITING_MODERATION && (
         <InfoMessage info="This palette is pending approval." />
       )}
+      {data.palette.moderationStatus === EModerationStatus.REJECTED && (
+        <ErrorMessage error="This palette was rejected." />
+      )}
       <Box sx={{ maxWidth: '1000px' }}>
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img

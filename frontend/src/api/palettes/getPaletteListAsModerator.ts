@@ -17,13 +17,15 @@ const zodResponse = z.discriminatedUnion('success', [
 export const getListAsModerator = async (status: EModerationStatus) => {
   const token = await getToken()
 
-  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/palettes/moderator/${status}`, {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${token}`,
-    },
-  })
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}/palettes/moderator?status=${status}`,
+    {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  )
   const json = await response.json()
   return zodResponse.parse(json)
 }

@@ -72,7 +72,7 @@ async def create(
         }
 
     except Exception as e:
-        log_error(e)
+        log_error(e, "create_palette")
         return {
             "success": False,
             "error": "Failed to create palette",

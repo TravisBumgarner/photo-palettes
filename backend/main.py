@@ -35,7 +35,7 @@ setup_cors(app, config.is_production)
 
 # Mount the uploads directory for static file serving
 uploads_dir = os.path.join(os.path.dirname(__file__), "uploads")
-print("Uploads directory:", uploads_dir)
+
 os.makedirs(uploads_dir, exist_ok=True)
 app.mount("/uploads", StaticFiles(directory=uploads_dir), name="uploads")
 

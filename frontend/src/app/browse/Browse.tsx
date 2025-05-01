@@ -6,7 +6,6 @@ import { useEffect } from 'react'
 import getPaletteListModerated from '../../api/palettes/getPaletteListModerated'
 import { logger } from '../../services/logging'
 import ErrorMessage from '../sharedComponents/ErrorMessage'
-import Link from '../sharedComponents/Link'
 import Loading from '../sharedComponents/Loading'
 import PaletteThumbnail from '../sharedComponents/PaletteThumbnail'
 
@@ -43,11 +42,7 @@ const Browse = () => {
           gap: '20px',
         }}
       >
-        {data?.palettes.map(palette => (
-          <Link href={`/palette/${palette.id}`} key={palette.id} hideUnderline>
-            <PaletteThumbnail palette={palette} />
-          </Link>
-        ))}
+        {data?.palettes.map(palette => <PaletteThumbnail key={palette.id} palette={palette} />)}
       </Box>
     </Box>
   )

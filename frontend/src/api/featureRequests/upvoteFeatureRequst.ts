@@ -16,17 +16,20 @@ const zodSchema = z.discriminatedUnion('success', [
 const upvoteFeatureRequest = async (featureRequestId: string) => {
   const token = await getToken()
 
-  if (!token)
+  if (!token) {
     return {
       success: false,
       error: 'No token',
     } as const
+  }
 
-  const response = await fetch(`${config.apiUrl}/feature-requests/upvote/${featureRequestId}`, {
+  const response = await fetch(`${config.apiUrl}/feature-requests/upvote`, {
     method: 'POST',
     headers: {
       Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json',
     },
+    body: JSON.stringify({ feature_request_id: featureRequestId }),
   })
 
   const data = await response.json()

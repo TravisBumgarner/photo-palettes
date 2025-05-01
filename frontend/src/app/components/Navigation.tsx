@@ -16,6 +16,11 @@ const ROUTES = {
     href: '/',
     label: 'Home',
   },
+  browse: {
+    key: 'browse',
+    href: '/browse',
+    label: 'Browse',
+  },
   moderation: {
     key: 'moderation',
     href: '/moderation',
@@ -143,6 +148,7 @@ const Navigation = () => {
         }}
       >
         <Link href="/">Photo Palettes</Link>
+        {!appUserDetails && <Link href="/browse">Browse</Link>}
       </Box>
       <Box sx={{ display: 'flex', flexDirection: 'row', gap: '14px' }}>
         {appUserDetails && (

@@ -66,7 +66,7 @@ async def generate(
             "paletteId": palette.id,
         }
     except Exception as error:
-        log_error(error)
+        log_error(error, "generate_palette")
         return {
             "success": False,
             "error": "Failed to generate palette",
