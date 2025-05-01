@@ -14,6 +14,7 @@ const publicRoutes = [
   '/feature_requests',
   '/feedback',
   '/palette',
+  '/browse',
 ]
 
 // Check if a path is in the public routes list

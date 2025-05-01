@@ -9,9 +9,9 @@ from .palette_response_models import map_palette_to_response
 
 
 @palettes_router.get("/id")
-async def get_by_id(request: RequestWithAuthState, palette_id: str):
+async def get_by_id(request: RequestWithAuthState, id: str):
     try:
-        palette = get_palette_by_id(UUID(palette_id))
+        palette = get_palette_by_id(UUID(id))
 
         if not palette:
             return {

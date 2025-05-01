@@ -17,6 +17,8 @@ public_routes = {
     ("/alpha/signup", "POST"),
     ("/feature-requests", "GET"),
     ("/palettes/app_user_id", "GET"),
+    ("/palettes", "GET"),
+    ("/palettes/id", "GET"),
 }
 
 if not config.is_production:
