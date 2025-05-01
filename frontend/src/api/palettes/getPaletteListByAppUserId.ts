@@ -13,7 +13,7 @@ const zodResponse = z.discriminatedUnion('success', [
   }),
 ])
 
-export const getListByAppUserId = async (appUserId: string) => {
+export const getPaletteListByAppUserId = async (appUserId: string) => {
   const token = await getToken()
 
   const response = await fetch(

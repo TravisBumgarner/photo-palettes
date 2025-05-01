@@ -4,7 +4,7 @@ import { Box, Tab, Tabs, Typography } from '@mui/material'
 import { useQuery } from '@tanstack/react-query'
 import { useParams } from 'next/navigation'
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import { getListByAppUserId } from '../../../api/palettes/getListByAppUserId'
+import { getPaletteListByAppUserId } from '../../../api/palettes/getPaletteListByAppUserId'
 import { logger } from '../../../services/logging'
 import useGlobalStore from '../../../store'
 import { EModerationStatus } from '../../../types'
@@ -38,7 +38,7 @@ const Profile = () => {
 
   const { data, isLoading, error, refetch } = useQuery({
     queryKey: ['profile', profileUserId],
-    queryFn: () => getListByAppUserId(profileUserId),
+    queryFn: () => getPaletteListByAppUserId(profileUserId),
     retry: false,
   })
 
