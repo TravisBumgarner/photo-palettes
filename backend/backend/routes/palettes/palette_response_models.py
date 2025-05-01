@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import List
+from typing import Any, Dict, List, Tuple
 from uuid import UUID
 
 from pydantic import BaseModel
@@ -18,18 +18,20 @@ class PaletteColorResponse(BaseModel):
 class PaletteResponse(BaseModel):
     id: UUID
     name: str
-    created_at: datetime
-    photo_url: str
+    createdAt: datetime
+    photoUrl: str
     colors: List[PaletteColorResponse]
-    moderation_status: int
+    moderationStatus: int
+    appUserId: UUID
 
 
 def map_palette_to_response(palette: Palette) -> PaletteResponse:
     return PaletteResponse(
         id=palette.id,
         name=palette.name,
-        created_at=palette.created_at,
-        photo_url=palette.photo_url,
+        createdAt=palette.created_at,
+        appUserId=palette.app_user_id,
+        photoUrl=palette.photo_url,
         colors=[
             PaletteColorResponse(
                 id=color.id,
@@ -40,9 +42,33 @@ def map_palette_to_response(palette: Palette) -> PaletteResponse:
             )
             for color in palette.colors
         ],
-        moderation_status=palette.moderation_status,
+        moderationStatus=palette.moderation_status,
     )
 
 
 def map_palette_array_to_response(palettes: List[Palette]) -> List[PaletteResponse]:
     return [map_palette_to_response(palette) for palette in palettes]
+
+
+class GeneratePaletteResponse(BaseModel):
+    color: str
+    percentLocation: Tuple[int, int]
+
+
+def map_generate_palette_to_response(
+    color: str,
+    percent_location: Tuple[float, float],
+) -> GeneratePaletteResponse:
+    return GeneratePaletteResponse(
+        color=color,
+        percentLocation=(round(percent_location[0]), round(percent_location[1])),
+    )
+
+
+def map_generate_palette_array_to_response(
+    palette_data: List[Dict[str, Any]],
+) -> List[GeneratePaletteResponse]:
+    return [
+        map_generate_palette_to_response(item["color"], item["percent_location"])
+        for item in palette_data
+    ]

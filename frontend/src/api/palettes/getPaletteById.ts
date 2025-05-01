@@ -1,6 +1,6 @@
 import { z } from 'zod'
 import { getToken } from '../../services/supabase/utils'
-import { EModerationStatus } from '../../types'
+import { zodPalette } from '../types'
 
 const zodResponse = z.discriminatedUnion('success', [
   z.object({
@@ -9,22 +9,7 @@ const zodResponse = z.discriminatedUnion('success', [
   }),
   z.object({
     success: z.literal(true),
-    palette: z.object({
-      moderation_status: z.nativeEnum(EModerationStatus),
-      id: z.string(),
-      name: z.string(),
-      photo_url: z.string(),
-      created_at: z.string(),
-      colors: z.array(
-        z.object({
-          id: z.string(),
-          hex: z.string(),
-          r: z.number(),
-          g: z.number(),
-          b: z.number(),
-        })
-      ),
-    }),
+    palette: zodPalette,
   }),
 ])
 

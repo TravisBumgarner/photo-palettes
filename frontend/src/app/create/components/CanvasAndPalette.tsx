@@ -108,7 +108,7 @@ const CanvasAndPalette = ({
       const newPalette = [...palette]
       newPalette[draggingIndex] = {
         color: newColor,
-        percent_location: [x, y],
+        percentLocation: [x, y],
       }
       handlePaletteChange(newPalette)
     },
@@ -126,8 +126,8 @@ const CanvasAndPalette = ({
 
       // Check if click is near any circle
       const index = palette.findIndex(swatch => {
-        const circleX = swatch.percent_location[0]
-        const circleY = swatch.percent_location[1]
+        const circleX = swatch.percentLocation[0]
+        const circleY = swatch.percentLocation[1]
         const distance = Math.sqrt(Math.pow(x - circleX, 2) + Math.pow(y - circleY, 2))
         return distance < 5 // 5% threshold for clicking
       })

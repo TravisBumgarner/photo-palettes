@@ -126,7 +126,7 @@ const NewFeatureSubmission = ({ refetch }: { refetch: () => void }) => {
   )
 }
 
-const Voting = () => {
+const FeatureRequests = () => {
   const appUserDetails = useGlobalStore(store => store.appUserDetails)
   const noop = useCallback(() => {}, [])
 
@@ -145,7 +145,7 @@ const Voting = () => {
 
   return (
     <Box>
-      <Typography variant="h1">Voting</Typography>
+      <Typography variant="h1">Feature Requests</Typography>
       <Typography variant="body1">
         Want to discuss or suggest a feature? <Link href="/feedback">Click here</Link>
       </Typography>
@@ -176,4 +176,4 @@ const Voting = () => {
   )
 }
 
-export default Voting
+export default FeatureRequests

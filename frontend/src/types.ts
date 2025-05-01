@@ -1,6 +1,6 @@
 export type TSwatch = {
   color: string
-  percent_location: [number, number]
+  percentLocation: [number, number]
 }
 
 export type TPalette = TSwatch[]
@@ -27,9 +27,10 @@ export type TPaletteColor = {
 }
 
 export type TPaletteAndColors = {
+  appUserId: string
   id: string
   name: string
-  photo_url: string
+  photoUrl: string
   colors: TPaletteColor[]
 }
 

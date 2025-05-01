@@ -8,6 +8,9 @@ from backend.config import get_config
 from backend.database.models import Palette
 from backend.database.queries.palettes import create_palette
 from backend.middleware.auth import RequestWithAuthState
+from backend.routes.palettes.palette_response_models import (
+    map_generate_palette_array_to_response,
+)
 from backend.services.logger import log_error
 from backend.utils.photos import save_photo
 
@@ -59,8 +62,8 @@ async def generate(
 
         return {
             "success": True,
-            "palette": colors,
-            "palette_id": palette.id,
+            "palette": map_generate_palette_array_to_response(colors),
+            "paletteId": palette.id,
         }
     except Exception as error:
         log_error(error)
