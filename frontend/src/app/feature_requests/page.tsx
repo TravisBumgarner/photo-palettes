@@ -2,6 +2,7 @@
 
 import { Box, Button, TextField, Typography } from '@mui/material'
 import { useMutation, useQuery } from '@tanstack/react-query'
+import { Reorder } from 'framer-motion'
 import React, { useCallback, useState } from 'react'
 import addFeatureRequest from '../../api/featureRequests/addFeatureRequest'
 import getFeatureRequests from '../../api/featureRequests/getFeatureRequests'
@@ -43,6 +44,7 @@ const FeatureRequestCard = ({
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
+        margin: '15px 0',
       }}
     >
       <Box>
@@ -126,6 +128,7 @@ const NewFeatureSubmission = ({ refetch }: { refetch: () => void }) => {
 
 const Voting = () => {
   const appUserDetails = useGlobalStore(store => store.appUserDetails)
+  const noop = useCallback(() => {}, [])
 
   const { data, isLoading, error, refetch } = useQuery({
     queryKey: ['feature-requests'],
@@ -150,14 +153,24 @@ const Voting = () => {
         <NewFeatureSubmission refetch={refetch} />
       )}
       <Box sx={{ marginTop: 2, display: 'flex', flexDirection: 'column', gap: 2 }}>
-        {data.featureRequests.map(featureRequest => (
-          <FeatureRequestCard
-            readonly={!appUserDetails}
-            key={featureRequest.id}
-            featureRequest={featureRequest}
-            refetch={refetch}
-          />
-        ))}
+        <Reorder.Group
+          axis="y"
+          values={data.featureRequests.sort((a, b) => b.votes.length - a.votes.length)}
+          onReorder={noop}
+          style={{ listStyle: 'none', padding: 0 }}
+        >
+          {data.featureRequests
+            .sort((a, b) => b.votes.length - a.votes.length)
+            .map(featureRequest => (
+              <Reorder.Item key={featureRequest.id} value={featureRequest} drag={false}>
+                <FeatureRequestCard
+                  readonly={!appUserDetails}
+                  featureRequest={featureRequest}
+                  refetch={refetch}
+                />
+              </Reorder.Item>
+            ))}
+        </Reorder.Group>
       </Box>
     </Box>
   )
