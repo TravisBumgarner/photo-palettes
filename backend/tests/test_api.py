@@ -116,3 +116,13 @@ def test_feature_requests():
     assert upvote_response.status_code == 200
     assert "featureRequestId" in upvote_response.json()
     assert upvote_response.json()["featureRequestId"] == feature_request_id
+
+
+def test_feature_requests_unauthorized():
+    response = requests.post(
+        f"{BASE_URL}/feature-requests",
+        headers=get_user_auth_headers(),
+        json={"title": "Test Feature Request", "description": "Test Description"},
+    )
+    assert response.json()["success"] == False
+    assert response.json()["error"] == "User is not a moderator"
