@@ -76,7 +76,6 @@ def create_auth_middleware(supabase: Client):
             app_user = get_or_create_app_user(
                 auth_id=uuid.UUID(auth_user.id),
                 email=auth_user.email,
-                display_name="foobar",
             )
 
             request.state.auth_id = uuid.UUID(auth_user.id)

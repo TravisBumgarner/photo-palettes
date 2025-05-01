@@ -27,6 +27,7 @@ export type TPaletteColor = {
 }
 
 export type TPaletteAndColors = {
+  appUserId: string
   id: string
   name: string
   photoUrl: string

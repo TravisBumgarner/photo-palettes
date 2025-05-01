@@ -18,8 +18,6 @@ async def get_by_app_user_id(request: RequestWithAuthState, app_user_id: str):
             UUID(app_user_id), only_approved=is_viewing_other_user
         )
 
-        print("ruda", palettes)
-
         return {
             "success": True,
             "palettes": map_palette_array_to_response(palettes),

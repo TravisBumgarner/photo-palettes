@@ -25,7 +25,7 @@
     "**/*.tsx",
     ".next/types/**/*.ts",
     "next.config.js",
-    "src/api/palettes/getListAsModerator.ts"
+    "src/api/palettes/getPaletteListAsModerator.ts"
   ],
   "exclude": ["node_modules"]
 }

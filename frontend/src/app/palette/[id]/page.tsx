@@ -1,11 +1,11 @@
 'use client'
 
-import { Box, Button, Typography } from '@mui/material'
+import { Box, Button, Link, Typography } from '@mui/material'
 import { useQuery } from '@tanstack/react-query'
 import { useParams } from 'next/navigation'
 import { useCallback, useEffect } from 'react'
 import { moderatePalette } from '../../../api/moderatePalette'
-import { getPaletteById } from '../../../api/palettes/getById'
+import { getPaletteById } from '../../../api/palettes/getPaletteById'
 import { logger } from '../../../services/logging'
 import useGlobalStore from '../../../store'
 import { EModerationStatus, EPermissionLevel } from '../../../types'
@@ -91,6 +91,7 @@ const PalettePage = () => {
           ))}
         </div>
         <Typography variant="h1">{data.palette.name}</Typography>
+        <Link href={`/profile/${data.palette.appUserId}`}>{data.palette.appUserId}</Link>
         <ModerationPanel paletteId={paletteId} />
       </Box>
     </Box>

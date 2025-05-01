@@ -68,7 +68,7 @@ async def create(
         send_pushover_notification(f"New palette submitted: {palette_request.name}")
         return {
             "success": True,
-            "palette_id": palette.id,
+            "paletteId": palette.id,
         }
 
     except Exception as e:

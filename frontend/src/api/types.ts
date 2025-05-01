@@ -6,6 +6,7 @@ export const zodPalette = z.object({
   photoUrl: z.string(),
   createdAt: z.string(),
   moderationStatus: z.number(),
+  appUserId: z.string(),
   colors: z.array(
     z.object({
       id: z.string(),

@@ -73,15 +73,7 @@ const DropdownLinks = ({ onClose }: { onClose: () => void }) => {
 
   const routeKeys = useMemo((): (keyof typeof ROUTES)[] => {
     if (!appUserDetails)
-      return [
-        'home',
-        'login',
-        'signup',
-        'feedback',
-        'featureRequests',
-        'privacyPolicy',
-        'termsOfService',
-      ]
+      return ['home', 'feedback', 'featureRequests', 'privacyPolicy', 'termsOfService']
 
     if (appUserDetails.permissionLevel >= EPermissionLevel.MODERATOR)
       return [
@@ -165,6 +157,12 @@ const Navigation = () => {
           >
             {ROUTES.create.label}
           </NextLink>
+        )}
+        {!appUserDetails && (
+          <>
+            <NextLink href={ROUTES.login.href}>{ROUTES.login.label}</NextLink>
+            <NextLink href={ROUTES.signup.href}>{ROUTES.signup.label}</NextLink>
+          </>
         )}
         <IconButton
           aria-label="menu"

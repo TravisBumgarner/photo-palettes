@@ -8,6 +8,7 @@ import { getListByAppUserId } from '../../../api/palettes/getListByAppUserId'
 import { logger } from '../../../services/logging'
 import useGlobalStore from '../../../store'
 import { EModerationStatus } from '../../../types'
+import { getContrastColor } from '../../../utils'
 import ErrorMessage from '../../sharedComponents/ErrorMessage'
 import Loading from '../../sharedComponents/Loading'
 import PaletteThumbnail from '../../sharedComponents/PaletteThumbnail'
@@ -31,9 +32,10 @@ const Empty = () => (
 const Profile = () => {
   const [tab, setTab] = useState(0)
   const params = useParams()
-  const profileUserId = params.id as string
   const appUserDetails = useGlobalStore(state => state.appUserDetails)
-  // Todo fix this query key
+
+  const profileUserId = (params.id as string) || appUserDetails?.id || ''
+
   const { data, isLoading, error, refetch } = useQuery({
     queryKey: ['profile', profileUserId],
     queryFn: () => getListByAppUserId(profileUserId),
@@ -69,6 +71,8 @@ const Profile = () => {
 
   const isProfileUser = profileUserId === appUserDetails?.id
 
+  const displayName = `#${profileUserId.slice(0, 6)}`
+
   const tabs = [
     { label: 'Approved', status: EModerationStatus.APPROVED },
     ...(isProfileUser
@@ -82,7 +86,17 @@ const Profile = () => {
 
   return (
     <Box sx={{ p: 3 }}>
-      <Typography variant="h1">User: {profileUserId}</Typography>
+      <Typography variant="h1">
+        <span
+          style={{
+            fontWeight: 700,
+            color: getContrastColor(displayName),
+            backgroundColor: displayName,
+          }}
+        >
+          {displayName}
+        </span>
+      </Typography>
       <Tabs value={tab} onChange={handleTabChange} sx={{ mb: 3 }}>
         {tabs.map((t, i) => (
           <Tab key={i} label={t.label} />

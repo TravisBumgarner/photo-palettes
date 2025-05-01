@@ -41,7 +41,11 @@ const PaletteThumbnail = ({ palette }: { palette: TPaletteAndColors }) => {
         </Box>
       )}
 
-      {palette.name && <Typography variant="h6">{palette.name}</Typography>}
+      {palette.name && (
+        <Typography variant="h6">
+          {palette.name} by {palette.appUserId.slice(0, 6)}
+        </Typography>
+      )}
     </Box>
   )
 }

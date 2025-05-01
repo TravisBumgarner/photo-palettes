@@ -12,6 +12,7 @@ const publicRoutes = [
   '/tos',
   '/donations',
   '/feature_requests',
+  'feedback',
 ]
 
 // Check if a path is in the public routes list

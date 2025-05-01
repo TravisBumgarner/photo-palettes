@@ -17,10 +17,13 @@ def get_app_user_by_auth_id(auth_id: uuid.UUID) -> AppUser | None:
     return session.query(AppUser).filter(AppUser.auth_id == auth_id).first()
 
 
-def insert_app_user(auth_id: uuid.UUID, email: str, display_name: str) -> AppUser:
+def insert_app_user(auth_id: uuid.UUID, email: str) -> AppUser:
     session = SessionLocal()
+    id = uuid.uuid4()
+    display_name = f"#{str(id)[0:6]}"
 
     app_user = AppUser(
+        id=id,
         auth_id=auth_id,
         email=email,
         display_name=display_name,
@@ -33,8 +36,8 @@ def insert_app_user(auth_id: uuid.UUID, email: str, display_name: str) -> AppUse
     return app_user
 
 
-def get_or_create_app_user(auth_id: uuid.UUID, email: str, display_name: str) -> AppUser:
+def get_or_create_app_user(auth_id: uuid.UUID, email: str) -> AppUser:
     app_user = get_app_user_by_auth_id(auth_id)
     if not app_user:
-        app_user = insert_app_user(auth_id, email, display_name)
+        app_user = insert_app_user(auth_id, email)
     return app_user
