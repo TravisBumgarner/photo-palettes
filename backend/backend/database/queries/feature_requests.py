@@ -14,15 +14,6 @@ def cast_vote(request_id: uuid.UUID, app_user_id: uuid.UUID) -> None:
     session.commit()
 
 
-def uncast_vote(request_id: uuid.UUID, app_user_id: uuid.UUID) -> None:
-    session = SessionLocal()
-    session.query(FeatureRequestVote).filter(
-        FeatureRequestVote.request_id == request_id,
-        FeatureRequestVote.app_user_id == app_user_id,
-    ).delete()
-    session.commit()
-
-
 def add_feature_request(title: str, description: str) -> uuid.UUID:
     session = SessionLocal()
     feature_request = FeatureRequest(title=title, description=description)
