@@ -6,11 +6,12 @@ from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 from supabase import Client, create_client
 
-from backend.config import get_config
-from backend.database import engine, models
-from backend.middleware import create_auth_middleware, setup_cors
-from backend.middleware.filesize import LimitUploadSizeMiddleware
-from backend.routes import alpha, ok, palettes, users
+from .config import get_config
+from .database import engine, models
+from .middleware.auth import create_auth_middleware
+from .middleware.cors import setup_cors
+from .middleware.filesize import LimitUploadSizeMiddleware
+from .routes import alpha, feature_requests, ok, palettes, users
 
 config = get_config()
 
@@ -50,3 +51,4 @@ app.include_router(ok.router)
 app.include_router(alpha.alpha_router, prefix="/alpha")
 app.include_router(users.users_router, prefix="/users")
 app.include_router(palettes.palettes_router, prefix="/palettes")
+app.include_router(feature_requests.feature_requests_router, prefix="/feature-requests")

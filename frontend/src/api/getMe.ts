@@ -33,5 +33,6 @@ export const getMe = async () => {
   })
 
   const json = await response.json()
+
   return zodResponse.parse(json)
 }

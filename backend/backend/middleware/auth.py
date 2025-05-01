@@ -11,13 +11,16 @@ from backend.services.logger import log_error
 
 config = get_config()
 
-# Added from main.py
-public_routes = {"/", "/alpha/signup"}
-
+# Each tuple is (path, method)
+public_routes = {
+    ("", "GET"),
+    ("/alpha/signup", "POST"),
+    ("/feature-requests", "GET"),
+}
 
 if not config.is_production:
-    public_routes.add("/docs")
-    public_routes.add("/openapi.json")
+    public_routes.add(("/docs", "GET"))
+    public_routes.add(("/openapi.json", "GET"))
 
 
 class AuthState:
@@ -32,8 +35,11 @@ class RequestWithAuthState(Request):
 
 def create_auth_middleware(supabase: Client):
     async def add_authentication(request: RequestWithAuthState, call_next):
-        is_whitelisted = request.url.path in public_routes
-        is_public_media = request.url.path.startswith("/uploads/")
+        # Normalize path by removing trailing slash
+        path = request.url.path.rstrip("/")
+        is_whitelisted = (path, request.method) in public_routes
+        is_public_media = path.startswith("/uploads/")
+        print("ruda", path, request.method, is_whitelisted)
 
         if is_whitelisted or is_public_media:
             return await call_next(request)

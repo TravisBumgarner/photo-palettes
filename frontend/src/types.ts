@@ -32,3 +32,17 @@ export type TPaletteAndColors = {
   photoUrl: string
   colors: TPaletteColor[]
 }
+
+export enum EFeatureRequestStatus {
+  PENDING = 0,
+  APPROVED = 1,
+  REJECTED = 2,
+}
+
+export type TFeatureRequest = {
+  id: string
+  title: string
+  description: string
+  status: EFeatureRequestStatus
+  votes: string[]
+}

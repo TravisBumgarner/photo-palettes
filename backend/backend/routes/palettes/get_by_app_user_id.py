@@ -5,7 +5,7 @@ from backend.middleware.auth import RequestWithAuthState
 from backend.services.logger import log_error
 
 from . import palettes_router
-from .response_models import map_palette_array_to_response
+from .palette_response_models import map_palette_array_to_response
 
 
 @palettes_router.get("/app_user_id/{app_user_id}")

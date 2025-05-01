@@ -2,48 +2,117 @@
 
 import { GiHamburgerMenu } from 'react-icons/gi'
 
-import { Box, IconButton, Menu, MenuItem, Typography } from '@mui/material'
+import { Box, IconButton, Menu, MenuItem } from '@mui/material'
 import NextLink from 'next/link'
-import { useCallback, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import useGlobalStore from '../../store'
 import { PALETTE } from '../../styles/Theme'
 import { EPermissionLevel } from '../../types'
 import Link from '../sharedComponents/Link'
 
-const AuthLinks = ({ onClose }: { onClose: () => void }) => {
+const ROUTES = {
+  home: {
+    key: 'home',
+    href: '/',
+    label: 'Home',
+  },
+  moderation: {
+    key: 'moderation',
+    href: '/moderation',
+    label: 'Moderation',
+  },
+  profile: {
+    key: 'profile',
+    href: '/profile',
+    label: 'Profile',
+  },
+  create: {
+    key: 'create',
+    href: '/create',
+    label: 'Create',
+  },
+  feedback: {
+    key: 'feedback',
+    href: '/feedback',
+    label: 'Feedback',
+  },
+  login: {
+    key: 'login',
+    href: '/login',
+    label: 'Login',
+  },
+  signup: {
+    key: 'signup',
+    href: '/signup',
+    label: 'Signup',
+  },
+  logout: {
+    key: 'logout',
+    href: '/logout',
+    label: 'Logout',
+  },
+  privacyPolicy: {
+    key: 'privacyPolicy',
+    href: '/privacy',
+    label: 'Privacy Policy',
+  },
+  termsOfService: {
+    key: 'termsOfService',
+    href: '/tos',
+    label: 'Terms of Service',
+  },
+  featureRequests: {
+    key: 'featureRequests',
+    href: '/feature_requests',
+    label: 'Feature Requests',
+  },
+}
+
+const DropdownLinks = ({ onClose }: { onClose: () => void }) => {
   const appUserDetails = useGlobalStore(state => state.appUserDetails)
 
-  const routes = {
-    public: [] as { key: string; href: string; label: string }[],
-    loggedOut: [
-      { key: 'login', href: '/login', label: 'Login' },
-      { key: 'signup', href: '/signup', label: 'Signup' },
-    ],
-    member: [
-      { key: 'profile', href: `/profile/${appUserDetails?.id}`, label: 'Profile' },
-      { key: 'logout', href: '/logout', label: 'Logout' },
-    ],
-    moderator: [{ key: 'moderation', href: '/moderation', label: 'Moderation' }],
-  }
+  const routeKeys = useMemo((): (keyof typeof ROUTES)[] => {
+    if (!appUserDetails)
+      return [
+        'home',
+        'login',
+        'signup',
+        'feedback',
+        'featureRequests',
+        'privacyPolicy',
+        'termsOfService',
+      ]
 
-  let availableRoutes = [...routes.public]
+    if (appUserDetails.permissionLevel >= EPermissionLevel.MODERATOR)
+      return [
+        'home',
+        'create',
+        'featureRequests',
+        'moderation',
+        'profile',
+        'feedback',
+        'logout',
+        'privacyPolicy',
+        'termsOfService',
+      ]
 
-  if (!appUserDetails) {
-    availableRoutes = [...availableRoutes, ...routes.loggedOut]
-  } else {
-    if (appUserDetails.permissionLevel >= EPermissionLevel.MEMBER) {
-      availableRoutes = [...availableRoutes, ...routes.member]
-    }
-    if (appUserDetails.permissionLevel >= EPermissionLevel.MODERATOR) {
-      availableRoutes = [...availableRoutes, ...routes.moderator]
-    }
-  }
+    return [
+      'home',
+      'create',
+      'featureRequests',
+      'profile',
+      'feedback',
+      'logout',
+      'privacyPolicy',
+      'termsOfService',
+    ]
+  }, [appUserDetails])
 
   return (
     <>
-      {availableRoutes.map(route => (
-        <MenuItem key={route.key} onClick={onClose}>
-          <Link href={route.href}>{route.label}</Link>
+      {routeKeys.map(key => (
+        <MenuItem key={key} onClick={onClose}>
+          <Link href={ROUTES[key].href}>{ROUTES[key].label}</Link>
         </MenuItem>
       ))}
     </>
@@ -84,15 +153,6 @@ const Navigation = () => {
         <Link href="/">Photo Palettes</Link>
       </Box>
       <Box sx={{ display: 'flex', flexDirection: 'row', gap: '14px' }}>
-        <Typography>Feedback:</Typography>
-        <Link target="_blank" href="https://discord.com/invite/J8jwMxEEff">
-          Discord
-        </Link>
-        <Link target="_blank" href="https://bsky.app/profile/sillysideprojects.bsky.social">
-          Bluesky
-        </Link>
-      </Box>
-      <Box sx={{ display: 'flex', flexDirection: 'row', gap: '14px' }}>
         {appUserDetails && (
           <NextLink
             style={{
@@ -101,9 +161,9 @@ const Navigation = () => {
               padding: '10px',
               borderRadius: 10,
             }}
-            href="/create"
+            href={ROUTES.create.href}
           >
-            Create
+            {ROUTES.create.label}
           </NextLink>
         )}
         <IconButton
@@ -117,7 +177,7 @@ const Navigation = () => {
         </IconButton>
 
         <Menu id="navigation-menu" anchorEl={anchorEl} open={open} onClose={handleClose}>
-          <AuthLinks onClose={handleClose} />
+          <DropdownLinks onClose={handleClose} />
         </Menu>
       </Box>
     </Box>
