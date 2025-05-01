@@ -37,7 +37,6 @@ class RequestWithAuthState(Request):
 
 
 def get_auth_user(supabase: Client, token: str):
-    print("token", token)
     if not token or token == "undefined":
         return None
 
