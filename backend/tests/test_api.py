@@ -41,8 +41,8 @@ def test_me_unauthorized():
 def test_me_authorized():
     response = requests.get(f"{BASE_URL}/users/me", headers=get_user_auth_headers())
     assert response.status_code == 200
-    assert "permission_level" in response.json()
-    assert "display_name" in response.json()
+    assert "permissionLevel" in response.json()
+    assert "displayName" in response.json()
     assert "email" in response.json()
     assert "id" in response.json()
     assert response.json()["email"] == os.getenv("TEST_USER_EMAIL")

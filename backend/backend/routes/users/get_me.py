@@ -22,8 +22,8 @@ async def me(request: RequestWithAuthState):
             "success": True,
             "id": app_user.id,
             "email": app_user.email,
-            "display_name": app_user.display_name,
-            "permission_level": app_user.permission_level,
+            "displayName": app_user.display_name,
+            "permissionLevel": app_user.permission_level,
         }
     except Exception as e:
         log_error(e)
