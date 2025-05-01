@@ -15,10 +15,17 @@ const zodResponse = z.discriminatedUnion('success', [
 ])
 
 export const getPaletteListByAppUserId = async (appUserId: string, status: EModerationStatus) => {
+  if (!appUserId) {
+    return {
+      success: false,
+      error: 'App user ID is required',
+    } as const
+  }
+
   const token = await getToken()
 
   const response = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}/palettes/app_user_id?app_user_id=${appUserId}&status=${status}`,
+    `${process.env.NEXT_PUBLIC_API_URL}/palettes/app_user_id/${appUserId}?status=${status}`,
     {
       method: 'GET',
       headers: {

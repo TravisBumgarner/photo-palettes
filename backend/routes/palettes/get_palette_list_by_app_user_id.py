@@ -9,7 +9,7 @@ from . import palettes_router
 from .palette_response_models import map_palette_array_to_response
 
 
-@palettes_router.get("/app_user_id")
+@palettes_router.get("/app_user_id/{app_user_id}")
 async def get_by_app_user_id(
     request: RequestWithAuthState, app_user_id: str, status: ModerationStatus
 ):

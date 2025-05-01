@@ -1,3 +1,4 @@
+import re
 import uuid
 
 from fastapi import Request
@@ -11,19 +12,20 @@ from services.logger import log_error
 
 config = get_config()
 
-# Each tuple is (path, method)
-public_routes = {
-    ("/", "GET"),
-    ("/alpha/signup", "POST"),
-    ("/feature-requests", "GET"),
-    ("/palettes/app_user_id", "GET"),
-    ("/palettes", "GET"),
-    ("/palettes/id", "GET"),
-}
+# Each tuple is (pattern, method)
+public_routes = [
+    (re.compile(r"^/$"), "GET"),
+    (re.compile(r"^/alpha/signup$"), "POST"),
+    (re.compile(r"^/feature-requests$"), "GET"),
+    (re.compile(r"^/palettes/app_user_id/\w+$"), "GET"),
+    (re.compile(r"^/palettes$"), "GET"),
+    (re.compile(r"^/palettes/id/\w+$"), "GET"),
+    (re.compile(r"^/uploads/.*$"), "GET"),
+]
 
 if not config.is_production:
-    public_routes.add(("/docs", "GET"))
-    public_routes.add(("/openapi.json", "GET"))
+    public_routes.append((re.compile(r"^/docs$"), "GET"))
+    public_routes.append((re.compile(r"^/openapi\.json$"), "GET"))
 
 
 class AuthState:
@@ -64,11 +66,9 @@ def get_app_user_details(auth_user):
 def create_auth_middleware(supabase: Client):
     async def add_authentication(request: RequestWithAuthState, call_next):
         path = request.url.path
-        route_requires_auth = (path, request.method) not in public_routes
-
-        is_public_media = path.startswith("/uploads/")
-        if is_public_media:
-            return await call_next(request)
+        route_requires_auth = not any(
+            pattern.match(path) and method == request.method for pattern, method in public_routes
+        )
 
         if request.method == "OPTIONS":
             return await call_next(request)
