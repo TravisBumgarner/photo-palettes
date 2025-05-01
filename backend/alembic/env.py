@@ -10,8 +10,8 @@ from alembic import context
 # Let us import app code
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "app")))
 
-from backend.config import get_config
-from backend.database.engine import Base
+from config import get_config
+from database.engine import Base
 
 app_config = get_config()
 

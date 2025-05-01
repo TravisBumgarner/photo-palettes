@@ -1,3 +1,0 @@
-"""
-Photo Palettes Backend
-"""

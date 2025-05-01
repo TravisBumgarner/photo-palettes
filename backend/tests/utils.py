@@ -4,7 +4,7 @@ from pathlib import Path
 from dotenv import load_dotenv
 from supabase import create_client
 
-from backend.config import get_config
+from config import get_config
 
 # Load environment variables from tests/.env
 load_dotenv(Path(__file__).parent / ".env")
