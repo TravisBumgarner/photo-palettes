@@ -83,7 +83,14 @@ def create_auth_middleware(supabase: Client):
                 content={"error": "Unauthorized", "message": "No token provided"},
             )
 
-        auth_user = get_auth_user(supabase, token)
+        try:
+            auth_user = get_auth_user(supabase, token)
+        except Exception as e:
+            log_error(e, "get_auth_user")
+            return JSONResponse(
+                status_code=401,
+                content={"error": "Unauthorized", "message": "Something went wrong"},
+            )
 
         try:
             if not auth_user:
