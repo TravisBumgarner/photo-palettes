@@ -79,22 +79,15 @@ def update_palette(palette_id: uuid.UUID, **kwargs):
 
 
 def get_palettes_by_app_user_id(
-    app_user_id: uuid.UUID, only_approved: bool = True
+    app_user_id: uuid.UUID,
+    status: ModerationStatus = ModerationStatus.APPROVED,
 ) -> List[Palette]:
     session = SessionLocal()
 
-    if only_approved:
-        return (
-            session.query(Palette)
-            .options(joinedload(Palette.colors))
-            .filter(Palette.app_user_id == app_user_id)
-            # .filter(Palette.moderation_status == ModerationStatus.APPROVED)
-            .all()
-        )
-    else:
-        return (
-            session.query(Palette)
-            .options(joinedload(Palette.colors))
-            .filter(Palette.app_user_id == app_user_id)
-            .all()
-        )
+    return (
+        session.query(Palette)
+        .options(joinedload(Palette.colors))
+        .filter(Palette.app_user_id == app_user_id)
+        .filter(Palette.moderation_status == status)
+        .all()
+    )

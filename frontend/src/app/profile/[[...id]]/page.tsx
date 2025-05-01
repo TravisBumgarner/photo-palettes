@@ -37,8 +37,8 @@ const Profile = () => {
   const profileUserId = (params.id as string) || appUserDetails?.id || ''
 
   const { data, isLoading, error, refetch } = useQuery({
-    queryKey: ['profile', profileUserId],
-    queryFn: () => getPaletteListByAppUserId(profileUserId),
+    queryKey: ['profile', profileUserId, tab],
+    queryFn: () => getPaletteListByAppUserId(profileUserId, tabs[tab].status),
     retry: false,
   })
 

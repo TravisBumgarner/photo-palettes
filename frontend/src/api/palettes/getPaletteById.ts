@@ -16,7 +16,7 @@ const zodResponse = z.discriminatedUnion('success', [
 export const getPaletteById = async (id: string) => {
   const token = await getToken()
 
-  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/palettes/id/${id}`, {
+  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/palettes?id=${id}`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',

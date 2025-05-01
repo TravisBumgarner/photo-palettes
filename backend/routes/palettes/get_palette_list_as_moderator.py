@@ -18,7 +18,7 @@ def validate_request(request: RequestWithAuthState):
     return None
 
 
-@palettes_router.get("/moderator/{status}")
+@palettes_router.get("/moderator")
 def get_list_as_moderator(request: RequestWithAuthState, status: ModerationStatus):
     validation_error = validate_request(request)
     if validation_error:

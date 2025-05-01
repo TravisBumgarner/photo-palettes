@@ -8,7 +8,7 @@ from . import palettes_router
 from .palette_response_models import map_palette_to_response
 
 
-@palettes_router.get("/id/{palette_id}")
+@palettes_router.get("/id")
 async def get_by_id(request: RequestWithAuthState, palette_id: str):
     try:
         palette = get_palette_by_id(UUID(palette_id))
