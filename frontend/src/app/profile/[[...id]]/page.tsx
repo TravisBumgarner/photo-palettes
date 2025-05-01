@@ -13,6 +13,13 @@ import ErrorMessage from '../../sharedComponents/ErrorMessage'
 import Loading from '../../sharedComponents/Loading'
 import PaletteThumbnail from '../../sharedComponents/PaletteThumbnail'
 
+const TABS = [
+  { label: 'Approved', status: EModerationStatus.APPROVED },
+  { label: 'Awaiting Moderation', status: EModerationStatus.AWAITING_MODERATION },
+  { label: 'Awaiting Submission', status: EModerationStatus.AWAITING_SUBMISSION },
+  { label: 'Rejected', status: EModerationStatus.REJECTED },
+]
+
 const Empty = () => (
   <Box
     sx={{
@@ -34,11 +41,12 @@ const Profile = () => {
   const params = useParams()
   const appUserDetails = useGlobalStore(state => state.appUserDetails)
 
-  const profileUserId = (params.id as string) || appUserDetails?.id || ''
+  const profileUserId =
+    (Array.isArray(params.id) ? params.id[0] : params.id) || appUserDetails?.id || ''
 
   const { data, isLoading, error, refetch } = useQuery({
     queryKey: ['profile', profileUserId, tab],
-    queryFn: () => getPaletteListByAppUserId(profileUserId, tabs[tab].status),
+    queryFn: () => getPaletteListByAppUserId(profileUserId, TABS[tab].status),
     retry: false,
   })
 
@@ -73,17 +81,6 @@ const Profile = () => {
 
   const displayName = `#${profileUserId.slice(0, 6)}`
 
-  const tabs = [
-    { label: 'Approved', status: EModerationStatus.APPROVED },
-    ...(isProfileUser
-      ? [{ label: 'Awaiting Moderation', status: EModerationStatus.AWAITING_MODERATION }]
-      : []),
-    ...(isProfileUser
-      ? [{ label: 'Awaiting Submission', status: EModerationStatus.AWAITING_SUBMISSION }]
-      : []),
-    ...(isProfileUser ? [{ label: 'Rejected', status: EModerationStatus.REJECTED }] : []),
-  ]
-
   return (
     <Box sx={{ p: 3 }}>
       <Typography variant="h1">
@@ -97,11 +94,13 @@ const Profile = () => {
           {displayName}
         </span>
       </Typography>
-      <Tabs value={tab} onChange={handleTabChange} sx={{ mb: 3 }}>
-        {tabs.map((t, i) => (
-          <Tab key={i} label={t.label} />
-        ))}
-      </Tabs>
+      {isProfileUser && (
+        <Tabs value={tab} onChange={handleTabChange} sx={{ mb: 3 }}>
+          {TABS.map((t, i) => (
+            <Tab key={i} label={t.label} />
+          ))}
+        </Tabs>
+      )}
       {content}
     </Box>
   )

@@ -10,5 +10,5 @@ def read_root():
     try:
         return {"message": "Hello, World!"}
     except Exception as e:
-        log_error(e)
+        log_error(e, "ok")
         return {"message": "Failed to get root"}

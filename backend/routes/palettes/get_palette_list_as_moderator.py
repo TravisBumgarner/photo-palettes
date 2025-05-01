@@ -32,7 +32,7 @@ def get_list_as_moderator(request: RequestWithAuthState, status: ModerationStatu
             "palettes": map_palette_array_to_response(palettes),
         }
     except Exception as e:
-        log_error(e)
+        log_error(e, "get_palette_list_as_moderator")
         return {
             "success": False,
             "error": "Failed to get palettes",

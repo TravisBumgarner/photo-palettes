@@ -13,7 +13,7 @@ config = get_config()
 
 # Each tuple is (path, method)
 public_routes = {
-    ("", "GET"),
+    ("/", "GET"),
     ("/alpha/signup", "POST"),
     ("/feature-requests", "GET"),
     ("/palettes/app_user_id", "GET"),
@@ -27,74 +27,80 @@ if not config.is_production:
 
 
 class AuthState:
-    auth_id: uuid.UUID
-    app_user_id: uuid.UUID
-    permission_level: PermissionLevel
+    auth_id: uuid.UUID | None
+    app_user_id: uuid.UUID | None
+    permission_level: PermissionLevel | None
 
 
 class RequestWithAuthState(Request):
     state: AuthState
 
 
+def get_auth_user(supabase: Client, token: str):
+    print("token", token)
+    if not token or token == "undefined":
+        return None
+
+    auth = supabase.auth.get_user(token)
+
+    if not auth or not auth.user:
+        return None
+
+    supabase.postgrest.auth(token)
+    return auth.user
+
+
+def get_app_user_details(auth_user):
+    app_user = get_or_create_app_user(
+        auth_id=uuid.UUID(auth_user.id),
+        email=auth_user.email,
+    )
+
+    return {
+        "app_user_id": app_user.id,
+        "permission_level": app_user.permission_level,
+    }
+
+
 def create_auth_middleware(supabase: Client):
     async def add_authentication(request: RequestWithAuthState, call_next):
-        # Normalize path by removing trailing slash
-        path = request.url.path.rstrip("/")
-        is_whitelisted = (path, request.method) in public_routes
-        is_public_media = path.startswith("/uploads/")
-        print("ruda", path, request.method, is_whitelisted)
+        path = request.url.path
+        route_requires_auth = (path, request.method) not in public_routes
 
-        if is_whitelisted or is_public_media:
+        is_public_media = path.startswith("/uploads/")
+        if is_public_media:
             return await call_next(request)
 
         if request.method == "OPTIONS":
             return await call_next(request)
 
         auth_header = request.headers.get("authorization", "")
-
         token = auth_header.replace("Bearer ", "")
 
-        if not token:
-            log_error(Exception("No token provided"))
+        if not token and route_requires_auth:
+            log_error(Exception("No token provided"), "not_token")
             return JSONResponse(
                 status_code=401,
                 content={"error": "Unauthorized", "message": "No token provided"},
             )
 
+        auth_user = get_auth_user(supabase, token)
+
         try:
-            auth = supabase.auth.get_user(token)
-            supabase.postgrest.auth(token)
-
-            auth_user = getattr(auth, "user", None)
-            if not auth_user or not getattr(auth_user, "email", None):
-                log_error(Exception("User email is missing"))
-                return JSONResponse(
-                    status_code=401,
-                    content={
-                        "error": "Unauthorized",
-                        "message": "User email is missing",
-                    },
-                )
-
-            app_user = get_or_create_app_user(
-                auth_id=uuid.UUID(auth_user.id),
-                email=auth_user.email,
-            )
-
-            request.state.auth_id = uuid.UUID(auth_user.id)
-            request.state.app_user_id = app_user.id
-            request.state.permission_level = app_user.permission_level
-
+            if not auth_user:
+                request.state.auth_id = None
+                request.state.app_user_id = None
+                request.state.permission_level = None
+            else:
+                request.state.auth_id = uuid.UUID(auth_user.id)
+                user_details = get_app_user_details(auth_user)
+                request.state.app_user_id = user_details["app_user_id"]
+                request.state.permission_level = user_details["permission_level"]
         except Exception as e:
-            log_error(e)
-            return JSONResponse(
-                status_code=401,
-                content={
-                    "error": "Unauthorized",
-                    "message": "Invalid user token",
-                    "details": str(e),
-                },
-            )
+            log_error(e, "auth_middleware")
+            request.state.auth_id = None
+            request.state.app_user_id = None
+            request.state.permission_level = None
 
         return await call_next(request)
 

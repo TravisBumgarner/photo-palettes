@@ -28,7 +28,7 @@ async def post_feature_request(request: RequestWithAuthState, upvote_request: Up
             "featureRequestId": upvote_request.feature_request_id,
         }
     except Exception as e:
-        log_error(e)
+        log_error(e, "upvote_feature_request")
         return {
             "success": False,
             "error": "Failed to upvote feature request",

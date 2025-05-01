@@ -15,7 +15,6 @@ const zodResponse = z.discriminatedUnion('success', [
 
 const getPaletteListModerated = async () => {
   const token = await getToken()
-
   const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/palettes`, {
     method: 'GET',
     headers: {

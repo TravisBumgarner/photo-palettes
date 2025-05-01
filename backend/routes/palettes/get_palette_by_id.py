@@ -24,7 +24,7 @@ async def get_by_id(request: RequestWithAuthState, id: str):
             "palette": map_palette_to_response(palette),
         }
     except Exception as e:
-        log_error(e)
+        log_error(e, "get_palette_by_id")
         return {
             "success": False,
             "error": "Failed to get palette",

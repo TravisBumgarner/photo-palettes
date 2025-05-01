@@ -17,7 +17,7 @@ async def get_list_moderated(request: RequestWithAuthState):
         }
 
     except Exception as error:
-        log_error(error)
+        log_error(error, "get_palette_list_moderated")
         return {
             "success": False,
             "error": "Failed to get moderated palettes",

@@ -16,7 +16,7 @@ async def get_list():
             "featureRequests": map_feature_request_array_to_response(feature_requests),
         }
     except Exception as e:
-        log_error(e)
+        log_error(e, "get_feature_request_list")
         return {
             "success": False,
             "error": str(e),

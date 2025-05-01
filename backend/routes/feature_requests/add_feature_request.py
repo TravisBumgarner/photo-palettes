@@ -18,7 +18,8 @@ def validate_request(request: RequestWithAuthState):
         log_error(
             PermissionError(
                 f"User {request.state.app_user_id} is not a moderator but attempted to moderate a palette"
-            )
+            ),
+            "add_feature_request_not_moderator",
         )
         return {
             "success": False,
@@ -41,7 +42,7 @@ async def post_feature_request(request: RequestWithAuthState, feature_request: A
             "featureRequestId": request_id,
         }
     except Exception as e:
-        log_error(e)
+        log_error(e, "add_feature_request")
         return {
             "success": False,
             "error": "Failed to add feature request",

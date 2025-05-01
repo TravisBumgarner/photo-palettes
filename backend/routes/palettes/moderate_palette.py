@@ -21,7 +21,8 @@ def validate_request(request: RequestWithAuthState):
         log_error(
             PermissionError(
                 f"User {request.state.app_user_id} is not a moderator but attempted to moderate a palette"
-            )
+            ),
+            "moderate_request_not_moderator",
         )
         return {
             "success": False,
@@ -44,5 +45,5 @@ async def moderate(
         return {"success": True}
 
     except Exception as e:
-        log_error(e)
+        log_error(e, "moderate_palette")
         return {"success": False, "error": "Failed to moderate palette"}
