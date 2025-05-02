@@ -1,7 +1,7 @@
 'use client'
 
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { TPalette } from '../../../types'
+import { TGeneratedPalette } from '../../../types'
 import { getContrastColor } from '../../../utils'
 import { HEIGHT, WIDTH } from '../consts'
 import DraggableSwatch from './DraggableSwatch'
@@ -12,7 +12,7 @@ const ReadonlySwatch = ({
   handleMouseEnterCallback,
   handleMouseLeaveCallback,
 }: {
-  swatch: TPalette[number]
+  swatch: TGeneratedPalette[number]
   index: number
   handleMouseEnterCallback: (index: number) => void
   handleMouseLeaveCallback: () => void
@@ -52,8 +52,8 @@ const CanvasAndPalette = ({
   handlePaletteChange,
   photo,
 }: {
-  palette: TPalette
-  handlePaletteChange: (palette: TPalette) => void
+  palette: TGeneratedPalette
+  handlePaletteChange: (palette: TGeneratedPalette) => void
   photo: File | null
 }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null)

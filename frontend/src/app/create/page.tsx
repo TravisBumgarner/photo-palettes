@@ -8,7 +8,7 @@ import { createPalette } from '../../api/palettes/createPalette'
 import { generatePalette } from '../../api/palettes/generatePalette'
 import { logger } from '../../services/logging'
 import useGlobalStore from '../../store'
-import { TPalette } from '../../types'
+import { TGeneratedPalette } from '../../types'
 import ErrorMessage from '../sharedComponents/ErrorMessage'
 import Loading from '../sharedComponents/Loading'
 import { ModalID } from '../sharedComponents/Modal/Modal.consts'
@@ -27,7 +27,7 @@ enum UploadStatus {
 
 const Create = () => {
   const [uploadStatus, setUploadStatus] = useState<UploadStatus>(UploadStatus.INITIAL)
-  const [palette, setPalette] = useState<TPalette>([])
+  const [palette, setPalette] = useState<TGeneratedPalette>([])
   const [photo, setPhoto] = useState<File | null>(null)
   const router = useRouter()
   const [paletteId, setPaletteId] = useState<string | null>(null)
@@ -109,7 +109,7 @@ const Create = () => {
     }
   }, [palette, paletteId, createPaletteMutation, setActiveModal, router, name])
 
-  const handlePaletteChange = useCallback((palette: TPalette) => {
+  const handlePaletteChange = useCallback((palette: TGeneratedPalette) => {
     setPalette(palette)
   }, [])
 

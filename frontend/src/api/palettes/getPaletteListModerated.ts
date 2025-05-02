@@ -1,7 +1,7 @@
 import { z } from 'zod'
 import config from '../../config'
 import { getToken } from '../../services/supabase/utils'
-import { zodPalette } from '../types'
+import { zodPalette } from '../../types'
 
 const zodResponse = z.discriminatedUnion('success', [
   z.object({

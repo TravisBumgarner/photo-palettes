@@ -2,7 +2,6 @@ import { Metadata } from 'next'
 import { getPaletteById } from '../../../api/palettes/getPaletteById'
 import { logger } from '../../../services/logging'
 
-
 type Props = {
   params: {
     id: string

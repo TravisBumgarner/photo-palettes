@@ -1,7 +1,7 @@
 import { z } from 'zod'
 import config from '../../config'
 import { getToken } from '../../services/supabase/utils'
-import { TPalette } from '../../types'
+import { TGeneratedPalette } from '../../types'
 
 const zodResponse = z.discriminatedUnion('success', [
   z.object({
@@ -19,7 +19,7 @@ export const createPalette = async ({
   paletteId,
   name,
 }: {
-  palette: TPalette
+  palette: TGeneratedPalette
   paletteId: string
   name: string
 }) => {

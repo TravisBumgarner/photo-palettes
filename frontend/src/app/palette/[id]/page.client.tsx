@@ -1,18 +1,13 @@
 'use client'
 
 import { Box, Button, Link, Typography } from '@mui/material'
-import { useQuery } from '@tanstack/react-query'
-import { useParams } from 'next/navigation'
-import { useCallback, useEffect } from 'react'
+import { useCallback } from 'react'
 import { moderatePalette } from '../../../api/moderatePalette'
-import { getPaletteById } from '../../../api/palettes/getPaletteById'
-import { logger } from '../../../services/logging'
 import useGlobalStore from '../../../store'
-import { EModerationStatus, EPermissionLevel } from '../../../types'
+import { EModerationStatus, EPermissionLevel, TPalette } from '../../../types'
 import { getContrastColor } from '../../../utils'
 import ErrorMessage from '../../sharedComponents/ErrorMessage'
 import InfoMessage from '../../sharedComponents/InfoMessage'
-import Loading from '../../sharedComponents/Loading'
 
 const ModerationPanel = ({ paletteId }: { paletteId: string }) => {
   const appUserDetails = useGlobalStore(state => state.appUserDetails)
@@ -39,43 +34,24 @@ const ModerationPanel = ({ paletteId }: { paletteId: string }) => {
   return <Box></Box>
 }
 
-const PalettePage = () => {
-  const params = useParams()
-  const paletteId = params.id as string
-
-  const { data, isLoading, error } = useQuery({
-    queryKey: ['palette', paletteId],
-    queryFn: () => getPaletteById(paletteId),
-    retry: false,
-  })
-
-  useEffect(() => {
-    if (error) logger.error(error)
-  }, [error])
-
-  if (isLoading || !data) return <Loading />
-
-  if (error) return <ErrorMessage />
-
-  if (!data.success) return <ErrorMessage error={data.error} />
-
+const PalettePage = ({ palette }: { palette: TPalette }) => {
   return (
     <Box sx={{ display: 'flex', justifyContent: 'center', flexDirection: 'column' }}>
-      {data.palette.moderationStatus === EModerationStatus.AWAITING_MODERATION && (
+      {palette.moderationStatus === EModerationStatus.AWAITING_MODERATION && (
         <InfoMessage info="This palette is pending approval." />
       )}
-      {data.palette.moderationStatus === EModerationStatus.REJECTED && (
+      {palette.moderationStatus === EModerationStatus.REJECTED && (
         <ErrorMessage error="This palette was rejected." />
       )}
       <Box sx={{ maxWidth: '1000px' }}>
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           style={{ maxWidth: '100%', maxHeight: '900px' }}
-          src={data.palette.photoUrl}
+          src={palette.photoUrl}
           alt="Palette"
         />
         <div style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap', gap: '10px' }}>
-          {data.palette.colors.map((color: { id: string; hex: string }) => (
+          {palette.colors.map((color: { id: string; hex: string }) => (
             <Box
               key={color.id}
               style={{
@@ -93,9 +69,9 @@ const PalettePage = () => {
             </Box>
           ))}
         </div>
-        <Typography variant="h1">{data.palette.name}</Typography>
-        <Link href={`/profile/${data.palette.appUserId}`}>{data.palette.appUserId}</Link>
-        <ModerationPanel paletteId={paletteId} />
+        <Typography variant="h1">{palette.name}</Typography>
+        <Link href={`/profile/${palette.appUserId}`}>{palette.appUserId}</Link>
+        <ModerationPanel paletteId={palette.id} />
       </Box>
     </Box>
   )

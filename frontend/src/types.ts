@@ -1,9 +1,11 @@
+import { z } from 'zod'
+
 export type TSwatch = {
   color: string
   percentLocation: [number, number]
 }
 
-export type TPalette = TSwatch[]
+export type TGeneratedPalette = TSwatch[]
 
 export enum EPermissionLevel {
   MEMBER = 0,
@@ -47,3 +49,24 @@ export type TFeatureRequest = {
   status: EFeatureRequestStatus
   votes: string[]
 }
+
+export const zodPalette = z.object({
+  id: z.string(),
+  name: z.string(),
+  photoUrl: z.string(),
+  ogPhotoUrl: z.string(),
+  createdAt: z.string(),
+  moderationStatus: z.number(),
+  appUserId: z.string(),
+  colors: z.array(
+    z.object({
+      id: z.string(),
+      hex: z.string(),
+      r: z.number(),
+      g: z.number(),
+      b: z.number(),
+    })
+  ),
+})
+
+export type TPalette = z.infer<typeof zodPalette>
