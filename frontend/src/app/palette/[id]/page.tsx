@@ -1,33 +1,34 @@
 import { Metadata } from 'next'
 import { getPaletteById } from '../../../api/palettes/getPaletteById'
 import { logger } from '../../../services/logging'
-import { TPalette } from '../../../types'
 import PalettePage from './page.client'
+
 type Props = {
   params: {
     id: string
   }
 }
 
-let paletteData: TPalette | null = null
+async function getPalette(id: string) {
+  const response = await getPaletteById(id, true)
+  if (!response.success) return null
+  return response.palette
+}
 
 export async function generateMetadata({ params }: Props): Promise<Metadata | null> {
   const { id } = await params
   try {
-    const response = await getPaletteById(id, true)
-
-    if (!response.success) {
+    const palette = await getPalette(id)
+    if (!palette) {
       logger.error('Palette not found', { id })
       return null
     }
 
-    paletteData = response.palette
-
     return {
-      title: `Palette - ${paletteData.name}`,
+      title: `Palette - ${palette.name}`,
       openGraph: {
-        images: [paletteData.ogPhotoUrl],
-        title: `Palette - ${paletteData.name}`,
+        images: [palette.ogPhotoUrl],
+        title: `Palette - ${palette.name}`,
       },
     }
   } catch {
@@ -36,16 +37,14 @@ export async function generateMetadata({ params }: Props): Promise<Metadata | nu
 }
 
 export default async function PhotoPage({ params }: Props) {
-  if (!paletteData) {
-    const response = await getPaletteById(params.id, true)
-    if (!response.success) return null
-    paletteData = response.palette
-  }
+  const { id } = await params
+  const palette = await getPalette(id)
+  if (!palette) return null
 
   return (
     <main>
       <h1>Photo</h1>
-      <PalettePage palette={paletteData} />
+      <PalettePage palette={palette} />
     </main>
   )
 }
