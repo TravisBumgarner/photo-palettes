@@ -76,7 +76,6 @@ def create_auth_middleware(supabase: Client):
 
         auth_header = request.headers.get("authorization", "")
         token = auth_header.replace("Bearer ", "")
-        print("route_requires_auth", route_requires_auth, path, request.method)
         if not token and route_requires_auth:
             log_error(Exception("No token provided"), "not_token")
             return JSONResponse(
