@@ -1,7 +1,7 @@
 import { z } from 'zod'
+import config from '../../config'
 import { getToken } from '../../services/supabase/utils'
-import { EModerationStatus } from '../../types'
-import { zodPalette } from '../types'
+import { EModerationStatus, zodPalette } from '../../types'
 
 const zodResponse = z.discriminatedUnion('success', [
   z.object({
@@ -25,7 +25,7 @@ export const getPaletteListByAppUserId = async (appUserId: string, status: EMode
   const token = await getToken()
 
   const response = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}/palettes/app_user_id/${appUserId}?status=${status}`,
+    `${config.apiUrl}/palettes/app_user_id/${appUserId}?status=${status}`,
     {
       method: 'GET',
       headers: {

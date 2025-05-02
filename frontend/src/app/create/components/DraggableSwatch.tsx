@@ -1,7 +1,7 @@
 import { Box } from '@mui/material'
 import { useCallback } from 'react'
 import { PALETTE } from '../../../styles/Theme'
-import { TPalette } from '../../../types'
+import { TGeneratedPalette } from '../../../types'
 import { getContrastColor } from '../../../utils'
 
 const DraggableSwatch = ({
@@ -10,7 +10,7 @@ const DraggableSwatch = ({
   handleSetDraggingIndex,
   isHovered,
 }: {
-  swatch: TPalette[number]
+  swatch: TGeneratedPalette[number]
   index: number
   handleSetDraggingIndex: (index: number) => void
   isHovered: boolean

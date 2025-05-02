@@ -19,7 +19,7 @@ public_routes = [
     (re.compile(r"^/feature-requests$"), "GET"),
     (re.compile(r"^/palettes/app_user_id/\w+$"), "GET"),
     (re.compile(r"^/palettes$"), "GET"),
-    (re.compile(r"^/palettes/id/\w+$"), "GET"),
+    (re.compile(r"^/palettes/id/.*$"), "GET"),
     (re.compile(r"^/uploads/.*$"), "GET"),
 ]
 

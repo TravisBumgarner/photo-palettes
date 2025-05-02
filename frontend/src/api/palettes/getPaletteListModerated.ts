@@ -1,6 +1,7 @@
 import { z } from 'zod'
+import config from '../../config'
 import { getToken } from '../../services/supabase/utils'
-import { zodPalette } from '../types'
+import { zodPalette } from '../../types'
 
 const zodResponse = z.discriminatedUnion('success', [
   z.object({
@@ -15,7 +16,7 @@ const zodResponse = z.discriminatedUnion('success', [
 
 const getPaletteListModerated = async () => {
   const token = await getToken()
-  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/palettes`, {
+  const response = await fetch(`${config.apiUrl}/palettes`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',

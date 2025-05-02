@@ -1,104 +1,50 @@
-'use client'
-
-import { Box, Button, Link, Typography } from '@mui/material'
-import { useQuery } from '@tanstack/react-query'
-import { useParams } from 'next/navigation'
-import { useCallback, useEffect } from 'react'
-import { moderatePalette } from '../../../api/moderatePalette'
+import { Metadata } from 'next'
 import { getPaletteById } from '../../../api/palettes/getPaletteById'
 import { logger } from '../../../services/logging'
-import useGlobalStore from '../../../store'
-import { EModerationStatus, EPermissionLevel } from '../../../types'
-import { getContrastColor } from '../../../utils'
-import ErrorMessage from '../../sharedComponents/ErrorMessage'
-import InfoMessage from '../../sharedComponents/InfoMessage'
-import Loading from '../../sharedComponents/Loading'
+import PalettePage from './page.client'
 
-const ModerationPanel = ({ paletteId }: { paletteId: string }) => {
-  const appUserDetails = useGlobalStore(state => state.appUserDetails)
-  const addAlert = useGlobalStore(state => state.addAlert)
-  const handleReject = useCallback(async () => {
-    const response = await moderatePalette(paletteId, EModerationStatus.REJECTED)
-    if (response.success) {
-      addAlert('Palette rejected')
-    } else {
-      addAlert(response.error)
-    }
-  }, [paletteId, addAlert])
-  if (!appUserDetails) return null
-
-  if (appUserDetails.permissionLevel >= EPermissionLevel.MODERATOR) {
-    return (
-      <Box sx={{ display: 'flex', flexDirection: 'row', gap: '10px', border: '4px solid red' }}>
-        <Typography>Moderation Panel</Typography>
-        <Button onClick={handleReject}>Reject</Button>
-      </Box>
-    )
+type Props = {
+  params: {
+    id: string
   }
-
-  return <Box></Box>
 }
 
-const PalettePage = () => {
-  const params = useParams()
-  const paletteId = params.id as string
+async function getPalette(id: string) {
+  const response = await getPaletteById(id, true)
+  if (!response.success) return null
+  return response.palette
+}
 
-  const { data, isLoading, error } = useQuery({
-    queryKey: ['palette', paletteId],
-    queryFn: () => getPaletteById(paletteId),
-    retry: false,
-  })
+export async function generateMetadata({ params }: Props): Promise<Metadata | null> {
+  const { id } = await params
+  try {
+    const palette = await getPalette(id)
+    if (!palette) {
+      logger.error('Palette not found', { id })
+      return null
+    }
 
-  useEffect(() => {
-    if (error) logger.error(error)
-  }, [error])
+    return {
+      title: `Palette - ${palette.name}`,
+      openGraph: {
+        images: [palette.ogPhotoUrl],
+        title: `Palette - ${palette.name}`,
+      },
+    }
+  } catch {
+    return null
+  }
+}
 
-  if (isLoading || !data) return <Loading />
-
-  if (error) return <ErrorMessage />
-
-  if (!data.success) return <ErrorMessage error={data.error} />
+export default async function PhotoPage({ params }: Props) {
+  const { id } = await params
+  const palette = await getPalette(id)
+  if (!palette) return null
 
   return (
-    <Box sx={{ display: 'flex', justifyContent: 'center', flexDirection: 'column' }}>
-      {data.palette.moderationStatus === EModerationStatus.AWAITING_MODERATION && (
-        <InfoMessage info="This palette is pending approval." />
-      )}
-      {data.palette.moderationStatus === EModerationStatus.REJECTED && (
-        <ErrorMessage error="This palette was rejected." />
-      )}
-      <Box sx={{ maxWidth: '1000px' }}>
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          style={{ maxWidth: '100%', maxHeight: '900px' }}
-          src={data.palette.photoUrl}
-          alt="Palette"
-        />
-        <div style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap', gap: '10px' }}>
-          {data.palette.colors.map((color: { id: string; hex: string }) => (
-            <Box
-              key={color.id}
-              style={{
-                backgroundColor: color.hex,
-                height: '75px',
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                flexGrow: 1,
-              }}
-            >
-              <Typography variant="body1" color={getContrastColor(color.hex)}>
-                {color.hex}
-              </Typography>
-            </Box>
-          ))}
-        </div>
-        <Typography variant="h1">{data.palette.name}</Typography>
-        <Link href={`/profile/${data.palette.appUserId}`}>{data.palette.appUserId}</Link>
-        <ModerationPanel paletteId={paletteId} />
-      </Box>
-    </Box>
+    <main>
+      <h1>Photo</h1>
+      <PalettePage palette={palette} />
+    </main>
   )
 }
-
-export default PalettePage
