@@ -14,12 +14,12 @@ def get_development_uploads_dir():
     return os.path.join(os.path.dirname(os.path.dirname(__file__)), DEVELOPMENT_UPLOADS_DIR)
 
 
-def save_photo(photo: bytes, id: str, extension: str) -> str:
+def save_photo(photo: bytes, basename: str, extension: str) -> str:
     if config.is_production:
-        result = save_image_to_cloudinary(photo, id)
+        result = save_image_to_cloudinary(photo, basename)
         return f"{PRODUCTION_UPLOADS_PREFIX}/{result}"
     else:
-        filename = f"{id}.{extension}"
+        filename = f"{basename}.{extension}"
         uploads_dir = get_development_uploads_dir()
         os.makedirs(uploads_dir, exist_ok=True)
         file_path = os.path.join(uploads_dir, filename)

@@ -1,4 +1,5 @@
 import { z } from 'zod'
+import config from '../../config'
 import { getToken } from '../../services/supabase/utils'
 import { EModerationStatus } from '../../types'
 import { zodPalette } from '../types'
@@ -17,15 +18,12 @@ const zodResponse = z.discriminatedUnion('success', [
 export const getListAsModerator = async (status: EModerationStatus) => {
   const token = await getToken()
 
-  const response = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}/palettes/moderator?status=${status}`,
-    {
-      method: 'GET',
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    }
-  )
+  const response = await fetch(`${config.apiUrl}/palettes/moderator?status=${status}`, {
+    method: 'GET',
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  })
   const json = await response.json()
   return zodResponse.parse(json)
 }

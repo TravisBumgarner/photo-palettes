@@ -1,4 +1,5 @@
 import { z } from 'zod'
+import config from '../../config'
 import { getToken } from '../../services/supabase/utils'
 
 const zodResponse = z.discriminatedUnion('success', [
@@ -24,7 +25,7 @@ export const generatePalette = async (photo: File) => {
   const formData = new FormData()
   formData.append('photo', photo)
   formData.append('extension', photo.name.split('.').pop() || '')
-  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/palettes/generate`, {
+  const response = await fetch(`${config.apiUrl}/palettes/generate`, {
     method: 'POST',
     body: formData,
     headers: {

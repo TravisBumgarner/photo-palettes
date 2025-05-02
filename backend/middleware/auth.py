@@ -19,8 +19,9 @@ public_routes = [
     (re.compile(r"^/feature-requests$"), "GET"),
     (re.compile(r"^/palettes/app_user_id/\w+$"), "GET"),
     (re.compile(r"^/palettes$"), "GET"),
-    (re.compile(r"^/palettes/id/\w+$"), "GET"),
+    (re.compile(r"^/palettes/id/.*$"), "GET"),
     (re.compile(r"^/uploads/.*$"), "GET"),
+    (re.compile(r"^/palettes/og_url/.*$"), "GET"),
 ]
 
 if not config.is_production:
@@ -75,7 +76,7 @@ def create_auth_middleware(supabase: Client):
 
         auth_header = request.headers.get("authorization", "")
         token = auth_header.replace("Bearer ", "")
-
+        print("route_requires_auth", route_requires_auth, path, request.method)
         if not token and route_requires_auth:
             log_error(Exception("No token provided"), "not_token")
             return JSONResponse(

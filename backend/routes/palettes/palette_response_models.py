@@ -5,6 +5,7 @@ from uuid import UUID
 from pydantic import BaseModel
 
 from database.models import Palette
+from utils.photos import get_photo_path
 
 
 class PaletteColorResponse(BaseModel):
@@ -23,6 +24,7 @@ class PaletteResponse(BaseModel):
     colors: List[PaletteColorResponse]
     moderationStatus: int
     appUserId: UUID
+    ogPhotoUrl: str
 
 
 def map_palette_to_response(palette: Palette) -> PaletteResponse:
@@ -31,7 +33,8 @@ def map_palette_to_response(palette: Palette) -> PaletteResponse:
         name=palette.name,
         createdAt=palette.created_at,
         appUserId=palette.app_user_id,
-        photoUrl=palette.photo_url,
+        photoUrl=get_photo_path(palette.photo_details),
+        ogPhotoUrl=get_photo_path(palette.og_photo_details),
         colors=[
             PaletteColorResponse(
                 id=color.id,

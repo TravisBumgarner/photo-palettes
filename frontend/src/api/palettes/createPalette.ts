@@ -1,4 +1,5 @@
 import { z } from 'zod'
+import config from '../../config'
 import { getToken } from '../../services/supabase/utils'
 import { TPalette } from '../../types'
 
@@ -34,7 +35,7 @@ export const createPalette = async ({
     palette_id: paletteId,
   }
 
-  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/palettes/create`, {
+  const response = await fetch(`${config.apiUrl}/palettes/create`, {
     method: 'POST',
     body: JSON.stringify(requestBody),
     headers: {

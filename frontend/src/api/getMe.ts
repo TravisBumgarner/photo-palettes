@@ -1,4 +1,5 @@
 import { z } from 'zod'
+import config from '../config'
 import { getToken } from '../services/supabase/utils'
 
 const zodResponse = z.discriminatedUnion('success', [
@@ -24,7 +25,7 @@ export const getMe = async () => {
       error: 'No token',
     } as const
 
-  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/me`, {
+  const response = await fetch(`${config.apiUrl}/users/me`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',

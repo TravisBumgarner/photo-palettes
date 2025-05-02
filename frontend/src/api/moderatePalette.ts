@@ -1,4 +1,5 @@
 import { z } from 'zod'
+import config from '../config'
 import { getToken } from '../services/supabase/utils'
 import { EModerationStatus } from '../types'
 
@@ -14,7 +15,7 @@ const zodResponse = z.discriminatedUnion('success', [
 
 export const moderatePalette = async (paletteId: string, status: EModerationStatus) => {
   const token = await getToken()
-  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/palettes/moderate`, {
+  const response = await fetch(`${config.apiUrl}/palettes/moderate`, {
     method: 'POST',
     body: JSON.stringify({ palette_id: paletteId, status }),
     headers: {

@@ -4,6 +4,7 @@ export const zodPalette = z.object({
   id: z.string(),
   name: z.string(),
   photoUrl: z.string(),
+  ogPhotoUrl: z.string(),
   createdAt: z.string(),
   moderationStatus: z.number(),
   appUserId: z.string(),

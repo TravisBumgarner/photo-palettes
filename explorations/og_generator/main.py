@@ -1,4 +1,5 @@
 import datetime
+import io
 import os
 
 from PIL import Image, ImageDraw, ImageFont
@@ -13,7 +14,7 @@ output_dir = "./uploads"
 os.makedirs(output_dir, exist_ok=True)
 
 # Config
-target_width = 990
+target_width = 1200
 target_height = 630
 block_width = 210
 block_height = 105  # 630 / 6
@@ -49,7 +50,8 @@ for filename in os.listdir(input_dir):
         offset = (image.height - new_height) // 2
         image = image.crop((0, offset, image.width, offset + new_height))
 
-    image = image.resize((target_width, target_height), Image.Resampling.LANCZOS)
+    # Use BICUBIC for better quality/size ratio than LANCZOS
+    image = image.resize((target_width, target_height), Image.Resampling.BICUBIC)
 
     # Create canvas
     canvas = Image.new("RGB", (1200, 630), color="white")
@@ -69,8 +71,18 @@ for filename in os.listdir(input_dir):
     # Create output file name
     name, ext = os.path.splitext(filename)
     timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-    output_filename = f"{name}_palette_{timestamp}.png"
+    output_filename = f"{name}_palette_{timestamp}.webp"
     output_path = os.path.join(output_dir, output_filename)
 
-    canvas.save(output_path)
+    # Get WebP bytes
+    webp_bytes = io.BytesIO()
+    canvas.save(webp_bytes, format="WEBP", quality=80, method=6)
+    webp_bytes.seek(0)
+
+    # For local dev, save to file
+    with open(output_path, "wb") as f:
+        f.write(webp_bytes.getvalue())
     print(f"✅ Saved: {output_path}")
+
+    # For prod, you can now use webp_bytes with Cloudinary:
+    # cloudinary.uploader.upload(webp_bytes, ...)

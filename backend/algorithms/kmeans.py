@@ -7,7 +7,7 @@ from sklearn.cluster import KMeans
 from .utils import convert_to_rgb, rgb_to_hex, scale_image
 
 
-def get_image_colors(photo_content: BytesIO, num_colors: int = 6) -> list:
+def get_image_colors(photo_content: BytesIO, num_colors: int = 6):
     image = Image.open(photo_content)
     image = scale_image(image, 200)
     image = convert_to_rgb(image)

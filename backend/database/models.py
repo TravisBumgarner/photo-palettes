@@ -70,16 +70,16 @@ class Palette(Base):
     created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.now)
     name: Mapped[str] = mapped_column(String)
     photo_details: Mapped[str] = mapped_column(String)
-
+    og_photo_details: Mapped[str] = mapped_column(String)
     colors: Mapped[List["PaletteColor"]] = relationship("PaletteColor", back_populates="palette")
     user: Mapped["AppUser"] = relationship("AppUser", back_populates="palettes")
     moderation_status: Mapped[ModerationStatus] = mapped_column(
         Integer, default=ModerationStatus.AWAITING_SUBMISSION
     )
 
-    @property
-    def photo_url(self) -> str:
-        return get_photo_path(self.photo_details)
+    # @property
+    # def photo_url(self) -> str:
+    #     return get_photo_path(self.photo_details)
 
 
 class FeatureRequestStatus(IntEnum):

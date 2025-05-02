@@ -4,6 +4,7 @@ import uuid
 from fastapi import Form, UploadFile
 
 from algorithms.kmeans import get_image_colors
+from algorithms.og import generate_og_image
 from config import get_config
 from database.models import Palette
 from database.queries.palettes import create_palette
@@ -40,22 +41,23 @@ async def generate(
         return validation_error
 
     try:
-        # Read the file content once
-        photo_content = await photo.read()
-
-        # Create a BytesIO object for get_image_colors
-        photo_bytes = io.BytesIO(photo_content)
+        # Read the file content once and create BytesIO
+        photo_bytes = io.BytesIO(await photo.read())
         colors = get_image_colors(photo_bytes)
 
-        id = str(uuid.uuid4())
+        id = uuid.uuid4()
+        photo_details = save_photo(photo_bytes.getvalue(), str(id), extension)
 
-        photo_details = save_photo(photo_content, id, extension)
+        hex_colors = [color["color"] for color in colors]
+        og_image = generate_og_image(id, photo_bytes, hex_colors)
+        og_photo_details = save_photo(og_image.getvalue(), f"{id!s}_og", "webp")
 
         palette = Palette(
             id=id,
             name="",
             app_user_id=request.state.app_user_id,
             photo_details=photo_details,
+            og_photo_details=og_photo_details,
         )
 
         create_palette(palette)
