@@ -16,16 +16,16 @@ const AlphaSignup = () => {
   const handleSubmit = useCallback(async () => {
     const validationResult = formValidation.safeParse({ email })
     if (!validationResult.success) {
-      addAlert('Please enter a valid email address.')
+      addAlert('Please enter a valid email address.', 'error')
       return
     }
     try {
       await alphaSignup(email)
-      addAlert('Thank you for signing up!')
+      addAlert('Thank you for signing up!', 'success')
       setEmail('')
     } catch (error) {
       logger.error('Error signing up', error)
-      addAlert('An error occurred while signing up. Please try again.')
+      addAlert('An error occurred while signing up. Please try again.', 'error')
     }
   }, [email, addAlert])
 

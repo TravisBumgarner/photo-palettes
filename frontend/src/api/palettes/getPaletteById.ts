@@ -31,7 +31,6 @@ export const getPaletteById = async (id: string, isServerSideRequest: boolean = 
       'Content-Type': 'application/json',
       Authorization: `Bearer ${token}`,
     },
-    next: { revalidate: 3600 }, // Store the response because we call this request twice per palette page load.
   })
   const json = await response.json()
 

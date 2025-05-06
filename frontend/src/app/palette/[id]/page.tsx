@@ -41,10 +41,5 @@ export default async function PhotoPage({ params }: Props) {
   const palette = await getPalette(id)
   if (!palette) return null
 
-  return (
-    <main>
-      <h1>Photo</h1>
-      <PalettePage palette={palette} />
-    </main>
-  )
+  return <PalettePage palette={palette} />
 }

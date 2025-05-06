@@ -44,6 +44,13 @@ export const PALETTE = {
   },
 }
 
+export const BORDER_RADIUS = {
+  ZERO: {
+    PX: '0px',
+    INT: 0,
+  },
+}
+
 export const FONT_SIZES = {
   SMALL: {
     PX: '12px',
@@ -56,6 +63,14 @@ export const FONT_SIZES = {
   LARGE: {
     PX: '24px',
     INT: 24,
+  },
+  HUGE: {
+    PX: '32px',
+    INT: 32,
+  },
+  HUGE_PLUS: {
+    PX: '48px',
+    INT: 48,
   },
 }
 
@@ -88,15 +103,6 @@ const baseThemeOptions: ThemeOptions = {
     body1: {
       fontSize: '24px',
     },
-    h1: {
-      fontSize: '48px',
-    },
-    h2: {
-      fontSize: '36px',
-    },
-    h3: {
-      fontSize: '24px',
-    },
   },
 }
 
@@ -106,12 +112,30 @@ const lightTheme = createTheme({
   palette: {
     mode: 'light',
     background: {
-      default: PALETTE.grayscale[50],
+      default: PALETTE.grayscale[100],
       paper: PALETTE.grayscale[50],
     },
     text: {
       primary: PALETTE.grayscale[900],
-      secondary: PALETTE.grayscale[900],
+      secondary: PALETTE.grayscale[800],
+    },
+    divider: PALETTE.grayscale[200],
+  },
+  typography: {
+    h1: {
+      color: PALETTE.grayscale[900],
+    },
+    h2: {
+      color: PALETTE.grayscale[900],
+    },
+    h3: {
+      color: PALETTE.grayscale[900],
+    },
+    body1: {
+      color: PALETTE.grayscale[900],
+    },
+    body2: {
+      color: PALETTE.grayscale[900],
     },
   },
 })
@@ -123,11 +147,29 @@ const darkTheme = createTheme({
     mode: 'dark',
     background: {
       default: PALETTE.grayscale[900],
-      paper: PALETTE.grayscale[900],
+      paper: PALETTE.grayscale[800],
     },
     text: {
-      primary: PALETTE.grayscale[50],
+      primary: PALETTE.grayscale[100],
       secondary: PALETTE.grayscale[50],
+    },
+    divider: PALETTE.grayscale[800],
+  },
+  typography: {
+    h1: {
+      color: PALETTE.grayscale[100],
+    },
+    h2: {
+      color: PALETTE.grayscale[100],
+    },
+    h3: {
+      color: PALETTE.grayscale[100],
+    },
+    body1: {
+      color: PALETTE.grayscale[100],
+    },
+    body2: {
+      color: PALETTE.grayscale[100],
     },
   },
 })

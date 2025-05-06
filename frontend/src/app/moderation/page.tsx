@@ -7,8 +7,8 @@ import { moderatePalette } from '../../api/moderatePalette'
 import { getListAsModerator } from '../../api/palettes/getPaletteListAsModerator'
 import { logger } from '../../services/logging'
 import { EModerationStatus, TPaletteAndColors } from '../../types'
-import ErrorMessage from '../sharedComponents/ErrorMessage'
 import Loading from '../sharedComponents/Loading'
+import Message from '../sharedComponents/Message'
 import PaletteThumbnail from '../sharedComponents/PaletteThumbnail'
 
 const Empty = ({ type }: { type: string }) => (
@@ -125,8 +125,8 @@ const Moderation = () => {
 
   const content = useMemo(() => {
     if (isLoading || !data) return <Loading />
-    if (error) return <ErrorMessage />
-    if (!data.success) return <ErrorMessage error={data.error} />
+    if (error) return <Message message="Error fetching palettes" color="error" />
+    if (!data.success) return <Message message={data.error} color="error" />
     if (data.palettes.length === 0) return <Empty type={tabs[tab].label} />
 
     return (

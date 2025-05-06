@@ -1,7 +1,7 @@
 import { Box, Typography } from '@mui/material'
+import { BORDER_RADIUS, SPACING } from '../../styles/Theme'
 import { TPaletteAndColors } from '../../types'
 import Link from './Link'
-
 const PaletteThumbnail = ({ palette }: { palette: TPaletteAndColors }) => {
   return (
     <Link href={`/palette/${palette.id}`} hideUnderline>
@@ -10,8 +10,8 @@ const PaletteThumbnail = ({ palette }: { palette: TPaletteAndColors }) => {
           width: '300px',
           border: '1px solid',
           borderColor: 'divider',
-          borderRadius: 1,
-          p: 2,
+          borderRadius: BORDER_RADIUS.ZERO.PX,
+          padding: SPACING.SMALL.PX,
           height: '100%',
         }}
         key={palette.id}

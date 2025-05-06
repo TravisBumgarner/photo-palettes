@@ -9,10 +9,11 @@ import addFeatureRequest from '../../api/featureRequests/addFeatureRequest'
 import getFeatureRequests from '../../api/featureRequests/getFeatureRequests'
 import upvoteFeatureRequest from '../../api/featureRequests/upvoteFeatureRequst'
 import useGlobalStore from '../../store'
+import { SPACING } from '../../styles/Theme'
 import { EPermissionLevel, TFeatureRequest } from '../../types'
-import ErrorMessage from '../sharedComponents/ErrorMessage'
 import Link from '../sharedComponents/Link'
 import Loading from '../sharedComponents/Loading'
+import Message from '../sharedComponents/Message'
 
 const FeatureRequestCard = ({
   featureRequest,
@@ -45,14 +46,14 @@ const FeatureRequestCard = ({
   return (
     <Box
       sx={{
-        border: '2px solid black',
-        padding: 2,
-        borderRadius: '10px',
+        border: '1px solid',
+        borderColor: 'divider',
+        padding: SPACING.MEDIUM.PX,
         display: 'flex',
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-        margin: '15px 0',
+        margin: `${SPACING.MEDIUM.PX} 0`,
       }}
     >
       <Box>
@@ -86,7 +87,7 @@ const NewFeatureSubmission = ({ refetch }: { refetch: () => void }) => {
   const { mutateAsync, isPending } = useMutation({
     mutationFn: () => addFeatureRequest(title, description),
     onSuccess: () => {
-      addAlert('Feature request submitted')
+      addAlert('Feature request submitted', 'success')
       setTitle('')
       setDescription('')
       refetch()
@@ -108,9 +109,9 @@ const NewFeatureSubmission = ({ refetch }: { refetch: () => void }) => {
   return (
     <Box
       sx={{
-        border: '2px solid black',
-        padding: 2,
-        borderRadius: '10px',
+        border: '1px solid',
+        borderColor: 'divider',
+        padding: SPACING.MEDIUM.PX,
       }}
     >
       <Typography variant="h2">Moderators Only</Typography>
@@ -149,7 +150,7 @@ const FeatureRequests = () => {
   }
 
   if (error || !data?.success) {
-    return <ErrorMessage />
+    return <Message message="Error fetching feature requests" color="error" />
   }
 
   return (

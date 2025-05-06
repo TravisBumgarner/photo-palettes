@@ -18,7 +18,7 @@ export const getPaletteListByAppUserId = async (appUserId: string, status: EMode
   if (!appUserId) {
     return {
       success: false,
-      error: 'App user ID is required',
+      error: 'No user found',
     } as const
   }
 

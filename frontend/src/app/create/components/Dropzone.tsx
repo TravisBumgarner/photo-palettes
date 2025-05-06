@@ -15,7 +15,7 @@ const Dropzone = ({ onDrop }: { onDrop: (acceptedFiles: File[]) => void }) => {
       'image/*': ['.png', '.jpg', '.jpeg'],
     },
     onDropRejected: fileRejections => {
-      addAlert(fileRejections.map(rejection => rejection.errors[0].message).join(', '))
+      addAlert(fileRejections.map(rejection => rejection.errors[0].message).join(', '), 'error')
     },
   })
 

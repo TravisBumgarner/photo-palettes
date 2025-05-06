@@ -22,7 +22,8 @@ const useGlobalStore = create<State>()(
         set({ alerts: alerts.slice(1) })
         return nextAlert
       },
-      addAlert: alert => set(state => ({ alerts: [...state.alerts, alert] })),
+      addAlert: (text, color) =>
+        set(state => ({ alerts: [...state.alerts, { message: text, color, id: Math.random() }] })),
       activeModal: null,
       setActiveModal: (activeModal: ActiveModal | null) => set({ activeModal }),
     }),
