@@ -11,22 +11,6 @@ import Loading from '../sharedComponents/Loading'
 import Message from '../sharedComponents/Message'
 import PaletteThumbnail from '../sharedComponents/PaletteThumbnail'
 
-const Empty = ({ type }: { type: string }) => (
-  <Box
-    sx={{
-      width: '100%',
-      height: '200px',
-      display: 'flex',
-      justifyContent: 'center',
-      border: '1px solid black',
-      alignItems: 'center',
-      borderRadius: '10px',
-    }}
-  >
-    <Typography variant="h5">No palettes {type}</Typography>
-  </Box>
-)
-
 const tabs = [
   { label: 'Awaiting Moderation', status: EModerationStatus.AWAITING_MODERATION },
   { label: 'Awaiting Submission', status: EModerationStatus.AWAITING_SUBMISSION },
@@ -127,7 +111,7 @@ const Moderation = () => {
     if (isLoading || !data) return <Loading />
     if (error) return <Message message="Error fetching palettes" color="error" />
     if (!data.success) return <Message message={data.error} color="error" />
-    if (data.palettes.length === 0) return <Empty type={tabs[tab].label} />
+    if (data.palettes.length === 0) return <Message message="No palettes" color="info" />
 
     return (
       <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2 }}>
