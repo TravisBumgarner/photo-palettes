@@ -1,4 +1,5 @@
-import { useTheme } from '@mui/material/styles'
+import { Box } from '@mui/material'
+import { SxProps, useTheme } from '@mui/material/styles'
 import NextLink from 'next/link'
 import { PALETTE } from '../../styles/Theme'
 
@@ -7,11 +8,13 @@ const Link = ({
   children,
   hideUnderline = false,
   target = '_self',
+  sx,
 }: {
   href: string
   children: React.ReactNode
   hideUnderline?: boolean
   target?: '_blank' | '_self'
+  sx?: SxProps
 }) => {
   const isDarkTheme = useTheme().palette.mode === 'dark'
 
@@ -24,7 +27,7 @@ const Link = ({
       }}
       href={href}
     >
-      {children}
+      <Box sx={sx}>{children}</Box>
     </NextLink>
   )
 }

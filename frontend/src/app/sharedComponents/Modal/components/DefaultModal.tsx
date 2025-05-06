@@ -3,8 +3,7 @@ import MUIModal from '@mui/material/Modal'
 import { useCallback, type FC } from 'react'
 import { IoMdClose } from 'react-icons/io'
 import useGlobalStore from '../../../../store'
-import { PALETTE } from '../../../../styles/Theme'
-
+import { BORDER_RADIUS, SPACING } from '../../../../styles/Theme'
 interface ActiveModal {
   children: React.ReactNode | React.ReactNode[]
   hideCloseButton?: boolean
@@ -28,7 +27,7 @@ const Modal: FC<ActiveModal> = ({ children, hideCloseButton = false }) => {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        backgroundColor: `${PALETTE.grayscale[500]}`,
+        backgroundColor: 'background.paper',
       }}
       open={activeModal !== null}
       onClose={handleClose}
@@ -41,10 +40,10 @@ const Modal: FC<ActiveModal> = ({ children, hideCloseButton = false }) => {
           maxWidth: '90%',
           display: 'flex',
           flexDirection: 'column',
-          backgroundColor: PALETTE.grayscale[900],
-          color: PALETTE.grayscale[50],
-          padding: '20px',
-          borderRadius: '10px',
+          backgroundColor: 'background.paper',
+          color: 'text.primary',
+          padding: SPACING.MEDIUM.PX,
+          borderRadius: BORDER_RADIUS.ZERO.PX,
         }}
       >
         {!hideCloseButton && (

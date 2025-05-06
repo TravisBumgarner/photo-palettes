@@ -99,6 +99,22 @@ export const SPACING = {
 
 // Base theme options shared between light and dark
 const baseThemeOptions: ThemeOptions = {
+  components: {
+    MuiButton: {
+      styleOverrides: {
+        root: {
+          borderRadius: BORDER_RADIUS.ZERO.PX,
+        },
+      },
+    },
+    MuiTextField: {
+      styleOverrides: {
+        root: {
+          borderRadius: BORDER_RADIUS.ZERO.PX,
+        },
+      },
+    },
+  },
   typography: {
     body1: {
       fontSize: '24px',
