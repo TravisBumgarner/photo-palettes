@@ -47,9 +47,9 @@ def get_config() -> Config:
     try:
         return Config()
     except ValidationError as e:
-        print("🚨 Configuration error:")
+        print("🚨 Configuration error:")  # noqa: T201
         for err in e.errors():
             loc = " -> ".join(str(i) for i in err["loc"])
             msg = err["msg"]
-            print(f"  • {loc}: {msg}")
+            print(f"  • {loc}: {msg}")  # noqa: T201
         sys.exit(1)
