@@ -3,13 +3,16 @@
 import { Box, Button, TextField, Typography } from '@mui/material'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { Reorder } from 'framer-motion'
+import { redirect } from 'next/navigation'
 import React, { useCallback, useState } from 'react'
 import addFeatureRequest from '../../api/featureRequests/addFeatureRequest'
 import getFeatureRequests from '../../api/featureRequests/getFeatureRequests'
 import upvoteFeatureRequest from '../../api/featureRequests/upvoteFeatureRequst'
 import useGlobalStore from '../../store'
 import { EPermissionLevel, TFeatureRequest } from '../../types'
+import ErrorMessage from '../sharedComponents/ErrorMessage'
 import Link from '../sharedComponents/Link'
+import Loading from '../sharedComponents/Loading'
 
 const FeatureRequestCard = ({
   featureRequest,
@@ -21,8 +24,9 @@ const FeatureRequestCard = ({
   refetch: () => void
 }) => {
   const appUserDetails = useGlobalStore(store => store.appUserDetails)
-  const { mutate, isPending, isSuccess } = useMutation({
+  const { mutate, isPending, isSuccess, isError } = useMutation({
     mutationFn: (featureRequestId: string) => upvoteFeatureRequest(featureRequestId),
+    retry: false,
     onSuccess: () => {
       refetch()
     },
@@ -33,6 +37,10 @@ const FeatureRequestCard = ({
 
     mutate(featureRequest.id)
   }, [mutate, featureRequest.id, readonly])
+
+  if (isError) {
+    return redirect('/error500')
+  }
 
   return (
     <Box
@@ -131,16 +139,17 @@ const FeatureRequests = () => {
   const noop = useCallback(() => {}, [])
 
   const { data, isLoading, error, refetch } = useQuery({
-    queryKey: ['feature-requests'],
+    queryKey: ['feature_requests'],
     queryFn: getFeatureRequests,
+    retry: false,
   })
 
   if (isLoading) {
-    return <Box>Loading...</Box>
+    return <Loading />
   }
 
   if (error || !data?.success) {
-    return <Box>Error: {error?.message}</Box>
+    return <ErrorMessage />
   }
 
   return (

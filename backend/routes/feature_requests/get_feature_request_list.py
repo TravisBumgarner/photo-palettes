@@ -9,6 +9,7 @@ from . import feature_requests_router
 
 @feature_requests_router.get("/")
 async def get_list():
+    print("doot doot")
     try:
         feature_requests = get_votes()
         return {

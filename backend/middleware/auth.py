@@ -16,7 +16,7 @@ config = get_config()
 public_routes = [
     (re.compile(r"^/$"), "GET"),
     (re.compile(r"^/alpha/signup$"), "POST"),
-    (re.compile(r"^/feature-requests$"), "GET"),
+    (re.compile(r"^/feature_requests/$"), "GET"),
     (re.compile(r"^/palettes/app_user_id/\w+$"), "GET"),
     (re.compile(r"^/palettes$"), "GET"),
     (re.compile(r"^/palettes/id/.*$"), "GET"),
@@ -69,6 +69,7 @@ def create_auth_middleware(supabase: Client):
         route_requires_auth = not any(
             pattern.match(path) and method == request.method for pattern, method in public_routes
         )
+        print(f"path: {path}, route_requires_auth: {route_requires_auth}")
 
         if request.method == "OPTIONS":
             return await call_next(request)

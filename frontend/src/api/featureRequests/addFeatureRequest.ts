@@ -22,7 +22,7 @@ const addFeatureRequest = async (title: string, description: string) => {
       error: 'No token',
     } as const
 
-  const response = await fetch(`${config.apiUrl}/feature-requests`, {
+  const response = await fetch(`${config.apiUrl}/feature_requests`, {
     method: 'POST',
     headers: {
       Authorization: `Bearer ${token}`,

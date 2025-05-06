@@ -1,3 +1,5 @@
+'use client'
+
 import { Typography } from '@mui/material'
 import StaticContentWrapper from '../../styles/Shared'
 import { PALETTE } from '../../styles/Theme'

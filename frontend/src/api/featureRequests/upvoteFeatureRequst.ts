@@ -23,7 +23,7 @@ const upvoteFeatureRequest = async (featureRequestId: string) => {
     } as const
   }
 
-  const response = await fetch(`${config.apiUrl}/feature-requests/upvote`, {
+  const response = await fetch(`${config.apiUrl}/feature_requests/upvote`, {
     method: 'POST',
     headers: {
       Authorization: `Bearer ${token}`,

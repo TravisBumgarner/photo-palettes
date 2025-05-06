@@ -5,106 +5,23 @@ import { GiHamburgerMenu } from 'react-icons/gi'
 import { Box, IconButton, Menu, MenuItem } from '@mui/material'
 import NextLink from 'next/link'
 import { useCallback, useMemo, useState } from 'react'
+import { ROUTES } from '../../consts'
 import useGlobalStore from '../../store'
 import { PALETTE } from '../../styles/Theme'
 import { EPermissionLevel } from '../../types'
 import Link from '../sharedComponents/Link'
 
-const ROUTES = {
-  home: {
-    key: 'home',
-    href: '/',
-    label: 'Home',
-  },
-  browse: {
-    key: 'browse',
-    href: '/browse',
-    label: 'Browse',
-  },
-  moderation: {
-    key: 'moderation',
-    href: '/moderation',
-    label: 'Moderation',
-  },
-  profile: {
-    key: 'profile',
-    href: '/profile',
-    label: 'Profile',
-  },
-  create: {
-    key: 'create',
-    href: '/create',
-    label: 'Create',
-  },
-  feedback: {
-    key: 'feedback',
-    href: '/feedback',
-    label: 'Feedback',
-  },
-  login: {
-    key: 'login',
-    href: '/login',
-    label: 'Login',
-  },
-  signup: {
-    key: 'signup',
-    href: '/signup',
-    label: 'Signup',
-  },
-  logout: {
-    key: 'logout',
-    href: '/logout',
-    label: 'Logout',
-  },
-  privacyPolicy: {
-    key: 'privacyPolicy',
-    href: '/privacy',
-    label: 'Privacy Policy',
-  },
-  termsOfService: {
-    key: 'termsOfService',
-    href: '/tos',
-    label: 'Terms of Service',
-  },
-  featureRequests: {
-    key: 'featureRequests',
-    href: '/feature_requests',
-    label: 'Feature Requests',
-  },
-}
-
 const DropdownLinks = ({ onClose }: { onClose: () => void }) => {
   const appUserDetails = useGlobalStore(state => state.appUserDetails)
 
   const routeKeys = useMemo((): (keyof typeof ROUTES)[] => {
-    if (!appUserDetails)
-      return ['home', 'feedback', 'featureRequests', 'privacyPolicy', 'termsOfService']
+    if (!appUserDetails) return ['login', 'signup']
 
     if (appUserDetails.permissionLevel >= EPermissionLevel.MODERATOR)
-      return [
-        'home',
-        'create',
-        'featureRequests',
-        'moderation',
-        'profile',
-        'feedback',
-        'logout',
-        'privacyPolicy',
-        'termsOfService',
-      ]
+      return ['profile', 'moderation', 'feedback', 'logout']
 
-    return [
-      'home',
-      'create',
-      'featureRequests',
-      'profile',
-      'feedback',
-      'logout',
-      'privacyPolicy',
-      'termsOfService',
-    ]
+    return ['profile', 'feedback', 'logout']
   }, [appUserDetails])
-
   return (
     <>
       {routeKeys.map(key => (
@@ -148,7 +65,6 @@ const Navigation = () => {
         }}
       >
         <Link href="/">Photo Palettes</Link>
-        {!appUserDetails && <Link href="/browse">Browse</Link>}
       </Box>
       <Box sx={{ display: 'flex', flexDirection: 'row', gap: '14px' }}>
         {appUserDetails && (
@@ -164,12 +80,7 @@ const Navigation = () => {
             {ROUTES.create.label}
           </NextLink>
         )}
-        {!appUserDetails && (
-          <>
-            <NextLink href={ROUTES.login.href}>{ROUTES.login.label}</NextLink>
-            <NextLink href={ROUTES.signup.href}>{ROUTES.signup.label}</NextLink>
-          </>
-        )}
+        {!appUserDetails && <Link href="/browse">Browse</Link>}
         <IconButton
           aria-label="menu"
           aria-controls={open ? 'navigation-menu' : undefined}

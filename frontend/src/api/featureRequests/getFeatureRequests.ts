@@ -22,7 +22,7 @@ const zodSchema = z.discriminatedUnion('success', [
 ])
 
 const getFeatureRequests = async () => {
-  const response = await fetch(`${config.apiUrl}/feature-requests`, {})
+  const response = await fetch(`${config.apiUrl}/feature_requests/`, {})
   const data = await response.json()
 
   return zodSchema.parse(data)
