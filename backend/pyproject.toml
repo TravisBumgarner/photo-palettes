@@ -5,7 +5,7 @@ python_functions = ["test_*"]
 
 [tool.ruff]
 # Enable pycodestyle (`E`), Pyflakes (`F`), and isort (`I`) codes
-select = ["E", "F", "I", "N", "W", "B", "C4", "UP", "PL", "RUF"]
+select = ["E", "F", "I", "N", "W", "B", "C4", "UP", "PL", "RUF", "T20"]
 ignore = []
 
 # Allow autofix for all enabled rules (when `--fix`) is provided.

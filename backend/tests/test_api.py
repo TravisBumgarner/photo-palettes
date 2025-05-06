@@ -99,7 +99,7 @@ def test_moderate_palette_unauthorized():
 
 def test_feature_requests():
     create_response = requests.post(
-        f"{BASE_URL}/feature-requests",
+        f"{BASE_URL}/feature_requests",
         headers={**get_moderator_auth_headers(), "Content-Type": "application/json"},
         json={"title": "Test Feature Request", "description": "Test Description"},
     )
@@ -109,7 +109,7 @@ def test_feature_requests():
     feature_request_id = create_response.json()["featureRequestId"]
 
     upvote_response = requests.post(
-        f"{BASE_URL}/feature-requests/upvote",
+        f"{BASE_URL}/feature_requests/upvote",
         headers={**get_user_auth_headers(), "Content-Type": "application/json"},
         json={"feature_request_id": feature_request_id},
     )
@@ -120,7 +120,7 @@ def test_feature_requests():
 
 def test_feature_requests_unauthorized():
     response = requests.post(
-        f"{BASE_URL}/feature-requests",
+        f"{BASE_URL}/feature_requests",
         headers=get_user_auth_headers(),
         json={"title": "Test Feature Request", "description": "Test Description"},
     )

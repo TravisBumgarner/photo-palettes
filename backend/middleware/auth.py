@@ -16,7 +16,7 @@ config = get_config()
 public_routes = [
     (re.compile(r"^/$"), "GET"),
     (re.compile(r"^/alpha/signup$"), "POST"),
-    (re.compile(r"^/feature-requests$"), "GET"),
+    (re.compile(r"^/feature_requests/$"), "GET"),
     (re.compile(r"^/palettes/app_user_id/\w+$"), "GET"),
     (re.compile(r"^/palettes$"), "GET"),
     (re.compile(r"^/palettes/id/.*$"), "GET"),

@@ -21,7 +21,6 @@ def get_text_color(hex_color):
 
 # Process all images in input_dir
 def generate_og_image(id: uuid.UUID, photo_content: BytesIO, colors: list[str]):
-    print("Generating OG image", colors)
     image = Image.open(photo_content)
     image = image.convert("RGB")
 
