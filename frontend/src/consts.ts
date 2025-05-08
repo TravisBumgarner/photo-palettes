@@ -16,7 +16,7 @@ export const ROUTES = {
   home: {
     key: 'home',
     href: '/',
-    label: 'Home',
+    label: 'Photo Palettes',
   },
   browse: {
     key: 'browse',

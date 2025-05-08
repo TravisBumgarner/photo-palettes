@@ -66,9 +66,9 @@ const Navigation = () => {
         <Link
           hideUnderline
           sx={{ fontWeight: 900, color: 'text.primary', fontSize: FONT_SIZES.LARGE.PX }}
-          href="/"
+          href={ROUTES.home.href}
         >
-          Photo Palettes
+          {ROUTES.home.label}
         </Link>
       </Box>
       <Box sx={{ display: 'flex', flexDirection: 'row', gap: '14px', alignItems: 'center' }}>
@@ -90,8 +90,8 @@ const Navigation = () => {
           </Link>
         )}
         {!appUserDetails && (
-          <Link sx={{ fontWeight: 900 }} href="/browse">
-            Browse
+          <Link sx={{ fontWeight: 900 }} href={ROUTES.browse.href}>
+            {ROUTES.browse.label}
           </Link>
         )}
         <IconButton
