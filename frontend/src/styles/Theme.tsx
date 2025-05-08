@@ -190,7 +190,7 @@ const darkThemeOptions: ThemeOptions = {
       primary: PALETTE.grayscale[100],
       secondary: PALETTE.grayscale[50],
     },
-    divider: PALETTE.grayscale[800],
+    divider: PALETTE.grayscale[700],
   },
   typography: {
     h1: {

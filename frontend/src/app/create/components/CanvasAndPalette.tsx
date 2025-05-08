@@ -2,50 +2,8 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { TGeneratedPalette } from '../../../types'
-import { getContrastColor } from '../../../utils'
-import { HEIGHT, WIDTH } from '../consts'
 import DraggableSwatch from './DraggableSwatch'
-
-const ReadonlySwatch = ({
-  swatch,
-  index,
-  handleMouseEnterCallback,
-  handleMouseLeaveCallback,
-}: {
-  swatch: TGeneratedPalette[number]
-  index: number
-  handleMouseEnterCallback: (index: number) => void
-  handleMouseLeaveCallback: () => void
-}) => {
-  const handleMouseEnter = useCallback(() => {
-    handleMouseEnterCallback(index)
-  }, [index, handleMouseEnterCallback])
-
-  const handleMouseLeave = useCallback(() => {
-    handleMouseLeaveCallback()
-  }, [handleMouseLeaveCallback])
-
-  return (
-    <div
-      key={swatch.color}
-      style={{
-        flexGrow: 1,
-        height: '50px',
-        backgroundColor: swatch.color,
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        fontSize: '12px',
-      }}
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
-    >
-      <span style={{ color: getContrastColor(swatch.color), fontSize: '20px' }}>
-        {swatch.color}
-      </span>
-    </div>
-  )
-}
+import ReadonlyPalette from './ReadonlyPalette'
 
 const CanvasAndPalette = ({
   palette,
@@ -60,9 +18,10 @@ const CanvasAndPalette = ({
   const containerRef = useRef<HTMLDivElement>(null)
   const [draggingIndex, setDraggingIndex] = useState<number | null>(null)
   const [hoveringIndex, setHoveringIndex] = useState<number | null>(null)
-  const [imageDimensions, setImageDimensions] = useState<{ width: number; height: number } | null>(
-    null
-  )
+  const [imageDimensions, setImageDimensions] = useState<{ width: number; height: number }>({
+    width: 1,
+    height: 1,
+  })
   const handleSetDraggingIndex = useCallback((index: number) => {
     setDraggingIndex(index)
   }, [])
@@ -170,37 +129,27 @@ const CanvasAndPalette = ({
     }
   }, [photo, setPhotoOnCanvas])
 
-  const handleMouseEnter = useCallback((index: number) => {
-    setHoveringIndex(index)
-  }, [])
-
-  const handleMouseLeave = useCallback(() => {
-    setHoveringIndex(null)
-  }, [])
-
   return (
     <>
       <div
         ref={containerRef}
-        style={{
-          width: '100%',
-          maxWidth: `${WIDTH}px`,
-          maxHeight: `${HEIGHT}px`,
-          position: 'relative',
-          aspectRatio: imageDimensions
-            ? `${imageDimensions.width} / ${imageDimensions.height}`
-            : '1',
-        }}
         onMouseDown={handleCanvasMouseDown}
         onMouseMove={handleCanvasMouseMove}
         onMouseUp={handleCanvasMouseUp}
         onMouseLeave={handleCanvasMouseUp}
+        style={{
+          width: '500px',
+          aspectRatio: imageDimensions.width / imageDimensions.height,
+          border: '1px solid red',
+          margin: '0 auto',
+          position: 'relative',
+        }}
       >
         <canvas
           style={{
-            width: '100%',
-            height: '100%',
             display: 'block',
+            width: '500px',
+            aspectRatio: imageDimensions.width / imageDimensions.height,
           }}
           ref={canvasRef}
         />
@@ -214,19 +163,7 @@ const CanvasAndPalette = ({
           />
         ))}
       </div>
-      {palette.length > 0 && (
-        <div style={{ display: 'flex', flexDirection: 'row' }}>
-          {palette.map((swatch, index) => (
-            <ReadonlySwatch
-              key={`${swatch.color}-${index}`}
-              swatch={swatch}
-              index={index}
-              handleMouseEnterCallback={handleMouseEnter}
-              handleMouseLeaveCallback={handleMouseLeave}
-            />
-          ))}
-        </div>
-      )}
+      <ReadonlyPalette palette={palette} setHoveringIndex={setHoveringIndex} />
     </>
   )
 }

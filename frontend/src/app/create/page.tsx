@@ -14,7 +14,6 @@ import Message from '../sharedComponents/Message'
 import { ModalID } from '../sharedComponents/Modal/Modal.consts'
 import CanvasAndPalette from './components/CanvasAndPalette'
 import Dropzone from './components/Dropzone'
-import { WIDTH } from './consts'
 
 enum UploadStatus {
   INITIAL = 'INITIAL',
@@ -121,17 +120,7 @@ const Create = () => {
 
   return (
     <div>
-      <Box
-        sx={{
-          margin: '0 auto',
-          minHeight: '70vh',
-          width: WIDTH,
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          flexDirection: 'column',
-        }}
-      >
+      <Box>
         {uploadStatus === UploadStatus.INITIAL && <Dropzone onDrop={onDrop} />}
         {uploadStatus === UploadStatus.UPLOADING && <Loading />}
         {uploadStatus === UploadStatus.ERROR && (
@@ -143,7 +132,7 @@ const Create = () => {
           />
         )}
         {(uploadStatus === UploadStatus.UPLOADED || uploadStatus === UploadStatus.SUBMITTING) && (
-          <Box sx={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+          <Box>
             <CanvasAndPalette
               palette={palette}
               handlePaletteChange={handlePaletteChange}
