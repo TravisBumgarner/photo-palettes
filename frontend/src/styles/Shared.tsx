@@ -1,4 +1,7 @@
+'use client'
+
 import { Box } from '@mui/material'
+import { SPACING } from './Theme'
 
 const StaticContentWrapper = ({ children }: { children: React.ReactNode }) => {
   return (
@@ -6,13 +9,18 @@ const StaticContentWrapper = ({ children }: { children: React.ReactNode }) => {
       sx={{
         display: 'flex',
         flexDirection: 'column',
-        gap: '30px',
+        gap: SPACING.MEDIUM.PX,
         width: '100%',
         maxWidth: '800px',
         margin: '0px auto',
-        padding: '20px',
         boxSizing: 'border-box',
-        fontSize: '30px',
+        '& .MuiListItem-root': {
+          display: 'list-item',
+          listStyleType: 'circle',
+        },
+        '& > ul': {
+          marginLeft: SPACING.LARGE.PX,
+        },
       }}
     >
       {children}

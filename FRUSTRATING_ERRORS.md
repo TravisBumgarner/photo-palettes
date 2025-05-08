@@ -27,3 +27,5 @@ docker compose exec frontend sh
 npm install react-dropzone
 
 HOT RELOADING BACKEND - WatchFiles doesn't see all new files in backend.
+
+Can't find something common? Like importing from theme? Need to make it 'use client'

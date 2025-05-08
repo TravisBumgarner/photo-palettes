@@ -27,7 +27,15 @@ const Link = ({
       }}
       href={href}
     >
-      <Box sx={sx}>{children}</Box>
+      <Box
+        component="span"
+        sx={{
+          ...sx,
+          '&:hover': { textDecoration: 'underline' },
+        }}
+      >
+        {children}
+      </Box>
     </NextLink>
   )
 }

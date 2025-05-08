@@ -86,6 +86,7 @@ const Footer = () => {
         margin: `${SPACING.MEDIUM.PX} auto`,
         gap: `${SPACING.HUGE.PX}`,
         justifyContent: 'center',
+        marginTop: SPACING.HUGE.PX,
       }}
     >
       {sections(appUserDetails?.permissionLevel).map(section => (

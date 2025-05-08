@@ -140,18 +140,26 @@ const lightTheme = createTheme({
   typography: {
     h1: {
       color: PALETTE.grayscale[900],
+      fontSize: FONT_SIZES.HUGE.PX,
+      fontWeight: 900,
     },
     h2: {
       color: PALETTE.grayscale[900],
+      fontSize: FONT_SIZES.LARGE.PX,
+      fontWeight: 900,
     },
     h3: {
       color: PALETTE.grayscale[900],
+      fontSize: FONT_SIZES.MEDIUM.PX,
+      fontWeight: 900,
     },
     body1: {
       color: PALETTE.grayscale[900],
+      fontSize: FONT_SIZES.MEDIUM.PX,
     },
     body2: {
       color: PALETTE.grayscale[900],
+      fontSize: FONT_SIZES.SMALL.PX,
     },
   },
 })
