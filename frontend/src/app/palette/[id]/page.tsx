@@ -4,9 +4,9 @@ import { logger } from '../../../services/logging'
 import PalettePage from './page.client'
 
 type Props = {
-  params: {
+  params: Promise<{
     id: string
-  }
+  }>
 }
 
 async function getPalette(id: string) {
