@@ -24,8 +24,9 @@ const FeatureRequestCard = ({
   readonly: boolean
   refetch: () => void
 }) => {
+  const addAlert = useGlobalStore(store => store.addAlert)
   const appUserDetails = useGlobalStore(store => store.appUserDetails)
-  const { mutate, isPending, isSuccess, isError } = useMutation({
+  const { mutateAsync, isPending, isSuccess, isError } = useMutation({
     mutationFn: (featureRequestId: string) => upvoteFeatureRequest(featureRequestId),
     retry: false,
     onSuccess: () => {
@@ -33,11 +34,16 @@ const FeatureRequestCard = ({
     },
   })
 
-  const handleClick = useCallback(() => {
+  const handleClick = useCallback(async () => {
     if (readonly) return
 
-    mutate(featureRequest.id)
-  }, [mutate, featureRequest.id, readonly])
+    const response = await mutateAsync(featureRequest.id)
+    if (response.success) {
+      addAlert('Feature request upvoted', 'success')
+    } else {
+      addAlert('Error upvoting feature request', 'error')
+    }
+  }, [mutateAsync, featureRequest.id, readonly, addAlert])
 
   if (isError) {
     return redirect('/error500')
@@ -60,10 +66,13 @@ const FeatureRequestCard = ({
         <Typography variant="h2">{featureRequest.title}</Typography>
         <Typography variant="body1">{featureRequest.description}</Typography>
       </Box>
-      <Box sx={{ display: 'flex', flexDirection: 'row', gap: 2 }}>
-        <Typography variant="body1">Votes: {featureRequest.votes.length}</Typography>
+      <Box sx={{ display: 'flex', flexDirection: 'row', gap: 2, alignItems: 'center' }}>
+        <Typography sx={{ width: '100px' }} variant="body1">
+          Votes: {featureRequest.votes.length}
+        </Typography>
         {!readonly && (
           <Button
+            sx={{ width: '110px' }}
             disabled={
               isPending || isSuccess || featureRequest.votes.includes(appUserDetails?.id || '')
             }

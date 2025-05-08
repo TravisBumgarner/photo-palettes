@@ -4,7 +4,7 @@ import { Box } from '@mui/material'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import useGlobalStore from '../../store'
 import { TAlert } from '../../store/types'
-import { BORDER_RADIUS, SPACING } from '../../styles/Theme'
+import { BORDER_RADIUS, FONT_SIZES, SPACING } from '../../styles/Theme'
 
 const Alert = ({
   id,
@@ -23,14 +23,16 @@ const Alert = ({
     <Box
       key={message}
       sx={{
-        border: `1px solid`,
+        border: `4px solid`,
         borderColor: `${color}.main`,
         textAlign: 'center',
         color: `${color}.main`,
+        fontSize: FONT_SIZES.LARGE.PX,
+        fontWeight: 700,
         backgroundColor: 'background.paper',
-        minWidth: '200px',
-        maxWidth: '400px',
-        padding: SPACING.MEDIUM.PX,
+        minWidth: '300px',
+        maxWidth: '500px',
+        padding: `${SPACING.MEDIUM.PX} ${SPACING.LARGE.PX}`,
         borderRadius: BORDER_RADIUS.ZERO.PX,
         position: 'relative',
         animation: 'slideUp 0.3s ease-out',
@@ -46,6 +48,7 @@ const Alert = ({
           cursor: 'pointer',
           fontWeight: 'bold',
           color: 'text.primary',
+          fontSize: FONT_SIZES.LARGE.PX,
         }}
       >
         &times;
