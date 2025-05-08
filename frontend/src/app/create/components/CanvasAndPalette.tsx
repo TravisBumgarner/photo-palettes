@@ -137,6 +137,9 @@ const CanvasAndPalette = ({
         sx={{
           width: '100%',
           height: '70vh',
+          '@media (max-width: 700px)': {
+            height: '50vh',
+          },
           border: '1px solid',
           borderColor: 'divider',
           display: 'flex',

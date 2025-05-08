@@ -6,9 +6,10 @@ import useGlobalStore from '../../store'
 import { FONT_SIZES, SPACING } from '../../styles/Theme'
 import { EPermissionLevel } from '../../types'
 import Link from '../sharedComponents/Link'
+
 const Section = ({ links, header }: { links: (keyof typeof ROUTES)[]; header: string }) => {
   return (
-    <Box>
+    <Box sx={{ width: '150px', margin: `${SPACING.MEDIUM.PX} 0` }}>
       <Typography
         variant="h6"
         sx={{ fontSize: FONT_SIZES.LARGE.PX, marginBottom: `${SPACING.TINY.PX}` }}
@@ -83,10 +84,9 @@ const Footer = () => {
         padding: SPACING.MEDIUM.PX,
         display: 'flex',
         flexDirection: 'row',
-        margin: `${SPACING.MEDIUM.PX} auto`,
-        gap: `${SPACING.HUGE.PX}`,
-        justifyContent: 'center',
         marginTop: '100px',
+        flexWrap: 'wrap',
+        justifyContent: 'space-between',
       }}
     >
       {sections(appUserDetails?.permissionLevel).map(section => (

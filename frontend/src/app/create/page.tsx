@@ -122,9 +122,17 @@ const Create = () => {
   return (
     <Box>
       {uploadStatus === UploadStatus.INITIAL && <Dropzone onDrop={onDrop} />}
-      {uploadStatus === UploadStatus.UPLOADING && (
+      {(uploadStatus === UploadStatus.UPLOADING || uploadStatus === UploadStatus.SUBMITTED) && (
         <Box
-          sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '70vh' }}
+          sx={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            height: '70vh',
+            '@media (max-width: 700px)': {
+              height: '50vh',
+            },
+          }}
         >
           <Loading />
         </Box>

@@ -1,3 +1,4 @@
+import { Box } from '@mui/material'
 import { useCallback } from 'react'
 import { TGeneratedPalette } from '../../../types'
 import { getContrastColor } from '../../../utils'
@@ -22,17 +23,16 @@ const ReadonlySwatch = ({
   }, [handleMouseLeaveCallback])
 
   return (
-    <div
+    <Box
       key={swatch.color}
-      style={{
-        flexGrow: 1,
+      sx={{
         height: '50px',
         backgroundColor: swatch.color,
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
         fontSize: '12px',
-        width: '150px',
+        width: '100px',
         cursor: 'pointer',
       }}
       onMouseEnter={handleMouseEnter}
@@ -41,7 +41,7 @@ const ReadonlySwatch = ({
       <span style={{ color: getContrastColor(swatch.color), fontSize: '20px' }}>
         {swatch.color}
       </span>
-    </div>
+    </Box>
   )
 }
 
@@ -65,13 +65,15 @@ const ReadonlyPalette = ({
 
   return (
     palette.length > 0 && (
-      <div
-        style={{
+      <Box
+        sx={{
           display: 'flex',
           flexDirection: 'row',
-          flexWrap: 'wrap',
-          maxWidth: '900px',
           margin: '0 auto',
+          '@media (max-width: 700px)': {
+            width: '300px',
+            flexWrap: 'wrap',
+          },
         }}
       >
         {palette.map((swatch, index) => (
@@ -83,7 +85,7 @@ const ReadonlyPalette = ({
             handleMouseLeaveCallback={handleMouseLeave}
           />
         ))}
-      </div>
+      </Box>
     )
   )
 }

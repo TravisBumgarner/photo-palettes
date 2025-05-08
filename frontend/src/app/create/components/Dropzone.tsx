@@ -1,5 +1,6 @@
 import { useDropzone } from 'react-dropzone'
 
+import { Box } from '@mui/material'
 import useGlobalStore from '../../../store'
 
 const Dropzone = ({ onDrop }: { onDrop: (acceptedFiles: File[]) => void }) => {
@@ -18,10 +19,13 @@ const Dropzone = ({ onDrop }: { onDrop: (acceptedFiles: File[]) => void }) => {
   })
 
   return (
-    <div
-      style={{
+    <Box
+      sx={{
         width: '100%',
         height: '70vh',
+        '@media (max-width: 700px)': {
+          height: '50vh',
+        },
         border: `1px dashed`,
         borderColor: 'divider',
         display: 'flex',
@@ -37,7 +41,7 @@ const Dropzone = ({ onDrop }: { onDrop: (acceptedFiles: File[]) => void }) => {
       ) : (
         <p>Drag and drop photo or click to select photo</p>
       )}
-    </div>
+    </Box>
   )
 }
 
