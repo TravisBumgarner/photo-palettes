@@ -1,41 +1,28 @@
 'use client'
 
-import { Box, Button, Link, Typography } from '@mui/material'
+import { Box, Link, Typography } from '@mui/material'
+import { useRouter } from 'next/navigation'
 import { useCallback } from 'react'
-import { moderatePalette } from '../../../api/moderatePalette'
-import useGlobalStore from '../../../store'
 import { FONT_SIZES, SPACING } from '../../../styles/Theme'
-import { EModerationStatus, EPermissionLevel, TPalette } from '../../../types'
+import { EModerationStatus, TPalette } from '../../../types'
 import { getContrastColor } from '../../../utils'
 import Message from '../../sharedComponents/Message'
-const ModerationPanel = ({ paletteId }: { paletteId: string }) => {
-  const appUserDetails = useGlobalStore(state => state.appUserDetails)
-  const addAlert = useGlobalStore(state => state.addAlert)
-  const handleReject = useCallback(async () => {
-    const response = await moderatePalette(paletteId, EModerationStatus.REJECTED)
-    if (response.success) {
-      addAlert('Palette rejected', 'success')
-    } else {
-      addAlert(response.error, 'error')
-    }
-  }, [paletteId, addAlert])
-  if (!appUserDetails) return null
-
-  if (appUserDetails.permissionLevel >= EPermissionLevel.MODERATOR) {
-    return (
-      <Box sx={{ display: 'flex', flexDirection: 'row', gap: '10px', border: '4px solid red' }}>
-        <Typography>Moderation Panel</Typography>
-        <Button onClick={handleReject}>Reject</Button>
-      </Box>
-    )
-  }
-
-  return <Box></Box>
-}
+import ModerationPanel from '../../sharedComponents/ModerationPanel'
 
 const PalettePage = ({ palette }: { palette: TPalette }) => {
+  const router = useRouter()
+  const refetch = useCallback(() => {
+    router.refresh()
+  }, [router])
+
   return (
     <Box sx={{ display: 'flex', justifyContent: 'center', flexDirection: 'column' }}>
+      <ModerationPanel
+        refetch={refetch}
+        moderationStatus={palette.moderationStatus}
+        paletteId={palette.id}
+      />
+
       {palette.moderationStatus === EModerationStatus.AWAITING_MODERATION && (
         <Message message="This palette is pending approval." color="info" />
       )}
@@ -94,7 +81,6 @@ const PalettePage = ({ palette }: { palette: TPalette }) => {
           {'by'}
           <Link href={`/profile/${palette.appUserId}`}>#{palette.appUserId.slice(0, 6)}</Link>
         </Box>
-        <ModerationPanel paletteId={palette.id} />
       </Box>
     </Box>
   )

@@ -24,11 +24,9 @@ const DropdownLinks = ({ onClose }: { onClose: () => void }) => {
   return (
     <>
       {routeKeys.map(key => (
-        <MenuItem key={key} onClick={onClose}>
-          <Link hideUnderline href={ROUTES[key].href}>
-            {ROUTES[key].label}
-          </Link>
-        </MenuItem>
+        <Link key={key} hideUnderline href={ROUTES[key].href}>
+          <MenuItem onClick={onClose}>{ROUTES[key].label}</MenuItem>
+        </Link>
       ))}
     </>
   )
