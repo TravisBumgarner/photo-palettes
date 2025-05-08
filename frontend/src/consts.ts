@@ -70,7 +70,7 @@ export const ROUTES = {
   },
   bluesky: {
     key: 'bluesky',
-    href: 'https://bsky.app/profile/sillysideprojects.bsky.social',
+    href: 'https://bsky.app/profile/photopalettes.bsky.social',
     label: 'Bluesky',
   },
   donate: {

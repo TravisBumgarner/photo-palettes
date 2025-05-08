@@ -3,6 +3,7 @@
 import { useMediaQuery } from '@mui/material'
 import CssBaseline from '@mui/material/CssBaseline'
 import { createTheme, ThemeOptions, ThemeProvider } from '@mui/material/styles'
+import _ from 'lodash'
 import { useMemo } from 'react'
 
 export const PALETTE = {
@@ -116,15 +117,28 @@ const baseThemeOptions: ThemeOptions = {
     },
   },
   typography: {
+    h1: {
+      fontSize: FONT_SIZES.LARGE.PX,
+      fontWeight: 900,
+    },
+    h2: {
+      fontSize: FONT_SIZES.LARGE.PX,
+      fontWeight: 900,
+    },
+    h3: {
+      fontSize: FONT_SIZES.MEDIUM.PX,
+      fontWeight: 900,
+    },
     body1: {
-      fontSize: '24px',
+      fontSize: FONT_SIZES.MEDIUM.PX,
+    },
+    body2: {
+      fontSize: FONT_SIZES.SMALL.PX,
     },
   },
 }
 
-// Light theme
-const lightTheme = createTheme({
-  ...baseThemeOptions,
+const lightThemeOptions: ThemeOptions = {
   palette: {
     mode: 'light',
     background: {
@@ -141,32 +155,24 @@ const lightTheme = createTheme({
     h1: {
       color: PALETTE.grayscale[900],
       fontSize: FONT_SIZES.HUGE.PX,
-      fontWeight: 900,
     },
     h2: {
       color: PALETTE.grayscale[900],
-      fontSize: FONT_SIZES.LARGE.PX,
-      fontWeight: 900,
     },
     h3: {
       color: PALETTE.grayscale[900],
-      fontSize: FONT_SIZES.MEDIUM.PX,
-      fontWeight: 900,
     },
     body1: {
       color: PALETTE.grayscale[900],
-      fontSize: FONT_SIZES.MEDIUM.PX,
     },
     body2: {
       color: PALETTE.grayscale[900],
       fontSize: FONT_SIZES.SMALL.PX,
     },
   },
-})
+}
 
-// Dark theme
-const darkTheme = createTheme({
-  ...baseThemeOptions,
+const darkThemeOptions: ThemeOptions = {
   palette: {
     mode: 'dark',
     background: {
@@ -196,7 +202,10 @@ const darkTheme = createTheme({
       color: PALETTE.grayscale[100],
     },
   },
-})
+}
+
+const darkTheme = createTheme(_.merge(baseThemeOptions, darkThemeOptions))
+const lightTheme = createTheme(_.merge(baseThemeOptions, lightThemeOptions))
 
 const AppThemeProvider = ({ children }: { children: React.ReactNode }) => {
   const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)')

@@ -109,9 +109,10 @@ const NewFeatureSubmission = ({ refetch }: { refetch: () => void }) => {
   return (
     <Box
       sx={{
-        border: '1px solid',
-        borderColor: 'divider',
+        border: '4px solid',
+        borderColor: 'red',
         padding: SPACING.MEDIUM.PX,
+        margin: `${SPACING.MEDIUM.PX} 0`,
       }}
     >
       <Typography variant="h2">Moderators Only</Typography>
@@ -157,7 +158,7 @@ const FeatureRequests = () => {
     <Box>
       <Typography variant="h1">Feature Requests</Typography>
       <Typography variant="body1">
-        Want to discuss or suggest a feature? <Link href="/feedback">Click here</Link>
+        <Link href="/feedback">Submit a feature request.</Link>
       </Typography>
       {appUserDetails && appUserDetails?.permissionLevel >= EPermissionLevel.MODERATOR && (
         <NewFeatureSubmission refetch={refetch} />

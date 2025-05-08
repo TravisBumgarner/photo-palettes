@@ -2,6 +2,7 @@
 
 import { Box, Typography } from '@mui/material'
 import Image from 'next/image'
+import { ROUTES } from '../../consts'
 import useGlobalStore from '../../store'
 import { StaticContentWrapper } from '../../styles/Shared'
 import AlphaSignup from '../sharedComponents/AlphaSignup'
@@ -10,17 +11,17 @@ const Inspired = () => {
   return (
     <Box>
       <Typography variant="h2" style={{ textAlign: 'center' }}>
-        Follow the Journey
+        Join the Discussion
       </Typography>
       <ul style={{ listStyleType: 'none', padding: 0, textAlign: 'center' }}>
         <li>
-          <a target="_blank" href="https://discord.com/invite/J8jwMxEEff">
-            Join the Chat on Discord
+          <a target="_blank" href={ROUTES.discord.href}>
+            {ROUTES.discord.label}
           </a>
         </li>
         <li>
-          <a target="_blank" href="https://bsky.app/profile/sillysideprojects.bsky.social">
-            Connect on Bluesky
+          <a target="_blank" href={ROUTES.bluesky.href}>
+            {ROUTES.bluesky.label}
           </a>
         </li>
       </ul>
