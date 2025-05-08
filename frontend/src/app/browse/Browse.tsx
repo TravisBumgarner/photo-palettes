@@ -36,9 +36,13 @@ const Browse = () => {
 
   return (
     <Box sx={{ margin: `${SPACING.MEDIUM.PX} 0` }}>
-      <ThumbnailGridDisplay>
-        {data?.palettes.map(palette => <PaletteThumbnail key={palette.id} palette={palette} />)}
-      </ThumbnailGridDisplay>
+      {!data || data.palettes.length === 0 ? (
+        <Message message="Be the first to create a palette!" color="info" />
+      ) : (
+        <ThumbnailGridDisplay>
+          {data?.palettes.map(palette => <PaletteThumbnail key={palette.id} palette={palette} />)}
+        </ThumbnailGridDisplay>
+      )}
     </Box>
   )
 }
