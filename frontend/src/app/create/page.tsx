@@ -120,55 +120,59 @@ const Create = () => {
   }, [])
 
   return (
-    <div>
-      <Box>
-        {uploadStatus === UploadStatus.INITIAL && <Dropzone onDrop={onDrop} />}
-        {uploadStatus === UploadStatus.UPLOADING && <Loading />}
-        {uploadStatus === UploadStatus.ERROR && (
-          <Message
-            message="Error generating palette"
-            color="error"
-            callback={handleTryAgain}
-            callbackText="Try again"
+    <Box>
+      {uploadStatus === UploadStatus.INITIAL && <Dropzone onDrop={onDrop} />}
+      {uploadStatus === UploadStatus.UPLOADING && (
+        <Box
+          sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '70vh' }}
+        >
+          <Loading />
+        </Box>
+      )}
+      {uploadStatus === UploadStatus.ERROR && (
+        <Message
+          message="Error generating palette"
+          color="error"
+          callback={handleTryAgain}
+          callbackText="Try again"
+        />
+      )}
+      {(uploadStatus === UploadStatus.UPLOADED || uploadStatus === UploadStatus.SUBMITTING) && (
+        <Box sx={{ display: 'flex', flexDirection: 'column', gap: SPACING.SMALL.PX }}>
+          <CanvasAndPalette
+            palette={palette}
+            handlePaletteChange={handlePaletteChange}
+            photo={photo}
           />
-        )}
-        {(uploadStatus === UploadStatus.UPLOADED || uploadStatus === UploadStatus.SUBMITTING) && (
-          <Box sx={{ display: 'flex', flexDirection: 'column', gap: SPACING.MEDIUM.PX }}>
-            <CanvasAndPalette
-              palette={palette}
-              handlePaletteChange={handlePaletteChange}
-              photo={photo}
-            />
-            <TextField
-              variant="outlined"
-              fullWidth
-              label="Title"
-              value={name}
-              onChange={handleNameChange}
-            />
-            <Box
-              sx={{
-                display: 'flex',
-                flexDirection: 'row',
-                gap: '10px',
-                justifyContent: 'flex-end',
-              }}
+          <TextField
+            variant="outlined"
+            fullWidth
+            label="Title"
+            value={name}
+            onChange={handleNameChange}
+          />
+          <Box
+            sx={{
+              display: 'flex',
+              flexDirection: 'row',
+              gap: '10px',
+              justifyContent: 'flex-end',
+            }}
+          >
+            <Button variant="outlined" onClick={handleClearPalette}>
+              Clear Palette
+            </Button>
+            <Button
+              disabled={!name || uploadStatus === UploadStatus.SUBMITTING}
+              variant="contained"
+              onClick={handleSavePalette}
             >
-              <Button variant="outlined" onClick={handleClearPalette}>
-                Clear Palette
-              </Button>
-              <Button
-                disabled={!name || uploadStatus === UploadStatus.SUBMITTING}
-                variant="contained"
-                onClick={handleSavePalette}
-              >
-                Save Palette
-              </Button>
-            </Box>
+              Save Palette
+            </Button>
           </Box>
-        )}
-      </Box>
-    </div>
+        </Box>
+      )}
+    </Box>
   )
 }
 

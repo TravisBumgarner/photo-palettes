@@ -142,7 +142,7 @@ const CanvasAndPalette = ({
           display: 'flex',
           justifyContent: 'center',
           alignItems: 'center',
-          padding: SPACING.MEDIUM.PX,
+          padding: SPACING.SMALL.PX,
         }}
       >
         <div

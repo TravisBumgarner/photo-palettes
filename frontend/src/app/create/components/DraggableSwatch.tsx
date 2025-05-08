@@ -1,9 +1,7 @@
-import { Box } from '@mui/material'
+import { motion } from 'framer-motion'
 import { useCallback } from 'react'
-import { PALETTE } from '../../../styles/Theme'
 import { TGeneratedPalette } from '../../../types'
 import { getContrastColor } from '../../../utils'
-
 const DraggableSwatch = ({
   swatch,
   index,
@@ -20,8 +18,14 @@ const DraggableSwatch = ({
   }, [handleSetDraggingIndex, index])
 
   return (
-    <Box
-      sx={{
+    <motion.div
+      initial={{
+        scale: 0,
+      }}
+      animate={{
+        scale: isHovered ? 3 : 1,
+      }}
+      style={{
         position: 'absolute',
         left: `${swatch.percentLocation[0]}%`,
         top: `${swatch.percentLocation[1]}%`,
@@ -30,9 +34,7 @@ const DraggableSwatch = ({
         height: '15px',
         borderRadius: '50%',
         backgroundColor: swatch.color,
-        border: isHovered
-          ? `2px solid ${PALETTE.primary[500]}`
-          : `2px solid ${getContrastColor(swatch.color)}`,
+        border: `2px solid ${getContrastColor(swatch.color)}`,
         cursor: 'pointer',
         boxShadow: '0 0 10px rgba(0,0,0,0.3)',
       }}

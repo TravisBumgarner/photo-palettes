@@ -33,6 +33,7 @@ const ReadonlySwatch = ({
         alignItems: 'center',
         fontSize: '12px',
         width: '150px',
+        cursor: 'pointer',
       }}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
@@ -43,6 +44,7 @@ const ReadonlySwatch = ({
     </div>
   )
 }
+
 const ReadonlyPalette = ({
   palette,
   setHoveringIndex,
@@ -68,7 +70,7 @@ const ReadonlyPalette = ({
           display: 'flex',
           flexDirection: 'row',
           flexWrap: 'wrap',
-          width: '450px',
+          maxWidth: '900px',
           margin: '0 auto',
         }}
       >

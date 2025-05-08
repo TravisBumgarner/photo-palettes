@@ -1,7 +1,6 @@
 import { useDropzone } from 'react-dropzone'
 
 import useGlobalStore from '../../../store'
-import { HEIGHT, WIDTH } from '../consts'
 
 const Dropzone = ({ onDrop }: { onDrop: (acceptedFiles: File[]) => void }) => {
   const addAlert = useGlobalStore(state => state.addAlert)
@@ -21,8 +20,8 @@ const Dropzone = ({ onDrop }: { onDrop: (acceptedFiles: File[]) => void }) => {
   return (
     <div
       style={{
-        width: `${WIDTH}px`,
-        height: `${HEIGHT}px`,
+        width: '100%',
+        height: '70vh',
         border: `1px dashed`,
         borderColor: 'divider',
         display: 'flex',
