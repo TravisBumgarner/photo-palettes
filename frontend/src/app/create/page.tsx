@@ -1,6 +1,6 @@
 'use client'
 
-import { Box, Button, TextField, Typography } from '@mui/material'
+import { Box, Button, TextField } from '@mui/material'
 import { useMutation } from '@tanstack/react-query'
 import { useRouter } from 'next/navigation'
 import { useCallback, useState } from 'react'
@@ -175,11 +175,6 @@ const Create = () => {
                 Save Palette
               </Button>
             </Box>
-          </Box>
-        )}
-        {uploadStatus === UploadStatus.SUBMITTED && (
-          <Box>
-            <Typography>Palette submitted</Typography>
           </Box>
         )}
       </Box>

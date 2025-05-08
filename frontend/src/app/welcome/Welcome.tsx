@@ -1,6 +1,6 @@
 'use client'
 
-import { Box, Typography } from '@mui/material'
+import { Box, Link, Typography } from '@mui/material'
 import Image from 'next/image'
 import { ROUTES } from '../../consts'
 import useGlobalStore from '../../store'
@@ -43,20 +43,20 @@ const Welcome = () => {
         </Typography>
         <Typography variant="body1">
           Inspired by{' '}
-          <a target="_blank" href="https://seis.pointlessprojects.com">
+          <Link target="_blank" href="https://seis.pointlessprojects.com">
             Seis Colores / Six Colors
-          </a>
+          </Link>
           . Check out some of the examples below.
         </Typography>
         <Typography variant="body1">
           - Travis Bumgarner (
-          <a target="_blank" href="https://www.linkedin.com/in/travisbumgarner/">
+          <Link target="_blank" href="https://www.linkedin.com/in/travisbumgarner/">
             LinkedIn
-          </a>
+          </Link>
           ,&nbsp;
-          <a target="_blank" href="https://travisbumgarner.dev">
+          <Link target="_blank" href="https://travisbumgarner.dev">
             Portfolio
-          </a>
+          </Link>
           )
         </Typography>
       </Box>

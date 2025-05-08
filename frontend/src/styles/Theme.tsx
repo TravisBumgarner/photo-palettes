@@ -101,6 +101,13 @@ export const SPACING = {
 // Base theme options shared between light and dark
 const baseThemeOptions: ThemeOptions = {
   components: {
+    MuiOutlinedInput: {
+      styleOverrides: {
+        root: {
+          borderRadius: BORDER_RADIUS.ZERO.PX,
+        },
+      },
+    },
     MuiButton: {
       styleOverrides: {
         root: {

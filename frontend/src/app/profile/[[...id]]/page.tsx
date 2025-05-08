@@ -10,10 +10,11 @@ import useGlobalStore from '../../../store'
 import { ThumbnailGridDisplay } from '../../../styles/Shared'
 import { FONT_SIZES, SPACING } from '../../../styles/Theme'
 import { EModerationStatus } from '../../../types'
-import { getContrastColor } from '../../../utils'
+import { getContrastColor, getUserColorFromUUID } from '../../../utils'
 import Loading from '../../sharedComponents/Loading'
 import Message from '../../sharedComponents/Message'
 import PaletteThumbnail from '../../sharedComponents/PaletteThumbnail'
+
 const TABS = [
   { label: 'Approved', status: EModerationStatus.APPROVED },
   { label: 'Awaiting Moderation', status: EModerationStatus.AWAITING_MODERATION },
@@ -70,7 +71,7 @@ const Profile = () => {
 
   const isProfileUser = profileUserId === appUserDetails?.id
 
-  const displayName = `#${profileUserId.slice(0, 6)}`
+  const displayName = getUserColorFromUUID(profileUserId)
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', gap: SPACING.MEDIUM.PX }}>
