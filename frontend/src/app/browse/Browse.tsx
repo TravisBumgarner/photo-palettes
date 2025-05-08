@@ -5,8 +5,10 @@ import { useQuery } from '@tanstack/react-query'
 import { useEffect } from 'react'
 import getPaletteListModerated from '../../api/palettes/getPaletteListModerated'
 import { logger } from '../../services/logging'
-import ErrorMessage from '../sharedComponents/ErrorMessage'
+import { ThumbnailGridDisplay } from '../../styles/Shared'
+import { SPACING } from '../../styles/Theme'
 import Loading from '../sharedComponents/Loading'
+import Message from '../sharedComponents/Message'
 import PaletteThumbnail from '../sharedComponents/PaletteThumbnail'
 
 const Browse = () => {
@@ -25,25 +27,18 @@ const Browse = () => {
   }
 
   if (error) {
-    return <ErrorMessage />
+    return <Message message="Error fetching palettes" color="error" />
   }
 
   if (!data.success) {
-    return <ErrorMessage error={data.error} />
+    return <Message message="Error fetching palettes" color="error" />
   }
 
   return (
-    <Box sx={{ margin: '20px 0' }}>
-      <Box
-        sx={{
-          display: 'flex',
-          flexDirection: 'row',
-          flexWrap: 'wrap',
-          gap: '20px',
-        }}
-      >
+    <Box sx={{ margin: `${SPACING.MEDIUM.PX} 0` }}>
+      <ThumbnailGridDisplay>
         {data?.palettes.map(palette => <PaletteThumbnail key={palette.id} palette={palette} />)}
-      </Box>
+      </ThumbnailGridDisplay>
     </Box>
   )
 }

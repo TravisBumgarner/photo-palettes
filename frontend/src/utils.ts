@@ -35,3 +35,7 @@ export const rgbToHex = (rgb: string) => {
     .map(num => parseInt(num).toString(16).padStart(2, '0')) // Convert to hex
     .join('')}` // Join and ensure uppercase
 }
+
+export const getUserColorFromUUID = (uuid: string) => {
+  return `#${uuid.slice(0, 6).toLocaleUpperCase()}`
+}

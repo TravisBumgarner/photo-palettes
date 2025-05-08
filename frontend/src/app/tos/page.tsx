@@ -1,5 +1,5 @@
-import { Typography } from '@mui/material'
-import StaticContentWrapper from '../../styles/Shared'
+import { List, ListItem, ListItemText, Typography } from '@mui/material'
+import { StaticContentWrapper } from '../../styles/Shared'
 
 const TermsOfService = () => {
   return (
@@ -32,13 +32,25 @@ const TermsOfService = () => {
 
       <Typography variant="h2">3. Restrictions</Typography>
       <Typography variant="body1">You agree not to use the Service to:</Typography>
-      <ul>
-        <li>Upload illegal, obscene, or infringing content.</li>
-        <li>Upload content that is not your own.</li>
-        <li>Upload AI-generated content.</li>
-        <li>Interfere with or disrupt the service.</li>
-        <li>Attempt to reverse engineer or misuse any part of the platform.</li>
-      </ul>
+      <List>
+        <ListItem>
+          <ListItemText>Upload illegal, obscene, or infringing content.</ListItemText>
+        </ListItem>
+        <ListItem>
+          <ListItemText>Upload content that is not your own.</ListItemText>
+        </ListItem>
+        <ListItem>
+          <ListItemText>Upload AI-generated content.</ListItemText>
+        </ListItem>
+        <ListItem>
+          <ListItemText>Interfere with or disrupt the service.</ListItemText>
+        </ListItem>
+        <ListItem>
+          <ListItemText>
+            Attempt to reverse engineer or misuse any part of the platform.
+          </ListItemText>
+        </ListItem>
+      </List>
 
       <Typography variant="h2">4. Intellectual Property</Typography>
       <Typography variant="body1">

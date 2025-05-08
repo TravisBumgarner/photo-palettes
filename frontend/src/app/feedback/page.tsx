@@ -2,6 +2,8 @@
 
 import { Box, Button, TextField, Typography } from '@mui/material'
 import React, { useCallback, useMemo, useState } from 'react'
+import { ROUTES } from '../../consts'
+import { StaticContentWrapper } from '../../styles/Shared'
 import Link from '../sharedComponents/Link'
 
 const Contact = () => {
@@ -78,24 +80,20 @@ const Contact = () => {
   }, [isSubmitting, success, failure, resetButtonText])
 
   return (
-    <div id="contact">
+    <StaticContentWrapper>
       <Typography variant="h1">Feedback</Typography>
       <Typography variant="body1">
-        Thank you so much for taking time to give me feedback!
-      </Typography>
-      <Typography variant="body1">
-        You can join the discussion on{' '}
-        <Link target="_blank" href="https://discord.com/invite/J8jwMxEEff">
-          Discord
+        Join the discussion on{' '}
+        <Link target="_blank" href={ROUTES.discord.href}>
+          {ROUTES.discord.label}
         </Link>
-        {', '}
-        message me on{' '}
-        <Link target="_blank" href="https://bsky.app/profile/sillysideprojects.bsky.social">
-          Bluesky,
-        </Link>{' '}
-        or type your message below.
+        {' and '}
+        <Link target="_blank" href={ROUTES.bluesky.href}>
+          {ROUTES.bluesky.label}
+        </Link>
+        .
       </Typography>
-      <Box sx={{ maxWidth: '600px', margin: '0 auto' }}>
+      <Box sx={{ width: '100%', maxWidth: '600px', margin: '0 auto' }}>
         <form
           style={{ display: 'flex', flexDirection: 'column', gap: 10, width: '100%' }}
           onSubmit={handleSubmit}
@@ -126,7 +124,7 @@ const Contact = () => {
           </Button>
         </form>
       </Box>
-    </div>
+    </StaticContentWrapper>
   )
 }
 

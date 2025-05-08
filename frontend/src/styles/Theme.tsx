@@ -3,6 +3,7 @@
 import { useMediaQuery } from '@mui/material'
 import CssBaseline from '@mui/material/CssBaseline'
 import { createTheme, ThemeOptions, ThemeProvider } from '@mui/material/styles'
+import _ from 'lodash'
 import { useMemo } from 'react'
 
 export const PALETTE = {
@@ -44,6 +45,13 @@ export const PALETTE = {
   },
 }
 
+export const BORDER_RADIUS = {
+  ZERO: {
+    PX: '0px',
+    INT: 0,
+  },
+}
+
 export const FONT_SIZES = {
   SMALL: {
     PX: '12px',
@@ -56,6 +64,14 @@ export const FONT_SIZES = {
   LARGE: {
     PX: '24px',
     INT: 24,
+  },
+  HUGE: {
+    PX: '32px',
+    INT: 32,
+  },
+  HUGE_PLUS: {
+    PX: '48px',
+    INT: 48,
   },
 }
 
@@ -84,53 +100,119 @@ export const SPACING = {
 
 // Base theme options shared between light and dark
 const baseThemeOptions: ThemeOptions = {
-  typography: {
-    body1: {
-      fontSize: '24px',
+  components: {
+    MuiOutlinedInput: {
+      styleOverrides: {
+        root: {
+          borderRadius: BORDER_RADIUS.ZERO.PX,
+        },
+      },
     },
+    MuiButton: {
+      styleOverrides: {
+        root: {
+          borderRadius: BORDER_RADIUS.ZERO.PX,
+        },
+      },
+    },
+    MuiTextField: {
+      styleOverrides: {
+        root: {
+          borderRadius: BORDER_RADIUS.ZERO.PX,
+        },
+      },
+    },
+  },
+  typography: {
     h1: {
-      fontSize: '48px',
+      fontSize: FONT_SIZES.LARGE.PX,
+      fontWeight: 900,
     },
     h2: {
-      fontSize: '36px',
+      fontSize: FONT_SIZES.LARGE.PX,
+      fontWeight: 900,
     },
     h3: {
-      fontSize: '24px',
+      fontSize: FONT_SIZES.MEDIUM.PX,
+      fontWeight: 900,
+    },
+    body1: {
+      fontSize: FONT_SIZES.MEDIUM.PX,
+    },
+    body2: {
+      fontSize: FONT_SIZES.SMALL.PX,
     },
   },
 }
 
-// Light theme
-const lightTheme = createTheme({
-  ...baseThemeOptions,
+const lightThemeOptions: ThemeOptions = {
   palette: {
     mode: 'light',
     background: {
-      default: PALETTE.grayscale[50],
+      default: PALETTE.grayscale[100],
       paper: PALETTE.grayscale[50],
     },
     text: {
       primary: PALETTE.grayscale[900],
-      secondary: PALETTE.grayscale[900],
+      secondary: PALETTE.grayscale[800],
+    },
+    divider: PALETTE.grayscale[200],
+  },
+  typography: {
+    h1: {
+      color: PALETTE.grayscale[900],
+      fontSize: FONT_SIZES.HUGE.PX,
+    },
+    h2: {
+      color: PALETTE.grayscale[900],
+    },
+    h3: {
+      color: PALETTE.grayscale[900],
+    },
+    body1: {
+      color: PALETTE.grayscale[900],
+    },
+    body2: {
+      color: PALETTE.grayscale[900],
+      fontSize: FONT_SIZES.SMALL.PX,
     },
   },
-})
+}
 
-// Dark theme
-const darkTheme = createTheme({
-  ...baseThemeOptions,
+const darkThemeOptions: ThemeOptions = {
   palette: {
     mode: 'dark',
     background: {
       default: PALETTE.grayscale[900],
-      paper: PALETTE.grayscale[900],
+      paper: PALETTE.grayscale[800],
     },
     text: {
-      primary: PALETTE.grayscale[50],
+      primary: PALETTE.grayscale[100],
       secondary: PALETTE.grayscale[50],
     },
+    divider: PALETTE.grayscale[800],
   },
-})
+  typography: {
+    h1: {
+      color: PALETTE.grayscale[100],
+    },
+    h2: {
+      color: PALETTE.grayscale[100],
+    },
+    h3: {
+      color: PALETTE.grayscale[100],
+    },
+    body1: {
+      color: PALETTE.grayscale[100],
+    },
+    body2: {
+      color: PALETTE.grayscale[100],
+    },
+  },
+}
+
+const darkTheme = createTheme(_.merge(baseThemeOptions, darkThemeOptions))
+const lightTheme = createTheme(_.merge(baseThemeOptions, lightThemeOptions))
 
 const AppThemeProvider = ({ children }: { children: React.ReactNode }) => {
   const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)')

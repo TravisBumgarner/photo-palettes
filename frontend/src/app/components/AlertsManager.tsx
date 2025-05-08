@@ -3,29 +3,37 @@
 import { Box } from '@mui/material'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import useGlobalStore from '../../store'
-import { PALETTE } from '../../styles/Theme'
+import { TAlert } from '../../store/types'
+import { BORDER_RADIUS, FONT_SIZES, SPACING } from '../../styles/Theme'
 
 const Alert = ({
   id,
   message,
   handleClose,
+  color,
 }: {
   id: number
   message: string
   handleClose: (id: number) => void
+  color: 'info' | 'error' | 'success'
 }) => {
   const handleCloseClick = useCallback(() => handleClose(id), [handleClose, id])
 
   return (
-    <div
-      key={id}
-      style={{
-        border: `2px solid ${PALETTE.secondary[900]}`,
+    <Box
+      key={message}
+      sx={{
+        border: `4px solid`,
+        borderColor: `${color}.main`,
         textAlign: 'center',
-        color: PALETTE.grayscale[900],
-        backgroundColor: PALETTE.secondary[400],
-        padding: '16px 16px 16px 8px',
-        borderRadius: 8,
+        color: `${color}.main`,
+        fontSize: FONT_SIZES.LARGE.PX,
+        fontWeight: 700,
+        backgroundColor: 'background.paper',
+        minWidth: '300px',
+        maxWidth: '500px',
+        padding: `${SPACING.MEDIUM.PX} ${SPACING.LARGE.PX}`,
+        borderRadius: BORDER_RADIUS.ZERO.PX,
         position: 'relative',
         animation: 'slideUp 0.3s ease-out',
       }}
@@ -35,23 +43,24 @@ const Alert = ({
         onClick={handleCloseClick}
         style={{
           position: 'absolute',
-          top: 4,
-          right: 4,
+          top: 2,
+          right: 8,
           cursor: 'pointer',
           fontWeight: 'bold',
-          color: PALETTE.grayscale[900],
+          color: 'text.primary',
+          fontSize: FONT_SIZES.LARGE.PX,
         }}
       >
         &times;
       </span>
-    </div>
+    </Box>
   )
 }
 
 const AlertsManager = () => {
   const alerts = useGlobalStore(state => state.alerts)
   const getAndRemoveNextAlert = useGlobalStore(state => state.getAndRemoveNextAlert)
-  const [visibleAlerts, setVisibleAlerts] = useState<{ id: number; message: string }[]>([])
+  const [visibleAlerts, setVisibleAlerts] = useState<TAlert[]>([])
   const nextIdRef = useRef(0)
 
   const handleClose = useCallback((id: number) => {
@@ -64,7 +73,8 @@ const AlertsManager = () => {
       if (nextAlert) {
         const newAlert = {
           id: nextIdRef.current++,
-          message: nextAlert,
+          message: nextAlert.message,
+          color: nextAlert.color,
         }
         setVisibleAlerts(prev => [...prev, newAlert])
 

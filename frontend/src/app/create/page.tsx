@@ -1,6 +1,6 @@
 'use client'
 
-import { Box, Button, TextField, Typography } from '@mui/material'
+import { Box, Button, TextField } from '@mui/material'
 import { useMutation } from '@tanstack/react-query'
 import { useRouter } from 'next/navigation'
 import { useCallback, useState } from 'react'
@@ -9,8 +9,8 @@ import { generatePalette } from '../../api/palettes/generatePalette'
 import { logger } from '../../services/logging'
 import useGlobalStore from '../../store'
 import { TGeneratedPalette } from '../../types'
-import ErrorMessage from '../sharedComponents/ErrorMessage'
 import Loading from '../sharedComponents/Loading'
+import Message from '../sharedComponents/Message'
 import { ModalID } from '../sharedComponents/Modal/Modal.consts'
 import CanvasAndPalette from './components/CanvasAndPalette'
 import Dropzone from './components/Dropzone'
@@ -135,7 +135,12 @@ const Create = () => {
         {uploadStatus === UploadStatus.INITIAL && <Dropzone onDrop={onDrop} />}
         {uploadStatus === UploadStatus.UPLOADING && <Loading />}
         {uploadStatus === UploadStatus.ERROR && (
-          <ErrorMessage error="Error generating palette" callback={handleTryAgain} />
+          <Message
+            message="Error generating palette"
+            color="error"
+            callback={handleTryAgain}
+            callbackText="Try again"
+          />
         )}
         {(uploadStatus === UploadStatus.UPLOADED || uploadStatus === UploadStatus.SUBMITTING) && (
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
@@ -170,11 +175,6 @@ const Create = () => {
                 Save Palette
               </Button>
             </Box>
-          </Box>
-        )}
-        {uploadStatus === UploadStatus.SUBMITTED && (
-          <Box>
-            <Typography>Palette submitted</Typography>
           </Box>
         )}
       </Box>

@@ -1,26 +1,27 @@
 'use client'
 
-import { Box, Typography } from '@mui/material'
+import { Box, Link, Typography } from '@mui/material'
 import Image from 'next/image'
+import { ROUTES } from '../../consts'
 import useGlobalStore from '../../store'
-import StaticContentWrapper from '../../styles/Shared'
+import { StaticContentWrapper } from '../../styles/Shared'
 import AlphaSignup from '../sharedComponents/AlphaSignup'
 
 const Inspired = () => {
   return (
     <Box>
       <Typography variant="h2" style={{ textAlign: 'center' }}>
-        Follow the Journey
+        Join the Discussion
       </Typography>
       <ul style={{ listStyleType: 'none', padding: 0, textAlign: 'center' }}>
         <li>
-          <a target="_blank" href="https://discord.com/invite/J8jwMxEEff">
-            Join the Chat on Discord
+          <a target="_blank" href={ROUTES.discord.href}>
+            {ROUTES.discord.label}
           </a>
         </li>
         <li>
-          <a target="_blank" href="https://bsky.app/profile/sillysideprojects.bsky.social">
-            Connect on Bluesky
+          <a target="_blank" href={ROUTES.bluesky.href}>
+            {ROUTES.bluesky.label}
           </a>
         </li>
       </ul>
@@ -42,20 +43,20 @@ const Welcome = () => {
         </Typography>
         <Typography variant="body1">
           Inspired by{' '}
-          <a target="_blank" href="https://seis.pointlessprojects.com">
+          <Link target="_blank" href="https://seis.pointlessprojects.com">
             Seis Colores / Six Colors
-          </a>
+          </Link>
           . Check out some of the examples below.
         </Typography>
         <Typography variant="body1">
           - Travis Bumgarner (
-          <a target="_blank" href="https://www.linkedin.com/in/travisbumgarner/">
+          <Link target="_blank" href="https://www.linkedin.com/in/travisbumgarner/">
             LinkedIn
-          </a>
+          </Link>
           ,&nbsp;
-          <a target="_blank" href="https://travisbumgarner.dev">
+          <Link target="_blank" href="https://travisbumgarner.dev">
             Portfolio
-          </a>
+          </Link>
           )
         </Typography>
       </Box>

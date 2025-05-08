@@ -3,7 +3,7 @@
 import { Box, List, ListItem, Typography } from '@mui/material'
 import { ROUTES } from '../../consts'
 import useGlobalStore from '../../store'
-import { FONT_SIZES, PALETTE, SPACING } from '../../styles/Theme'
+import { FONT_SIZES, SPACING } from '../../styles/Theme'
 import { EPermissionLevel } from '../../types'
 import Link from '../sharedComponents/Link'
 const Section = ({ links, header }: { links: (keyof typeof ROUTES)[]; header: string }) => {
@@ -79,13 +79,14 @@ const Footer = () => {
   return (
     <Box
       sx={{
-        backgroundColor: PALETTE.grayscale[100],
+        backgroundColor: 'divider',
         padding: SPACING.MEDIUM.PX,
         display: 'flex',
         flexDirection: 'row',
         margin: `${SPACING.MEDIUM.PX} auto`,
         gap: `${SPACING.HUGE.PX}`,
         justifyContent: 'center',
+        marginTop: '100px',
       }}
     >
       {sections(appUserDetails?.permissionLevel).map(section => (

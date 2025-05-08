@@ -8,6 +8,7 @@ import config from '../../config'
 import { MINIMUM_PASSWORD_LENGTH } from '../../consts'
 import { signup } from '../../services/supabase/actions'
 import useGlobalStore from '../../store'
+import { ModalID } from '../sharedComponents/Modal/Modal.consts'
 
 const SignupSchema = z.object({
   email: z.string().email(),
@@ -29,7 +30,7 @@ export default function SignupPage() {
   )
   const router = useRouter()
   const setIsAppAuthenticating = useGlobalStore(state => state.setIsAppAuthenticating)
-  const addAlert = useGlobalStore(state => state.addAlert)
+  const setActiveModal = useGlobalStore(state => state.setActiveModal)
 
   const handlePasswordChange = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
@@ -77,8 +78,14 @@ export default function SignupPage() {
         const response = await signup(formData)
         if (response.success) {
           setIsAppAuthenticating(true)
-          addAlert('Check your email for a confirmation.')
-          router.push('/')
+          setActiveModal({
+            id: ModalID.ConfirmationModal,
+            title: 'Signup Successful',
+            body: 'Check your email for a confirmation.',
+            confirmationCallback: () => {
+              router.push('/')
+            },
+          })
         } else {
           setError(response.error)
         }
@@ -86,7 +93,7 @@ export default function SignupPage() {
         setError(err instanceof Error ? err.message : 'An error occurred during signup')
       }
     },
-    [email, password, repeatPassword, invitationKey, router, setIsAppAuthenticating, addAlert]
+    [email, password, repeatPassword, invitationKey, router, setIsAppAuthenticating, setActiveModal]
   )
 
   const handleInvitationKeyChange = useCallback(

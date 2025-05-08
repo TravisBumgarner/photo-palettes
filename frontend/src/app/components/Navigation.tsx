@@ -3,11 +3,10 @@
 import { GiHamburgerMenu } from 'react-icons/gi'
 
 import { Box, IconButton, Menu, MenuItem } from '@mui/material'
-import NextLink from 'next/link'
 import { useCallback, useMemo, useState } from 'react'
 import { ROUTES } from '../../consts'
 import useGlobalStore from '../../store'
-import { PALETTE } from '../../styles/Theme'
+import { BORDER_RADIUS, FONT_SIZES } from '../../styles/Theme'
 import { EPermissionLevel } from '../../types'
 import Link from '../sharedComponents/Link'
 
@@ -25,9 +24,9 @@ const DropdownLinks = ({ onClose }: { onClose: () => void }) => {
   return (
     <>
       {routeKeys.map(key => (
-        <MenuItem key={key} onClick={onClose}>
-          <Link href={ROUTES[key].href}>{ROUTES[key].label}</Link>
-        </MenuItem>
+        <Link key={key} hideUnderline href={ROUTES[key].href}>
+          <MenuItem onClick={onClose}>{ROUTES[key].label}</MenuItem>
+        </Link>
       ))}
     </>
   )
@@ -64,23 +63,37 @@ const Navigation = () => {
           gap: '14px',
         }}
       >
-        <Link href="/">Photo Palettes</Link>
+        <Link
+          hideUnderline
+          sx={{ fontWeight: 900, color: 'text.primary', fontSize: FONT_SIZES.LARGE.PX }}
+          href={ROUTES.home.href}
+        >
+          {ROUTES.home.label}
+        </Link>
       </Box>
-      <Box sx={{ display: 'flex', flexDirection: 'row', gap: '14px' }}>
+      <Box sx={{ display: 'flex', flexDirection: 'row', gap: '14px', alignItems: 'center' }}>
         {appUserDetails && (
-          <NextLink
-            style={{
-              backgroundColor: PALETTE.secondary[400],
-              color: PALETTE.grayscale[900],
+          <Link
+            hideUnderline
+            sx={{
+              fontWeight: 900,
+              backgroundColor: 'text.primary',
+              color: 'background.paper',
               padding: '10px',
-              borderRadius: 10,
+              border: '1px solid',
+              borderColor: 'divider',
+              borderRadius: BORDER_RADIUS.ZERO.PX,
             }}
             href={ROUTES.create.href}
           >
             {ROUTES.create.label}
-          </NextLink>
+          </Link>
         )}
-        {!appUserDetails && <Link href="/browse">Browse</Link>}
+        {!appUserDetails && (
+          <Link sx={{ fontWeight: 900 }} href={ROUTES.browse.href}>
+            {ROUTES.browse.label}
+          </Link>
+        )}
         <IconButton
           aria-label="menu"
           aria-controls={open ? 'navigation-menu' : undefined}
@@ -90,7 +103,6 @@ const Navigation = () => {
         >
           <GiHamburgerMenu />
         </IconButton>
-
         <Menu id="navigation-menu" anchorEl={anchorEl} open={open} onClose={handleClose}>
           <DropdownLinks onClose={handleClose} />
         </Menu>

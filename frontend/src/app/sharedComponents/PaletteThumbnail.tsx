@@ -1,5 +1,7 @@
 import { Box, Typography } from '@mui/material'
+import { BORDER_RADIUS, SPACING } from '../../styles/Theme'
 import { TPaletteAndColors } from '../../types'
+import { getUserColorFromUUID } from '../../utils'
 import Link from './Link'
 
 const PaletteThumbnail = ({ palette }: { palette: TPaletteAndColors }) => {
@@ -7,11 +9,10 @@ const PaletteThumbnail = ({ palette }: { palette: TPaletteAndColors }) => {
     <Link href={`/palette/${palette.id}`} hideUnderline>
       <Box
         sx={{
-          width: '300px',
           border: '1px solid',
           borderColor: 'divider',
-          borderRadius: 1,
-          p: 2,
+          borderRadius: BORDER_RADIUS.ZERO.PX,
+          padding: SPACING.SMALL.PX,
           height: '100%',
         }}
         key={palette.id}
@@ -45,7 +46,7 @@ const PaletteThumbnail = ({ palette }: { palette: TPaletteAndColors }) => {
 
         {palette.name && (
           <Typography variant="h6">
-            {palette.name} by #{palette.appUserId.slice(0, 6)}
+            {palette.name} by {palette.appUserId ? getUserColorFromUUID(palette.appUserId) : ''}
           </Typography>
         )}
       </Box>

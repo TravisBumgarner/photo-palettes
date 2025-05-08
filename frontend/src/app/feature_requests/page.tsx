@@ -9,10 +9,11 @@ import addFeatureRequest from '../../api/featureRequests/addFeatureRequest'
 import getFeatureRequests from '../../api/featureRequests/getFeatureRequests'
 import upvoteFeatureRequest from '../../api/featureRequests/upvoteFeatureRequst'
 import useGlobalStore from '../../store'
+import { SPACING } from '../../styles/Theme'
 import { EPermissionLevel, TFeatureRequest } from '../../types'
-import ErrorMessage from '../sharedComponents/ErrorMessage'
 import Link from '../sharedComponents/Link'
 import Loading from '../sharedComponents/Loading'
+import Message from '../sharedComponents/Message'
 
 const FeatureRequestCard = ({
   featureRequest,
@@ -23,8 +24,9 @@ const FeatureRequestCard = ({
   readonly: boolean
   refetch: () => void
 }) => {
+  const addAlert = useGlobalStore(store => store.addAlert)
   const appUserDetails = useGlobalStore(store => store.appUserDetails)
-  const { mutate, isPending, isSuccess, isError } = useMutation({
+  const { mutateAsync, isPending, isSuccess, isError } = useMutation({
     mutationFn: (featureRequestId: string) => upvoteFeatureRequest(featureRequestId),
     retry: false,
     onSuccess: () => {
@@ -32,11 +34,16 @@ const FeatureRequestCard = ({
     },
   })
 
-  const handleClick = useCallback(() => {
+  const handleClick = useCallback(async () => {
     if (readonly) return
 
-    mutate(featureRequest.id)
-  }, [mutate, featureRequest.id, readonly])
+    const response = await mutateAsync(featureRequest.id)
+    if (response.success) {
+      addAlert('Feature request upvoted', 'success')
+    } else {
+      addAlert('Error upvoting feature request', 'error')
+    }
+  }, [mutateAsync, featureRequest.id, readonly, addAlert])
 
   if (isError) {
     return redirect('/error500')
@@ -45,24 +52,27 @@ const FeatureRequestCard = ({
   return (
     <Box
       sx={{
-        border: '2px solid black',
-        padding: 2,
-        borderRadius: '10px',
+        border: '1px solid',
+        borderColor: 'divider',
+        padding: SPACING.MEDIUM.PX,
         display: 'flex',
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-        margin: '15px 0',
+        margin: `${SPACING.MEDIUM.PX} 0`,
       }}
     >
       <Box>
         <Typography variant="h2">{featureRequest.title}</Typography>
         <Typography variant="body1">{featureRequest.description}</Typography>
       </Box>
-      <Box sx={{ display: 'flex', flexDirection: 'row', gap: 2 }}>
-        <Typography variant="body1">Votes: {featureRequest.votes.length}</Typography>
+      <Box sx={{ display: 'flex', flexDirection: 'row', gap: 2, alignItems: 'center' }}>
+        <Typography sx={{ width: '100px' }} variant="body1">
+          Votes: {featureRequest.votes.length}
+        </Typography>
         {!readonly && (
           <Button
+            sx={{ width: '110px' }}
             disabled={
               isPending || isSuccess || featureRequest.votes.includes(appUserDetails?.id || '')
             }
@@ -86,7 +96,7 @@ const NewFeatureSubmission = ({ refetch }: { refetch: () => void }) => {
   const { mutateAsync, isPending } = useMutation({
     mutationFn: () => addFeatureRequest(title, description),
     onSuccess: () => {
-      addAlert('Feature request submitted')
+      addAlert('Feature request submitted', 'success')
       setTitle('')
       setDescription('')
       refetch()
@@ -108,9 +118,10 @@ const NewFeatureSubmission = ({ refetch }: { refetch: () => void }) => {
   return (
     <Box
       sx={{
-        border: '2px solid black',
-        padding: 2,
-        borderRadius: '10px',
+        border: '4px solid',
+        borderColor: 'red',
+        padding: SPACING.MEDIUM.PX,
+        margin: `${SPACING.MEDIUM.PX} 0`,
       }}
     >
       <Typography variant="h2">Moderators Only</Typography>
@@ -149,14 +160,14 @@ const FeatureRequests = () => {
   }
 
   if (error || !data?.success) {
-    return <ErrorMessage />
+    return <Message message="Error fetching feature requests" color="error" />
   }
 
   return (
     <Box>
       <Typography variant="h1">Feature Requests</Typography>
       <Typography variant="body1">
-        Want to discuss or suggest a feature? <Link href="/feedback">Click here</Link>
+        <Link href="/feedback">Submit a feature request.</Link>
       </Typography>
       {appUserDetails && appUserDetails?.permissionLevel >= EPermissionLevel.MODERATOR && (
         <NewFeatureSubmission refetch={refetch} />

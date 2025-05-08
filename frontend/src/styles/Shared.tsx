@@ -1,18 +1,26 @@
-import { Box } from '@mui/material'
+'use client'
 
-const StaticContentWrapper = ({ children }: { children: React.ReactNode }) => {
+import { Box } from '@mui/material'
+import { SPACING } from './Theme'
+
+export const StaticContentWrapper = ({ children }: { children: React.ReactNode }) => {
   return (
     <Box
       sx={{
         display: 'flex',
         flexDirection: 'column',
-        gap: '30px',
+        gap: SPACING.MEDIUM.PX,
         width: '100%',
         maxWidth: '800px',
         margin: '0px auto',
-        padding: '20px',
         boxSizing: 'border-box',
-        fontSize: '30px',
+        '& .MuiListItem-root': {
+          display: 'list-item',
+          listStyleType: 'circle',
+        },
+        '& > ul': {
+          marginLeft: SPACING.LARGE.PX,
+        },
       }}
     >
       {children}
@@ -20,4 +28,22 @@ const StaticContentWrapper = ({ children }: { children: React.ReactNode }) => {
   )
 }
 
-export default StaticContentWrapper
+export const ThumbnailGridDisplay = ({ children }: { children: React.ReactNode }) => {
+  return (
+    <Box
+      sx={{
+        display: 'grid',
+        gridTemplateColumns: 'repeat(3, 1fr)',
+        gap: SPACING.MEDIUM.PX,
+        '@media (max-width: 768px)': {
+          gridTemplateColumns: 'repeat(2, 1fr)',
+        },
+        '@media (max-width: 480px)': {
+          gridTemplateColumns: 'repeat(1, 1fr)',
+        },
+      }}
+    >
+      {children}
+    </Box>
+  )
+}

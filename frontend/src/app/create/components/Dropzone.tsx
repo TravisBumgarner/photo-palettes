@@ -1,7 +1,6 @@
 import { useDropzone } from 'react-dropzone'
 
 import useGlobalStore from '../../../store'
-import { PALETTE } from '../../../styles/Theme'
 import { HEIGHT, WIDTH } from '../consts'
 
 const Dropzone = ({ onDrop }: { onDrop: (acceptedFiles: File[]) => void }) => {
@@ -15,7 +14,7 @@ const Dropzone = ({ onDrop }: { onDrop: (acceptedFiles: File[]) => void }) => {
       'image/*': ['.png', '.jpg', '.jpeg'],
     },
     onDropRejected: fileRejections => {
-      addAlert(fileRejections.map(rejection => rejection.errors[0].message).join(', '))
+      addAlert(fileRejections.map(rejection => rejection.errors[0].message).join(', '), 'error')
     },
   })
 
@@ -24,7 +23,8 @@ const Dropzone = ({ onDrop }: { onDrop: (acceptedFiles: File[]) => void }) => {
       style={{
         width: `${WIDTH}px`,
         height: `${HEIGHT}px`,
-        border: `1px dashed ${PALETTE.primary[500]}`,
+        border: `1px dashed`,
+        borderColor: 'divider',
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
