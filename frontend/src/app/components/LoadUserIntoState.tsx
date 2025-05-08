@@ -1,6 +1,6 @@
 'use client'
 
-import { Box } from '@mui/material'
+import { Box, useMediaQuery } from '@mui/material'
 import { useEffect } from 'react'
 import { getMe } from '../../api/getMe'
 import { createClient } from '../../services/supabase/client'
@@ -38,7 +38,7 @@ export function LoadUserIntoStore() {
     loadUser()
   }, [setAuthId, supabase, setIsAppAuthenticating, isAppAuthenticating, setAppUserDetails])
 
-  const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches
+  const isDark = useMediaQuery('(prefers-color-scheme: dark)')
 
   return isAppAuthenticating ? (
     <Box
