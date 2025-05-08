@@ -7,6 +7,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 import { getPaletteListByAppUserId } from '../../../api/palettes/getPaletteListByAppUserId'
 import { logger } from '../../../services/logging'
 import useGlobalStore from '../../../store'
+import { ThumbnailGridDisplay } from '../../../styles/Shared'
 import { FONT_SIZES, SPACING } from '../../../styles/Theme'
 import { EModerationStatus } from '../../../types'
 import { getContrastColor } from '../../../utils'
@@ -59,11 +60,11 @@ const Profile = () => {
     if (data.palettes.length === 0) return <Message message="No palettes found" color="info" />
 
     return (
-      <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: SPACING.MEDIUM.PX }}>
+      <ThumbnailGridDisplay>
         {data.palettes.map(palette => (
           <PaletteThumbnail key={palette.id} palette={palette} />
         ))}
-      </Box>
+      </ThumbnailGridDisplay>
     )
   }, [data, error, isLoading])
 

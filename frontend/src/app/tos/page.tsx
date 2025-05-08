@@ -1,5 +1,5 @@
 import { List, ListItem, ListItemText, Typography } from '@mui/material'
-import StaticContentWrapper from '../../styles/Shared'
+import { StaticContentWrapper } from '../../styles/Shared'
 
 const TermsOfService = () => {
   return (
