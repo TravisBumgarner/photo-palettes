@@ -72,7 +72,7 @@ const Profile = () => {
   const displayName = `#${profileUserId.slice(0, 6)}`
 
   return (
-    <Box>
+    <Box sx={{ display: 'flex', flexDirection: 'column', gap: SPACING.MEDIUM.PX }}>
       <Typography
         variant="h1"
         sx={{
@@ -81,9 +81,10 @@ const Profile = () => {
           color: getContrastColor(displayName),
           backgroundColor: displayName,
           display: 'inline-block',
+          alignSelf: 'flex-start',
+          padding: SPACING.SMALL.PX,
         }}
       >
-        <span></span>
         {displayName}
       </Typography>
       {isProfileUser && (

@@ -73,7 +73,7 @@ const Navigation = () => {
           Photo Palettes
         </Link>
       </Box>
-      <Box sx={{ display: 'flex', flexDirection: 'row', gap: '14px' }}>
+      <Box sx={{ display: 'flex', flexDirection: 'row', gap: '14px', alignItems: 'center' }}>
         {appUserDetails && (
           <Link
             hideUnderline
@@ -91,7 +91,11 @@ const Navigation = () => {
             {ROUTES.create.label}
           </Link>
         )}
-        {!appUserDetails && <Link href="/browse">Browse</Link>}
+        {!appUserDetails && (
+          <Link sx={{ fontWeight: 900 }} href="/browse">
+            Browse
+          </Link>
+        )}
         <IconButton
           aria-label="menu"
           aria-controls={open ? 'navigation-menu' : undefined}
@@ -101,7 +105,6 @@ const Navigation = () => {
         >
           <GiHamburgerMenu />
         </IconButton>
-
         <Menu id="navigation-menu" anchorEl={anchorEl} open={open} onClose={handleClose}>
           <DropdownLinks onClose={handleClose} />
         </Menu>
