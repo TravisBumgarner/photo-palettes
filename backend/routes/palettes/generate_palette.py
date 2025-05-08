@@ -1,4 +1,5 @@
 import io
+import time
 import uuid
 
 from fastapi import Form, UploadFile
@@ -41,16 +42,35 @@ async def generate(
         return validation_error
 
     try:
+        start_time = time.time()
+        print(f"[BENCHMARK:{request.state.app_user_id}]: generate called", start_time)
+
         # Read the file content once and create BytesIO
         photo_bytes = io.BytesIO(await photo.read())
-        colors = get_image_colors(photo_bytes)
+        print(
+            f"[BENCHMARK:{request.state.app_user_id}]: photo_bytes created",
+            time.time() - start_time,
+        )
+
+        colors = get_image_colors(photo_bytes, str(request.state.app_user_id), start_time)
+        print(f"[BENCHMARK:{request.state.app_user_id}]: colors created", time.time() - start_time)
 
         id = uuid.uuid4()
         photo_details = save_photo(photo_bytes.getvalue(), str(id), extension)
-
+        print(
+            f"[BENCHMARK:{request.state.app_user_id}]: photo_details created",
+            time.time() - start_time,
+        )
         hex_colors = [color["color"] for color in colors]
         og_image = generate_og_image(id, photo_bytes, hex_colors)
+        print(
+            f"[BENCHMARK:{request.state.app_user_id}]: og_image created", time.time() - start_time
+        )
         og_photo_details = save_photo(og_image.getvalue(), f"{id!s}_og", "webp")
+        print(
+            f"[BENCHMARK:{request.state.app_user_id}]: og_photo_details created",
+            time.time() - start_time,
+        )
 
         palette = Palette(
             id=id,

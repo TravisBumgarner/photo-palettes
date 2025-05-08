@@ -90,7 +90,18 @@ const Navigation = () => {
           </Link>
         )}
         {!appUserDetails && (
-          <Link sx={{ fontWeight: 900 }} href={ROUTES.browse.href}>
+          <Link
+            sx={{
+              fontWeight: 900,
+              backgroundColor: 'text.primary',
+              color: 'background.paper',
+              padding: '10px',
+              border: '1px solid',
+              borderColor: 'divider',
+              borderRadius: BORDER_RADIUS.ZERO.PX,
+            }}
+            href={ROUTES.browse.href}
+          >
             {ROUTES.browse.label}
           </Link>
         )}
