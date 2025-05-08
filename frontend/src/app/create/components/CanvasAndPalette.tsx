@@ -129,6 +129,8 @@ const CanvasAndPalette = ({
     }
   }, [photo, setPhotoOnCanvas])
 
+  const isLandscape = imageDimensions.width > imageDimensions.height
+
   return (
     <>
       <div
@@ -138,17 +140,25 @@ const CanvasAndPalette = ({
         onMouseUp={handleCanvasMouseUp}
         onMouseLeave={handleCanvasMouseUp}
         style={{
-          width: '500px',
-          aspectRatio: imageDimensions.width / imageDimensions.height,
-          border: '1px solid red',
-          margin: '0 auto',
+          width: '100%',
+          height: '70vh',
+          border: '1px solid',
+          borderColor: 'divider',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
           position: 'relative',
         }}
       >
         <canvas
           style={{
             display: 'block',
-            width: '500px',
+            ...(!isLandscape && {
+              height: '100%',
+            }),
+            ...(isLandscape && {
+              width: '100%',
+            }),
             aspectRatio: imageDimensions.width / imageDimensions.height,
           }}
           ref={canvasRef}
