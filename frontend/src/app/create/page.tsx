@@ -8,6 +8,7 @@ import { createPalette } from '../../api/palettes/createPalette'
 import { generatePalette } from '../../api/palettes/generatePalette'
 import { logger } from '../../services/logging'
 import useGlobalStore from '../../store'
+import { SPACING } from '../../styles/Theme'
 import { TGeneratedPalette } from '../../types'
 import Loading from '../sharedComponents/Loading'
 import Message from '../sharedComponents/Message'
@@ -132,7 +133,7 @@ const Create = () => {
           />
         )}
         {(uploadStatus === UploadStatus.UPLOADED || uploadStatus === UploadStatus.SUBMITTING) && (
-          <Box>
+          <Box sx={{ display: 'flex', flexDirection: 'column', gap: SPACING.MEDIUM.PX }}>
             <CanvasAndPalette
               palette={palette}
               handlePaletteChange={handlePaletteChange}

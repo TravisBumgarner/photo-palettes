@@ -1,6 +1,8 @@
 'use client'
 
+import { Box } from '@mui/material'
 import { useCallback, useEffect, useRef, useState } from 'react'
+import { SPACING } from '../../../styles/Theme'
 import { TGeneratedPalette } from '../../../types'
 import DraggableSwatch from './DraggableSwatch'
 import ReadonlyPalette from './ReadonlyPalette'
@@ -129,17 +131,10 @@ const CanvasAndPalette = ({
     }
   }, [photo, setPhotoOnCanvas])
 
-  const isLandscape = imageDimensions.width > imageDimensions.height
-
   return (
     <>
-      <div
-        ref={containerRef}
-        onMouseDown={handleCanvasMouseDown}
-        onMouseMove={handleCanvasMouseMove}
-        onMouseUp={handleCanvasMouseUp}
-        onMouseLeave={handleCanvasMouseUp}
-        style={{
+      <Box
+        sx={{
           width: '100%',
           height: '70vh',
           border: '1px solid',
@@ -147,32 +142,42 @@ const CanvasAndPalette = ({
           display: 'flex',
           justifyContent: 'center',
           alignItems: 'center',
-          position: 'relative',
+          padding: SPACING.MEDIUM.PX,
         }}
       >
-        <canvas
+        <div
+          ref={containerRef}
+          onMouseDown={handleCanvasMouseDown}
+          onMouseMove={handleCanvasMouseMove}
+          onMouseUp={handleCanvasMouseUp}
+          onMouseLeave={handleCanvasMouseUp}
           style={{
-            display: 'block',
-            ...(!isLandscape && {
-              height: '100%',
-            }),
-            ...(isLandscape && {
-              width: '100%',
-            }),
+            position: 'relative',
+            maxWidth: '100%',
+            maxHeight: '100%',
             aspectRatio: imageDimensions.width / imageDimensions.height,
           }}
-          ref={canvasRef}
-        />
-        {palette.map((swatch, index) => (
-          <DraggableSwatch
-            isHovered={hoveringIndex === index}
-            key={`${swatch.color}-${index}`}
-            swatch={swatch}
-            index={index}
-            handleSetDraggingIndex={handleSetDraggingIndex}
+        >
+          <canvas
+            style={{
+              display: 'block',
+              maxWidth: '100%',
+              maxHeight: '100%',
+              aspectRatio: imageDimensions.width / imageDimensions.height,
+            }}
+            ref={canvasRef}
           />
-        ))}
-      </div>
+          {palette.map((swatch, index) => (
+            <DraggableSwatch
+              isHovered={hoveringIndex === index}
+              key={`${swatch.color}-${index}`}
+              swatch={swatch}
+              index={index}
+              handleSetDraggingIndex={handleSetDraggingIndex}
+            />
+          ))}
+        </div>
+      </Box>
       <ReadonlyPalette palette={palette} setHoveringIndex={setHoveringIndex} />
     </>
   )
