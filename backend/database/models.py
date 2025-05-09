@@ -3,10 +3,8 @@ from datetime import datetime
 from enum import IntEnum
 from typing import List
 
-from sqlalchemy import UUID, DateTime, ForeignKey, Integer, String
+from sqlalchemy import UUID, DateTime, Float, ForeignKey, Integer, String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-
-from utils.photos import get_photo_path
 
 from .engine import Base
 from .types import Cube
@@ -76,6 +74,8 @@ class Palette(Base):
     moderation_status: Mapped[ModerationStatus] = mapped_column(
         Integer, default=ModerationStatus.AWAITING_SUBMISSION
     )
+    blurhash: Mapped[str] = mapped_column(String)
+    aspect_ratio: Mapped[float] = mapped_column(Float)
 
     # @property
     # def photo_url(self) -> str:

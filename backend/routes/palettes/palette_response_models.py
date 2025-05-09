@@ -25,6 +25,8 @@ class PaletteResponse(BaseModel):
     moderationStatus: int
     appUserId: UUID
     ogPhotoUrl: str
+    blurhash: str
+    aspectRatio: float
 
 
 def map_palette_to_response(palette: Palette) -> PaletteResponse:
@@ -46,6 +48,8 @@ def map_palette_to_response(palette: Palette) -> PaletteResponse:
             for color in palette.colors
         ],
         moderationStatus=palette.moderation_status,
+        blurhash=palette.blurhash,
+        aspectRatio=palette.aspect_ratio,
     )
 
 

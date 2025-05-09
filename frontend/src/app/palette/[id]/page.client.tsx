@@ -1,6 +1,7 @@
 'use client'
 
 import { Box, Link, Typography } from '@mui/material'
+import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import { useCallback } from 'react'
 import { FONT_SIZES, SPACING } from '../../../styles/Theme'
@@ -43,14 +44,17 @@ const PalettePage = ({ palette }: { palette: TPalette }) => {
             margin: `${SPACING.MEDIUM.PX} 0`,
           }}
         >
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
+          <Image
+            placeholder="blur"
             style={{
               objectFit: 'contain',
               width: '100%',
               height: '100%',
               padding: SPACING.MEDIUM.PX,
             }}
+            blurDataURL={palette.blurhash}
+            width={palette.aspectRatio * 1200}
+            height={1200}
             src={palette.photoUrl}
             alt="Palette"
           />

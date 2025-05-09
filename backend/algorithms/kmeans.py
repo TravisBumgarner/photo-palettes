@@ -1,12 +1,11 @@
 import time
-from io import BytesIO
 from typing import TypedDict
 
 import numpy as np
 from PIL import Image
 from sklearn.cluster import KMeans
 
-from .utils import convert_to_rgb, rgb_to_hex, scale_image
+from .utils import rgb_to_hex
 
 
 class TSwatch(TypedDict):
@@ -17,22 +16,11 @@ class TSwatch(TypedDict):
 TGeneratedPalette = list[TSwatch]
 
 
-def get_image_colors(
-    photo_content: BytesIO, app_user_id: str, start_time: float
-) -> TGeneratedPalette:
-    print(f"[BENCHMARK:{app_user_id}]: get_image_colors called", time.time() - start_time)
-    image = Image.open(photo_content)
-    print(f"[BENCHMARK:{app_user_id}]: image opened", time.time() - start_time)
-    image = scale_image(image, 200)
-    print(f"[BENCHMARK:{app_user_id}]: image scaled", time.time() - start_time)
-    image = convert_to_rgb(image)
-    print(f"[BENCHMARK:{app_user_id}]: image converted to rgb", time.time() - start_time)
-
+def get_image_colors(image: Image.Image, app_user_id: str, start_time: float) -> TGeneratedPalette:
     img_array = np.array(image)
     pixels = img_array.reshape(-1, 3)
     kmeans = KMeans(n_clusters=6, random_state=42)
     kmeans.fit(pixels)
-    print(f"[BENCHMARK:{app_user_id}]: kmeans fit", time.time() - start_time)
     colors = []
     for center in kmeans.cluster_centers_:
         rgb = tuple(int(x) for x in center)
@@ -44,7 +32,7 @@ def get_image_colors(
     height, width = img_array.shape[:2]
     locations = []
     selected_indices = []
-    print(f"[BENCHMARK:{app_user_id}]: kmeans cluster centers", time.time() - start_time)
+
     for center in kmeans.cluster_centers_:
         # Calculate color distance to each pixel
         color_distances = np.linalg.norm(pixels - center, axis=1)
