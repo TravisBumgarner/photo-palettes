@@ -7,3 +7,6 @@ export const sharedCSS = {
     height: '50vh',
   },
 }
+
+
+export const SWATCH_SIZE = 20

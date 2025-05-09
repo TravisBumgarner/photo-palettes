@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion'
 import { forwardRef, useCallback, useState } from 'react'
-
+import { SWATCH_SIZE } from './shared'
 const DraggableSwatch = forwardRef<
   HTMLDivElement,
   {
@@ -33,9 +33,9 @@ const DraggableSwatch = forwardRef<
         // Additional styles set by parent via refs.
         position: 'absolute',
         transform: 'translate(-50%, -50%)',
-        width: '20px',
+        width: `${SWATCH_SIZE}px`,
         cursor: 'none',
-        height: '20px',
+        height: `${SWATCH_SIZE}px`,
         borderRadius: '50%',
         border: `2px solid black`,
         boxShadow: '0 0 10px rgba(0,0,0,0.3)',

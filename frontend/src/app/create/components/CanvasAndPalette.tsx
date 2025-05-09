@@ -13,7 +13,7 @@ import { TGeneratedPalette, TSwatch } from '../../../types'
 import { getContrastColor } from '../../../utils'
 import DraggableSwatch from './DraggableSwatch'
 import ReadonlySwatch from './ReadonlySwatch'
-import { sharedCSS } from './shared'
+import { sharedCSS, SWATCH_SIZE } from './shared'
 
 const CanvasAndPalette = ({
   photo,
@@ -59,13 +59,13 @@ const CanvasAndPalette = ({
     const readonlySwatchRef = readonlySwatchRefs.current[index]
 
     if (!draggableSwatchRef || !readonlySwatchRef) return
-    draggableSwatchRef.style.backgroundColor = swatch.color
+    draggableSwatchRef.style.backgroundColor = swatch.color.toUpperCase()
     draggableSwatchRef.style.left = `${swatch.percentLocation[0]}%`
     draggableSwatchRef.style.top = `${swatch.percentLocation[1]}%`
 
-    readonlySwatchRef.style.backgroundColor = swatch.color
+    readonlySwatchRef.style.backgroundColor = swatch.color.toUpperCase()
     readonlySwatchRef.style.color = getContrastColor(swatch.color)
-    readonlySwatchRef.innerHTML = swatch.color
+    readonlySwatchRef.innerHTML = swatch.color.toUpperCase()
   }, [])
 
   const handleMove = useCallback(
@@ -77,17 +77,23 @@ const CanvasAndPalette = ({
 
       const rect = container.getBoundingClientRect()
 
-      // Clamp coordinates to container bounds
-      const x = Math.max(0, Math.min(100, ((clientX - rect.left) / rect.width) * 100))
-      const y = Math.max(0, Math.min(100, ((clientY - rect.top) / rect.height) * 100))
-
-      const newColor = sampleColorAtPosition(
-        Math.max(0, Math.min(rect.width, clientX - rect.left)),
-        Math.max(0, Math.min(rect.height, clientY - rect.top))
+      // Clamp absolute coordinates to container bounds
+      const x = Math.max(
+        0,
+        Math.min(rect.width - SWATCH_SIZE, clientX - rect.left - SWATCH_SIZE / 2)
       )
+      const y = Math.max(
+        0,
+        Math.min(rect.height - SWATCH_SIZE, clientY - rect.top - SWATCH_SIZE / 2)
+      )
+
+      const newColor = sampleColorAtPosition(x, y)
       if (!newColor) return
 
-      updateSwatch(draggingIndex, { color: newColor, percentLocation: [x, y] })
+      updateSwatch(draggingIndex, {
+        color: newColor,
+        percentLocation: [(x / rect.width) * 100, (y / rect.height) * 100],
+      })
     },
     [draggingIndex, sampleColorAtPosition, updateSwatch]
   )
@@ -215,7 +221,6 @@ const CanvasAndPalette = ({
             maxWidth: '100%',
             maxHeight: '100%',
             aspectRatio: imageDimensions.width / imageDimensions.height,
-            cursor: draggingIndex !== null ? 'none' : 'default',
           }}
         >
           <canvas
