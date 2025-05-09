@@ -11,8 +11,6 @@ export const StaticContentWrapper = ({ children }: { children: React.ReactNode }
         flexDirection: 'column',
         gap: SPACING.MEDIUM.PX,
         width: '100%',
-        maxWidth: '800px',
-        margin: '0px auto',
         boxSizing: 'border-box',
         '& .MuiListItem-root': {
           display: 'list-item',

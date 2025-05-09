@@ -1,6 +1,6 @@
 'use client'
 
-import { Box, Tab, Tabs, Typography } from '@mui/material'
+import { Box, Tab, Tabs } from '@mui/material'
 import { useQuery } from '@tanstack/react-query'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { getListAsModerator } from '../../api/palettes/getPaletteListAsModerator'
@@ -61,8 +61,7 @@ const Moderation = () => {
   }, [data, error, isLoading, refetch, tab])
 
   return (
-    <Box sx={{ p: 3 }}>
-      <Typography variant="h4">Moderation</Typography>
+    <Box>
       <Tabs value={tab} onChange={handleTabChange}>
         {tabs.map((t, i) => (
           <Tab key={i} label={t.label} />

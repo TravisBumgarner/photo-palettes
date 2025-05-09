@@ -85,7 +85,7 @@ const PalettePage = ({ palette }: { palette: TPalette }) => {
           ))}
         </Box>
         <Box sx={{ display: 'flex', flexDirection: 'row', gap: '10px', alignItems: 'baseline' }}>
-          <Typography variant="h1" sx={{ fontSize: FONT_SIZES.HUGE.PX }}>
+          <Typography variant="h2" sx={{ fontSize: FONT_SIZES.HUGE.PX }}>
             {palette.name}
           </Typography>
           {'by'}

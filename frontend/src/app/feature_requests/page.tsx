@@ -165,7 +165,7 @@ const FeatureRequests = () => {
 
   return (
     <Box>
-      <Typography variant="h1">Feature Requests</Typography>
+      <Typography variant="h2">Feature Requests</Typography>
       <Typography variant="body1">
         <Link href="/feedback">Submit a feature request.</Link>
       </Typography>

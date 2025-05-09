@@ -15,14 +15,14 @@ const Inspired = () => {
       </Typography>
       <ul style={{ listStyleType: 'none', padding: 0, textAlign: 'center' }}>
         <li>
-          <a target="_blank" href={ROUTES.discord.href}>
+          <Link target="_blank" href={ROUTES.discord.href}>
             {ROUTES.discord.label}
-          </a>
+          </Link>
         </li>
         <li>
-          <a target="_blank" href={ROUTES.bluesky.href}>
+          <Link target="_blank" href={ROUTES.bluesky.href}>
             {ROUTES.bluesky.label}
-          </a>
+          </Link>
         </li>
       </ul>
     </Box>
@@ -63,14 +63,14 @@ const Welcome = () => {
       <Box sx={{ width: '100%', aspectRatio: 16 / 9, position: 'relative' }}>
         <Image fill alt="color palette 1" src="/landing_page/1.png" />
       </Box>
+      <AlphaSignup />
       <Box style={{ width: '100%', aspectRatio: 16 / 9, position: 'relative' }}>
         <Image fill alt="color palette 1" src="/landing_page/2.png" />
       </Box>
+      <Inspired />
       <Box sx={{ width: '100%', aspectRatio: 16 / 9, position: 'relative' }}>
         <Image fill alt="color palette 1" src="/landing_page/3.png" />
       </Box>
-      <AlphaSignup />
-      <Inspired />
     </StaticContentWrapper>
   )
 }
