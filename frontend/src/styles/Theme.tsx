@@ -125,7 +125,7 @@ const baseThemeOptions: ThemeOptions = {
   },
   typography: {
     h1: {
-      fontSize: FONT_SIZES.LARGE.PX,
+      fontSize: FONT_SIZES.HUGE.PX,
       fontWeight: 900,
     },
     h2: {
@@ -161,7 +161,6 @@ const lightThemeOptions: ThemeOptions = {
   typography: {
     h1: {
       color: PALETTE.grayscale[900],
-      fontSize: FONT_SIZES.HUGE.PX,
     },
     h2: {
       color: PALETTE.grayscale[900],

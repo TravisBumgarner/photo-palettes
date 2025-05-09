@@ -2,7 +2,7 @@
 
 import { GiHamburgerMenu } from 'react-icons/gi'
 
-import { Box, IconButton, Menu, MenuItem } from '@mui/material'
+import { Box, IconButton, Menu, MenuItem, Typography } from '@mui/material'
 import { useCallback, useMemo, useState } from 'react'
 import { ROUTES } from '../../consts'
 import useGlobalStore from '../../store'
@@ -68,7 +68,7 @@ const Navigation = () => {
           sx={{ fontWeight: 900, color: 'text.primary', fontSize: FONT_SIZES.LARGE.PX }}
           href={ROUTES.home.href}
         >
-          {ROUTES.home.label}
+          <Typography variant="h1">{ROUTES.home.label}</Typography>
         </Link>
       </Box>
       <Box sx={{ display: 'flex', flexDirection: 'row', gap: '14px', alignItems: 'center' }}>

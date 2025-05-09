@@ -81,7 +81,7 @@ const Contact = () => {
 
   return (
     <StaticContentWrapper>
-      <Typography variant="h1">Feedback</Typography>
+      <Typography variant="h2">Feedback</Typography>
       <Typography variant="body1">
         Join the discussion on{' '}
         <Link target="_blank" href={ROUTES.discord.href}>

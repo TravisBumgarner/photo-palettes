@@ -1,8 +1,19 @@
 'use client'
 
-import { Typography } from '@mui/material'
+import {
+  Table as MuiTable,
+  Paper,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Typography,
+} from '@mui/material'
 import { StaticContentWrapper } from '../../styles/Shared'
-import { PALETTE } from '../../styles/Theme'
+import { BORDER_RADIUS } from '../../styles/Theme'
+import Link from '../sharedComponents/Link'
+
 interface TableProps {
   items: Array<{
     item: string
@@ -12,34 +23,30 @@ interface TableProps {
 
 const Table: React.FC<TableProps> = ({ items }) => {
   return (
-    <table
-      style={{
-        border: `1px solid ${PALETTE.grayscale[900]}`,
-        padding: '10px',
-        color: PALETTE.grayscale[900],
-      }}
-    >
-      <thead>
-        <tr>
-          <th>Item</th>
-          <th>Monthly Cost</th>
-        </tr>
-      </thead>
-      <tbody>
-        {items.map((row, idx) => (
-          <tr key={idx}>
-            <td style={{ textAlign: 'left' }}>{row.item}</td>
-            <td style={{ textAlign: 'right' }}>${row.cost.toFixed(2)}</td>
-          </tr>
-        ))}
-        <tr>
-          <td style={{ fontWeight: 'bold' }}>Total</td>
-          <td style={{ fontWeight: 'bold', textAlign: 'right' }}>
-            ${(items.reduce((acc, row) => acc + row.cost, 0) + 1).toFixed(2)}
-          </td>
-        </tr>
-      </tbody>
-    </table>
+    <TableContainer component={Paper} sx={{ borderRadius: BORDER_RADIUS.ZERO.PX }}>
+      <MuiTable>
+        <TableHead>
+          <TableRow>
+            <TableCell>Item</TableCell>
+            <TableCell align="right">Monthly Cost</TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {items.map((row, idx) => (
+            <TableRow key={idx}>
+              <TableCell>{row.item}</TableCell>
+              <TableCell align="right">${row.cost.toFixed(2)}</TableCell>
+            </TableRow>
+          ))}
+          <TableRow>
+            <TableCell sx={{ fontWeight: 'bold' }}>Total</TableCell>
+            <TableCell sx={{ fontWeight: 'bold' }} align="right">
+              ${(items.reduce((acc, row) => acc + row.cost, 0) + 1).toFixed(2)}
+            </TableCell>
+          </TableRow>
+        </TableBody>
+      </MuiTable>
+    </TableContainer>
   )
 }
 
@@ -57,16 +64,16 @@ const Donations = () => {
 
   return (
     <StaticContentWrapper>
-      <Typography variant="h1">Donate</Typography>
+      <Typography variant="h2">Donate</Typography>
       <Typography variant="body1">
         The project currently costs ${monthlyCost}/month or ${yearlyCost}/year to run. Below is a
         breakdown. At this point the costs are manageable for me. I have seen projects like this
         fall apart because of costs. If you would like to support the project, you can do so by
         donating.
       </Typography>
-      <a href="https://www.patreon.com/c/photopalettes/membership">
+      <Link href="https://www.patreon.com/c/photopalettes/membership">
         Support the project on Patreon
-      </a>
+      </Link>
       <Table items={items} />
     </StaticContentWrapper>
   )

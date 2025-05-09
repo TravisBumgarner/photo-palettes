@@ -75,7 +75,7 @@ const Profile = () => {
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', gap: SPACING.MEDIUM.PX }}>
       <Typography
-        variant="h1"
+        variant="h2"
         sx={{
           fontWeight: 700,
           fontSize: FONT_SIZES.HUGE_PLUS.PX,

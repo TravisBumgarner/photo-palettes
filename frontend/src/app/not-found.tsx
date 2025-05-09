@@ -5,7 +5,7 @@ import { Box, Typography } from '@mui/material'
 const Error404 = () => {
   return (
     <Box>
-      <Typography variant="h1">Error 404</Typography>
+      <Typography variant="h2">Error 404</Typography>
     </Box>
   )
 }

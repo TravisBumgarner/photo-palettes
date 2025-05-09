@@ -1,10 +1,13 @@
+'use client'
+
 import { Typography } from '@mui/material'
 import { StaticContentWrapper } from '../../styles/Shared'
+import Link from '../sharedComponents/Link'
 
 const Privacy = () => {
   return (
     <StaticContentWrapper>
-      <Typography variant="h1">Privacy Policy</Typography>
+      <Typography variant="h2">Privacy Policy</Typography>
       <Typography variant="body1">
         <em>Last updated: April 17, 2025</em>
       </Typography>
@@ -15,7 +18,7 @@ const Privacy = () => {
         protect data in connection with our closed alpha app.
       </Typography>
 
-      <Typography variant="h2">1. Information We Collect</Typography>
+      <Typography variant="h3">1. Information We Collect</Typography>
       <Typography variant="body1">
         During this closed alpha phase, we collect limited data to help us improve the app. This
         includes:
@@ -39,7 +42,7 @@ const Privacy = () => {
         your name, email, or contact details, unless you provide them to us directly.
       </Typography>
 
-      <Typography variant="h2">2. How We Use Your Information</Typography>
+      <Typography variant="h3">2. How We Use Your Information</Typography>
       <Typography variant="body1">We use the data collected to:</Typography>
       <ul>
         <li>Understand how testers use the app.</li>
@@ -47,7 +50,7 @@ const Privacy = () => {
         <li>Improve the performance and design of the app.</li>
       </ul>
 
-      <Typography variant="h2">3. Third-Party Services</Typography>
+      <Typography variant="h3">3. Third-Party Services</Typography>
       <Typography variant="body1">
         We use <strong>Google Analytics</strong>, a web analytics service provided by Google LLC.
         Google Analytics uses cookies and similar technologies to collect and analyze information
@@ -58,49 +61,41 @@ const Privacy = () => {
       <Typography variant="body1">
         To learn more about how Google collects and processes data, visit:
         <br />
-        <a
-          href="https://policies.google.com/technologies/partner-sites"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
+        <Link href="https://policies.google.com/technologies/partner-sites" target="_blank">
           https://policies.google.com/technologies/partner-sites
-        </a>
+        </Link>
       </Typography>
       <Typography variant="body1">
         You can opt out of Google Analytics tracking by installing the Google Analytics Opt-out
         Browser Add-on{' '}
-        <a
-          href="https://tools.google.com/dlpage/gaoptout"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
+        <Link href="https://tools.google.com/dlpage/gaoptout" target="_blank">
           https://tools.google.com/dlpage/gaoptout
-        </a>
+        </Link>
       </Typography>
 
-      <Typography variant="h2">4. Data Retention</Typography>
+      <Typography variant="h3">4. Data Retention</Typography>
       <Typography variant="body1">
         We retain usage data for as long as necessary to analyze app performance and make
         improvements, or as required by our data processors (e.g., Google Analytics, Sentry.io).
       </Typography>
 
-      <Typography variant="h2">5. Security</Typography>
+      <Typography variant="h3">5. Security</Typography>
       <Typography variant="body1">
         We take reasonable steps to protect your information, but please note that no system can be
         guaranteed 100% secure. Since this is an early-stage testing phase, we recommend not sharing
         sensitive information through the app.
       </Typography>
 
-      <Typography variant="h2">6. Changes to This Policy</Typography>
+      <Typography variant="h3">6. Changes to This Policy</Typography>
       <Typography variant="body1">
         We may update this Privacy Policy from time to time. If we make significant changes, we’ll
         notify testers through the app or via email.
       </Typography>
 
-      <Typography variant="h2">7. Contact Us</Typography>
+      <Typography variant="h3">7. Contact Us</Typography>
       <Typography variant="body1">
         If you have any questions or concerns about this Privacy Policy, please contact us at:{' '}
-        <a href="mailto:support@photopalettes.com">support@photopalettes.com</a>.
+        <Link href="mailto:support@photopalettes.com">support@photopalettes.com</Link>.
       </Typography>
     </StaticContentWrapper>
   )
