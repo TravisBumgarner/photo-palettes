@@ -2,6 +2,7 @@ import { useDropzone } from 'react-dropzone'
 
 import { Box } from '@mui/material'
 import useGlobalStore from '../../../store'
+import { sharedCSS } from './shared'
 
 const Dropzone = ({ onDrop }: { onDrop: (acceptedFiles: File[]) => void }) => {
   const addAlert = useGlobalStore(state => state.addAlert)
@@ -21,11 +22,7 @@ const Dropzone = ({ onDrop }: { onDrop: (acceptedFiles: File[]) => void }) => {
   return (
     <Box
       sx={{
-        width: '100%',
-        height: '70vh',
-        '@media (max-width: 700px)': {
-          height: '50vh',
-        },
+        ...sharedCSS,
         border: `1px dashed`,
         borderColor: 'divider',
         display: 'flex',

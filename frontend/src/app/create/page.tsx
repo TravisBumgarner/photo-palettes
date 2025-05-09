@@ -15,6 +15,7 @@ import Message from '../sharedComponents/Message'
 import { ModalID } from '../sharedComponents/Modal/Modal.consts'
 import CanvasAndPalette from './components/CanvasAndPalette'
 import Dropzone from './components/Dropzone'
+import { sharedCSS } from './components/shared'
 
 enum UploadStatus {
   INITIAL = 'INITIAL',
@@ -123,10 +124,7 @@ const Create = () => {
             display: 'flex',
             justifyContent: 'center',
             alignItems: 'center',
-            height: '70vh',
-            '@media (max-width: 700px)': {
-              height: '50vh',
-            },
+            ...sharedCSS,
           }}
         >
           <Loading />

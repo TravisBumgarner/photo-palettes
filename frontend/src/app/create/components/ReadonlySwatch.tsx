@@ -26,7 +26,7 @@ const ReadonlySwatch = forwardRef(
       <Box
         ref={ref}
         sx={{
-          // Background are set by refs from the parent.
+          // Additional styles set by parent via refs.
           height: '50px',
           display: 'flex',
           justifyContent: 'center',
@@ -37,7 +37,9 @@ const ReadonlySwatch = forwardRef(
         }}
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
-      ></Box>
+      >
+        {/* Set by parent via refs. */}
+      </Box>
     )
   }
 )
@@ -45,31 +47,3 @@ const ReadonlySwatch = forwardRef(
 ReadonlySwatch.displayName = 'ReadonlySwatch'
 
 export default ReadonlySwatch
-
-// const ReadonlyPalette = ({
-//   setHoveringIndex,
-//   palette,
-// }: {
-//   setHoveringIndex: (index: number | null) => void
-//   palette: TGeneratedPalette | null
-// }) => {
-//   const handleMouseEnter = useCallback(
-//     (index: number) => {
-//       setHoveringIndex(index)
-//     },
-//     [setHoveringIndex]
-//   )
-
-//   const handleMouseLeave = useCallback(() => {
-//     setHoveringIndex(null)
-//   }, [setHoveringIndex])
-
-//   if (!palette) return null
-
-//   return (
-
-//     </Box>
-//   )
-// }
-
-// export default ReadonlyPalette

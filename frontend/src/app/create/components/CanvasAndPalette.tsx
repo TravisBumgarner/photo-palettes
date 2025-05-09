@@ -1,5 +1,10 @@
 'use client'
 
+// Some Notes on this File.
+// - Preact Signals don't seem to work with NextJS.
+// - Storing the palette in Zustand causes mobile to not work on drag.
+// - Now we use lots of refs to control all the colors.
+
 import { Box, rgbToHex } from '@mui/material'
 import { useDrag } from '@use-gesture/react'
 import { useCallback, useEffect, useRef, useState } from 'react'
@@ -8,6 +13,7 @@ import { TGeneratedPalette, TSwatch } from '../../../types'
 import { getContrastColor } from '../../../utils'
 import DraggableSwatch from './DraggableSwatch'
 import ReadonlySwatch from './ReadonlySwatch'
+import { sharedCSS } from './shared'
 
 const CanvasAndPalette = ({
   photo,
@@ -190,11 +196,7 @@ const CanvasAndPalette = ({
     <>
       <Box
         sx={{
-          width: '100%',
-          height: '70vh',
-          '@media (max-width: 700px)': {
-            height: '50vh',
-          },
+          ...sharedCSS,
           border: '1px solid',
           borderColor: 'divider',
           display: 'flex',

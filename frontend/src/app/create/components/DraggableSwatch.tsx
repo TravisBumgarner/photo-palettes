@@ -30,6 +30,7 @@ const DraggableSwatch = forwardRef<
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
       style={{
+        // Additional styles set by parent via refs.
         position: 'absolute',
         transform: 'translate(-50%, -50%)',
         width: '20px',
