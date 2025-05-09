@@ -3,12 +3,20 @@
 import { Box } from '@mui/material'
 import { useDrag } from '@use-gesture/react'
 import { useCallback, useEffect, useRef, useState } from 'react'
-import useGlobalStore from '../../../store'
 import { SPACING } from '../../../styles/Theme'
+import { TGeneratedPalette, TSwatch } from '../../../types'
 import DraggableSwatch from './DraggableSwatch'
 import ReadonlyPalette from './ReadonlyPalette'
 
-const CanvasAndPalette = ({ photo }: { photo: File | null }) => {
+const CanvasAndPalette = ({
+  photo,
+  palette,
+  updatePalette,
+}: {
+  photo: File | null
+  palette: TGeneratedPalette | null
+  updatePalette: (palette: TGeneratedPalette) => void
+}) => {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const containerRef = useRef<HTMLDivElement>(null)
   const swatchRefs = useRef<(HTMLDivElement | null)[]>([])
@@ -18,7 +26,6 @@ const CanvasAndPalette = ({ photo }: { photo: File | null }) => {
     width: 1,
     height: 1,
   })
-  const newPalette = useGlobalStore(state => state.newPalette)
 
   const sampleColorAtPosition = useCallback((x: number, y: number) => {
     const canvas = canvasRef.current
@@ -37,6 +44,14 @@ const CanvasAndPalette = ({ photo }: { photo: File | null }) => {
 
     const pixel = ctx.getImageData(pixelX, pixelY, 1, 1).data
     return `#${pixel[0].toString(16).padStart(2, '0')}${pixel[1].toString(16).padStart(2, '0')}${pixel[2].toString(16).padStart(2, '0')}`
+  }, [])
+
+  const updateSwatch = useCallback((index: number, swatch: TSwatch) => {
+    const swatchRef = swatchRefs.current[index]
+    if (!swatchRef) return
+    swatchRef.style.backgroundColor = swatch.color
+    swatchRef.style.left = `${swatch.percentLocation[0]}%`
+    swatchRef.style.top = `${swatch.percentLocation[1]}%`
   }, [])
 
   const handleMove = useCallback(
@@ -58,18 +73,20 @@ const CanvasAndPalette = ({ photo }: { photo: File | null }) => {
       )
       if (!newColor) return
 
-      const swatch = swatchRefs.current[draggingIndex]
-      if (swatch) {
-        swatch.style.backgroundColor = newColor
-        swatch.style.left = `${x}%`
-        swatch.style.top = `${y}%`
-      }
+      updateSwatch(draggingIndex, { color: newColor, percentLocation: [x, y] })
     },
-    [draggingIndex, sampleColorAtPosition]
+    [draggingIndex, sampleColorAtPosition, updateSwatch]
   )
 
+  useEffect(() => {
+    if (palette) {
+      palette.forEach((swatch, index) => {
+        updateSwatch(index, swatch)
+      })
+    }
+  }, [palette, updateSwatch])
+
   const handleStart = useCallback((clientX: number, clientY: number) => {
-    // console.log('handleStart')
     const container = containerRef.current
     if (!container) return
 
@@ -92,7 +109,16 @@ const CanvasAndPalette = ({ photo }: { photo: File | null }) => {
 
   const handleEnd = useCallback(() => {
     setDraggingIndex(null)
-  }, [])
+    updatePalette(
+      swatchRefs.current.map(swatch => ({
+        color: swatch?.style.backgroundColor || '',
+        percentLocation: [
+          parseFloat(swatch?.style.left || '0'),
+          parseFloat(swatch?.style.top || '0'),
+        ],
+      }))
+    )
+  }, [updatePalette])
 
   const setPhotoOnCanvas = useCallback((photo: File) => {
     const image = new Image()
@@ -185,18 +211,17 @@ const CanvasAndPalette = ({ photo }: { photo: File | null }) => {
             }}
             ref={canvasRef}
           />
-          {newPalette!.map((swatch, index) => (
+          {new Array(6).fill(null).map((_, index) => (
             <DraggableSwatch
               ref={setRef(index)}
               isHovering={hoveringIndex === index}
               isDragging={draggingIndex === index}
-              key={`${swatch.color}-${index}`}
-              swatch={swatch}
+              key={index}
             />
           ))}
         </div>
       </Box>
-      <ReadonlyPalette setHoveringIndex={setHoveringIndex} />
+      <ReadonlyPalette setHoveringIndex={setHoveringIndex} palette={palette} />
     </>
   )
 }

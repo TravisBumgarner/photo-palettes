@@ -1,6 +1,5 @@
 import { Box } from '@mui/material'
 import { useCallback } from 'react'
-import useGlobalStore from '../../../store'
 import { TGeneratedPalette } from '../../../types'
 import { getContrastColor } from '../../../utils'
 
@@ -48,11 +47,11 @@ const ReadonlySwatch = ({
 
 const ReadonlyPalette = ({
   setHoveringIndex,
+  palette,
 }: {
   setHoveringIndex: (index: number | null) => void
+  palette: TGeneratedPalette | null
 }) => {
-  const newPalette = useGlobalStore(state => state.newPalette)
-
   const handleMouseEnter = useCallback(
     (index: number) => {
       setHoveringIndex(index)
@@ -64,7 +63,7 @@ const ReadonlyPalette = ({
     setHoveringIndex(null)
   }, [setHoveringIndex])
 
-  if (!newPalette) return null
+  if (!palette) return null
 
   return (
     <Box
@@ -78,7 +77,7 @@ const ReadonlyPalette = ({
         },
       }}
     >
-      {newPalette.map((swatch, index) => (
+      {palette.map((swatch, index) => (
         <ReadonlySwatch
           key={`${swatch.color}-${index}`}
           swatch={swatch}

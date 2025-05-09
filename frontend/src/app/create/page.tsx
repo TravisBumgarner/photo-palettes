@@ -9,6 +9,7 @@ import { generatePalette } from '../../api/palettes/generatePalette'
 import { logger } from '../../services/logging'
 import useGlobalStore from '../../store'
 import { SPACING } from '../../styles/Theme'
+import { TGeneratedPalette } from '../../types'
 import Loading from '../sharedComponents/Loading'
 import Message from '../sharedComponents/Message'
 import { ModalID } from '../sharedComponents/Modal/Modal.consts'
@@ -31,8 +32,7 @@ const Create = () => {
   const [paletteId, setPaletteId] = useState<string | null>(null)
   const setActiveModal = useGlobalStore(state => state.setActiveModal)
   const [name, setName] = useState('')
-  const setNewPalette = useGlobalStore(state => state.setNewPalette)
-  const addAlert = useGlobalStore(state => state.addAlert)
+  const [palette, setPalette] = useState<TGeneratedPalette | null>(null)
 
   const generatePaletteMutation = useMutation({
     mutationFn: generatePalette,
@@ -52,14 +52,14 @@ const Create = () => {
       setPhoto(photo)
       const response = await generatePaletteMutation.mutateAsync(photo)
       if (response.success) {
-        setNewPalette(response.palette)
+        setPalette(response.palette)
         setPaletteId(response.paletteId)
         setUploadStatus(UploadStatus.UPLOADED)
       } else {
         setUploadStatus(UploadStatus.ERROR)
       }
     },
-    [generatePaletteMutation, setNewPalette, setPaletteId]
+    [generatePaletteMutation, setPalette, setPaletteId]
   )
 
   const handleNameChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
@@ -67,11 +67,11 @@ const Create = () => {
   }, [])
 
   const handleClearPalette = useCallback(() => {
-    setNewPalette([])
+    setPalette(null)
     setUploadStatus(UploadStatus.INITIAL)
     setPhoto(null)
     setName('')
-  }, [setNewPalette])
+  }, [setPalette])
 
   const createPaletteMutation = useMutation({
     mutationFn: createPalette,
@@ -85,18 +85,11 @@ const Create = () => {
   })
 
   const handleSavePalette = useCallback(async () => {
-    if (!paletteId) return
+    if (!paletteId || !palette) return
     setUploadStatus(UploadStatus.SUBMITTING)
 
-    const newPalette = useGlobalStore.getState().newPalette
-    if (!newPalette) {
-      logger.error('No palette to save')
-      addAlert('No palette to save', 'error')
-      return
-    }
-
     const response = await createPaletteMutation.mutateAsync({
-      palette: newPalette,
+      palette,
       paletteId,
       name,
     })
@@ -114,16 +107,13 @@ const Create = () => {
     } else {
       setUploadStatus(UploadStatus.ERROR)
     }
-  }, [paletteId, createPaletteMutation, setActiveModal, router, name, addAlert])
+  }, [paletteId, createPaletteMutation, setActiveModal, router, name, palette])
 
   const handleTryAgain = useCallback(() => {
     setUploadStatus(UploadStatus.INITIAL)
-    setNewPalette([])
+    setPalette(null)
     setPhoto(null)
-  }, [setNewPalette, setPhoto])
-
-  // console.log('rerenders')
-
+  }, [setPalette, setPhoto])
   return (
     <Box>
       {uploadStatus === UploadStatus.INITIAL && <Dropzone onDrop={onDrop} />}
@@ -152,7 +142,7 @@ const Create = () => {
       )}
       {(uploadStatus === UploadStatus.UPLOADED || uploadStatus === UploadStatus.SUBMITTING) && (
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: SPACING.SMALL.PX }}>
-          <CanvasAndPalette photo={photo} />
+          <CanvasAndPalette photo={photo} palette={palette} updatePalette={setPalette} />
           <TextField
             variant="outlined"
             fullWidth
