@@ -159,6 +159,8 @@ const CanvasAndPalette = ({
             maxWidth: '100%',
             maxHeight: '100%',
             aspectRatio: imageDimensions.width / imageDimensions.height,
+            touchAction: 'none',
+            cursor: draggingIndex !== null ? 'none' : 'default',
           }}
         >
           <canvas
@@ -172,7 +174,8 @@ const CanvasAndPalette = ({
           />
           {palette.map((swatch, index) => (
             <DraggableSwatch
-              isHovered={hoveringIndex === index}
+              isHovering={hoveringIndex === index}
+              isDragging={draggingIndex === index}
               key={`${swatch.color}-${index}`}
               swatch={swatch}
               index={index}
