@@ -1,6 +1,7 @@
 'use client'
 
 import { Box } from '@mui/material'
+import { useDrag } from '@use-gesture/react'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import useGlobalStore from '../../../store'
 import { SPACING } from '../../../styles/Theme'
@@ -18,13 +19,12 @@ const CanvasAndPalette = ({ photo }: { photo: File | null }) => {
     height: 1,
   })
   const newPalette = useGlobalStore(state => state.newPalette)
-  const updateNewPalette = useGlobalStore(state => state.updateNewPalette)
 
   const sampleColorAtPosition = useCallback((x: number, y: number) => {
     const canvas = canvasRef.current
     if (!canvas) return null
 
-    const ctx = canvas.getContext('2d')
+    const ctx = canvas.getContext('2d', { willReadFrequently: true })
     if (!ctx) return null
 
     const rect = canvas.getBoundingClientRect()
@@ -39,8 +39,8 @@ const CanvasAndPalette = ({ photo }: { photo: File | null }) => {
     return `#${pixel[0].toString(16).padStart(2, '0')}${pixel[1].toString(16).padStart(2, '0')}${pixel[2].toString(16).padStart(2, '0')}`
   }, [])
 
-  const handleCanvasMouseMove = useCallback(
-    (e: React.MouseEvent<HTMLDivElement>) => {
+  const handleMove = useCallback(
+    (clientX: number, clientY: number) => {
       if (draggingIndex === null) return
 
       const container = containerRef.current
@@ -49,24 +49,27 @@ const CanvasAndPalette = ({ photo }: { photo: File | null }) => {
       const rect = container.getBoundingClientRect()
 
       // Clamp coordinates to container bounds
-      const x = Math.max(0, Math.min(100, ((e.clientX - rect.left) / rect.width) * 100))
-      const y = Math.max(0, Math.min(100, ((e.clientY - rect.top) / rect.height) * 100))
+      const x = Math.max(0, Math.min(100, ((clientX - rect.left) / rect.width) * 100))
+      const y = Math.max(0, Math.min(100, ((clientY - rect.top) / rect.height) * 100))
 
       const newColor = sampleColorAtPosition(
-        Math.max(0, Math.min(rect.width, e.clientX - rect.left)),
-        Math.max(0, Math.min(rect.height, e.clientY - rect.top))
+        Math.max(0, Math.min(rect.width, clientX - rect.left)),
+        Math.max(0, Math.min(rect.height, clientY - rect.top))
       )
       if (!newColor) return
 
-      updateNewPalette(draggingIndex, {
-        color: newColor,
-        percentLocation: [x, y],
-      })
+      const swatch = swatchRefs.current[draggingIndex]
+      if (swatch) {
+        swatch.style.backgroundColor = newColor
+        swatch.style.left = `${x}%`
+        swatch.style.top = `${y}%`
+      }
     },
-    [draggingIndex, sampleColorAtPosition, updateNewPalette]
+    [draggingIndex, sampleColorAtPosition]
   )
 
-  const handleCanvasMouseDown = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
+  const handleStart = useCallback((clientX: number, clientY: number) => {
+    // console.log('handleStart')
     const container = containerRef.current
     if (!container) return
 
@@ -75,10 +78,10 @@ const CanvasAndPalette = ({ photo }: { photo: File | null }) => {
       if (!ref) return false
       const rect = ref.getBoundingClientRect()
       return (
-        e.clientX >= rect.left &&
-        e.clientX <= rect.right &&
-        e.clientY >= rect.top &&
-        e.clientY <= rect.bottom
+        clientX >= rect.left &&
+        clientX <= rect.right &&
+        clientY >= rect.top &&
+        clientY <= rect.bottom
       )
     })
 
@@ -87,7 +90,7 @@ const CanvasAndPalette = ({ photo }: { photo: File | null }) => {
     }
   }, [])
 
-  const handleCanvasMouseUp = useCallback(() => {
+  const handleEnd = useCallback(() => {
     setDraggingIndex(null)
   }, [])
 
@@ -102,12 +105,10 @@ const CanvasAndPalette = ({ photo }: { photo: File | null }) => {
       canvas.height = image.height
       setImageDimensions({ width: image.width, height: image.height })
 
-      const ctx = canvas.getContext('2d')
+      const ctx = canvas.getContext('2d', { willReadFrequently: true })
       if (!ctx) return
 
       ctx.drawImage(image, 0, 0, image.width, image.height)
-      // setImageData(canvas.toDataURL())
-
       URL.revokeObjectURL(image.src)
     }
   }, [])
@@ -118,13 +119,30 @@ const CanvasAndPalette = ({ photo }: { photo: File | null }) => {
     }
   }, [photo, setPhotoOnCanvas])
 
-  // console.log('component rerenders', draggingIndex, hoveringIndex)
-
   const setRef = useCallback(
     (index: number) => (el: HTMLDivElement | null) => {
       swatchRefs.current[index] = el
     },
     []
+  )
+
+  const bind = useDrag(
+    ({ active, first, last, xy: [x, y] }) => {
+      if (first) {
+        handleStart(x, y)
+      }
+      if (active) {
+        handleMove(x, y)
+      }
+      if (last) {
+        handleEnd()
+      }
+    },
+    {
+      filterTaps: true,
+      preventScroll: true,
+      pointer: { touch: true },
+    }
   )
 
   return (
@@ -142,25 +160,24 @@ const CanvasAndPalette = ({ photo }: { photo: File | null }) => {
           justifyContent: 'center',
           alignItems: 'center',
           padding: SPACING.SMALL.PX,
+          touchAction: 'none',
         }}
       >
         <div
           ref={containerRef}
-          onMouseDown={handleCanvasMouseDown}
-          onMouseMove={handleCanvasMouseMove}
-          onMouseUp={handleCanvasMouseUp}
-          onMouseLeave={handleCanvasMouseUp}
+          {...bind()}
           style={{
+            touchAction: 'none',
             position: 'relative',
             maxWidth: '100%',
             maxHeight: '100%',
             aspectRatio: imageDimensions.width / imageDimensions.height,
-            touchAction: 'none',
             cursor: draggingIndex !== null ? 'none' : 'default',
           }}
         >
           <canvas
             style={{
+              touchAction: 'none',
               display: 'block',
               maxWidth: '100%',
               maxHeight: '100%',
