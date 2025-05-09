@@ -1,25 +1,16 @@
 import { motion } from 'framer-motion'
-import { useCallback } from 'react'
 import { TGeneratedPalette } from '../../../types'
 import { getContrastColor } from '../../../utils'
 
 const DraggableSwatch = ({
   swatch,
-  index,
-  handleSetDraggingIndex,
   isHovering,
   isDragging,
 }: {
   swatch: TGeneratedPalette[number]
-  index: number
-  handleSetDraggingIndex: (index: number) => void
   isHovering: boolean
   isDragging: boolean
 }) => {
-  const handleMouseDown = useCallback(() => {
-    handleSetDraggingIndex(index)
-  }, [handleSetDraggingIndex, index])
-
   return (
     <motion.div
       initial={{
@@ -40,7 +31,6 @@ const DraggableSwatch = ({
         border: isDragging ? 'none' : `2px solid ${getContrastColor(swatch.color)}`,
         boxShadow: '0 0 10px rgba(0,0,0,0.3)',
       }}
-      onMouseDown={handleMouseDown}
     />
   )
 }

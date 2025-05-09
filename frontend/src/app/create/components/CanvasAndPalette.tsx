@@ -24,9 +24,6 @@ const CanvasAndPalette = ({
     width: 1,
     height: 1,
   })
-  const handleSetDraggingIndex = useCallback((index: number) => {
-    setDraggingIndex(index)
-  }, [])
 
   const sampleColorAtPosition = useCallback((x: number, y: number) => {
     const canvas = canvasRef.current
@@ -178,8 +175,6 @@ const CanvasAndPalette = ({
               isDragging={draggingIndex === index}
               key={`${swatch.color}-${index}`}
               swatch={swatch}
-              index={index}
-              handleSetDraggingIndex={handleSetDraggingIndex}
             />
           ))}
         </div>
