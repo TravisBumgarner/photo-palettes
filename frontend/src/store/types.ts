@@ -1,5 +1,6 @@
 import { User } from '@supabase/supabase-js'
 import { ActiveModal } from '../app/sharedComponents/Modal/Modal.types'
+import { TGeneratedPalette, TSwatch } from '../types'
 
 export interface AppUserDetails {
   permissionLevel: number
@@ -26,4 +27,7 @@ export interface State {
   addAlert: (text: string, color: 'info' | 'error' | 'success') => void
   activeModal: null | ActiveModal
   setActiveModal: (activeModal: ActiveModal | null) => void
+  newPalette: TGeneratedPalette
+  setNewPalette: (newPalette: TGeneratedPalette) => void
+  updateNewPalette: (swatchIndex: number, newSwatch: TSwatch) => void
 }

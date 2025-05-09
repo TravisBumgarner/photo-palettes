@@ -2,28 +2,23 @@
 
 import { Box } from '@mui/material'
 import { useCallback, useEffect, useRef, useState } from 'react'
+import useGlobalStore from '../../../store'
 import { SPACING } from '../../../styles/Theme'
-import { TGeneratedPalette } from '../../../types'
 import DraggableSwatch from './DraggableSwatch'
 import ReadonlyPalette from './ReadonlyPalette'
 
-const CanvasAndPalette = ({
-  palette,
-  handlePaletteChange,
-  photo,
-}: {
-  palette: TGeneratedPalette
-  handlePaletteChange: (palette: TGeneratedPalette) => void
-  photo: File | null
-}) => {
+const CanvasAndPalette = ({ photo }: { photo: File | null }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const containerRef = useRef<HTMLDivElement>(null)
+  const swatchRefs = useRef<(HTMLDivElement | null)[]>([])
   const [draggingIndex, setDraggingIndex] = useState<number | null>(null)
   const [hoveringIndex, setHoveringIndex] = useState<number | null>(null)
   const [imageDimensions, setImageDimensions] = useState<{ width: number; height: number }>({
     width: 1,
     height: 1,
   })
+  const newPalette = useGlobalStore(state => state.newPalette)
+  const updateNewPalette = useGlobalStore(state => state.updateNewPalette)
 
   const sampleColorAtPosition = useCallback((x: number, y: number) => {
     const canvas = canvasRef.current
@@ -63,39 +58,34 @@ const CanvasAndPalette = ({
       )
       if (!newColor) return
 
-      const newPalette = [...palette]
-      newPalette[draggingIndex] = {
+      updateNewPalette(draggingIndex, {
         color: newColor,
         percentLocation: [x, y],
-      }
-      handlePaletteChange(newPalette)
-    },
-    [draggingIndex, palette, sampleColorAtPosition, handlePaletteChange]
-  )
-
-  const handleCanvasMouseDown = useCallback(
-    (e: React.MouseEvent<HTMLDivElement>) => {
-      const container = containerRef.current
-      if (!container) return
-
-      const rect = container.getBoundingClientRect()
-      const x = ((e.clientX - rect.left) / rect.width) * 100
-      const y = ((e.clientY - rect.top) / rect.height) * 100
-
-      // Check if click is near any circle
-      const index = palette.findIndex(swatch => {
-        const circleX = swatch.percentLocation[0]
-        const circleY = swatch.percentLocation[1]
-        const distance = Math.sqrt(Math.pow(x - circleX, 2) + Math.pow(y - circleY, 2))
-        return distance < 5 // 5% threshold for clicking
       })
-
-      if (index !== -1) {
-        setDraggingIndex(index)
-      }
     },
-    [palette]
+    [draggingIndex, sampleColorAtPosition, updateNewPalette]
   )
+
+  const handleCanvasMouseDown = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
+    const container = containerRef.current
+    if (!container) return
+
+    // Check if click is on any palette element
+    const index = swatchRefs.current.findIndex(ref => {
+      if (!ref) return false
+      const rect = ref.getBoundingClientRect()
+      return (
+        e.clientX >= rect.left &&
+        e.clientX <= rect.right &&
+        e.clientY >= rect.top &&
+        e.clientY <= rect.bottom
+      )
+    })
+
+    if (index !== -1) {
+      setDraggingIndex(index)
+    }
+  }, [])
 
   const handleCanvasMouseUp = useCallback(() => {
     setDraggingIndex(null)
@@ -127,6 +117,15 @@ const CanvasAndPalette = ({
       setPhotoOnCanvas(photo)
     }
   }, [photo, setPhotoOnCanvas])
+
+  // console.log('component rerenders', draggingIndex, hoveringIndex)
+
+  const setRef = useCallback(
+    (index: number) => (el: HTMLDivElement | null) => {
+      swatchRefs.current[index] = el
+    },
+    []
+  )
 
   return (
     <>
@@ -169,8 +168,9 @@ const CanvasAndPalette = ({
             }}
             ref={canvasRef}
           />
-          {palette.map((swatch, index) => (
+          {newPalette!.map((swatch, index) => (
             <DraggableSwatch
+              ref={setRef(index)}
               isHovering={hoveringIndex === index}
               isDragging={draggingIndex === index}
               key={`${swatch.color}-${index}`}
@@ -179,7 +179,7 @@ const CanvasAndPalette = ({
           ))}
         </div>
       </Box>
-      <ReadonlyPalette palette={palette} setHoveringIndex={setHoveringIndex} />
+      <ReadonlyPalette setHoveringIndex={setHoveringIndex} />
     </>
   )
 }

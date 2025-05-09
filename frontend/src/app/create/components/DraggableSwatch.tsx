@@ -1,18 +1,19 @@
 import { motion } from 'framer-motion'
+import { forwardRef } from 'react'
 import { TGeneratedPalette } from '../../../types'
 import { getContrastColor } from '../../../utils'
 
-const DraggableSwatch = ({
-  swatch,
-  isHovering,
-  isDragging,
-}: {
-  swatch: TGeneratedPalette[number]
-  isHovering: boolean
-  isDragging: boolean
-}) => {
+const DraggableSwatch = forwardRef<
+  HTMLDivElement,
+  {
+    swatch: TGeneratedPalette[number]
+    isHovering: boolean
+    isDragging: boolean
+  }
+>(({ swatch, isHovering, isDragging }, ref) => {
   return (
     <motion.div
+      ref={ref}
       initial={{
         scale: isDragging ? 3 : 1,
       }}
@@ -33,6 +34,8 @@ const DraggableSwatch = ({
       }}
     />
   )
-}
+})
+
+DraggableSwatch.displayName = 'DraggableSwatch'
 
 export default DraggableSwatch

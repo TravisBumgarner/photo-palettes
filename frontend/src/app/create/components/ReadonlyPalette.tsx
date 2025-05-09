@@ -1,5 +1,6 @@
 import { Box } from '@mui/material'
 import { useCallback } from 'react'
+import useGlobalStore from '../../../store'
 import { TGeneratedPalette } from '../../../types'
 import { getContrastColor } from '../../../utils'
 
@@ -46,12 +47,12 @@ const ReadonlySwatch = ({
 }
 
 const ReadonlyPalette = ({
-  palette,
   setHoveringIndex,
 }: {
-  palette: TGeneratedPalette
   setHoveringIndex: (index: number | null) => void
 }) => {
+  const newPalette = useGlobalStore(state => state.newPalette)
+
   const handleMouseEnter = useCallback(
     (index: number) => {
       setHoveringIndex(index)
@@ -63,30 +64,30 @@ const ReadonlyPalette = ({
     setHoveringIndex(null)
   }, [setHoveringIndex])
 
+  if (!newPalette) return null
+
   return (
-    palette.length > 0 && (
-      <Box
-        sx={{
-          display: 'flex',
-          flexDirection: 'row',
-          margin: '0 auto',
-          '@media (max-width: 700px)': {
-            width: '300px',
-            flexWrap: 'wrap',
-          },
-        }}
-      >
-        {palette.map((swatch, index) => (
-          <ReadonlySwatch
-            key={`${swatch.color}-${index}`}
-            swatch={swatch}
-            index={index}
-            handleMouseEnterCallback={handleMouseEnter}
-            handleMouseLeaveCallback={handleMouseLeave}
-          />
-        ))}
-      </Box>
-    )
+    <Box
+      sx={{
+        display: 'flex',
+        flexDirection: 'row',
+        margin: '0 auto',
+        '@media (max-width: 700px)': {
+          width: '300px',
+          flexWrap: 'wrap',
+        },
+      }}
+    >
+      {newPalette.map((swatch, index) => (
+        <ReadonlySwatch
+          key={`${swatch.color}-${index}`}
+          swatch={swatch}
+          index={index}
+          handleMouseEnterCallback={handleMouseEnter}
+          handleMouseLeaveCallback={handleMouseLeave}
+        />
+      ))}
+    </Box>
   )
 }
 
