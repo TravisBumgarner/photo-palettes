@@ -1,12 +1,13 @@
 'use client'
 
-import { Box } from '@mui/material'
+import { Box, rgbToHex } from '@mui/material'
 import { useDrag } from '@use-gesture/react'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { SPACING } from '../../../styles/Theme'
 import { TGeneratedPalette, TSwatch } from '../../../types'
+import { getContrastColor } from '../../../utils'
 import DraggableSwatch from './DraggableSwatch'
-import ReadonlyPalette from './ReadonlyPalette'
+import ReadonlySwatch from './ReadonlySwatch'
 
 const CanvasAndPalette = ({
   photo,
@@ -19,7 +20,8 @@ const CanvasAndPalette = ({
 }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const containerRef = useRef<HTMLDivElement>(null)
-  const swatchRefs = useRef<(HTMLDivElement | null)[]>([])
+  const draggableSwatchRefs = useRef<(HTMLDivElement | null)[]>([])
+  const readonlySwatchRefs = useRef<(HTMLDivElement | null)[]>([])
   const [draggingIndex, setDraggingIndex] = useState<number | null>(null)
   const [hoveringIndex, setHoveringIndex] = useState<number | null>(null)
   const [imageDimensions, setImageDimensions] = useState<{ width: number; height: number }>({
@@ -47,11 +49,17 @@ const CanvasAndPalette = ({
   }, [])
 
   const updateSwatch = useCallback((index: number, swatch: TSwatch) => {
-    const swatchRef = swatchRefs.current[index]
-    if (!swatchRef) return
-    swatchRef.style.backgroundColor = swatch.color
-    swatchRef.style.left = `${swatch.percentLocation[0]}%`
-    swatchRef.style.top = `${swatch.percentLocation[1]}%`
+    const draggableSwatchRef = draggableSwatchRefs.current[index]
+    const readonlySwatchRef = readonlySwatchRefs.current[index]
+
+    if (!draggableSwatchRef || !readonlySwatchRef) return
+    draggableSwatchRef.style.backgroundColor = swatch.color
+    draggableSwatchRef.style.left = `${swatch.percentLocation[0]}%`
+    draggableSwatchRef.style.top = `${swatch.percentLocation[1]}%`
+
+    readonlySwatchRef.style.backgroundColor = swatch.color
+    readonlySwatchRef.style.color = getContrastColor(swatch.color)
+    readonlySwatchRef.innerHTML = swatch.color
   }, [])
 
   const handleMove = useCallback(
@@ -91,7 +99,7 @@ const CanvasAndPalette = ({
     if (!container) return
 
     // Check if click is on any palette element
-    const index = swatchRefs.current.findIndex(ref => {
+    const index = draggableSwatchRefs.current.findIndex(ref => {
       if (!ref) return false
       const rect = ref.getBoundingClientRect()
       return (
@@ -110,8 +118,8 @@ const CanvasAndPalette = ({
   const handleEnd = useCallback(() => {
     setDraggingIndex(null)
     updatePalette(
-      swatchRefs.current.map(swatch => ({
-        color: swatch?.style.backgroundColor || '',
+      draggableSwatchRefs.current.map(swatch => ({
+        color: rgbToHex(swatch?.style.backgroundColor || ''),
         percentLocation: [
           parseFloat(swatch?.style.left || '0'),
           parseFloat(swatch?.style.top || '0'),
@@ -145,9 +153,16 @@ const CanvasAndPalette = ({
     }
   }, [photo, setPhotoOnCanvas])
 
-  const setRef = useCallback(
+  const setDraggableSwatchRef = useCallback(
     (index: number) => (el: HTMLDivElement | null) => {
-      swatchRefs.current[index] = el
+      draggableSwatchRefs.current[index] = el
+    },
+    []
+  )
+
+  const setReadonlySwatchRef = useCallback(
+    (index: number) => (el: HTMLDivElement | null) => {
+      readonlySwatchRefs.current[index] = el
     },
     []
   )
@@ -213,7 +228,7 @@ const CanvasAndPalette = ({
           />
           {new Array(6).fill(null).map((_, index) => (
             <DraggableSwatch
-              ref={setRef(index)}
+              ref={setDraggableSwatchRef(index)}
               isHovering={hoveringIndex === index}
               isDragging={draggingIndex === index}
               key={index}
@@ -221,7 +236,27 @@ const CanvasAndPalette = ({
           ))}
         </div>
       </Box>
-      <ReadonlyPalette setHoveringIndex={setHoveringIndex} palette={palette} />
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: 'row',
+          margin: '0 auto',
+          '@media (max-width: 700px)': {
+            width: '300px',
+            flexWrap: 'wrap',
+          },
+        }}
+      >
+        {new Array(6).fill(null).map((_, index) => (
+          <ReadonlySwatch
+            key={index}
+            ref={setReadonlySwatchRef(index)}
+            index={index}
+            handleMouseEnterCallback={setHoveringIndex}
+            handleMouseLeaveCallback={setHoveringIndex}
+          />
+        ))}
+      </Box>
     </>
   )
 }
