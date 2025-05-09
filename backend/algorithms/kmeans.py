@@ -83,4 +83,7 @@ def get_image_colors(
         x = (closest_idx % width) / width * 100
         locations.append([float(x), float(y)])
 
-    return [{"color": color, "percent_location": loc} for color, loc in zip(hex_colors, locations)]
+    return [
+        {"color": color.upper(), "percent_location": loc}
+        for color, loc in zip(hex_colors, locations)
+    ]

@@ -26,7 +26,7 @@ export const createPalette = async ({
   const token = await getToken()
 
   // Extract hex colors from palette
-  const hexColors = palette.map(swatch => swatch.color)
+  const hexColors = palette.map(swatch => swatch.color.toUpperCase())
 
   // Create the request body
   const requestBody = {
