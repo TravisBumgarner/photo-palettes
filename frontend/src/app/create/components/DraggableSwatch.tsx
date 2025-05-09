@@ -1,44 +1,42 @@
-import { Box } from '@mui/material'
-import { useCallback } from 'react'
-import { PALETTE } from '../../../styles/Theme'
-import { TGeneratedPalette } from '../../../types'
-import { getContrastColor } from '../../../utils'
-
-const DraggableSwatch = ({
-  swatch,
-  index,
-  handleSetDraggingIndex,
-  isHovered,
-}: {
-  swatch: TGeneratedPalette[number]
-  index: number
-  handleSetDraggingIndex: (index: number) => void
-  isHovered: boolean
-}) => {
-  const handleMouseDown = useCallback(() => {
-    handleSetDraggingIndex(index)
-  }, [handleSetDraggingIndex, index])
-
+import { motion } from 'framer-motion'
+import { forwardRef } from 'react'
+import { SWATCH_SIZE } from './shared'
+const DraggableSwatch = forwardRef<
+  HTMLDivElement,
+  {
+    isHovering: boolean
+    isDragging: boolean
+  }
+>(({ isHovering, isDragging }, ref) => {
   return (
-    <Box
-      sx={{
+    <motion.div
+      ref={ref}
+      whileHover={{
+        scale: 3,
+      }}
+      whileDrag={{
+        scale: 3,
+      }}
+      initial={{
+        scale: isHovering || isDragging ? 3 : 1,
+      }}
+      animate={{
+        scale: isHovering || isDragging ? 3 : 1,
+      }}
+      style={{
+        // Additional styles set by parent via refs.
         position: 'absolute',
-        left: `${swatch.percentLocation[0]}%`,
-        top: `${swatch.percentLocation[1]}%`,
-        transform: 'translate(-50%, -50%)',
-        width: '15px',
-        height: '15px',
+        width: `${SWATCH_SIZE}px`,
+        cursor: 'none',
+        height: `${SWATCH_SIZE}px`,
         borderRadius: '50%',
-        backgroundColor: swatch.color,
-        border: isHovered
-          ? `2px solid ${PALETTE.primary[500]}`
-          : `2px solid ${getContrastColor(swatch.color)}`,
-        cursor: 'pointer',
+        border: `2px solid black`,
         boxShadow: '0 0 10px rgba(0,0,0,0.3)',
       }}
-      onMouseDown={handleMouseDown}
     />
   )
-}
+})
+
+DraggableSwatch.displayName = 'DraggableSwatch'
 
 export default DraggableSwatch

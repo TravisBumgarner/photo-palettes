@@ -8,13 +8,14 @@ import { createPalette } from '../../api/palettes/createPalette'
 import { generatePalette } from '../../api/palettes/generatePalette'
 import { logger } from '../../services/logging'
 import useGlobalStore from '../../store'
+import { SPACING } from '../../styles/Theme'
 import { TGeneratedPalette } from '../../types'
 import Loading from '../sharedComponents/Loading'
 import Message from '../sharedComponents/Message'
 import { ModalID } from '../sharedComponents/Modal/Modal.consts'
 import CanvasAndPalette from './components/CanvasAndPalette'
 import Dropzone from './components/Dropzone'
-import { WIDTH } from './consts'
+import { sharedCSS } from './components/shared'
 
 enum UploadStatus {
   INITIAL = 'INITIAL',
@@ -27,12 +28,12 @@ enum UploadStatus {
 
 const Create = () => {
   const [uploadStatus, setUploadStatus] = useState<UploadStatus>(UploadStatus.INITIAL)
-  const [palette, setPalette] = useState<TGeneratedPalette>([])
   const [photo, setPhoto] = useState<File | null>(null)
   const router = useRouter()
   const [paletteId, setPaletteId] = useState<string | null>(null)
   const setActiveModal = useGlobalStore(state => state.setActiveModal)
   const [name, setName] = useState('')
+  const [palette, setPalette] = useState<TGeneratedPalette | null>(null)
 
   const generatePaletteMutation = useMutation({
     mutationFn: generatePalette,
@@ -59,7 +60,7 @@ const Create = () => {
         setUploadStatus(UploadStatus.ERROR)
       }
     },
-    [generatePaletteMutation]
+    [generatePaletteMutation, setPalette, setPaletteId]
   )
 
   const handleNameChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
@@ -67,11 +68,11 @@ const Create = () => {
   }, [])
 
   const handleClearPalette = useCallback(() => {
-    setPalette([])
+    setPalette(null)
     setUploadStatus(UploadStatus.INITIAL)
     setPhoto(null)
     setName('')
-  }, [])
+  }, [setPalette])
 
   const createPaletteMutation = useMutation({
     mutationFn: createPalette,
@@ -85,7 +86,7 @@ const Create = () => {
   })
 
   const handleSavePalette = useCallback(async () => {
-    if (!paletteId) return
+    if (!paletteId || !palette) return
     setUploadStatus(UploadStatus.SUBMITTING)
 
     const response = await createPaletteMutation.mutateAsync({
@@ -107,78 +108,68 @@ const Create = () => {
     } else {
       setUploadStatus(UploadStatus.ERROR)
     }
-  }, [palette, paletteId, createPaletteMutation, setActiveModal, router, name])
-
-  const handlePaletteChange = useCallback((palette: TGeneratedPalette) => {
-    setPalette(palette)
-  }, [])
+  }, [paletteId, createPaletteMutation, setActiveModal, router, name, palette])
 
   const handleTryAgain = useCallback(() => {
     setUploadStatus(UploadStatus.INITIAL)
-    setPalette([])
+    setPalette(null)
     setPhoto(null)
-  }, [])
-
+  }, [setPalette, setPhoto])
   return (
-    <div>
-      <Box
-        sx={{
-          margin: '0 auto',
-          minHeight: '70vh',
-          width: WIDTH,
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          flexDirection: 'column',
-        }}
-      >
-        {uploadStatus === UploadStatus.INITIAL && <Dropzone onDrop={onDrop} />}
-        {uploadStatus === UploadStatus.UPLOADING && <Loading />}
-        {uploadStatus === UploadStatus.ERROR && (
-          <Message
-            message="Error generating palette"
-            color="error"
-            callback={handleTryAgain}
-            callbackText="Try again"
+    <Box>
+      {uploadStatus === UploadStatus.INITIAL && <Dropzone onDrop={onDrop} />}
+      {(uploadStatus === UploadStatus.UPLOADING || uploadStatus === UploadStatus.SUBMITTED) && (
+        <Box
+          sx={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            ...sharedCSS,
+          }}
+        >
+          <Loading />
+        </Box>
+      )}
+      {uploadStatus === UploadStatus.ERROR && (
+        <Message
+          message="Error generating palette"
+          color="error"
+          callback={handleTryAgain}
+          callbackText="Try again"
+        />
+      )}
+      {(uploadStatus === UploadStatus.UPLOADED || uploadStatus === UploadStatus.SUBMITTING) && (
+        <Box sx={{ display: 'flex', flexDirection: 'column', gap: SPACING.SMALL.PX }}>
+          <CanvasAndPalette photo={photo} palette={palette} updatePalette={setPalette} />
+          <TextField
+            variant="outlined"
+            fullWidth
+            label="Title"
+            value={name}
+            onChange={handleNameChange}
           />
-        )}
-        {(uploadStatus === UploadStatus.UPLOADED || uploadStatus === UploadStatus.SUBMITTING) && (
-          <Box sx={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-            <CanvasAndPalette
-              palette={palette}
-              handlePaletteChange={handlePaletteChange}
-              photo={photo}
-            />
-            <TextField
-              variant="outlined"
-              fullWidth
-              label="Title"
-              value={name}
-              onChange={handleNameChange}
-            />
-            <Box
-              sx={{
-                display: 'flex',
-                flexDirection: 'row',
-                gap: '10px',
-                justifyContent: 'flex-end',
-              }}
+          <Box
+            sx={{
+              display: 'flex',
+              flexDirection: 'row',
+              gap: '10px',
+              justifyContent: 'flex-end',
+            }}
+          >
+            <Button variant="outlined" onClick={handleClearPalette}>
+              Clear Palette
+            </Button>
+            <Button
+              disabled={!name || uploadStatus === UploadStatus.SUBMITTING}
+              variant="contained"
+              onClick={handleSavePalette}
             >
-              <Button variant="outlined" onClick={handleClearPalette}>
-                Clear Palette
-              </Button>
-              <Button
-                disabled={!name || uploadStatus === UploadStatus.SUBMITTING}
-                variant="contained"
-                onClick={handleSavePalette}
-              >
-                Save Palette
-              </Button>
-            </Box>
+              Save Palette
+            </Button>
           </Box>
-        )}
-      </Box>
-    </div>
+        </Box>
+      )}
+    </Box>
   )
 }
 

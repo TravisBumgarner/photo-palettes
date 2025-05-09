@@ -55,25 +55,35 @@ const PalettePage = ({ palette }: { palette: TPalette }) => {
             alt="Palette"
           />
         </Box>
-        <div style={{ display: 'flex', flexDirection: 'row' }}>
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'row',
+            flexWrap: 'wrap',
+            margin: '0 auto',
+            width: '600px',
+            '@media (max-width: 700px)': { width: '300px' },
+          }}
+        >
           {palette.colors.map((color: { id: string; hex: string }) => (
             <Box
               key={color.id}
               style={{
                 backgroundColor: color.hex,
-                height: '75px',
+                height: '50px',
+                width: '100px',
                 display: 'flex',
                 justifyContent: 'center',
+                fontSize: '20px',
                 alignItems: 'center',
                 flexGrow: 1,
+                color: getContrastColor(color.hex),
               }}
             >
-              <Typography variant="body1" color={getContrastColor(color.hex)}>
-                {color.hex}
-              </Typography>
+              {color.hex}
             </Box>
           ))}
-        </div>
+        </Box>
         <Box sx={{ display: 'flex', flexDirection: 'row', gap: '10px', alignItems: 'baseline' }}>
           <Typography variant="h1" sx={{ fontSize: FONT_SIZES.HUGE.PX }}>
             {palette.name}

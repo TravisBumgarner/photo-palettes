@@ -13,9 +13,8 @@ import ModerationPanel from '../sharedComponents/ModerationPanel'
 import PaletteThumbnail from '../sharedComponents/PaletteThumbnail'
 
 const tabs = [
-  { label: 'Awaiting Moderation', status: EModerationStatus.AWAITING_MODERATION },
+  { label: 'Pending', status: EModerationStatus.AWAITING_MODERATION },
   { label: 'Approved', status: EModerationStatus.APPROVED },
-  { label: 'Awaiting Submission', status: EModerationStatus.AWAITING_SUBMISSION },
   { label: 'Rejected', status: EModerationStatus.REJECTED },
 ]
 
@@ -63,10 +62,8 @@ const Moderation = () => {
 
   return (
     <Box sx={{ p: 3 }}>
-      <Typography variant="h4" sx={{ mb: 3 }}>
-        Moderation
-      </Typography>
-      <Tabs value={tab} onChange={handleTabChange} sx={{ mb: 3 }}>
+      <Typography variant="h4">Moderation</Typography>
+      <Tabs value={tab} onChange={handleTabChange}>
         {tabs.map((t, i) => (
           <Tab key={i} label={t.label} />
         ))}

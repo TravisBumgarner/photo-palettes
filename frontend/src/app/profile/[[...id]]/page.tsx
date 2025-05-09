@@ -17,8 +17,7 @@ import PaletteThumbnail from '../../sharedComponents/PaletteThumbnail'
 
 const TABS = [
   { label: 'Approved', status: EModerationStatus.APPROVED },
-  { label: 'Awaiting Moderation', status: EModerationStatus.AWAITING_MODERATION },
-  { label: 'Awaiting Submission', status: EModerationStatus.AWAITING_SUBMISSION },
+  { label: 'Pending', status: EModerationStatus.AWAITING_MODERATION },
   { label: 'Rejected', status: EModerationStatus.REJECTED },
 ]
 

@@ -1,10 +1,11 @@
 'use client'
 
-import { Box } from '@mui/material'
+import { Box, useMediaQuery } from '@mui/material'
 import { useEffect } from 'react'
 import { getMe } from '../../api/getMe'
 import { createClient } from '../../services/supabase/client'
 import useGlobalStore from '../../store'
+import { PALETTE } from '../../styles/Theme'
 import Loading from '../sharedComponents/Loading'
 
 export function LoadUserIntoStore() {
@@ -37,6 +38,8 @@ export function LoadUserIntoStore() {
     loadUser()
   }, [setAuthId, supabase, setIsAppAuthenticating, isAppAuthenticating, setAppUserDetails])
 
+  const isDark = useMediaQuery('(prefers-color-scheme: dark)')
+
   return isAppAuthenticating ? (
     <Box
       sx={{
@@ -45,8 +48,8 @@ export function LoadUserIntoStore() {
         top: 0,
         bottom: 0,
         position: 'fixed',
-        backgroundColor: 'white',
         zIndex: 1000,
+        backgroundColor: isDark ? PALETTE.grayscale[900] : PALETTE.grayscale[100],
       }}
     >
       <Loading />

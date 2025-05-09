@@ -1,77 +1,45 @@
 'use client'
 
+// Some Notes on this File.
+// - Preact Signals don't seem to work with NextJS.
+// - Storing the palette in Zustand causes mobile to not work on drag.
+// - Now we use lots of refs to control all the colors.
+
+import { Box, rgbToHex } from '@mui/material'
+import { useDrag } from '@use-gesture/react'
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { TGeneratedPalette } from '../../../types'
+import { SPACING } from '../../../styles/Theme'
+import { TGeneratedPalette, TSwatch } from '../../../types'
 import { getContrastColor } from '../../../utils'
-import { HEIGHT, WIDTH } from '../consts'
 import DraggableSwatch from './DraggableSwatch'
-
-const ReadonlySwatch = ({
-  swatch,
-  index,
-  handleMouseEnterCallback,
-  handleMouseLeaveCallback,
-}: {
-  swatch: TGeneratedPalette[number]
-  index: number
-  handleMouseEnterCallback: (index: number) => void
-  handleMouseLeaveCallback: () => void
-}) => {
-  const handleMouseEnter = useCallback(() => {
-    handleMouseEnterCallback(index)
-  }, [index, handleMouseEnterCallback])
-
-  const handleMouseLeave = useCallback(() => {
-    handleMouseLeaveCallback()
-  }, [handleMouseLeaveCallback])
-
-  return (
-    <div
-      key={swatch.color}
-      style={{
-        flexGrow: 1,
-        height: '50px',
-        backgroundColor: swatch.color,
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        fontSize: '12px',
-      }}
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
-    >
-      <span style={{ color: getContrastColor(swatch.color), fontSize: '20px' }}>
-        {swatch.color}
-      </span>
-    </div>
-  )
-}
+import ReadonlySwatch from './ReadonlySwatch'
+import { sharedCSS, SWATCH_SIZE } from './shared'
 
 const CanvasAndPalette = ({
-  palette,
-  handlePaletteChange,
   photo,
+  palette,
+  updatePalette,
 }: {
-  palette: TGeneratedPalette
-  handlePaletteChange: (palette: TGeneratedPalette) => void
   photo: File | null
+  palette: TGeneratedPalette | null
+  updatePalette: (palette: TGeneratedPalette) => void
 }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const containerRef = useRef<HTMLDivElement>(null)
+  const draggableSwatchRefs = useRef<(HTMLDivElement | null)[]>([])
+  const readonlySwatchRefs = useRef<(HTMLDivElement | null)[]>([])
   const [draggingIndex, setDraggingIndex] = useState<number | null>(null)
   const [hoveringIndex, setHoveringIndex] = useState<number | null>(null)
-  const [imageDimensions, setImageDimensions] = useState<{ width: number; height: number } | null>(
-    null
-  )
-  const handleSetDraggingIndex = useCallback((index: number) => {
-    setDraggingIndex(index)
-  }, [])
+  const [imageDimensions, setImageDimensions] = useState<{ width: number; height: number }>({
+    width: 1,
+    height: 1,
+  })
 
   const sampleColorAtPosition = useCallback((x: number, y: number) => {
     const canvas = canvasRef.current
     if (!canvas) return null
 
-    const ctx = canvas.getContext('2d')
+    const ctx = canvas.getContext('2d', { willReadFrequently: true })
     if (!ctx) return null
 
     const rect = canvas.getBoundingClientRect()
@@ -86,8 +54,22 @@ const CanvasAndPalette = ({
     return `#${pixel[0].toString(16).padStart(2, '0')}${pixel[1].toString(16).padStart(2, '0')}${pixel[2].toString(16).padStart(2, '0')}`
   }, [])
 
-  const handleCanvasMouseMove = useCallback(
-    (e: React.MouseEvent<HTMLDivElement>) => {
+  const updateSwatch = useCallback((index: number, swatch: TSwatch) => {
+    const draggableSwatchRef = draggableSwatchRefs.current[index]
+    const readonlySwatchRef = readonlySwatchRefs.current[index]
+
+    if (!draggableSwatchRef || !readonlySwatchRef) return
+    draggableSwatchRef.style.backgroundColor = swatch.color.toUpperCase()
+    draggableSwatchRef.style.left = `${swatch.percentLocation[0]}%`
+    draggableSwatchRef.style.top = `${swatch.percentLocation[1]}%`
+
+    readonlySwatchRef.style.backgroundColor = swatch.color.toUpperCase()
+    readonlySwatchRef.style.color = getContrastColor(swatch.color)
+    readonlySwatchRef.innerHTML = swatch.color.toUpperCase()
+  }, [])
+
+  const handleMove = useCallback(
+    (clientX: number, clientY: number) => {
       if (draggingIndex === null) return
 
       const container = containerRef.current
@@ -95,53 +77,69 @@ const CanvasAndPalette = ({
 
       const rect = container.getBoundingClientRect()
 
-      // Clamp coordinates to container bounds
-      const x = Math.max(0, Math.min(100, ((e.clientX - rect.left) / rect.width) * 100))
-      const y = Math.max(0, Math.min(100, ((e.clientY - rect.top) / rect.height) * 100))
-
-      const newColor = sampleColorAtPosition(
-        Math.max(0, Math.min(rect.width, e.clientX - rect.left)),
-        Math.max(0, Math.min(rect.height, e.clientY - rect.top))
+      // The math below seems correct, I have no idea why.
+      // Clamp absolute coordinates to container bounds
+      const x = Math.max(
+        0,
+        Math.min(rect.width - SWATCH_SIZE, clientX - rect.left - SWATCH_SIZE / 2)
       )
+      const y = Math.max(
+        0,
+        Math.min(rect.height - SWATCH_SIZE, clientY - rect.top - SWATCH_SIZE / 2)
+      )
+
+      const newColor = sampleColorAtPosition(x + SWATCH_SIZE / 2, y + SWATCH_SIZE / 2)
       if (!newColor) return
 
-      const newPalette = [...palette]
-      newPalette[draggingIndex] = {
+      updateSwatch(draggingIndex, {
         color: newColor,
-        percentLocation: [x, y],
-      }
-      handlePaletteChange(newPalette)
-    },
-    [draggingIndex, palette, sampleColorAtPosition, handlePaletteChange]
-  )
-
-  const handleCanvasMouseDown = useCallback(
-    (e: React.MouseEvent<HTMLDivElement>) => {
-      const container = containerRef.current
-      if (!container) return
-
-      const rect = container.getBoundingClientRect()
-      const x = ((e.clientX - rect.left) / rect.width) * 100
-      const y = ((e.clientY - rect.top) / rect.height) * 100
-
-      // Check if click is near any circle
-      const index = palette.findIndex(swatch => {
-        const circleX = swatch.percentLocation[0]
-        const circleY = swatch.percentLocation[1]
-        const distance = Math.sqrt(Math.pow(x - circleX, 2) + Math.pow(y - circleY, 2))
-        return distance < 5 // 5% threshold for clicking
+        percentLocation: [(x / rect.width) * 100, (y / rect.height) * 100],
       })
-
-      if (index !== -1) {
-        setDraggingIndex(index)
-      }
     },
-    [palette]
+    [draggingIndex, sampleColorAtPosition, updateSwatch]
   )
 
-  const handleCanvasMouseUp = useCallback(() => {
-    setDraggingIndex(null)
+  useEffect(() => {
+    if (palette) {
+      palette.forEach((swatch, index) => {
+        updateSwatch(index, swatch)
+      })
+    }
+  }, [palette, updateSwatch])
+
+  const handleStart = useCallback((clientX: number, clientY: number) => {
+    const container = containerRef.current
+    if (!container) return
+
+    // Check if click is on any palette element
+    const index = draggableSwatchRefs.current.findIndex(ref => {
+      if (!ref) return false
+      const rect = ref.getBoundingClientRect()
+      return (
+        clientX >= rect.left &&
+        clientX <= rect.right &&
+        clientY >= rect.top &&
+        clientY <= rect.bottom
+      )
+    })
+
+    if (index !== -1) {
+      setDraggingIndex(index)
+    }
   }, [])
+
+  const handleEnd = useCallback(() => {
+    setDraggingIndex(null)
+    updatePalette(
+      draggableSwatchRefs.current.map(swatch => ({
+        color: rgbToHex(swatch?.style.backgroundColor || ''),
+        percentLocation: [
+          parseFloat(swatch?.style.left || '0'),
+          parseFloat(swatch?.style.top || '0'),
+        ],
+      }))
+    )
+  }, [updatePalette])
 
   const setPhotoOnCanvas = useCallback((photo: File) => {
     const image = new Image()
@@ -154,12 +152,10 @@ const CanvasAndPalette = ({
       canvas.height = image.height
       setImageDimensions({ width: image.width, height: image.height })
 
-      const ctx = canvas.getContext('2d')
+      const ctx = canvas.getContext('2d', { willReadFrequently: true })
       if (!ctx) return
 
       ctx.drawImage(image, 0, 0, image.width, image.height)
-      // setImageData(canvas.toDataURL())
-
       URL.revokeObjectURL(image.src)
     }
   }, [])
@@ -170,63 +166,105 @@ const CanvasAndPalette = ({
     }
   }, [photo, setPhotoOnCanvas])
 
-  const handleMouseEnter = useCallback((index: number) => {
-    setHoveringIndex(index)
-  }, [])
+  const setDraggableSwatchRef = useCallback(
+    (index: number) => (el: HTMLDivElement | null) => {
+      draggableSwatchRefs.current[index] = el
+    },
+    []
+  )
 
-  const handleMouseLeave = useCallback(() => {
-    setHoveringIndex(null)
-  }, [])
+  const setReadonlySwatchRef = useCallback(
+    (index: number) => (el: HTMLDivElement | null) => {
+      readonlySwatchRefs.current[index] = el
+    },
+    []
+  )
+
+  const bind = useDrag(
+    ({ active, first, last, xy: [x, y] }) => {
+      if (first) {
+        handleStart(x, y)
+      }
+      if (active) {
+        handleMove(x, y)
+      }
+      if (last) {
+        handleEnd()
+      }
+    },
+    {
+      filterTaps: true,
+      preventScroll: true,
+      pointer: { touch: true },
+    }
+  )
 
   return (
     <>
-      <div
-        ref={containerRef}
-        style={{
-          width: '100%',
-          maxWidth: `${WIDTH}px`,
-          maxHeight: `${HEIGHT}px`,
-          position: 'relative',
-          aspectRatio: imageDimensions
-            ? `${imageDimensions.width} / ${imageDimensions.height}`
-            : '1',
+      <Box
+        sx={{
+          ...sharedCSS,
+          border: '1px solid',
+          borderColor: 'divider',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          padding: SPACING.SMALL.PX,
+          touchAction: 'none',
         }}
-        onMouseDown={handleCanvasMouseDown}
-        onMouseMove={handleCanvasMouseMove}
-        onMouseUp={handleCanvasMouseUp}
-        onMouseLeave={handleCanvasMouseUp}
       >
-        <canvas
+        <div
+          ref={containerRef}
+          {...bind()}
           style={{
-            width: '100%',
-            height: '100%',
-            display: 'block',
+            touchAction: 'none',
+            position: 'relative',
+            maxWidth: '100%',
+            maxHeight: '100%',
+            aspectRatio: imageDimensions.width / imageDimensions.height,
           }}
-          ref={canvasRef}
-        />
-        {palette.map((swatch, index) => (
-          <DraggableSwatch
-            isHovered={hoveringIndex === index}
-            key={`${swatch.color}-${index}`}
-            swatch={swatch}
-            index={index}
-            handleSetDraggingIndex={handleSetDraggingIndex}
+        >
+          <canvas
+            style={{
+              touchAction: 'none',
+              display: 'block',
+              maxWidth: '100%',
+              maxHeight: '100%',
+              aspectRatio: imageDimensions.width / imageDimensions.height,
+            }}
+            ref={canvasRef}
           />
-        ))}
-      </div>
-      {palette.length > 0 && (
-        <div style={{ display: 'flex', flexDirection: 'row' }}>
-          {palette.map((swatch, index) => (
-            <ReadonlySwatch
-              key={`${swatch.color}-${index}`}
-              swatch={swatch}
-              index={index}
-              handleMouseEnterCallback={handleMouseEnter}
-              handleMouseLeaveCallback={handleMouseLeave}
+          {new Array(6).fill(null).map((_, index) => (
+            <DraggableSwatch
+              ref={setDraggableSwatchRef(index)}
+              isHovering={hoveringIndex === index}
+              isDragging={draggingIndex === index}
+              key={index}
             />
           ))}
         </div>
-      )}
+      </Box>
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: 'row',
+          margin: '0 auto',
+          '@media (max-width: 700px)': {
+            width: '300px',
+            flexWrap: 'wrap',
+          },
+        }}
+      >
+        {new Array(6).fill(null).map((_, index) => (
+          <ReadonlySwatch
+            key={index}
+            ref={setReadonlySwatchRef(index)}
+            index={index}
+            handleMouseEnterCallback={setHoveringIndex}
+            handleMouseLeaveCallback={setHoveringIndex}
+          />
+        ))}
+      </Box>
     </>
   )
 }
