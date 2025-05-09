@@ -77,6 +77,7 @@ const CanvasAndPalette = ({
 
       const rect = container.getBoundingClientRect()
 
+      // The math below seems correct, I have no idea why.
       // Clamp absolute coordinates to container bounds
       const x = Math.max(
         0,
@@ -87,7 +88,7 @@ const CanvasAndPalette = ({
         Math.min(rect.height - SWATCH_SIZE, clientY - rect.top - SWATCH_SIZE / 2)
       )
 
-      const newColor = sampleColorAtPosition(x, y)
+      const newColor = sampleColorAtPosition(x + SWATCH_SIZE / 2, y + SWATCH_SIZE / 2)
       if (!newColor) return
 
       updateSwatch(draggingIndex, {

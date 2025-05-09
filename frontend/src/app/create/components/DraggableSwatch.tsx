@@ -32,7 +32,6 @@ const DraggableSwatch = forwardRef<
       style={{
         // Additional styles set by parent via refs.
         position: 'absolute',
-        transform: 'translate(-50%, -50%)',
         width: `${SWATCH_SIZE}px`,
         cursor: 'none',
         height: `${SWATCH_SIZE}px`,
