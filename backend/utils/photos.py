@@ -11,7 +11,7 @@ config = get_config()
 
 DEVELOPMENT_UPLOADS_DIR = "uploads"
 DEVELOPMENT_UPLOADS_PREFIX = f"/{DEVELOPMENT_UPLOADS_DIR}"
-PRODUCTION_UPLOADS_PREFIX = "cloudinary:"
+PRODUCTION_UPLOADS_PREFIX = "cloudinary:/"
 
 
 def get_development_uploads_dir():
@@ -21,7 +21,7 @@ def get_development_uploads_dir():
 def save_photo(photo: bytes, basename: str, extension: str) -> str:
     if config.is_production:
         result = save_image_to_cloudinary(photo, basename)
-        return f"{PRODUCTION_UPLOADS_PREFIX}/{result}"
+        return f"{PRODUCTION_UPLOADS_PREFIX}{result}"
     else:
         filename = f"{basename}.{extension}"
         uploads_dir = get_development_uploads_dir()
