@@ -4,7 +4,16 @@ import uuid
 import pytest
 import requests
 
-from .utils import get_moderator_auth_headers, get_user_auth_headers
+from database.queries.palettes import create_palette, delete_palette_by_id
+
+from .utils import (
+    generate_color,
+    generate_palette,
+    get_moderator_app_user_id,
+    get_moderator_auth_headers,
+    get_user_app_user_id,
+    get_user_auth_headers,
+)
 
 BASE_URL = "http://localhost:8000"
 
@@ -59,7 +68,7 @@ def test_generate_palette_file_too_large():
             files = {"photo": ("test.jpg", f, "image/jpeg")}
             extension = "jpg"
             response = requests.post(
-                f"{BASE_URL}/generate-palette",
+                f"{BASE_URL}/palettes/generate",
                 files=files,
                 headers=get_user_auth_headers(),
                 data={"extension": extension},
@@ -93,7 +102,7 @@ def test_moderate_palette_unauthorized():
         json={"palette_id": palette_id, "status": 2},
     )
     # Status code 400 means the user is not a moderator. The test will fail for other reasons because palette doesn't exist.
-    assert response.json()["success"] == False
+    assert not response.json()["success"]
     assert response.json()["error"] == "User is not a moderator"
 
 
@@ -124,5 +133,57 @@ def test_feature_requests_unauthorized():
         headers=get_user_auth_headers(),
         json={"title": "Test Feature Request", "description": "Test Description"},
     )
-    assert response.json()["success"] == False
+    assert not response.json()["success"]
     assert response.json()["error"] == "User is not a moderator"
+
+
+def test_delete_palette_as_resource_owner():
+    color = generate_color()
+    app_user_id = get_user_app_user_id()
+    palette = generate_palette(app_user_id)
+    palette.colors.append(color)
+    create_palette(
+        palette=palette,
+    )
+
+    delete_response = requests.delete(
+        f"{BASE_URL}/palettes/id/{palette.id}",
+        headers=get_user_auth_headers(),
+    )
+    assert delete_response.status_code == 200
+    assert delete_response.json()["success"]
+
+
+def test_delete_palette_as_not_resource_owner():
+    color = generate_color()
+    app_user_id = get_moderator_app_user_id()
+    palette = generate_palette(app_user_id)
+    palette.colors.append(color)
+    create_palette(
+        palette=palette,
+    )
+
+    delete_response = requests.delete(
+        f"{BASE_URL}/palettes/id/{palette.id}",
+        headers=get_user_auth_headers(),
+    )
+    assert delete_response.status_code == 200
+    assert not delete_response.json()["success"]
+    delete_palette_by_id(palette.id)
+
+
+def test_delete_palette_as_moderator():
+    color = generate_color()
+    app_user_id = get_user_app_user_id()
+    palette = generate_palette(app_user_id)
+    palette.colors.append(color)
+    create_palette(
+        palette=palette,
+    )
+
+    delete_response = requests.delete(
+        f"{BASE_URL}/palettes/id/{palette.id}",
+        headers=get_user_auth_headers(),
+    )
+    assert delete_response.status_code == 200
+    assert delete_response.json()["success"]

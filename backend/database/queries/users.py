@@ -17,6 +17,12 @@ def get_app_user_by_auth_id(auth_id: uuid.UUID) -> AppUser | None:
     return session.query(AppUser).filter(AppUser.auth_id == auth_id).first()
 
 
+def get_app_user_by_email(email: str) -> AppUser | None:
+    session = SessionLocal()
+
+    return session.query(AppUser).filter(AppUser.email == email).first()
+
+
 def insert_app_user(auth_id: uuid.UUID, email: str) -> AppUser:
     session = SessionLocal()
     id = uuid.uuid4()
