@@ -11,6 +11,17 @@ const config = {
     NEXT_PUBLIC_SUPABASE_URL: process.env.NEXT_PUBLIC_SUPABASE_URL,
     NEXT_PUBLIC_SUPABASE_ANON_KEY: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
   },
+  images: {
+    remotePatterns: [
+      new URL('https://res.cloudinary.com/hqjbxtyku/image/upload/**'),
+      {
+        protocol: 'http',
+        hostname: 'backend',
+        port: '8000',
+        pathname: '/uploads/**',
+      },
+    ],
+  },
   turbopack: {
     resolveExtensions: ['.ts', '.tsx', '.js', '.jsx', '.json', '.css', '.scss', '.md'],
   },

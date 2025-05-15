@@ -35,4 +35,4 @@ def get_photo_path(photo_details: str) -> str:
         public_id = photo_details.replace(PRODUCTION_UPLOADS_PREFIX, "")
         return get_image_from_cloudinary(public_id)
 
-    return f"http://localhost:8000{photo_details}"
+    return f"http://backend:8000{photo_details}"

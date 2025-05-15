@@ -20,7 +20,7 @@ public_routes = [
     (re.compile(r"^/palettes/app_user_id/\w+$"), "GET"),
     (re.compile(r"^/palettes$"), "GET"),
     (re.compile(r"^/palettes/id/.*$"), "GET"),
-    (re.compile(r"^/uploads/.*$"), "GET"),
+    (re.compile(r"^/uploads/.*\.(jpg|jpeg|png|webp)$"), "GET"),
 ]
 
 if not config.is_production:
