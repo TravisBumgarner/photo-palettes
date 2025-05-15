@@ -3,18 +3,21 @@
 import { Box, Link, Typography } from '@mui/material'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
-import { useCallback } from 'react'
+import { useCallback, useMemo } from 'react'
 import { FONT_SIZES, SPACING } from '../../../styles/Theme'
 import { EModerationStatus, TPalette } from '../../../types'
 import { getContrastColor } from '../../../utils'
 import Message from '../../sharedComponents/Message'
 import ModerationPanel from '../../sharedComponents/ModerationPanel'
+import { blurHashToDataURL } from '../../../utils/blurhashToDataURL'
 
 const PalettePage = ({ palette }: { palette: TPalette }) => {
   const router = useRouter()
   const refetch = useCallback(() => {
     router.refresh()
   }, [router])
+
+  const blurDataURL = useMemo(() => blurHashToDataURL(palette.blurhash), [palette.blurhash])
 
   return (
     <Box sx={{ display: 'flex', justifyContent: 'center', flexDirection: 'column' }}>
@@ -52,9 +55,9 @@ const PalettePage = ({ palette }: { palette: TPalette }) => {
               height: '100%',
               padding: SPACING.MEDIUM.PX,
             }}
-            blurDataURL={palette.blurhash}
-            width={palette.aspectRatio * 1200}
-            height={1200}
+            blurDataURL={blurDataURL}
+            width={palette.aspectRatio * 1000}
+            height={1000}
             src={palette.photoUrl}
             alt="Palette"
           />

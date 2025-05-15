@@ -4,8 +4,12 @@ import { BORDER_RADIUS, SPACING } from '../../styles/Theme'
 import { TPalette } from '../../types'
 import { getUserColorFromUUID } from '../../utils'
 import Link from './Link'
+import { blurHashToDataURL } from '../../utils/blurhashToDataURL'
+import { useMemo } from 'react'
 
 const PaletteThumbnail = ({ palette }: { palette: TPalette }) => {
+  const blurDataURL = useMemo(() => blurHashToDataURL(palette.blurhash), [palette.blurhash])
+
   return (
     <Link href={`/palette/${palette.id}`} hideUnderline>
       <Box
@@ -22,7 +26,7 @@ const PaletteThumbnail = ({ palette }: { palette: TPalette }) => {
           placeholder="blur"
           width={1200}
           height={1200}
-          blurDataURL={palette.blurhash}
+          blurDataURL={blurDataURL}
           src={palette.photoUrl}
           alt={palette.name}
           style={{
