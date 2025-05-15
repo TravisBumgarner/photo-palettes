@@ -69,17 +69,15 @@ class Palette(Base):
     name: Mapped[str] = mapped_column(String)
     photo_details: Mapped[str] = mapped_column(String)
     og_photo_details: Mapped[str] = mapped_column(String)
-    colors: Mapped[List["PaletteColor"]] = relationship("PaletteColor", back_populates="palette")
+    colors: Mapped[List["PaletteColor"]] = relationship(
+        "PaletteColor", back_populates="palette", cascade="all, delete-orphan"
+    )
     user: Mapped["AppUser"] = relationship("AppUser", back_populates="palettes")
     moderation_status: Mapped[ModerationStatus] = mapped_column(
         Integer, default=ModerationStatus.AWAITING_SUBMISSION
     )
     blurhash: Mapped[str] = mapped_column(String)
     aspect_ratio: Mapped[float] = mapped_column(Float)
-
-    # @property
-    # def photo_url(self) -> str:
-    #     return get_photo_path(self.photo_details)
 
 
 class FeatureRequestStatus(IntEnum):

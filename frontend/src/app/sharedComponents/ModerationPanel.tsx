@@ -6,7 +6,9 @@ import { EModerationStatus, EPermissionLevel } from '../../types'
 
 import { Box, Button } from '@mui/material'
 import useGlobalStore from '../../store'
-import { BORDER_RADIUS, SPACING } from '../../styles/Theme'
+import { BORDER_RADIUS, SPACING } from '../../styles/styleConsts'
+import { deletePalette } from '../../api/deletePalette'
+import { ModalID } from './Modal/Modal.consts'
 const ModerationPanel = ({
   refetch,
   moderationStatus,
@@ -18,6 +20,7 @@ const ModerationPanel = ({
 }) => {
   const [isFetching, setIsFetching] = useState(false)
   const appUserDetails = useGlobalStore(state => state.appUserDetails)
+  const setActiveModal = useGlobalStore(state => state.setActiveModal)
 
   const handleApprove = useCallback(async () => {
     setIsFetching(true)
@@ -41,11 +44,21 @@ const ModerationPanel = ({
     }
   }, [paletteId, refetch])
 
-  const handleDelete = useCallback(() => {
-    // setIsFetching(true)
-    // deletePalette(paletteId)
-    // refetch()
-  }, [])
+  const handleDeleteCallback = useCallback(async () => {
+    setIsFetching(true)
+    await deletePalette(paletteId)
+    refetch()
+  }, [paletteId, refetch, setIsFetching])
+
+  const handleDelete = useCallback(async () => {
+    setActiveModal({
+      id: ModalID.ConfirmationModal,
+      title: 'Delete Palette',
+      body: 'Are you sure you want to delete this palette?',
+      confirmationCallback: handleDeleteCallback,
+      showCancel: true,
+    })
+  }, [handleDeleteCallback, setActiveModal])
 
   if (!appUserDetails || appUserDetails.permissionLevel < EPermissionLevel.MODERATOR) {
     return null
@@ -82,10 +95,7 @@ const ModerationPanel = ({
       >
         Reject
       </Button>
-      <Button
-        disabled={isFetching || moderationStatus === EModerationStatus.AWAITING_MODERATION}
-        onClick={handleDelete}
-      >
+      <Button disabled={isFetching} onClick={handleDelete}>
         Delete
       </Button>
     </Box>

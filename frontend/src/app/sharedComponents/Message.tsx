@@ -1,5 +1,5 @@
 import { Box, Button, Typography } from '@mui/material'
-import { BORDER_RADIUS, SPACING } from '../../styles/Theme'
+import { BORDER_RADIUS, SPACING } from '../../styles/styleConsts'
 
 const Message = ({
   message,

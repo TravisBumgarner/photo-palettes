@@ -41,7 +41,7 @@ def update_palette_moderation_status(palette_id: uuid.UUID, moderation_status: M
     session = SessionLocal()
     palette = session.query(Palette).filter(Palette.id == palette_id).first()
     if not palette:
-        raise ValueError("Palette not found")
+        return None
     palette.moderation_status = moderation_status
     session.commit()
     session.refresh(palette)
@@ -60,7 +60,7 @@ def update_palette(palette_id: uuid.UUID, **kwargs):
     session = SessionLocal()
     palette = session.query(Palette).filter(Palette.id == palette_id).first()
     if not palette:
-        raise ValueError("Palette not found")
+        return None
 
     # Handle colors separately if present
     if "colors" in kwargs:
@@ -90,3 +90,13 @@ def get_palettes_by_app_user_id(
         .filter(Palette.moderation_status == status)
         .all()
     )
+
+
+def delete_palette_by_id(palette_id: uuid.UUID) -> bool:
+    session = SessionLocal()
+    palette = session.query(Palette).filter(Palette.id == palette_id).first()
+    if not palette:
+        return False
+    session.delete(palette)
+    session.commit()
+    return True

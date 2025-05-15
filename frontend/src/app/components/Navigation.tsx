@@ -6,7 +6,7 @@ import { Box, IconButton, Menu, MenuItem, Typography } from '@mui/material'
 import { useCallback, useMemo, useState } from 'react'
 import { ROUTES } from '../../consts'
 import useGlobalStore from '../../store'
-import { BORDER_RADIUS, FONT_SIZES } from '../../styles/Theme'
+import { BORDER_RADIUS, FONT_SIZES } from '../../styles/styleConsts'
 import { EPermissionLevel } from '../../types'
 import Link from '../sharedComponents/Link'
 

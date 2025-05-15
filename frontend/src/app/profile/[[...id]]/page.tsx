@@ -8,7 +8,7 @@ import { getPaletteListByAppUserId } from '../../../api/palettes/getPaletteListB
 import { logger } from '../../../services/logging'
 import useGlobalStore from '../../../store'
 import { ThumbnailGridDisplay } from '../../../styles/Shared'
-import { FONT_SIZES, SPACING } from '../../../styles/Theme'
+import { FONT_SIZES, SPACING } from '../../../styles/styleConsts'
 import { EModerationStatus } from '../../../types'
 import { getContrastColor, getUserColorFromUUID } from '../../../utils'
 import Loading from '../../sharedComponents/Loading'

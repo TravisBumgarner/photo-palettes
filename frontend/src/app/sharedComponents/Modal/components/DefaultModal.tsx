@@ -3,7 +3,7 @@ import MUIModal from '@mui/material/Modal'
 import { useCallback, type FC } from 'react'
 import { IoMdClose } from 'react-icons/io'
 import useGlobalStore from '../../../../store'
-import { BORDER_RADIUS, SPACING } from '../../../../styles/Theme'
+import { BORDER_RADIUS, SPACING } from '../../../../styles/styleConsts'
 interface ActiveModal {
   children: React.ReactNode | React.ReactNode[]
   hideCloseButton?: boolean

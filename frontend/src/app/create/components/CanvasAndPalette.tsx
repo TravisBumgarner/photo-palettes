@@ -8,7 +8,7 @@
 import { Box, rgbToHex } from '@mui/material'
 import { useDrag } from '@use-gesture/react'
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { SPACING } from '../../../styles/Theme'
+import { SPACING } from '../../../styles/styleConsts'
 import { TGeneratedPalette, TSwatch } from '../../../types'
 import { getContrastColor } from '../../../utils'
 import DraggableSwatch from './DraggableSwatch'

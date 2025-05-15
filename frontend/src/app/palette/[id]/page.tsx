@@ -2,6 +2,7 @@ import { Metadata } from 'next'
 import { getPaletteById } from '../../../api/palettes/getPaletteById'
 import { logger } from '../../../services/logging'
 import PalettePage from './page.client'
+import Message from '../../sharedComponents/Message'
 
 type Props = {
   params: Promise<{
@@ -20,7 +21,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata | nu
   try {
     const palette = await getPalette(id)
     if (!palette) {
-      logger.error('Palette not found', { id })
+      logger.info(`Palette not found: ${id}`)
       return null
     }
 
@@ -39,7 +40,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata | nu
 export default async function PhotoPage({ params }: Props) {
   const { id } = await params
   const palette = await getPalette(id)
-  if (!palette) return null
+  if (!palette) return <Message message="Palette not found" color="error" />
 
   return <PalettePage palette={palette} />
 }

@@ -16,6 +16,7 @@ const tabs = [
   { label: 'Pending', status: EModerationStatus.AWAITING_MODERATION },
   { label: 'Approved', status: EModerationStatus.APPROVED },
   { label: 'Rejected', status: EModerationStatus.REJECTED },
+  { label: 'Submitting', status: EModerationStatus.AWAITING_SUBMISSION },
 ]
 
 const Moderation = () => {
@@ -64,7 +65,7 @@ const Moderation = () => {
     <Box>
       <Tabs value={tab} onChange={handleTabChange}>
         {tabs.map((t, i) => (
-          <Tab key={i} label={t.label} />
+          <Tab key={i} label={t.label} sx={{ padding: 0 }} />
         ))}
       </Tabs>
       {content}

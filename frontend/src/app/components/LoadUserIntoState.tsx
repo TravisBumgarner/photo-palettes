@@ -5,7 +5,7 @@ import { useEffect } from 'react'
 import { getMe } from '../../api/getMe'
 import { createClient } from '../../services/supabase/client'
 import useGlobalStore from '../../store'
-import { PALETTE } from '../../styles/Theme'
+import { PALETTE } from '../../styles/styleConsts'
 import Loading from '../sharedComponents/Loading'
 
 export function LoadUserIntoStore() {

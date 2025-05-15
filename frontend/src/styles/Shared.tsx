@@ -1,7 +1,7 @@
 'use client'
 
 import { Box } from '@mui/material'
-import { SPACING } from './Theme'
+import { SPACING } from './styleConsts'
 
 export const StaticContentWrapper = ({ children }: { children: React.ReactNode }) => {
   return (

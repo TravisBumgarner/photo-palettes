@@ -1,6 +1,6 @@
 import { Box, Typography } from '@mui/material'
 import Image from 'next/image'
-import { BORDER_RADIUS, SPACING } from '../../styles/Theme'
+import { BORDER_RADIUS, SPACING } from '../../styles/styleConsts'
 import { TPalette } from '../../types'
 import { getUserColorFromUUID } from '../../utils'
 import Link from './Link'

@@ -1,7 +1,11 @@
 import os
 
 from config import get_config
-from services.cloudinary import get_image_from_cloudinary, save_image_to_cloudinary
+from services.cloudinary import (
+    delete_image_from_cloudinary,
+    get_image_from_cloudinary,
+    save_image_to_cloudinary,
+)
 
 config = get_config()
 
@@ -36,3 +40,14 @@ def get_photo_path(photo_details: str) -> str:
         return get_image_from_cloudinary(public_id)
 
     return f"http://backend:8000{photo_details}"
+
+
+def delete_photo(photo_details: str) -> None:
+    if photo_details.startswith(PRODUCTION_UPLOADS_PREFIX):
+        public_id = photo_details.replace(PRODUCTION_UPLOADS_PREFIX, "")
+        return delete_image_from_cloudinary(public_id)
+
+    # For local development, we can just remove the file from the filesystem
+    file_path = os.path.join(get_development_uploads_dir(), os.path.basename(photo_details))
+    if os.path.exists(file_path):
+        os.remove(file_path)

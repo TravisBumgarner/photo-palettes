@@ -1,7 +1,7 @@
 import { Box } from '@mui/material'
 import { SxProps, useTheme } from '@mui/material/styles'
 import NextLink from 'next/link'
-import { PALETTE } from '../../styles/Theme'
+import { PALETTE } from '../../styles/styleConsts'
 
 const Link = ({
   href,

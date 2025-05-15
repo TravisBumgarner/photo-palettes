@@ -11,4 +11,5 @@ from . import (
     get_palette_list_by_app_user_id,
     get_palette_list_moderated,
     moderate_palette,
+    delete_palette,
 )

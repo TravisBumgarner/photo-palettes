@@ -4,7 +4,7 @@ import { Box } from '@mui/material'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import useGlobalStore from '../../store'
 import { TAlert } from '../../store/types'
-import { BORDER_RADIUS, FONT_SIZES, SPACING } from '../../styles/Theme'
+import { BORDER_RADIUS, FONT_SIZES, SPACING } from '../../styles/styleConsts'
 
 const Alert = ({
   id,

@@ -11,7 +11,7 @@ import {
   Typography,
 } from '@mui/material'
 import { StaticContentWrapper } from '../../styles/Shared'
-import { BORDER_RADIUS } from '../../styles/Theme'
+import { BORDER_RADIUS } from '../../styles/styleConsts'
 import Link from '../sharedComponents/Link'
 
 interface TableProps {
