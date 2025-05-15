@@ -13,6 +13,7 @@ const config = {
   },
   images: {
     remotePatterns: [
+      new URL('https://res.cloudinary.com/hqjbxtyku/image/upload/**'),
       {
         protocol: 'http',
         hostname: 'backend',
