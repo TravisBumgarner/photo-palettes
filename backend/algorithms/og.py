@@ -20,7 +20,7 @@ def get_text_color(hex_color):
 
 
 # Process all images in input_dir
-def generate_og_image(id: uuid.UUID, image: Image.Image, colors: list[str]):
+def generate_og_image(image: Image.Image, colors: list[str]):
     # Crop to fill 1200x630
     img_ratio = image.width / image.height
     target_ratio = TARGET_WIDTH / TARGET_HEIGHT

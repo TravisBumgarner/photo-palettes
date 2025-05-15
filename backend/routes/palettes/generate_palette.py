@@ -61,7 +61,7 @@ async def generate(
         photo_details = save_photo(img_bytes, str(id), extension)
 
         hex_colors = [color["color"] for color in colors]
-        og_image = generate_og_image(id, thumbnail, hex_colors)
+        og_image = generate_og_image(image, hex_colors)
 
         blurhash = encode_blurhash(thumbnail)
 
