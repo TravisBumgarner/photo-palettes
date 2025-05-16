@@ -69,7 +69,7 @@ const Moderation = () => {
   }
 
   return (
-    <PageWrapper width="full" sx={{ minHeight: '70vh' }}>
+    <PageWrapper width="full" minHeight>
       <PageTitle text="Moderation" marginBottom />
       <Tabs value={tab} onChange={handleTabChange}>
         {tabs.map((t, i) => (

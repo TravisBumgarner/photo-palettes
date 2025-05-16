@@ -73,7 +73,7 @@ const Profile = () => {
   const displayName = getUserColorFromUUID(profileUserId)
 
   return (
-    <PageWrapper width="full" sx={{ minHeight: '70vh' }}>
+    <PageWrapper width="full" minHeight>
       <PageTitle
         text={displayName}
         marginBottom

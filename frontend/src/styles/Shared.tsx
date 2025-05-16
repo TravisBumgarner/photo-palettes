@@ -50,6 +50,7 @@ export const ThumbnailGridDisplay = ({ children }: { children: React.ReactNode }
  *
  * @param width - `small | medium | full` - Specify how much horizontal screen space to take up and center if less than full.
  * @param minHeight - `boolean` - For pages with not lots of content, set a min height.
+ * @param verticallyAlign - `boolean` - Used with minHeight to align content.
  * @param staticContent - `boolean` - For pages that are purely static content to add some styling to text, titles, lists, etc.
  * @returns
  */
@@ -57,12 +58,14 @@ export const PageWrapper = ({
   children,
   width,
   minHeight,
+  verticallyAlign,
   staticContent,
   sx,
 }: {
   children: React.ReactNode
   width: 'small' | 'medium' | 'full'
   minHeight?: boolean
+  verticallyAlign?: boolean
   staticContent?: boolean
   sx?: SxProps
 }) => {
@@ -95,6 +98,10 @@ export const PageWrapper = ({
         ...(minHeight
           ? {
               height: '70vh',
+            }
+          : {}),
+        ...(verticallyAlign
+          ? {
               justifyContent: 'center',
             }
           : {}),
