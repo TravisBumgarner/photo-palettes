@@ -59,8 +59,8 @@ const sections = (
       links: ['feedback', 'featureRequests'],
     },
     {
-      header: 'Legal',
-      links: ['privacy', 'tos'],
+      header: 'Site Info',
+      links: ['changelog', 'privacy', 'tos'],
     },
     {
       header: 'User',

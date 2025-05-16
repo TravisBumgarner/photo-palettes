@@ -86,11 +86,7 @@ export const PageWrapper = ({
           ? {
               gap: SPACING.MEDIUM.PX,
               boxSizing: 'border-box',
-              '& .MuiListItem-root': {
-                display: 'list-item',
-                listStyleType: 'circle',
-              },
-              '& > ul': {
+              ul: {
                 marginLeft: SPACING.LARGE.PX,
               },
             }
