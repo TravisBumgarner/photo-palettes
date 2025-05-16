@@ -73,7 +73,7 @@ const Moderation = () => {
       <PageTitle text="Moderation" marginBottom />
       <Tabs value={tab} onChange={handleTabChange}>
         {tabs.map((t, i) => (
-          <Tab key={i} label={t.label} sx={{ padding: 0 }} />
+          <Tab disabled={isLoading} key={i} label={t.label} sx={{ padding: 0 }} />
         ))}
       </Tabs>
       {content}
