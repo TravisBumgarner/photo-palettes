@@ -59,7 +59,7 @@ export default function LoginPage() {
   )
 
   return (
-    <PageWrapper minHeight width="small">
+    <PageWrapper minHeight verticallyAlign width="small">
       <form onSubmit={handleSubmit} style={authFormCSS}>
         <PageTitle text="Log In" center />
         {error && <p style={{ color: 'red' }}>{error}</p>}

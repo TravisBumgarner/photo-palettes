@@ -2,7 +2,7 @@
 
 import { Tab, Tabs } from '@mui/material'
 import { useQuery } from '@tanstack/react-query'
-import { useParams, useRouter } from 'next/navigation'
+import { notFound, useParams, useRouter } from 'next/navigation'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { getPaletteListByAppUserId } from '../../../api/palettes/getPaletteListByAppUserId'
 import { logger } from '../../../services/logging'
@@ -25,6 +25,8 @@ const Profile = () => {
   const [tab, setTab] = useState(0)
   const params = useParams()
   const appUserDetails = useGlobalStore(state => state.appUserDetails)
+  const isAppAuthenticating = useGlobalStore(state => state.isAppAuthenticating)
+
   const router = useRouter()
   const profileUserId =
     (Array.isArray(params.id) ? params.id[0] : params.id) || appUserDetails?.id || ''
@@ -40,10 +42,10 @@ const Profile = () => {
   }, [error])
 
   useEffect(() => {
-    if (!profileUserId) {
-      router.push('/')
+    if (!profileUserId && !isAppAuthenticating) {
+      notFound()
     }
-  }, [profileUserId, router])
+  }, [profileUserId, router, isAppAuthenticating])
 
   const handleTabChange = useCallback(
     (_event: unknown, v: number) => {

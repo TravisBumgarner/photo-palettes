@@ -2,6 +2,7 @@ from uuid import UUID
 
 from database.models import ModerationStatus
 from database.queries.palettes import get_palettes_by_app_user_id
+from database.queries.users import get_app_user_by_app_user_id
 from middleware.auth import RequestWithAuthState
 from services.logger import log_error
 
@@ -14,6 +15,13 @@ async def get_by_app_user_id(
     request: RequestWithAuthState, app_user_id: str, status: ModerationStatus
 ):
     try:
+        user_exists = get_app_user_by_app_user_id(UUID(app_user_id))
+        if not user_exists:
+            return {
+                "success": False,
+                "error": "User does not exist",
+            }
+
         # If user is not logged in, they are viewing another user's palettes.
         if not getattr(request.state, "app_user_id", None):
             is_viewing_other_user = True

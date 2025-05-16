@@ -115,7 +115,7 @@ export default function SignupPage() {
   )
 
   return (
-    <PageWrapper minHeight width="small">
+    <PageWrapper minHeight verticallyAlign width="small">
       <form onSubmit={handleSubmit} style={authFormCSS}>
         <PageTitle center text="Sign Up" />
         {error && <p style={{ color: 'red' }}>{error}</p>}
