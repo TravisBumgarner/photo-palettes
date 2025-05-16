@@ -9,6 +9,7 @@ import { MINIMUM_PASSWORD_LENGTH } from '../../consts'
 import { signup } from '../../services/supabase/actions'
 import useGlobalStore from '../../store'
 import { ModalID } from '../sharedComponents/Modal/Modal.consts'
+import { authFormCSS } from '../../styles/Shared'
 
 const SignupSchema = z.object({
   email: z.string().email(),
@@ -122,10 +123,7 @@ export default function SignupPage() {
         height: '70vh',
       }}
     >
-      <form
-        onSubmit={handleSubmit}
-        style={{ display: 'flex', flexDirection: 'column', gap: '10px', width: '400px' }}
-      >
+      <form onSubmit={handleSubmit} style={authFormCSS}>
         {error && <p style={{ color: 'red' }}>{error}</p>}
         <TextField
           id="invitationKey"

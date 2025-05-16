@@ -33,8 +33,6 @@ const DropdownLinks = ({ onClose }: { onClose: () => void }) => {
 }
 
 const Navigation = () => {
-  const appUserDetails = useGlobalStore(state => state.appUserDetails)
-
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
   const open = Boolean(anchorEl)
 
@@ -72,39 +70,21 @@ const Navigation = () => {
         </Link>
       </Box>
       <Box sx={{ display: 'flex', flexDirection: 'row', gap: '14px', alignItems: 'center' }}>
-        {appUserDetails && (
-          <Link
-            hideUnderline
-            sx={{
-              fontWeight: 900,
-              backgroundColor: 'text.primary',
-              color: 'background.paper',
-              padding: '10px',
-              border: '1px solid',
-              borderColor: 'divider',
-              borderRadius: BORDER_RADIUS.ZERO.PX,
-            }}
-            href={ROUTES.create.href}
-          >
-            {ROUTES.create.label}
-          </Link>
-        )}
-        {!appUserDetails && (
-          <Link
-            sx={{
-              fontWeight: 900,
-              backgroundColor: 'text.primary',
-              color: 'background.paper',
-              padding: '10px',
-              border: '1px solid',
-              borderColor: 'divider',
-              borderRadius: BORDER_RADIUS.ZERO.PX,
-            }}
-            href={ROUTES.browse.href}
-          >
-            {ROUTES.browse.label}
-          </Link>
-        )}
+        <Link
+          hideUnderline
+          sx={{
+            fontWeight: 900,
+            backgroundColor: 'text.primary',
+            color: 'background.paper',
+            padding: '10px',
+            border: '1px solid',
+            borderColor: 'divider',
+            borderRadius: BORDER_RADIUS.ZERO.PX,
+          }}
+          href={ROUTES.create.href}
+        >
+          {ROUTES.create.label}
+        </Link>
         <IconButton
           aria-label="menu"
           aria-controls={open ? 'navigation-menu' : undefined}

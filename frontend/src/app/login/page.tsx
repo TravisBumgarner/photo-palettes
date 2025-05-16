@@ -7,6 +7,7 @@ import { z } from 'zod'
 import { MINIMUM_PASSWORD_LENGTH } from '../../consts'
 import { login } from '../../services/supabase/actions'
 import useGlobalStore from '../../store'
+import { authFormCSS } from '../../styles/Shared'
 
 const LoginSchema = z.object({
   email: z.string().email(),
@@ -66,10 +67,7 @@ export default function LoginPage() {
         height: '70vh',
       }}
     >
-      <form
-        onSubmit={handleSubmit}
-        style={{ display: 'flex', flexDirection: 'column', gap: '10px', width: '400px' }}
-      >
+      <form onSubmit={handleSubmit} style={authFormCSS}>
         {error && <p style={{ color: 'red' }}>{error}</p>}
         <TextField
           id="email"

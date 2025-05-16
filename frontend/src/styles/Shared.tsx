@@ -45,3 +45,11 @@ export const ThumbnailGridDisplay = ({ children }: { children: React.ReactNode }
     </Box>
   )
 }
+
+export const authFormCSS: React.CSSProperties = {
+  display: 'flex',
+  flexDirection: 'column',
+  gap: '10px',
+  width: '400px',
+  maxWidth: '95%',
+}
