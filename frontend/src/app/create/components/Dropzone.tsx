@@ -23,7 +23,7 @@ const Dropzone = ({ onDrop }: { onDrop: (acceptedFiles: File[]) => void }) => {
     <Box
       sx={{
         ...sharedCSS,
-        border: `4px dashed`,
+        border: `2px dashed`,
         borderColor: 'divider',
         display: 'flex',
         justifyContent: 'center',

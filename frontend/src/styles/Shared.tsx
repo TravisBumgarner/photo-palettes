@@ -74,7 +74,7 @@ export const PageWrapper = ({
         ...widthCSS,
         ...(minHeight
           ? {
-              height: '70vh',
+              minHeight: '70vh',
             }
           : {}),
         ...(verticallyAlign

@@ -142,7 +142,6 @@ const Create = () => {
       )}
       {(uploadStatus === UploadStatus.UPLOADED || uploadStatus === UploadStatus.SUBMITTING) && (
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: SPACING.SMALL.PX }}>
-          <CanvasAndPalette photo={photo} palette={palette} updatePalette={setPalette} />
           <TextField
             variant="outlined"
             fullWidth
@@ -150,12 +149,13 @@ const Create = () => {
             value={name}
             onChange={handleNameChange}
           />
+          <CanvasAndPalette photo={photo} palette={palette} updatePalette={setPalette} />
           <Box
             sx={{
               display: 'flex',
               flexDirection: 'row',
               gap: '10px',
-              justifyContent: 'flex-end',
+            justifyContent: 'flex-end',
             }}
           >
             <Button variant="outlined" onClick={handleClearPalette}>

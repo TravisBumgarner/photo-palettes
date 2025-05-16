@@ -9,7 +9,7 @@ import Link from '../sharedComponents/Link'
 
 const Section = ({ links, header }: { links: (keyof typeof ROUTES)[]; header: string }) => {
   return (
-    <Box sx={{ width: '150px', margin: `${SPACING.MEDIUM.PX} 0` }}>
+    <Box sx={{ width: '150px' }}>
       <Typography
         variant="h6"
         sx={{ fontSize: FONT_SIZES.LARGE.PX, marginBottom: `${SPACING.TINY.PX}` }}
@@ -80,11 +80,12 @@ const Footer = () => {
   return (
     <Box
       sx={{
-        backgroundColor: 'divider',
+        borderTop: '2px solid',
+        borderColor: 'divider',
         padding: SPACING.MEDIUM.PX,
+        marginTop: SPACING.MEDIUM.PX,
         display: 'flex',
         flexDirection: 'row',
-        marginTop: '100px',
         flexWrap: 'wrap',
         justifyContent: 'space-between',
       }}
