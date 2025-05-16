@@ -30,6 +30,10 @@ const PalettePage = ({ palette }: { palette: TPalette }) => {
       )}
       <Box>
         <PageTitle text={palette.name} marginBottom />
+        <Box sx={{ display: 'flex', flexDirection: 'row', gap: '10px', alignItems: 'baseline' }}>
+          {'By'}
+          <Link href={`/profile/${palette.appUserId}`}>#{palette.appUserId.slice(0, 6)}</Link>
+        </Box>
         <Box
           sx={{
             display: 'flex',
@@ -63,7 +67,6 @@ const PalettePage = ({ palette }: { palette: TPalette }) => {
             display: 'flex',
             flexDirection: 'row',
             flexWrap: 'wrap',
-            margin: '0 auto',
             width: '600px',
             '@media (max-width: 700px)': { width: '300px' },
           }}
@@ -86,10 +89,6 @@ const PalettePage = ({ palette }: { palette: TPalette }) => {
               {color.hex}
             </Box>
           ))}
-        </Box>
-        <Box sx={{ display: 'flex', flexDirection: 'row', gap: '10px', alignItems: 'baseline' }}>
-          {'By'}
-          <Link href={`/profile/${palette.appUserId}`}>#{palette.appUserId.slice(0, 6)}</Link>
         </Box>
       </Box>
       <ModerationPanel
