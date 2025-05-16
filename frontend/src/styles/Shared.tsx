@@ -58,11 +58,13 @@ export const PageWrapper = ({
   width,
   minHeight,
   staticContent,
+  sx,
 }: {
   children: React.ReactNode
   width: 'small' | 'medium' | 'full'
   minHeight?: boolean
   staticContent?: boolean
+  sx?: SxProps
 }) => {
   const widthCSS = useMemo((): React.CSSProperties => {
     if (width === 'small') {
@@ -109,6 +111,7 @@ export const PageWrapper = ({
               },
             }
           : {}),
+        ...(sx ? sx : {}),
       }}
     >
       {children}

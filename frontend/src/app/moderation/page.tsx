@@ -5,7 +5,7 @@ import { useQuery } from '@tanstack/react-query'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { getListAsModerator } from '../../api/palettes/getPaletteListAsModerator'
 import { logger } from '../../services/logging'
-import { ThumbnailGridDisplay } from '../../styles/Shared'
+import { PageTitle, PageWrapper, ThumbnailGridDisplay } from '../../styles/Shared'
 import { EModerationStatus } from '../../types'
 import Loading from '../sharedComponents/Loading'
 import Message from '../sharedComponents/Message'
@@ -62,14 +62,15 @@ const Moderation = () => {
   }, [data, error, isLoading, refetch, tab])
 
   return (
-    <Box>
+    <PageWrapper width="full" sx={{ minHeight: '70vh' }}>
+      <PageTitle text="Moderation" marginBottom />
       <Tabs value={tab} onChange={handleTabChange}>
         {tabs.map((t, i) => (
           <Tab key={i} label={t.label} sx={{ padding: 0 }} />
         ))}
       </Tabs>
       {content}
-    </Box>
+    </PageWrapper>
   )
 }
 
