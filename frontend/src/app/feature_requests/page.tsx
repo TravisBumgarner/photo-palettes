@@ -9,7 +9,7 @@ import addFeatureRequest from '../../api/featureRequests/addFeatureRequest'
 import getFeatureRequests from '../../api/featureRequests/getFeatureRequests'
 import upvoteFeatureRequest from '../../api/featureRequests/upvoteFeatureRequst'
 import useGlobalStore from '../../store'
-import { SPACING } from '../../styles/styleConsts'
+import { FONT_SIZES, SPACING } from '../../styles/styleConsts'
 import { EPermissionLevel, TFeatureRequest } from '../../types'
 import Link from '../sharedComponents/Link'
 import Loading from '../sharedComponents/Loading'
@@ -68,9 +68,14 @@ const FeatureRequestCard = ({
         <Typography variant="body1">{featureRequest.description}</Typography>
       </Box>
       <Box sx={{ display: 'flex', flexDirection: 'row', gap: 2, alignItems: 'center' }}>
-        <Typography sx={{ width: '100px' }} variant="body1">
-          Votes: {featureRequest.votes.length}
-        </Typography>
+        <Box sx={{ width: '75px' }}>
+          <Typography sx={{ fontSize: FONT_SIZES.LARGE.PX, textAlign: 'center' }} variant="body1">
+            {featureRequest.votes.length}
+          </Typography>
+          <Typography sx={{ textAlign: 'center' }} variant="body1">
+            Votes
+          </Typography>
+        </Box>
         {!readonly && (
           <Button
             sx={{ width: '110px' }}
