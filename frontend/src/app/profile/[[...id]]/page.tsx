@@ -89,7 +89,7 @@ const Profile = () => {
       {isProfileUser && (
         <Tabs value={tab} onChange={handleTabChange} sx={{ marginBottom: SPACING.MEDIUM.PX }}>
           {TABS.map((t, i) => (
-            <Tab key={i} label={t.label} />
+            <Tab disabled={isLoading} key={i} label={t.label} />
           ))}
         </Tabs>
       )}
