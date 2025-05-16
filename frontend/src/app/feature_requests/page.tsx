@@ -130,7 +130,7 @@ const NewFeatureSubmission = ({ refetch }: { refetch: () => void }) => {
         margin: `${SPACING.MEDIUM.PX} 0`,
       }}
     >
-      <PageTitle marginBottom text="MOderators Only" />
+      <PageTitle marginBottom text="Moderators Only" />
       <Box sx={{ display: 'flex', gap: SPACING.MEDIUM.PX, flexDirection: 'column' }}>
         <Typography variant="body1">Add</Typography>
         <TextField fullWidth label="Title" value={title} onChange={handleTitleChange} />

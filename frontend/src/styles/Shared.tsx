@@ -4,29 +4,6 @@ import { Box, SxProps, Typography } from '@mui/material'
 import { SPACING } from './styleConsts'
 import React, { useMemo } from 'react'
 
-// export const StaticContentWrapper = ({ children }: { children: React.ReactNode }) => {
-//   return (
-//     <Box
-//       sx={{
-//         display: 'flex',
-//         flexDirection: 'column',
-//         gap: SPACING.MEDIUM.PX,
-//         width: '100%',
-//         boxSizing: 'border-box',
-//         '& .MuiListItem-root': {
-//           display: 'list-item',
-//           listStyleType: 'circle',
-//         },
-//         '& > ul': {
-//           marginLeft: SPACING.LARGE.PX,
-//         },
-//       }}
-//     >
-//       {children}
-//     </Box>
-//   )
-// }
-
 export const ThumbnailGridDisplay = ({ children }: { children: React.ReactNode }) => {
   return (
     <Box
