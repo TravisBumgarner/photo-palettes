@@ -1,14 +1,16 @@
 'use client'
 
-import { Box, Button, TextField } from '@mui/material'
+import { Button, TextField, Typography } from '@mui/material'
 import { useRouter } from 'next/navigation'
 import { ChangeEvent, useCallback, useState } from 'react'
 import { z } from 'zod'
 import config from '../../config'
-import { MINIMUM_PASSWORD_LENGTH } from '../../consts'
+import { MINIMUM_PASSWORD_LENGTH, ROUTES } from '../../consts'
 import { signup } from '../../services/supabase/actions'
 import useGlobalStore from '../../store'
 import { ModalID } from '../sharedComponents/Modal/Modal.consts'
+import { authFormCSS, PageTitle, PageWrapper } from '../../styles/Shared'
+import Link from '../sharedComponents/Link'
 
 const SignupSchema = z.object({
   email: z.string().email(),
@@ -113,19 +115,9 @@ export default function SignupPage() {
   )
 
   return (
-    <Box
-      sx={{
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-        height: '70vh',
-      }}
-    >
-      <form
-        onSubmit={handleSubmit}
-        style={{ display: 'flex', flexDirection: 'column', gap: '10px', width: '400px' }}
-      >
+    <PageWrapper minHeight verticallyAlign width="small">
+      <form onSubmit={handleSubmit} style={authFormCSS}>
+        <PageTitle center text="Sign Up" />
         {error && <p style={{ color: 'red' }}>{error}</p>}
         <TextField
           id="invitationKey"
@@ -183,7 +175,11 @@ export default function SignupPage() {
         >
           Sign up
         </Button>
+        <Typography variant="body1">
+          {'Have have an account? '}
+          <Link href={ROUTES.login.href}>{ROUTES.login.label}</Link>.
+        </Typography>
       </form>
-    </Box>
+    </PageWrapper>
   )
 }

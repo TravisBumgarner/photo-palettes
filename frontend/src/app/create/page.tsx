@@ -16,6 +16,7 @@ import { ModalID } from '../sharedComponents/Modal/Modal.consts'
 import CanvasAndPalette from './components/CanvasAndPalette'
 import Dropzone from './components/Dropzone'
 import { sharedCSS } from './components/shared'
+import { PageTitle, PageWrapper } from '../../styles/Shared'
 
 enum UploadStatus {
   INITIAL = 'INITIAL',
@@ -116,7 +117,8 @@ const Create = () => {
     setPhoto(null)
   }, [setPalette, setPhoto])
   return (
-    <Box>
+    <PageWrapper width="full">
+      <PageTitle marginBottom text="Create" />
       {uploadStatus === UploadStatus.INITIAL && <Dropzone onDrop={onDrop} />}
       {(uploadStatus === UploadStatus.UPLOADING || uploadStatus === UploadStatus.SUBMITTED) && (
         <Box
@@ -169,7 +171,7 @@ const Create = () => {
           </Box>
         </Box>
       )}
-    </Box>
+    </PageWrapper>
   )
 }
 

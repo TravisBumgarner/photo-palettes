@@ -1,13 +1,13 @@
 'use client'
 
 import { Typography } from '@mui/material'
-import { StaticContentWrapper } from '../../styles/Shared'
+import { PageTitle, PageWrapper } from '../../styles/Shared'
 import Link from '../sharedComponents/Link'
 
 const Privacy = () => {
   return (
-    <StaticContentWrapper>
-      <Typography variant="h2">Privacy Policy</Typography>
+    <PageWrapper width="medium" staticContent>
+      <PageTitle text="Privacy Policy" />
       <Typography variant="body1">
         <em>Last updated: April 17, 2025</em>
       </Typography>
@@ -97,7 +97,7 @@ const Privacy = () => {
         If you have any questions or concerns about this Privacy Policy, please contact us at:{' '}
         <Link href="mailto:support@photopalettes.com">support@photopalettes.com</Link>.
       </Typography>
-    </StaticContentWrapper>
+    </PageWrapper>
   )
 }
 

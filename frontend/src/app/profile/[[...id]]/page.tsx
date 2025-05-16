@@ -1,14 +1,14 @@
 'use client'
 
-import { Box, Tab, Tabs, Typography } from '@mui/material'
+import { Tab, Tabs } from '@mui/material'
 import { useQuery } from '@tanstack/react-query'
-import { useParams, useRouter } from 'next/navigation'
+import { notFound, useParams, useRouter } from 'next/navigation'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { getPaletteListByAppUserId } from '../../../api/palettes/getPaletteListByAppUserId'
 import { logger } from '../../../services/logging'
 import useGlobalStore from '../../../store'
-import { ThumbnailGridDisplay } from '../../../styles/Shared'
-import { FONT_SIZES, SPACING } from '../../../styles/styleConsts'
+import { PageTitle, PageWrapper, ThumbnailGridDisplay } from '../../../styles/Shared'
+import { SPACING } from '../../../styles/styleConsts'
 import { EModerationStatus } from '../../../types'
 import { getContrastColor, getUserColorFromUUID } from '../../../utils'
 import Loading from '../../sharedComponents/Loading'
@@ -25,6 +25,8 @@ const Profile = () => {
   const [tab, setTab] = useState(0)
   const params = useParams()
   const appUserDetails = useGlobalStore(state => state.appUserDetails)
+  const isAppAuthenticating = useGlobalStore(state => state.isAppAuthenticating)
+
   const router = useRouter()
   const profileUserId =
     (Array.isArray(params.id) ? params.id[0] : params.id) || appUserDetails?.id || ''
@@ -40,10 +42,10 @@ const Profile = () => {
   }, [error])
 
   useEffect(() => {
-    if (!profileUserId) {
-      router.push('/')
+    if (!profileUserId && !isAppAuthenticating) {
+      notFound()
     }
-  }, [profileUserId, router])
+  }, [profileUserId, router, isAppAuthenticating])
 
   const handleTabChange = useCallback(
     (_event: unknown, v: number) => {
@@ -73,30 +75,26 @@ const Profile = () => {
   const displayName = getUserColorFromUUID(profileUserId)
 
   return (
-    <Box sx={{ display: 'flex', flexDirection: 'column', gap: SPACING.MEDIUM.PX }}>
-      <Typography
-        variant="h2"
+    <PageWrapper width="full" minHeight>
+      <PageTitle
+        text={displayName}
+        marginBottom
         sx={{
           fontWeight: 700,
-          fontSize: FONT_SIZES.HUGE_PLUS.PX,
           color: getContrastColor(displayName),
           backgroundColor: displayName,
-          display: 'inline-block',
           alignSelf: 'flex-start',
-          padding: SPACING.SMALL.PX,
         }}
-      >
-        {displayName}
-      </Typography>
+      />
       {isProfileUser && (
         <Tabs value={tab} onChange={handleTabChange} sx={{ marginBottom: SPACING.MEDIUM.PX }}>
           {TABS.map((t, i) => (
-            <Tab key={i} label={t.label} />
+            <Tab disabled={isLoading} key={i} label={t.label} />
           ))}
         </Tabs>
       )}
       {content}
-    </Box>
+    </PageWrapper>
   )
 }
 

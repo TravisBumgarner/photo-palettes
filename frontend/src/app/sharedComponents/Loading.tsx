@@ -8,6 +8,7 @@ const Loading = () => {
         justifyContent: 'center',
         alignItems: 'center',
         height: '100%',
+        flexGrow: 1,
       }}
     >
       <AnimatePresence>

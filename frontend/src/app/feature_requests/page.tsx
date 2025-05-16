@@ -9,11 +9,12 @@ import addFeatureRequest from '../../api/featureRequests/addFeatureRequest'
 import getFeatureRequests from '../../api/featureRequests/getFeatureRequests'
 import upvoteFeatureRequest from '../../api/featureRequests/upvoteFeatureRequst'
 import useGlobalStore from '../../store'
-import { SPACING } from '../../styles/styleConsts'
+import { FONT_SIZES, SPACING } from '../../styles/styleConsts'
 import { EPermissionLevel, TFeatureRequest } from '../../types'
 import Link from '../sharedComponents/Link'
 import Loading from '../sharedComponents/Loading'
 import Message from '../sharedComponents/Message'
+import { PageTitle, PageWrapper } from '../../styles/Shared'
 
 const FeatureRequestCard = ({
   featureRequest,
@@ -63,13 +64,18 @@ const FeatureRequestCard = ({
       }}
     >
       <Box>
-        <Typography variant="h2">{featureRequest.title}</Typography>
+        <PageTitle marginBottom text={featureRequest.title} />
         <Typography variant="body1">{featureRequest.description}</Typography>
       </Box>
       <Box sx={{ display: 'flex', flexDirection: 'row', gap: 2, alignItems: 'center' }}>
-        <Typography sx={{ width: '100px' }} variant="body1">
-          Votes: {featureRequest.votes.length}
-        </Typography>
+        <Box sx={{ width: '75px' }}>
+          <Typography sx={{ fontSize: FONT_SIZES.LARGE.PX, textAlign: 'center' }} variant="body1">
+            {featureRequest.votes.length}
+          </Typography>
+          <Typography sx={{ textAlign: 'center' }} variant="body1">
+            Votes
+          </Typography>
+        </Box>
         {!readonly && (
           <Button
             sx={{ width: '110px' }}
@@ -124,12 +130,12 @@ const NewFeatureSubmission = ({ refetch }: { refetch: () => void }) => {
         margin: `${SPACING.MEDIUM.PX} 0`,
       }}
     >
-      <Typography variant="h2">Moderators Only</Typography>
-      <Box sx={{ display: 'flex', flexDirection: 'row', gap: 2, alignItems: 'center' }}>
+      <PageTitle marginBottom text="MOderators Only" />
+      <Box sx={{ display: 'flex', gap: SPACING.MEDIUM.PX, flexDirection: 'column' }}>
         <Typography variant="body1">Add</Typography>
-        <TextField label="Title" value={title} onChange={handleTitleChange} />
+        <TextField fullWidth label="Title" value={title} onChange={handleTitleChange} />
         <TextField
-          sx={{ flexGrow: 1 }}
+          fullWidth
           label="Description"
           value={description}
           onChange={handleDescriptionChange}
@@ -164,14 +170,16 @@ const FeatureRequests = () => {
   }
 
   return (
-    <Box>
-      <Typography variant="h2">Feature Requests</Typography>
+    <PageWrapper width="medium">
+      <PageTitle marginBottom text="Feature Requests" />
+      {!appUserDetails && (
+        <Typography variant="body1">
+          <Link href="/login">Log in to upvote.</Link>
+        </Typography>
+      )}
       <Typography variant="body1">
         <Link href="/feedback">Submit a feature request.</Link>
       </Typography>
-      {appUserDetails && appUserDetails?.permissionLevel >= EPermissionLevel.MODERATOR && (
-        <NewFeatureSubmission refetch={refetch} />
-      )}
       <Box sx={{ marginTop: 2, display: 'flex', flexDirection: 'column', gap: 2 }}>
         <Reorder.Group
           axis="y"
@@ -192,7 +200,10 @@ const FeatureRequests = () => {
             ))}
         </Reorder.Group>
       </Box>
-    </Box>
+      {appUserDetails && appUserDetails?.permissionLevel >= EPermissionLevel.MODERATOR && (
+        <NewFeatureSubmission refetch={refetch} />
+      )}
+    </PageWrapper>
   )
 }
 

@@ -2,11 +2,8 @@
 
 import { Box, Button, TextField, Typography } from '@mui/material'
 import React, { useCallback, useMemo, useState } from 'react'
-import { ROUTES } from '../../consts'
-import { PageTitle, PageWrapper } from '../../styles/Shared'
-import Link from '../sharedComponents/Link'
 
-const Contact = () => {
+const WhatWentWrongContactForm = () => {
   const [success, setSuccess] = useState(false)
   const [failure, setFailure] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -15,7 +12,7 @@ const Contact = () => {
     name: '',
     email: '',
     message: '',
-    website: 'photo-palettes-feedback',
+    website: 'photo-palettes-something-went-wrong',
   })
 
   const handleChange = useCallback(
@@ -70,7 +67,7 @@ const Contact = () => {
     }
     if (success) {
       resetButtonText()
-      return 'Message sent!'
+      return 'Thanks for your help!'
     }
     if (failure) {
       resetButtonText()
@@ -80,37 +77,13 @@ const Contact = () => {
   }, [isSubmitting, success, failure, resetButtonText])
 
   return (
-    <PageWrapper minHeight width="small" staticContent>
-      <PageTitle text="Feedback" />
-      <Typography variant="body1">
-        Join the discussion on{' '}
-        <Link target="_blank" href={ROUTES.discord.href}>
-          {ROUTES.discord.label}
-        </Link>
-        {' and '}
-        <Link target="_blank" href={ROUTES.bluesky.href}>
-          {ROUTES.bluesky.label}
-        </Link>
-        .
-      </Typography>
+    <>
+      <Typography variant="body1">What were you trying to do?</Typography>
       <Box sx={{ width: '100%', maxWidth: '600px', margin: '0 auto' }}>
         <form
           style={{ display: 'flex', flexDirection: 'column', gap: 10, width: '100%' }}
           onSubmit={handleSubmit}
         >
-          <TextField
-            placeholder="Name (Optional)"
-            name="name"
-            value={formData.name}
-            onChange={handleChange}
-          />
-          <TextField
-            placeholder="Email (Optional)"
-            name="email"
-            value={formData.email}
-            onChange={handleChange}
-            type="email"
-          />
           <TextField
             placeholder="Message"
             name="message"
@@ -124,8 +97,8 @@ const Contact = () => {
           </Button>
         </form>
       </Box>
-    </PageWrapper>
+    </>
   )
 }
 
-export default Contact
+export default WhatWentWrongContactForm

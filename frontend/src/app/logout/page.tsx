@@ -1,10 +1,11 @@
 'use client'
 
-import { Box } from '@mui/material'
+import { Typography } from '@mui/material'
 import { useRouter } from 'next/navigation'
 import { useEffect } from 'react'
 import { logout } from '../../services/supabase/actions'
 import useGlobalStore from '../../store'
+import { PageTitle, PageWrapper } from '../../styles/Shared'
 export default function LogoutPage() {
   const router = useRouter()
   const setAuthId = useGlobalStore(state => state.setAuthId)
@@ -22,5 +23,10 @@ export default function LogoutPage() {
     logoutUser()
   }, [router, setAuthId, setAppUserDetails])
 
-  return <Box>Logging out...</Box>
+  return (
+    <PageWrapper width="small">
+      <PageTitle center text="Signing out..." />
+      <Typography style={{ textAlign: 'center' }}>See you soon!</Typography>
+    </PageWrapper>
+  )
 }
