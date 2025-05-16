@@ -172,6 +172,11 @@ const FeatureRequests = () => {
   return (
     <PageWrapper width="medium">
       <PageTitle marginBottom text="Feature Requests" />
+      {!appUserDetails && (
+        <Typography variant="body1">
+          <Link href="/login">Log in to upvote.</Link>
+        </Typography>
+      )}
       <Typography variant="body1">
         <Link href="/feedback">Submit a feature request.</Link>
       </Typography>

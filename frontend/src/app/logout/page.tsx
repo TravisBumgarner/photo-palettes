@@ -26,7 +26,7 @@ export default function LogoutPage() {
   return (
     <PageWrapper width="small">
       <PageTitle center text="Signing out..." />
-      <Typography>See you soon!</Typography>
+      <Typography style={{ textAlign: 'center' }}>See you soon!</Typography>
     </PageWrapper>
   )
 }
