@@ -14,12 +14,12 @@ const DropdownLinks = ({ onClose }: { onClose: () => void }) => {
   const appUserDetails = useGlobalStore(state => state.appUserDetails)
 
   const routeKeys = useMemo((): (keyof typeof ROUTES)[] => {
-    if (!appUserDetails) return ['login', 'signup']
+    if (!appUserDetails) return ['login', 'signup', 'featureRequests']
 
     if (appUserDetails.permissionLevel >= EPermissionLevel.MODERATOR)
-      return ['profile', 'moderation', 'feedback', 'logout']
+      return ['profile', 'moderation', 'feedback', 'featureRequests', 'logout']
 
-    return ['profile', 'feedback', 'logout']
+    return ['profile', 'feedback', 'featureRequests', 'logout']
   }, [appUserDetails])
   return (
     <>
@@ -73,7 +73,9 @@ const Navigation = () => {
           <Typography variant="h1">{ROUTES.home.label}</Typography>
         </Link>
       </Box>
-      <Box sx={{ display: 'flex', flexDirection: 'row', gap: '14px', alignItems: 'center' }}>
+      <Box
+        sx={{ display: 'flex', flexDirection: 'row', gap: SPACING.MEDIUM.PX, alignItems: 'center' }}
+      >
         <Link
           hideUnderline
           sx={{
@@ -98,7 +100,13 @@ const Navigation = () => {
         >
           <GiHamburgerMenu />
         </IconButton>
-        <Menu id="navigation-menu" anchorEl={anchorEl} open={open} onClose={handleClose}>
+        <Menu
+          slotProps={{ paper: { sx: { borderRadius: BORDER_RADIUS.ZERO.PX } } }}
+          id="navigation-menu"
+          anchorEl={anchorEl}
+          open={open}
+          onClose={handleClose}
+        >
           <DropdownLinks onClose={handleClose} />
         </Menu>
       </Box>
