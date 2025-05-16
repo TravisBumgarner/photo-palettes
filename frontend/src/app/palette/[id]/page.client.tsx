@@ -29,10 +29,12 @@ const PalettePage = ({ palette }: { palette: TPalette }) => {
         <Message message="This palette was rejected." color="error" />
       )}
       <Box>
-        <PageTitle text={palette.name} marginBottom />
-        <Box sx={{ display: 'flex', flexDirection: 'row', gap: '10px', alignItems: 'baseline' }}>
-          {'By'}
-          <Link href={`/profile/${palette.appUserId}`}>#{palette.appUserId.slice(0, 6)}</Link>
+        <Box sx={{ display: 'flex', alignItems: 'baseline', gap: SPACING.MEDIUM.PX }}>
+          <PageTitle text={palette.name} />
+          <Box sx={{ display: 'flex', flexDirection: 'row', gap: '10px', alignItems: 'baseline' }}>
+            {'By'}
+            <Link href={`/profile/${palette.appUserId}`}>#{palette.appUserId.slice(0, 6)}</Link>
+          </Box>
         </Box>
         <Box
           sx={{
@@ -53,7 +55,7 @@ const PalettePage = ({ palette }: { palette: TPalette }) => {
               objectFit: 'contain',
               width: '100%',
               height: '100%',
-              padding: SPACING.MEDIUM.PX,
+              padding: SPACING.SMALL.PX,
             }}
             blurDataURL={blurDataURL}
             width={palette.aspectRatio * 1000}
@@ -67,8 +69,15 @@ const PalettePage = ({ palette }: { palette: TPalette }) => {
             display: 'flex',
             flexDirection: 'row',
             flexWrap: 'wrap',
-            width: '600px',
-            '@media (max-width: 700px)': { width: '300px' },
+            '& > *': {
+              flex: '1 0 16.66%', // 6 per row by default
+              boxSizing: 'border-box',
+            },
+            '@media (max-width: 700px)': {
+              '& > *': {
+                flex: '1 0 33.33%', // 3 per row at <=700px
+              },
+            },
           }}
         >
           {palette.colors.map((color: { id: string; hex: string }) => (
@@ -77,7 +86,6 @@ const PalettePage = ({ palette }: { palette: TPalette }) => {
               style={{
                 backgroundColor: color.hex,
                 height: '50px',
-                width: '100px',
                 display: 'flex',
                 justifyContent: 'center',
                 fontSize: '20px',

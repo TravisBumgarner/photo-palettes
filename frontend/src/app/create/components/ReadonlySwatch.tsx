@@ -31,7 +31,7 @@ const ReadonlySwatch = forwardRef(
           display: 'flex',
           justifyContent: 'center',
           alignItems: 'center',
-          width: '100px',
+          flexGrow: 1,
           cursor: 'pointer',
           fontSize: '20px',
         }}

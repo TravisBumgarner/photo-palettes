@@ -78,4 +78,9 @@ export const ROUTES = {
     href: '/donations',
     label: 'Donate',
   },
+  changelog: {
+    key: 'changelog',
+    href: '/changelog',
+    label: 'Changelog',
+  },
 }

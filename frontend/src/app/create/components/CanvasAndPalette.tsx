@@ -248,10 +248,15 @@ const CanvasAndPalette = ({
         sx={{
           display: 'flex',
           flexDirection: 'row',
-          margin: '0 auto',
+          flexWrap: 'wrap',
+          '& > *': {
+            flex: '1 0 16.66%', // 6 per row by default
+            boxSizing: 'border-box',
+          },
           '@media (max-width: 700px)': {
-            width: '300px',
-            flexWrap: 'wrap',
+            '& > *': {
+              flex: '1 0 33.33%', // 3 per row at <=700px
+            },
           },
         }}
       >
