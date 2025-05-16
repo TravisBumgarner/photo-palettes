@@ -125,11 +125,11 @@ const NewFeatureSubmission = ({ refetch }: { refetch: () => void }) => {
       }}
     >
       <Typography variant="h2">Moderators Only</Typography>
-      <Box sx={{ display: 'flex', flexDirection: 'row', gap: 2, alignItems: 'center' }}>
+      <Box sx={{ display: 'flex', gap: SPACING.MEDIUM.PX, flexDirection: 'column' }}>
         <Typography variant="body1">Add</Typography>
-        <TextField label="Title" value={title} onChange={handleTitleChange} />
+        <TextField fullWidth label="Title" value={title} onChange={handleTitleChange} />
         <TextField
-          sx={{ flexGrow: 1 }}
+          fullWidth
           label="Description"
           value={description}
           onChange={handleDescriptionChange}
@@ -169,9 +169,6 @@ const FeatureRequests = () => {
       <Typography variant="body1">
         <Link href="/feedback">Submit a feature request.</Link>
       </Typography>
-      {appUserDetails && appUserDetails?.permissionLevel >= EPermissionLevel.MODERATOR && (
-        <NewFeatureSubmission refetch={refetch} />
-      )}
       <Box sx={{ marginTop: 2, display: 'flex', flexDirection: 'column', gap: 2 }}>
         <Reorder.Group
           axis="y"
@@ -192,6 +189,9 @@ const FeatureRequests = () => {
             ))}
         </Reorder.Group>
       </Box>
+      {appUserDetails && appUserDetails?.permissionLevel >= EPermissionLevel.MODERATOR && (
+        <NewFeatureSubmission refetch={refetch} />
+      )}
     </Box>
   )
 }
