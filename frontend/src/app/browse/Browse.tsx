@@ -33,7 +33,7 @@ const Browse = () => {
   }
 
   return (
-    <PageWrapper width="full" minHeight>
+    <PageWrapper width="full" sx={{ minHeight: '70vh' }}>
       {!data || data.palettes.length === 0 ? (
         <Message message="Be the first to create a palette!" color="info" />
       ) : (

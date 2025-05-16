@@ -6,11 +6,13 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 import { getListAsModerator } from '../../api/palettes/getPaletteListAsModerator'
 import { logger } from '../../services/logging'
 import { PageTitle, PageWrapper, ThumbnailGridDisplay } from '../../styles/Shared'
-import { EModerationStatus } from '../../types'
+import { EModerationStatus, EPermissionLevel } from '../../types'
 import Loading from '../sharedComponents/Loading'
 import Message from '../sharedComponents/Message'
 import ModerationPanel from '../sharedComponents/ModerationPanel'
 import PaletteThumbnail from '../sharedComponents/PaletteThumbnail'
+import useGlobalStore from '../../store'
+import { notFound } from 'next/navigation'
 
 const tabs = [
   { label: 'Pending', status: EModerationStatus.AWAITING_MODERATION },
@@ -21,6 +23,7 @@ const tabs = [
 
 const Moderation = () => {
   const [tab, setTab] = useState(0)
+  const appUserDetails = useGlobalStore(state => state.appUserDetails)
   const { data, isLoading, error, refetch } = useQuery({
     queryKey: ['moderation', tabs[tab].status],
     queryFn: () => getListAsModerator(tabs[tab].status),
@@ -60,6 +63,10 @@ const Moderation = () => {
       </ThumbnailGridDisplay>
     )
   }, [data, error, isLoading, refetch, tab])
+
+  if (!appUserDetails || appUserDetails?.permissionLevel < EPermissionLevel.MODERATOR) {
+    notFound()
+  }
 
   return (
     <PageWrapper width="full" sx={{ minHeight: '70vh' }}>
