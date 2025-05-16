@@ -3,16 +3,13 @@
 import { Box, Link, Typography } from '@mui/material'
 import Image from 'next/image'
 import { ROUTES } from '../../consts'
-import useGlobalStore from '../../store'
-import { StaticContentWrapper } from '../../styles/Shared'
+import { PageTitle, PageWrapper } from '../../styles/Shared'
 import AlphaSignup from '../sharedComponents/AlphaSignup'
 
 const Inspired = () => {
   return (
     <Box>
-      <Typography variant="h2" style={{ textAlign: 'center' }}>
-        Join the Discussion
-      </Typography>
+      <PageTitle text="Join the Discussion" />
       <ul style={{ listStyleType: 'none', padding: 0, textAlign: 'center' }}>
         <li>
           <Link target="_blank" href={ROUTES.discord.href}>
@@ -30,14 +27,10 @@ const Inspired = () => {
 }
 
 const Welcome = () => {
-  const appUserDetails = useGlobalStore(state => state.appUserDetails)
-
   return (
-    <StaticContentWrapper>
+    <PageWrapper width="full">
       <Box>
-        <Typography variant="h1">
-          Welcome {appUserDetails ? appUserDetails.displayName : 'to Photo Palettes!'}
-        </Typography>
+        <PageTitle text="Welcome {appUserDetails ? appUserDetails.displayName : 'to Photo Palettes!'}" />
         <Typography variant="body1">
           A social platform for generating color palettes from photos.
         </Typography>
@@ -71,7 +64,7 @@ const Welcome = () => {
       <Box sx={{ width: '100%', aspectRatio: 16 / 9, position: 'relative' }}>
         <Image fill alt="color palette 1" src="/landing_page/3.png" />
       </Box>
-    </StaticContentWrapper>
+    </PageWrapper>
   )
 }
 

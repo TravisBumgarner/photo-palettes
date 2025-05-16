@@ -10,7 +10,7 @@ import {
   TableRow,
   Typography,
 } from '@mui/material'
-import { StaticContentWrapper } from '../../styles/Shared'
+import { PageTitle, PageWrapper } from '../../styles/Shared'
 import { BORDER_RADIUS } from '../../styles/styleConsts'
 import Link from '../sharedComponents/Link'
 
@@ -63,8 +63,8 @@ const Donations = () => {
   const yearlyCost = monthlyCost * 12
 
   return (
-    <StaticContentWrapper>
-      <Typography variant="h2">Donate</Typography>
+    <PageWrapper minHeight staticContent width="medium">
+      <PageTitle text="Donate" />
       <Typography variant="body1">
         The project currently costs ${monthlyCost}/month or ${yearlyCost}/year to run. Below is a
         breakdown. At this point the costs are manageable for me. I have seen projects like this
@@ -72,10 +72,10 @@ const Donations = () => {
         donating.
       </Typography>
       <Link href="https://www.patreon.com/c/photopalettes/membership">
-        Support the project on Patreon
+        Support the project on Patreon.
       </Link>
       <Table items={items} />
-    </StaticContentWrapper>
+    </PageWrapper>
   )
 }
 

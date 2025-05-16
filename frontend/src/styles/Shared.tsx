@@ -1,30 +1,31 @@
 'use client'
 
-import { Box } from '@mui/material'
+import { Box, SxProps, Typography } from '@mui/material'
 import { SPACING } from './styleConsts'
+import React, { useMemo } from 'react'
 
-export const StaticContentWrapper = ({ children }: { children: React.ReactNode }) => {
-  return (
-    <Box
-      sx={{
-        display: 'flex',
-        flexDirection: 'column',
-        gap: SPACING.MEDIUM.PX,
-        width: '100%',
-        boxSizing: 'border-box',
-        '& .MuiListItem-root': {
-          display: 'list-item',
-          listStyleType: 'circle',
-        },
-        '& > ul': {
-          marginLeft: SPACING.LARGE.PX,
-        },
-      }}
-    >
-      {children}
-    </Box>
-  )
-}
+// export const StaticContentWrapper = ({ children }: { children: React.ReactNode }) => {
+//   return (
+//     <Box
+//       sx={{
+//         display: 'flex',
+//         flexDirection: 'column',
+//         gap: SPACING.MEDIUM.PX,
+//         width: '100%',
+//         boxSizing: 'border-box',
+//         '& .MuiListItem-root': {
+//           display: 'list-item',
+//           listStyleType: 'circle',
+//         },
+//         '& > ul': {
+//           marginLeft: SPACING.LARGE.PX,
+//         },
+//       }}
+//     >
+//       {children}
+//     </Box>
+//   )
+// }
 
 export const ThumbnailGridDisplay = ({ children }: { children: React.ReactNode }) => {
   return (
@@ -45,11 +46,103 @@ export const ThumbnailGridDisplay = ({ children }: { children: React.ReactNode }
     </Box>
   )
 }
+/**
+ *
+ * @param width - `small | medium | full` - Specify how much horizontal screen space to take up and center if less than full.
+ * @param minHeight - `boolean` - For pages with not lots of content, set a min height.
+ * @param staticContent - `boolean` - For pages that are purely static content to add some styling to text, titles, lists, etc.
+ * @returns
+ */
+export const PageWrapper = ({
+  children,
+  width,
+  minHeight,
+  staticContent,
+}: {
+  children: React.ReactNode
+  width: 'small' | 'medium' | 'full'
+  minHeight?: boolean
+  staticContent?: boolean
+}) => {
+  const widthCSS = useMemo((): React.CSSProperties => {
+    if (width === 'small') {
+      return {
+        width: '400px',
+        maxWidth: '95%',
+        margin: '0 auto',
+      }
+    }
+
+    if (width === 'medium') {
+      return {
+        width: '600px',
+        maxWidth: '95%',
+        margin: '0 auto',
+      }
+    }
+
+    return {}
+  }, [width])
+
+  return (
+    <Box
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        ...widthCSS,
+        ...(minHeight
+          ? {
+              height: '70vh',
+              justifyContent: 'center',
+            }
+          : {}),
+        ...(staticContent
+          ? {
+              gap: SPACING.MEDIUM.PX,
+              boxSizing: 'border-box',
+              '& .MuiListItem-root': {
+                display: 'list-item',
+                listStyleType: 'circle',
+              },
+              '& > ul': {
+                marginLeft: SPACING.LARGE.PX,
+              },
+            }
+          : {}),
+      }}
+    >
+      {children}
+    </Box>
+  )
+}
 
 export const authFormCSS: React.CSSProperties = {
   display: 'flex',
+  gap: SPACING.MEDIUM.PX,
   flexDirection: 'column',
-  gap: '10px',
-  width: '400px',
-  maxWidth: '95%',
+}
+
+export const PageTitle = ({
+  text,
+  marginBottom,
+  center,
+  sx,
+}: {
+  text: string
+  marginBottom?: boolean
+  center?: boolean
+  sx?: SxProps
+}) => {
+  return (
+    <Typography
+      variant="h2"
+      sx={{
+        marginBottom: marginBottom ? SPACING.MEDIUM.PX : '0px',
+        textAlign: center ? 'center' : 'left',
+        ...(sx ? sx : {}),
+      }}
+    >
+      {text}
+    </Typography>
+  )
 }

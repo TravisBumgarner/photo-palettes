@@ -1,12 +1,12 @@
 'use client'
 
 import { List, ListItem, ListItemText, Typography } from '@mui/material'
-import { StaticContentWrapper } from '../../styles/Shared'
+import { PageTitle, PageWrapper } from '../../styles/Shared'
 import Link from '../sharedComponents/Link'
 const TermsOfService = () => {
   return (
-    <StaticContentWrapper>
-      <Typography variant="h2">Terms of Service</Typography>
+    <PageWrapper width="medium" staticContent>
+      <PageTitle text="Terms of Service" />
       <Typography variant="body1">
         <em>Last updated: April 17, 2025</em>
       </Typography>
@@ -90,7 +90,7 @@ const TermsOfService = () => {
         If you have questions or concerns, contact us at{' '}
         <Link href="mailto:support@photopalettes.com">support@photopalettes.com</Link>.
       </Typography>
-    </StaticContentWrapper>
+    </PageWrapper>
   )
 }
 

@@ -9,6 +9,7 @@ import useGlobalStore from '../../store'
 import { BORDER_RADIUS, SPACING } from '../../styles/styleConsts'
 import { deletePalette } from '../../api/deletePalette'
 import { ModalID } from './Modal/Modal.consts'
+
 const ModerationPanel = ({
   refetch,
   moderationStatus,
@@ -73,6 +74,7 @@ const ModerationPanel = ({
         borderColor: 'red',
         borderRadius: BORDER_RADIUS.ZERO.PX,
         padding: SPACING.SMALL.PX,
+        margin: `${SPACING.LARGE.PX} 0`,
       }}
     >
       <Button

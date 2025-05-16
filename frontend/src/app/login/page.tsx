@@ -1,13 +1,14 @@
 'use client'
 
-import { Box, Button, TextField } from '@mui/material'
+import { Button, TextField, Typography } from '@mui/material'
 import { useRouter } from 'next/navigation'
 import { ChangeEvent, useCallback, useState } from 'react'
 import { z } from 'zod'
-import { MINIMUM_PASSWORD_LENGTH } from '../../consts'
+import { MINIMUM_PASSWORD_LENGTH, ROUTES } from '../../consts'
 import { login } from '../../services/supabase/actions'
 import useGlobalStore from '../../store'
-import { authFormCSS } from '../../styles/Shared'
+import { authFormCSS, PageTitle, PageWrapper } from '../../styles/Shared'
+import Link from '../sharedComponents/Link'
 
 const LoginSchema = z.object({
   email: z.string().email(),
@@ -58,16 +59,9 @@ export default function LoginPage() {
   )
 
   return (
-    <Box
-      sx={{
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-        height: '70vh',
-      }}
-    >
+    <PageWrapper minHeight width="small">
       <form onSubmit={handleSubmit} style={authFormCSS}>
+        <PageTitle text="Log In" center />
         {error && <p style={{ color: 'red' }}>{error}</p>}
         <TextField
           id="email"
@@ -96,7 +90,11 @@ export default function LoginPage() {
         <Button variant="contained" type="submit" fullWidth>
           Log in
         </Button>
+        <Typography variant="body1">
+          {"Don't have an account? "}
+          <Link href={ROUTES.signup.href}>{ROUTES.signup.label}</Link>.
+        </Typography>
       </form>
-    </Box>
+    </PageWrapper>
   )
 }

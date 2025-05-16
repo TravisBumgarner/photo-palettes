@@ -14,6 +14,7 @@ import { EPermissionLevel, TFeatureRequest } from '../../types'
 import Link from '../sharedComponents/Link'
 import Loading from '../sharedComponents/Loading'
 import Message from '../sharedComponents/Message'
+import { PageTitle, PageWrapper } from '../../styles/Shared'
 
 const FeatureRequestCard = ({
   featureRequest,
@@ -63,7 +64,7 @@ const FeatureRequestCard = ({
       }}
     >
       <Box>
-        <Typography variant="h2">{featureRequest.title}</Typography>
+        <PageTitle marginBottom text={featureRequest.title} />
         <Typography variant="body1">{featureRequest.description}</Typography>
       </Box>
       <Box sx={{ display: 'flex', flexDirection: 'row', gap: 2, alignItems: 'center' }}>
@@ -124,7 +125,7 @@ const NewFeatureSubmission = ({ refetch }: { refetch: () => void }) => {
         margin: `${SPACING.MEDIUM.PX} 0`,
       }}
     >
-      <Typography variant="h2">Moderators Only</Typography>
+      <PageTitle marginBottom text="MOderators Only" />
       <Box sx={{ display: 'flex', gap: SPACING.MEDIUM.PX, flexDirection: 'column' }}>
         <Typography variant="body1">Add</Typography>
         <TextField fullWidth label="Title" value={title} onChange={handleTitleChange} />
@@ -164,8 +165,8 @@ const FeatureRequests = () => {
   }
 
   return (
-    <Box>
-      <Typography variant="h2">Feature Requests</Typography>
+    <PageWrapper width="medium">
+      <PageTitle marginBottom text="Feature Requests" />
       <Typography variant="body1">
         <Link href="/feedback">Submit a feature request.</Link>
       </Typography>
@@ -192,7 +193,7 @@ const FeatureRequests = () => {
       {appUserDetails && appUserDetails?.permissionLevel >= EPermissionLevel.MODERATOR && (
         <NewFeatureSubmission refetch={refetch} />
       )}
-    </Box>
+    </PageWrapper>
   )
 }
 

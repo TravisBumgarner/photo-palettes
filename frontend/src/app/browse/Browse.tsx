@@ -1,12 +1,10 @@
 'use client'
 
-import { Box } from '@mui/material'
 import { useQuery } from '@tanstack/react-query'
 import { useEffect } from 'react'
 import getPaletteListModerated from '../../api/palettes/getPaletteListModerated'
 import { logger } from '../../services/logging'
-import { ThumbnailGridDisplay } from '../../styles/Shared'
-import { SPACING } from '../../styles/styleConsts'
+import { PageWrapper, ThumbnailGridDisplay } from '../../styles/Shared'
 import Loading from '../sharedComponents/Loading'
 import Message from '../sharedComponents/Message'
 import PaletteThumbnail from '../sharedComponents/PaletteThumbnail'
@@ -35,7 +33,7 @@ const Browse = () => {
   }
 
   return (
-    <Box sx={{ margin: `${SPACING.MEDIUM.PX} 0` }}>
+    <PageWrapper width="full" minHeight>
       {!data || data.palettes.length === 0 ? (
         <Message message="Be the first to create a palette!" color="info" />
       ) : (
@@ -43,7 +41,7 @@ const Browse = () => {
           {data?.palettes.map(palette => <PaletteThumbnail key={palette.id} palette={palette} />)}
         </ThumbnailGridDisplay>
       )}
-    </Box>
+    </PageWrapper>
   )
 }
 

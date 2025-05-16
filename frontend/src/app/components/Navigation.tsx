@@ -6,7 +6,7 @@ import { Box, IconButton, Menu, MenuItem, Typography } from '@mui/material'
 import { useCallback, useMemo, useState } from 'react'
 import { ROUTES } from '../../consts'
 import useGlobalStore from '../../store'
-import { BORDER_RADIUS, FONT_SIZES } from '../../styles/styleConsts'
+import { BORDER_RADIUS, FONT_SIZES, SPACING } from '../../styles/styleConsts'
 import { EPermissionLevel } from '../../types'
 import Link from '../sharedComponents/Link'
 
@@ -50,8 +50,12 @@ const Navigation = () => {
         display: 'flex',
         flexDirection: 'row',
         justifyContent: 'space-between',
-        margin: `10px 0`,
+        marginTop: SPACING.MEDIUM.PX,
+        paddingBottom: SPACING.MEDIUM.PX,
+        marginBottom: SPACING.MEDIUM.PX,
         alignItems: 'center',
+        borderBottom: '2px solid',
+        borderBottomColor: 'divider',
       }}
     >
       <Box
