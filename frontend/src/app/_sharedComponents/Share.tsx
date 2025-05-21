@@ -2,12 +2,8 @@ import { Box, Tooltip, Button } from '@mui/material'
 import {
   BlueskyIcon,
   BlueskyShareButton,
-  EmailIcon,
-  EmailShareButton,
-  FacebookIcon,
-  FacebookShareButton,
-  RedditIcon,
-  RedditShareButton,
+  PinterestIcon,
+  PinterestShareButton,
   ThreadsIcon,
   ThreadsShareButton,
   TwitterIcon,
@@ -15,14 +11,17 @@ import {
 } from 'react-share'
 import { SPACING } from '../../styles/styleConsts'
 import { useCallback } from 'react'
+import useGlobalStore from '../../store'
 
 const ICON_SIZE = 32
 
 const CopyLink = ({ url }: { url: string }) => {
+  const addAlert = useGlobalStore(store => store.addAlert)
+
   const copyToClipboard = useCallback(() => {
     navigator.clipboard.writeText(url)
-    alert('Link copied to clipboard!')
-  }, [url])
+    addAlert('Link copied to clipboard', 'success')
+  }, [url, addAlert])
 
   return (
     <Tooltip title="Copy Link" arrow>
@@ -33,7 +32,7 @@ const CopyLink = ({ url }: { url: string }) => {
           '&:hover': {
             boxShadow: 'none',
           },
-          color: 'text.primary',
+          color: 'primary.main',
           boxShadow: 'none',
           padding: `0 ${SPACING.TINY.PX}`,
           height: ICON_SIZE,
@@ -49,52 +48,66 @@ const CopyLink = ({ url }: { url: string }) => {
   )
 }
 
-const Share = ({ url }: { url: string }) => {
+const Share = ({ url, text, media }: { url: string; text: string; media: string }) => {
+  const absoluteUrl = process.env.NEXT_PUBLIC_FE_URL + '/' + url
+
   return (
-    <Box sx={{ display: 'flex', gap: SPACING.SMALL.PX }}>
+    <Box
+      sx={{
+        display: 'flex',
+        gap: SPACING.SMALL.PX,
+        '& svg > rect': { fill: theme => theme.palette.divider },
+        '& svg > path': { fill: theme => theme.palette.primary.main },
+      }}
+    >
       <Tooltip title="Copy Link" arrow>
-        <CopyLink url={url} />
+        <CopyLink url={absoluteUrl} />
+      </Tooltip>
+
+      <Tooltip title="Share on Pinterest" arrow>
+        <PinterestShareButton url={absoluteUrl} media={media} description={text}>
+          <PinterestIcon size={ICON_SIZE} />
+        </PinterestShareButton>
       </Tooltip>
 
       <Tooltip title="Share on Bluesky" arrow sx={{ borderRadius: '0%' }}>
-        <BlueskyShareButton url={url}>
+        <BlueskyShareButton
+          url={absoluteUrl}
+          title={`${text}\n#photopalettes #colorpalettes #color`}
+        >
           <BlueskyIcon size={ICON_SIZE} />
         </BlueskyShareButton>
       </Tooltip>
 
       <Tooltip title="Share on Twitter" arrow>
-        <TwitterShareButton url={url}>
+        <TwitterShareButton
+          url={absoluteUrl}
+          title={text}
+          hashtags={['palette', 'color', 'photopalette']}
+        >
           <TwitterIcon size={ICON_SIZE} />
         </TwitterShareButton>
       </Tooltip>
 
-      <Tooltip title="Share on Facebook" arrow>
-        <FacebookShareButton url={url}>
+      {/* Not working */}
+      {/* <Tooltip title="Share on Facebook" arrow>
+        <FacebookShareButton url={absoluteUrl}>
           <FacebookIcon size={ICON_SIZE} />
         </FacebookShareButton>
-      </Tooltip>
+      </Tooltip> */}
 
       <Tooltip title="Share on Threads" arrow>
-        <ThreadsShareButton url={url}>
+        <ThreadsShareButton url={absoluteUrl} title={text}>
           <ThreadsIcon size={ICON_SIZE} />
         </ThreadsShareButton>
       </Tooltip>
 
-      <Tooltip title="Share on Reddit" arrow>
-        <RedditShareButton url={url}>
+      {/* Not currently working. */}
+      {/* <Tooltip title="Share on Reddit" arrow>
+        <RedditShareButton url={absoluteUrl} title={text}>
           <RedditIcon size={ICON_SIZE} />
         </RedditShareButton>
-      </Tooltip>
-
-      <Tooltip title="Share via Email" arrow>
-        <EmailShareButton
-          url={url}
-          subject={'Check out this link!'}
-          body={'I found this link and thought you might like it!'}
-        >
-          <EmailIcon size={ICON_SIZE} />
-        </EmailShareButton>
-      </Tooltip>
+      </Tooltip> */}
     </Box>
   )
 }

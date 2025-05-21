@@ -23,11 +23,6 @@ const PalettePage = ({ palette }: { palette: TPalette }) => {
 
   return (
     <PageWrapper width="full">
-      {palette.moderationStatus === EModerationStatus.APPROVED && (
-        <Box sx={{ display: 'flex', justifyContent: 'flex-end', marginBottom: SPACING.MEDIUM.PX }}>
-          <Share url="fill me" />
-        </Box>
-      )}
       {palette.moderationStatus === EModerationStatus.AWAITING_MODERATION && (
         <Message message="This palette is pending approval." color="info" />
       )}
@@ -105,6 +100,15 @@ const PalettePage = ({ palette }: { palette: TPalette }) => {
           ))}
         </Box>
       </Box>
+      {palette.moderationStatus === EModerationStatus.APPROVED && (
+        <Box sx={{ display: 'flex', justifyContent: 'flex-end', marginTop: SPACING.MEDIUM.PX }}>
+          <Share
+            url={`palette/${palette.id}`}
+            text={`${palette.name} by #${palette.appUserId.slice(0, 6)}`}
+            media={palette.ogPhotoUrl}
+          />
+        </Box>
+      )}
       <ModerationPanel
         refetch={refetch}
         moderationStatus={palette.moderationStatus}
