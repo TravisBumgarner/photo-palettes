@@ -1,7 +1,7 @@
 import { User } from '@supabase/supabase-js'
 import { create } from 'zustand'
 import { devtools } from 'zustand/middleware'
-import { ActiveModal } from '../app/sharedComponents/Modal/Modal.types'
+import { ActiveModal } from '../app/_sharedComponents/Modal/Modal.types'
 import { AppUserDetails, State } from './types'
 
 const useGlobalStore = create<State>()(

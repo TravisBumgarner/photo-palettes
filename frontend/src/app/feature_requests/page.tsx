@@ -11,9 +11,9 @@ import upvoteFeatureRequest from '../../api/featureRequests/upvoteFeatureRequst'
 import useGlobalStore from '../../store'
 import { FONT_SIZES, SPACING } from '../../styles/styleConsts'
 import { EPermissionLevel, TFeatureRequest } from '../../types'
-import Link from '../sharedComponents/Link'
-import Loading from '../sharedComponents/Loading'
-import Message from '../sharedComponents/Message'
+import Link from '../_sharedComponents/Link'
+import Loading from '../_sharedComponents/Loading'
+import Message from '../_sharedComponents/Message'
 import { PageTitle, PageWrapper } from '../../styles/Shared'
 
 const FeatureRequestCard = ({

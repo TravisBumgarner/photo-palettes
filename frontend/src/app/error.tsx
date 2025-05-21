@@ -2,7 +2,7 @@
 
 import { Typography } from '@mui/material'
 import { PageWrapper } from '../styles/Shared'
-import WhatWentWrongContactForm from './sharedComponents/WhatWentWrongContactForm'
+import WhatWentWrongContactForm from './_sharedComponents/WhatWentWrongContactForm'
 
 const Error500 = () => {
   return (

@@ -6,7 +6,7 @@ import { getMe } from '../../api/getMe'
 import { createClient } from '../../services/supabase/client'
 import useGlobalStore from '../../store'
 import { PALETTE } from '../../styles/styleConsts'
-import Loading from '../sharedComponents/Loading'
+import Loading from '../_sharedComponents/Loading'
 
 export function LoadUserIntoStore() {
   const supabase = createClient()

@@ -5,7 +5,7 @@ import { ROUTES } from '../../consts'
 import useGlobalStore from '../../store'
 import { FONT_SIZES, SPACING } from '../../styles/styleConsts'
 import { EPermissionLevel } from '../../types'
-import Link from '../sharedComponents/Link'
+import Link from '../_sharedComponents/Link'
 
 const Section = ({ links, header }: { links: (keyof typeof ROUTES)[]; header: string }) => {
   return (

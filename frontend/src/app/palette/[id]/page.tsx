@@ -2,7 +2,7 @@ import { Metadata } from 'next'
 import { getPaletteById } from '../../../api/palettes/getPaletteById'
 import { logger } from '../../../services/logging'
 import PalettePage from './page.client'
-import Message from '../../sharedComponents/Message'
+import Message from '../../_sharedComponents/Message'
 
 type Props = {
   params: Promise<{

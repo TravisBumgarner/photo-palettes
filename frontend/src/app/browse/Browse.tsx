@@ -5,9 +5,9 @@ import { useEffect } from 'react'
 import getPaletteListModerated from '../../api/palettes/getPaletteListModerated'
 import { logger } from '../../services/logging'
 import { PageWrapper, ThumbnailGridDisplay } from '../../styles/Shared'
-import Loading from '../sharedComponents/Loading'
-import Message from '../sharedComponents/Message'
-import PaletteThumbnail from '../sharedComponents/PaletteThumbnail'
+import Loading from '../_sharedComponents/Loading'
+import Message from '../_sharedComponents/Message'
+import PaletteThumbnail from '../_sharedComponents/PaletteThumbnail'
 
 const Browse = () => {
   const { data, isLoading, error } = useQuery({

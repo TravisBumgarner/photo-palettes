@@ -9,7 +9,7 @@ import Footer from './_components/Footer'
 import { LoadUserIntoStore } from './_components/LoadUserIntoState'
 import Navigation from './_components/Navigation'
 import './global.css'
-import RenderModal from './sharedComponents/Modal'
+import RenderModal from './_sharedComponents/Modal'
 
 const satoshi = localFont({
   src: [

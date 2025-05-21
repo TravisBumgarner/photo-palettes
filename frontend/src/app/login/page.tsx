@@ -8,7 +8,7 @@ import { MINIMUM_PASSWORD_LENGTH, ROUTES } from '../../consts'
 import { login } from '../../services/supabase/actions'
 import useGlobalStore from '../../store'
 import { authFormCSS, PageTitle, PageWrapper } from '../../styles/Shared'
-import Link from '../sharedComponents/Link'
+import Link from '../_sharedComponents/Link'
 
 const LoginSchema = z.object({
   email: z.string().email(),

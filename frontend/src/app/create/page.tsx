@@ -10,9 +10,9 @@ import { logger } from '../../services/logging'
 import useGlobalStore from '../../store'
 import { SPACING } from '../../styles/styleConsts'
 import { TGeneratedPalette } from '../../types'
-import Loading from '../sharedComponents/Loading'
-import Message from '../sharedComponents/Message'
-import { ModalID } from '../sharedComponents/Modal/Modal.consts'
+import Loading from '../_sharedComponents/Loading'
+import Message from '../_sharedComponents/Message'
+import { ModalID } from '../_sharedComponents/Modal/Modal.consts'
 import CanvasAndPalette from './components/CanvasAndPalette'
 import Dropzone from './components/Dropzone'
 import { sharedCSS } from './components/shared'
@@ -155,7 +155,7 @@ const Create = () => {
               display: 'flex',
               flexDirection: 'row',
               gap: '10px',
-            justifyContent: 'flex-end',
+              justifyContent: 'flex-end',
             }}
           >
             <Button variant="outlined" onClick={handleClearPalette}>

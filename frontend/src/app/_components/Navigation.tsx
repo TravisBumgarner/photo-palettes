@@ -8,7 +8,7 @@ import { ROUTES } from '../../consts'
 import useGlobalStore from '../../store'
 import { BORDER_RADIUS, FONT_SIZES, SPACING } from '../../styles/styleConsts'
 import { EPermissionLevel } from '../../types'
-import Link from '../sharedComponents/Link'
+import Link from '../_sharedComponents/Link'
 
 const DropdownLinks = ({ onClose }: { onClose: () => void }) => {
   const appUserDetails = useGlobalStore(state => state.appUserDetails)
