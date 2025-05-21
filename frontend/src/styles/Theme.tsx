@@ -28,6 +28,12 @@ const baseThemeOptions: ThemeOptions = {
       styleOverrides: {
         root: {
           borderRadius: BORDER_RADIUS.ZERO.PX,
+          boxShadow: 'none',
+          cursor: 'pointer',
+          fontWeight: 600,
+          '&:hover': {
+            boxShadow: 'none',
+          },
         },
       },
     },

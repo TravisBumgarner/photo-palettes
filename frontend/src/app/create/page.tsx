@@ -27,6 +27,8 @@ enum UploadStatus {
   SUBMITTED = 'SUBMITTED',
 }
 
+const MAX_NAME_LENGTH = 50
+
 const Create = () => {
   const [uploadStatus, setUploadStatus] = useState<UploadStatus>(UploadStatus.INITIAL)
   const [photo, setPhoto] = useState<File | null>(null)
@@ -65,7 +67,7 @@ const Create = () => {
   )
 
   const handleNameChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    setName(e.target.value)
+    setName(e.target.value.slice(0, MAX_NAME_LENGTH))
   }, [])
 
   const handleClearPalette = useCallback(() => {
@@ -116,6 +118,9 @@ const Create = () => {
     setPalette(null)
     setPhoto(null)
   }, [setPalette, setPhoto])
+
+  const nameLabel = name.length > 0 ? `Name: ${name.length} / ${MAX_NAME_LENGTH}` : 'Name'
+
   return (
     <PageWrapper width="full">
       <PageTitle marginBottom text="Create" />
@@ -145,7 +150,8 @@ const Create = () => {
           <TextField
             variant="outlined"
             fullWidth
-            label="Title"
+            label={nameLabel}
+            placeholder="Name your palette"
             value={name}
             onChange={handleNameChange}
           />
