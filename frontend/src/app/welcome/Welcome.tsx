@@ -4,7 +4,7 @@ import { Box, Link, Typography } from '@mui/material'
 import Image from 'next/image'
 import { ROUTES } from '../../consts'
 import { PageTitle, PageWrapper } from '../../styles/Shared'
-import AlphaSignup from '../sharedComponents/AlphaSignup'
+import AlphaSignup from '../_sharedComponents/AlphaSignup'
 
 const Inspired = () => {
   return (

@@ -7,10 +7,11 @@ import { useCallback, useMemo } from 'react'
 import { SPACING } from '../../../styles/styleConsts'
 import { EModerationStatus, TPalette } from '../../../types'
 import { getContrastColor } from '../../../utils'
-import Message from '../../sharedComponents/Message'
-import ModerationPanel from '../../sharedComponents/ModerationPanel'
+import Message from '../../_sharedComponents/Message'
+import ModerationPanel from '../../_sharedComponents/ModerationPanel'
 import { blurHashToDataURL } from '../../../utils/blurhashToDataURL'
 import { PageTitle, PageWrapper } from '../../../styles/Shared'
+import Share from '../../_sharedComponents/Share'
 
 const PalettePage = ({ palette }: { palette: TPalette }) => {
   const router = useRouter()
@@ -99,6 +100,15 @@ const PalettePage = ({ palette }: { palette: TPalette }) => {
           ))}
         </Box>
       </Box>
+      {palette.moderationStatus === EModerationStatus.APPROVED && (
+        <Box sx={{ display: 'flex', justifyContent: 'flex-end', marginTop: SPACING.MEDIUM.PX }}>
+          <Share
+            url={`palette/${palette.id}`}
+            text={`${palette.name} by #${palette.appUserId.slice(0, 6)}`}
+            media={palette.ogPhotoUrl}
+          />
+        </Box>
+      )}
       <ModerationPanel
         refetch={refetch}
         moderationStatus={palette.moderationStatus}

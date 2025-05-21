@@ -12,7 +12,7 @@ import {
 } from '@mui/material'
 import { PageTitle, PageWrapper } from '../../styles/Shared'
 import { BORDER_RADIUS } from '../../styles/styleConsts'
-import Link from '../sharedComponents/Link'
+import Link from '../_sharedComponents/Link'
 
 interface TableProps {
   items: Array<{

@@ -8,9 +8,9 @@ import config from '../../config'
 import { MINIMUM_PASSWORD_LENGTH, ROUTES } from '../../consts'
 import { signup } from '../../services/supabase/actions'
 import useGlobalStore from '../../store'
-import { ModalID } from '../sharedComponents/Modal/Modal.consts'
+import { ModalID } from '../_sharedComponents/Modal/Modal.consts'
 import { authFormCSS, PageTitle, PageWrapper } from '../../styles/Shared'
-import Link from '../sharedComponents/Link'
+import Link from '../_sharedComponents/Link'
 
 const SignupSchema = z.object({
   email: z.string().email(),

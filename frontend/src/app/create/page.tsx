@@ -10,9 +10,9 @@ import { logger } from '../../services/logging'
 import useGlobalStore from '../../store'
 import { SPACING } from '../../styles/styleConsts'
 import { TGeneratedPalette } from '../../types'
-import Loading from '../sharedComponents/Loading'
-import Message from '../sharedComponents/Message'
-import { ModalID } from '../sharedComponents/Modal/Modal.consts'
+import Loading from '../_sharedComponents/Loading'
+import Message from '../_sharedComponents/Message'
+import { ModalID } from '../_sharedComponents/Modal/Modal.consts'
 import CanvasAndPalette from './components/CanvasAndPalette'
 import Dropzone from './components/Dropzone'
 import { sharedCSS } from './components/shared'
@@ -26,6 +26,8 @@ enum UploadStatus {
   SUBMITTING = 'SUBMITTING',
   SUBMITTED = 'SUBMITTED',
 }
+
+const MAX_NAME_LENGTH = 50
 
 const Create = () => {
   const [uploadStatus, setUploadStatus] = useState<UploadStatus>(UploadStatus.INITIAL)
@@ -65,7 +67,7 @@ const Create = () => {
   )
 
   const handleNameChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    setName(e.target.value)
+    setName(e.target.value.slice(0, MAX_NAME_LENGTH))
   }, [])
 
   const handleClearPalette = useCallback(() => {
@@ -116,6 +118,9 @@ const Create = () => {
     setPalette(null)
     setPhoto(null)
   }, [setPalette, setPhoto])
+
+  const nameLabel = name.length > 0 ? `Name: ${name.length} / ${MAX_NAME_LENGTH}` : 'Name'
+
   return (
     <PageWrapper width="full">
       <PageTitle marginBottom text="Create" />
@@ -145,7 +150,8 @@ const Create = () => {
           <TextField
             variant="outlined"
             fullWidth
-            label="Title"
+            label={nameLabel}
+            placeholder="Name your palette"
             value={name}
             onChange={handleNameChange}
           />
@@ -155,7 +161,7 @@ const Create = () => {
               display: 'flex',
               flexDirection: 'row',
               gap: '10px',
-            justifyContent: 'flex-end',
+              justifyContent: 'flex-end',
             }}
           >
             <Button variant="outlined" onClick={handleClearPalette}>

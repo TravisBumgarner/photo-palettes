@@ -4,7 +4,7 @@ import { Box, Button, TextField, Typography } from '@mui/material'
 import React, { useCallback, useMemo, useState } from 'react'
 import { ROUTES } from '../../consts'
 import { PageTitle, PageWrapper } from '../../styles/Shared'
-import Link from '../sharedComponents/Link'
+import Link from '../_sharedComponents/Link'
 
 const Contact = () => {
   const [success, setSuccess] = useState(false)

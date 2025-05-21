@@ -11,9 +11,9 @@ import { PageTitle, PageWrapper, ThumbnailGridDisplay } from '../../../styles/Sh
 import { SPACING } from '../../../styles/styleConsts'
 import { EModerationStatus } from '../../../types'
 import { getContrastColor, getUserColorFromUUID } from '../../../utils'
-import Loading from '../../sharedComponents/Loading'
-import Message from '../../sharedComponents/Message'
-import PaletteThumbnail from '../../sharedComponents/PaletteThumbnail'
+import Loading from '../../_sharedComponents/Loading'
+import Message from '../../_sharedComponents/Message'
+import PaletteThumbnail from '../../_sharedComponents/PaletteThumbnail'
 
 const TABS = [
   { label: 'Approved', status: EModerationStatus.APPROVED },

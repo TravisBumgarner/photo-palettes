@@ -1,5 +1,5 @@
 import { User } from '@supabase/supabase-js'
-import { ActiveModal } from '../app/sharedComponents/Modal/Modal.types'
+import { ActiveModal } from '../app/_sharedComponents/Modal/Modal.types'
 
 export interface AppUserDetails {
   permissionLevel: number

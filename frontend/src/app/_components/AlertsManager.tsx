@@ -35,7 +35,7 @@ const Alert = ({
         padding: `${SPACING.MEDIUM.PX} ${SPACING.LARGE.PX}`,
         borderRadius: BORDER_RADIUS.ZERO.PX,
         position: 'relative',
-        animation: 'slideUp 0.3s ease-out',
+        animation: 'slideDown 0.3s ease-out',
       }}
     >
       {message}
@@ -94,17 +94,17 @@ const AlertsManager = () => {
         flexDirection: 'column',
         gap: 2,
         position: 'fixed',
-        bottom: 16,
+        top: 16,
         left: '50%',
         transform: 'translateX(-50%)',
         zIndex: 1000,
-        '@keyframes slideUp': {
+        '@keyframes slideDown': {
           from: {
-            transform: 'translateY(100%)',
+            transform: 'translateY(-100%)',
             opacity: 0,
           },
           to: {
-            transform: 'translateY(0)',
+            transform: 'translateY(0%)',
             opacity: 1,
           },
         },

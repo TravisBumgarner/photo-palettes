@@ -2,7 +2,7 @@
 
 import { List, ListItem, ListItemText, Typography } from '@mui/material'
 import { PageTitle, PageWrapper } from '../../styles/Shared'
-import Link from '../sharedComponents/Link'
+import Link from '../_sharedComponents/Link'
 const TermsOfService = () => {
   return (
     <PageWrapper width="medium" staticContent>
