@@ -10,6 +10,13 @@ import { FONT_SIZES, PALETTE, BORDER_RADIUS } from './styleConsts'
 // Base theme options shared between light and dark
 const baseThemeOptions: ThemeOptions = {
   components: {
+    MuiTooltip: {
+      styleOverrides: {
+        tooltip: {
+          borderRadius: 0,
+        },
+      },
+    },
     MuiOutlinedInput: {
       styleOverrides: {
         root: {

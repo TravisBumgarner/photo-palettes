@@ -11,6 +11,7 @@ import Message from '../../_sharedComponents/Message'
 import ModerationPanel from '../../_sharedComponents/ModerationPanel'
 import { blurHashToDataURL } from '../../../utils/blurhashToDataURL'
 import { PageTitle, PageWrapper } from '../../../styles/Shared'
+import Share from '../../_sharedComponents/Share'
 
 const PalettePage = ({ palette }: { palette: TPalette }) => {
   const router = useRouter()
@@ -22,6 +23,11 @@ const PalettePage = ({ palette }: { palette: TPalette }) => {
 
   return (
     <PageWrapper width="full">
+      {palette.moderationStatus === EModerationStatus.APPROVED && (
+        <Box sx={{ display: 'flex', justifyContent: 'flex-end', marginBottom: SPACING.MEDIUM.PX }}>
+          <Share url="fill me" />
+        </Box>
+      )}
       {palette.moderationStatus === EModerationStatus.AWAITING_MODERATION && (
         <Message message="This palette is pending approval." color="info" />
       )}
