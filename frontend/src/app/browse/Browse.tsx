@@ -1,7 +1,7 @@
 'use client'
 
 import { useQuery } from '@tanstack/react-query'
-import { useEffect } from 'react'
+import { useEffect, useMemo } from 'react'
 import getPaletteListModerated from '../../api/palettes/getPaletteListModerated'
 import { logger } from '../../services/logging'
 import { PageWrapper, ThumbnailGridDisplay } from '../../styles/Shared'
@@ -20,27 +20,25 @@ const Browse = () => {
     if (error) logger.error(error)
   }, [error])
 
-  if (isLoading || !data) {
-    return <Loading />
-  }
+  const loading = isLoading || !data
+  const hasErrored = error || (data && !data.success)
+  const noPalettes = !data || (data.success && data.palettes.length === 0)
 
-  if (error) {
-    return <Message message="Error fetching palettes" color="error" />
-  }
+  const content = useMemo(() => {
+    if (hasErrored) return <Message message="Error fetching palettes" color="error" />
+    if (loading) return <Loading />
+    if (noPalettes) return <Message message="No palettes found" color="info" />
 
-  if (!data.success) {
-    return <Message message="Error fetching palettes" color="error" />
-  }
+    return (
+      <ThumbnailGridDisplay>
+        {data?.palettes.map(palette => <PaletteThumbnail key={palette.id} palette={palette} />)}
+      </ThumbnailGridDisplay>
+    )
+  }, [hasErrored, noPalettes, data, loading])
 
   return (
     <PageWrapper width="full" minHeight>
-      {!data || data.palettes.length === 0 ? (
-        <Message message="Be the first to create a palette!" color="info" />
-      ) : (
-        <ThumbnailGridDisplay>
-          {data?.palettes.map(palette => <PaletteThumbnail key={palette.id} palette={palette} />)}
-        </ThumbnailGridDisplay>
-      )}
+      {content}
     </PageWrapper>
   )
 }
