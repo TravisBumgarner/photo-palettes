@@ -4,13 +4,13 @@ import { Button, TextField, Typography } from '@mui/material'
 import { useRouter } from 'next/navigation'
 import { ChangeEvent, useCallback, useState } from 'react'
 import { z } from 'zod'
-import config from '../../config'
-import { MINIMUM_PASSWORD_LENGTH, ROUTES } from '../../consts'
+import { MINIMUM_PASSWORD_LENGTH, ROUTES, SUPER_SECRET_INVITATION_KEY } from '../../consts'
 import { signup } from '../../services/supabase/actions'
 import useGlobalStore from '../../store'
 import { ModalID } from '../_sharedComponents/Modal/Modal.consts'
 import { authFormCSS, PageTitle, PageWrapper } from '../../styles/Shared'
 import Link from '../_sharedComponents/Link'
+import { getLocalStorage, LOCAL_STORAGE_KEYS } from '../../utils/localStorage'
 
 const SignupSchema = z.object({
   email: z.string().email(),
@@ -18,17 +18,14 @@ const SignupSchema = z.object({
   repeatPassword: z.string().min(MINIMUM_PASSWORD_LENGTH),
 })
 
-// Congrats, you found the secret invitation key!
-// The rest of the app is quite secure.
-const SUPER_SECRET_INVITATION_KEY = 'welcome-to-photo-palettes'
 
 export default function SignupPage() {
   const [error, setError] = useState<string | null>(null)
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [repeatPassword, setRepeatPassword] = useState('')
-  const [invitationKey, setInvitationKey] = useState(
-    config.is_production ? '' : SUPER_SECRET_INVITATION_KEY
+  const [invitationKey, setInvitationKey] = useState<string>(
+    getLocalStorage(LOCAL_STORAGE_KEYS.SIGNUP_CODE, '')
   )
   const router = useRouter()
   const setIsAppAuthenticating = useGlobalStore(state => state.setIsAppAuthenticating)
@@ -126,10 +123,12 @@ export default function SignupPage() {
           required
           value={invitationKey}
           onChange={handleInvitationKeyChange}
-          placeholder="Enter invitation key"
-          label="Invitation Key"
+          label="Invitation key"
           fullWidth
           autoComplete="off"
+          slotProps={{
+            inputLabel: { shrink: true },
+          }}
         />
         <TextField
           id="email"
@@ -138,10 +137,12 @@ export default function SignupPage() {
           required
           value={email}
           onChange={handleEmailChange}
-          placeholder="Enter email"
           label="Email"
           fullWidth
           autoComplete="email"
+          slotProps={{
+            inputLabel: { shrink: true },
+          }}
         />
         <TextField
           id="password"
@@ -150,10 +151,12 @@ export default function SignupPage() {
           required
           value={password}
           onChange={handlePasswordChange}
-          placeholder="Enter password"
           label="Password"
           fullWidth
           autoComplete="new-password"
+          slotProps={{
+            inputLabel: { shrink: true },
+          }}
         />
         <TextField
           id="repeatPassword"
@@ -162,10 +165,12 @@ export default function SignupPage() {
           required
           value={repeatPassword}
           onChange={handleRepeatPasswordChange}
-          placeholder="Enter password again"
           label="Repeat Password"
           fullWidth
           autoComplete="new-password"
+          slotProps={{
+            inputLabel: { shrink: true },
+          }}
         />
         <Button
           variant="contained"

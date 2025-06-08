@@ -68,24 +68,28 @@ export default function LoginPage() {
           name="email"
           type="email"
           required
-          placeholder="Enter email"
           label="Email"
           autoComplete="email"
           fullWidth
           value={email}
           onChange={handleEmailChange}
+          slotProps={{
+            inputLabel: { shrink: true },
+          }}
         />
         <TextField
           id="password"
           name="password"
           type="password"
           required
-          placeholder="Enter password"
           label="Password"
           autoComplete="current-password"
           fullWidth
           value={password}
           onChange={handlePasswordChange}
+          slotProps={{
+            inputLabel: { shrink: true },
+          }}
         />
         <Button variant="contained" type="submit" fullWidth>
           Log in
