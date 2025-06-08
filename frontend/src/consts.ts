@@ -84,3 +84,7 @@ export const ROUTES = {
     label: 'Changelog',
   },
 }
+
+// Congrats, you found the secret invitation key!
+// The rest of the app is quite secure.
+export const SUPER_SECRET_INVITATION_KEY = 'welcome-to-photo-palettes'

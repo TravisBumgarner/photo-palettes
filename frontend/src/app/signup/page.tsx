@@ -4,7 +4,7 @@ import { Button, TextField, Typography } from '@mui/material'
 import { useRouter } from 'next/navigation'
 import { ChangeEvent, useCallback, useState } from 'react'
 import { z } from 'zod'
-import { MINIMUM_PASSWORD_LENGTH, ROUTES } from '../../consts'
+import { MINIMUM_PASSWORD_LENGTH, ROUTES, SUPER_SECRET_INVITATION_KEY } from '../../consts'
 import { signup } from '../../services/supabase/actions'
 import useGlobalStore from '../../store'
 import { ModalID } from '../_sharedComponents/Modal/Modal.consts'
@@ -18,9 +18,6 @@ const SignupSchema = z.object({
   repeatPassword: z.string().min(MINIMUM_PASSWORD_LENGTH),
 })
 
-// Congrats, you found the secret invitation key!
-// The rest of the app is quite secure.
-const SUPER_SECRET_INVITATION_KEY = 'welcome-to-photo-palettes'
 
 export default function SignupPage() {
   const [error, setError] = useState<string | null>(null)
