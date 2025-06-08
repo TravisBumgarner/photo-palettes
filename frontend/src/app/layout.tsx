@@ -45,7 +45,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body>
         <div id="root">
           <Suspense>
-            {' '}
             {/* Needed for useSearchParams */}
             <AppRouterCacheProvider>
               <AppThemeProvider>
