@@ -42,9 +42,10 @@ const DraggableSwatch = forwardRef<
         width: `${SWATCH_SIZE}px`,
         cursor: 'none',
         height: `${SWATCH_SIZE}px`,
-        borderRadius: '50%',
-        border: `2px solid black`,
+        // borderRadius: '50%',
+        border: `1px solid black`,
         boxShadow: '0 0 10px rgba(0,0,0,0.3)',
+        transform: 'translate(-50%, -50%)',
       }}
     />
   )

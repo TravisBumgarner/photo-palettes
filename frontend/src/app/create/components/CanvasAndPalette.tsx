@@ -59,7 +59,7 @@ const CanvasAndPalette = ({
     const readonlySwatchRef = readonlySwatchRefs.current[index]
 
     if (!draggableSwatchRef || !readonlySwatchRef) return
-    draggableSwatchRef.style.backgroundColor = swatch.color.toUpperCase()
+    // draggableSwatchRef.style.backgroundColor = swatch.color.toUpperCase()
     draggableSwatchRef.style.left = `${swatch.percentLocation[0]}%`
     draggableSwatchRef.style.top = `${swatch.percentLocation[1]}%`
 

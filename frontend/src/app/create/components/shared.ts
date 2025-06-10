@@ -8,4 +8,4 @@ export const sharedCSS = {
   },
 }
 
-export const SWATCH_SIZE = 30
+export const SWATCH_SIZE = 5
