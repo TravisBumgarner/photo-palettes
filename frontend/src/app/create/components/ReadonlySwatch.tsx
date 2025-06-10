@@ -7,10 +7,14 @@ const ReadonlySwatch = forwardRef(
       index,
       handleMouseEnterCallback,
       handleMouseLeaveCallback,
+      isHovering,
+      isDragging,
     }: {
       index: number
       handleMouseEnterCallback: (index: number) => void
       handleMouseLeaveCallback: (index: null) => void
+      isHovering: boolean
+      isDragging: boolean
     },
     ref
   ) => {
@@ -34,6 +38,7 @@ const ReadonlySwatch = forwardRef(
           flexGrow: 1,
           cursor: 'pointer',
           fontSize: '20px',
+          fontWeight: isHovering || isDragging ? 900 : 100,
         }}
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}

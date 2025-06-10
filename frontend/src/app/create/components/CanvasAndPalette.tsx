@@ -240,6 +240,9 @@ const CanvasAndPalette = ({
               isHovering={hoveringIndex === index}
               isDragging={draggingIndex === index}
               key={index}
+              index={index}
+              handleMouseEnterCallback={setHoveringIndex}
+              handleMouseLeaveCallback={setHoveringIndex}
             />
           ))}
         </div>
@@ -265,6 +268,8 @@ const CanvasAndPalette = ({
             key={index}
             ref={setReadonlySwatchRef(index)}
             index={index}
+            isHovering={hoveringIndex === index}
+            isDragging={draggingIndex === index}
             handleMouseEnterCallback={setHoveringIndex}
             handleMouseLeaveCallback={setHoveringIndex}
           />

@@ -1,13 +1,24 @@
 import { motion } from 'framer-motion'
-import { forwardRef } from 'react'
+import { forwardRef, useCallback } from 'react'
 import { SWATCH_SIZE } from './shared'
 const DraggableSwatch = forwardRef<
   HTMLDivElement,
   {
+    index: number
     isHovering: boolean
     isDragging: boolean
+    handleMouseEnterCallback: (index: number) => void
+    handleMouseLeaveCallback: (index: null) => void
   }
->(({ isHovering, isDragging }, ref) => {
+>(({ index, isHovering, isDragging, handleMouseEnterCallback, handleMouseLeaveCallback }, ref) => {
+  const handleMouseEnter = useCallback(() => {
+    handleMouseEnterCallback(index)
+  }, [index, handleMouseEnterCallback])
+
+  const handleMouseLeave = useCallback(() => {
+    handleMouseLeaveCallback(null)
+  }, [handleMouseLeaveCallback])
+
   return (
     <motion.div
       ref={ref}
@@ -23,6 +34,8 @@ const DraggableSwatch = forwardRef<
       animate={{
         scale: isHovering || isDragging ? 3 : 1,
       }}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
       style={{
         // Additional styles set by parent via refs.
         position: 'absolute',
