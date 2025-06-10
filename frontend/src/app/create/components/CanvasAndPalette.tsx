@@ -13,7 +13,7 @@ import { TGeneratedPalette, TSwatch } from '../../../types'
 import { getContrastColor } from '../../../utils'
 import DraggableSwatch from './DraggableSwatch'
 import ReadonlySwatch from './ReadonlySwatch'
-import { sharedCSS, SWATCH_SIZE } from './shared'
+import { sharedCSS, SWATCH_SIZE, PREVIEW_SIDE_LENGTH } from './shared'
 
 const CanvasAndPalette = ({
   photo,
@@ -30,6 +30,7 @@ const CanvasAndPalette = ({
   const readonlySwatchRefs = useRef<(HTMLDivElement | null)[]>([])
   const [draggingIndex, setDraggingIndex] = useState<number | null>(null)
   const [hoveringIndex, setHoveringIndex] = useState<number | null>(null)
+  const [neighbors, setNeighbors] = useState<string[]>([])
   const [imageDimensions, setImageDimensions] = useState<{ width: number; height: number }>({
     width: 1,
     height: 1,
@@ -37,10 +38,10 @@ const CanvasAndPalette = ({
 
   const sampleColorAtPosition = useCallback((x: number, y: number) => {
     const canvas = canvasRef.current
-    if (!canvas) return null
+    if (!canvas) return '#000000'
 
     const ctx = canvas.getContext('2d', { willReadFrequently: true })
-    if (!ctx) return null
+    if (!ctx) return '#000000'
 
     const rect = canvas.getBoundingClientRect()
     const scaleX = canvas.width / rect.width
@@ -53,6 +54,25 @@ const CanvasAndPalette = ({
     const pixel = ctx.getImageData(pixelX, pixelY, 1, 1).data
     return `#${pixel[0].toString(16).padStart(2, '0')}${pixel[1].toString(16).padStart(2, '0')}${pixel[2].toString(16).padStart(2, '0')}`
   }, [])
+
+  const getGridCoordinates = (x: number, y: number, N: number) => {
+    const half = Math.floor(N / 2)
+    const coords: [number, number][] = []
+    for (let dy = -half; dy <= half; dy++) {
+      for (let dx = -half; dx <= half; dx++) {
+        coords.push([x + dx, y + dy])
+      }
+    }
+    return coords
+  }
+
+  const sampleColorsAtPosition = useCallback(
+    (x: number, y: number) => {
+      const coordinates = getGridCoordinates(x, y, PREVIEW_SIDE_LENGTH)
+      return coordinates.map(position => sampleColorAtPosition(...position))
+    },
+    [sampleColorAtPosition]
+  )
 
   const updateSwatch = useCallback((index: number, swatch: TSwatch) => {
     const draggableSwatchRef = draggableSwatchRefs.current[index]
@@ -88,18 +108,19 @@ const CanvasAndPalette = ({
         Math.min(rect.height - SWATCH_SIZE, clientY - rect.top - SWATCH_SIZE / 2)
       )
 
-      const newColor = sampleColorAtPosition(x + SWATCH_SIZE / 2, y + SWATCH_SIZE / 2)
-      if (!newColor) return
-
+      const newColors = sampleColorsAtPosition(x + SWATCH_SIZE / 2, y + SWATCH_SIZE / 2)
+      const center = Math.floor((PREVIEW_SIDE_LENGTH * PREVIEW_SIDE_LENGTH) / 2)
       updateSwatch(draggingIndex, {
-        color: newColor,
+        color: newColors[center],
         percentLocation: [(x / rect.width) * 100, (y / rect.height) * 100],
       })
+      setNeighbors(newColors)
     },
-    [draggingIndex, sampleColorAtPosition, updateSwatch]
+    [draggingIndex, updateSwatch, sampleColorsAtPosition]
   )
 
   useEffect(() => {
+    // Draw swatches on screen.
     if (palette) {
       palette.forEach((swatch, index) => {
         updateSwatch(index, swatch)
@@ -130,6 +151,7 @@ const CanvasAndPalette = ({
 
   const handleEnd = useCallback(() => {
     setDraggingIndex(null)
+    setNeighbors([])
     updatePalette(
       draggableSwatchRefs.current.map(swatch => ({
         color: rgbToHex(swatch?.style.backgroundColor || ''),
@@ -239,6 +261,7 @@ const CanvasAndPalette = ({
               ref={setDraggableSwatchRef(index)}
               isHovering={hoveringIndex === index}
               isDragging={draggingIndex === index}
+              neighbors={neighbors}
               key={index}
               index={index}
               handleMouseEnterCallback={setHoveringIndex}
