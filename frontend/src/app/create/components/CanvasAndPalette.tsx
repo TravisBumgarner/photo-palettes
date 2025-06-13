@@ -29,6 +29,7 @@ const CanvasAndPalette = ({
   // const [draggingIndex, setDraggingIndex] = useState<number | null>(null)
   // const [hoveringIndex, setHoveringIndex] = useState<number | null>(null)
   const [activeIndex, setActiveIndex] = useState<number | null>(null)
+  const [readyToDrawSwatches, setReadyToDrawSwatches] = useState(false)
   const [imageDimensions, setImageDimensions] = useState<{ width: number; height: number }>({
     width: 1,
     height: 1,
@@ -50,6 +51,7 @@ const CanvasAndPalette = ({
 
       ctx.drawImage(image, 0, 0, image.width, image.height)
       URL.revokeObjectURL(image.src)
+      setReadyToDrawSwatches(true)
     }
   }, [])
 
@@ -120,6 +122,7 @@ const CanvasAndPalette = ({
                 handleMouseLeaveCallback={setActiveIndex}
                 canvasContainerRef={canvasContainerRef}
                 canvasRef={canvasRef}
+                readyToDrawSwatches={readyToDrawSwatches}
               />
             ))}
         </div>

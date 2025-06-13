@@ -31,6 +31,7 @@ const DraggableSwatch = forwardRef<
     handleMouseLeaveCallback: (index: null) => void
     canvasContainerRef: React.RefObject<HTMLDivElement | null>
     canvasRef: React.RefObject<HTMLCanvasElement | null>
+    readyToDrawSwatches: boolean
   }
 >(
   (
@@ -42,6 +43,7 @@ const DraggableSwatch = forwardRef<
       canvasContainerRef,
       canvasRef,
       startingPosition,
+      readyToDrawSwatches,
     },
     ref
   ) => {
@@ -96,21 +98,24 @@ const DraggableSwatch = forwardRef<
     useEffect(() => {
       // Update neighbors when dragging or hovering over a swatch.
 
+      if (!readyToDrawSwatches) return
+
       const container = canvasContainerRef.current
       if (!container) return
       const rect = container.getBoundingClientRect()
-      console.log(
-        'I run at',
-        (rect.width * position.left) / 100,
-        (rect.height * position.top) / 100
-      )
       const newColors = sampleColorsAtPosition(
         (rect.width * position.left) / 100,
         (rect.height * position.top) / 100
       )
-      console.log('New colors:', newColors)
       setNeighbors(newColors)
-    }, [sampleColorsAtPosition, canvasContainerRef, index, position.left, position.top])
+    }, [
+      sampleColorsAtPosition,
+      canvasContainerRef,
+      index,
+      position.left,
+      position.top,
+      readyToDrawSwatches,
+    ])
 
     const handleMouseEnter = useCallback(() => {
       handleMouseEnterCallback(index)
