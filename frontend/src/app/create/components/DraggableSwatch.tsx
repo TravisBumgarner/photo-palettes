@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion'
 import { forwardRef, useCallback } from 'react'
-import { BORDER_WIDTH, PIXEL_SIDE_LENGTH } from './shared'
+import { BORDER_WIDTH, CENTER_PIXEL_INDEX, PIXEL_SIDE_LENGTH } from './shared'
 
 const SIDE_LENGTH = PIXEL_SIDE_LENGTH * 3 + BORDER_WIDTH * 2
 const SIDE_LENGTH_SCALED = SIDE_LENGTH * 3
@@ -63,7 +63,7 @@ const DraggableSwatch = forwardRef<
           <div
             key={i}
             style={{
-              border: `0.5px solid color-mix(in srgb, ${neighbor} ${i === 4 ? '20%' : '80%'}, white ${i === 4 ? '80%' : '20%'})`,
+              border: `0.5px solid color-mix(in srgb, ${neighbor} ${i === CENTER_PIXEL_INDEX ? '20%' : '80%'}, white ${i === CENTER_PIXEL_INDEX ? '80%' : '20%'})`,
               backgroundColor: neighbor,
             }}
           />

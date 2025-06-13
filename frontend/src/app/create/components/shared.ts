@@ -13,3 +13,5 @@ export const PIXEL_SIDE_LENGTH = 5
 export const BORDER_WIDTH = 1
 
 export const NUMBER_OF_PIXELS_IN_PREVIEW = 3
+
+export const CENTER_PIXEL_INDEX = 4

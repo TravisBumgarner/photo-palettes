@@ -13,7 +13,13 @@ import { TGeneratedPalette, TSwatch } from '../../../types'
 import { getContrastColor } from '../../../utils'
 import DraggableSwatch from './DraggableSwatch'
 import ReadonlySwatch from './ReadonlySwatch'
-import { BORDER_WIDTH, NUMBER_OF_PIXELS_IN_PREVIEW, PIXEL_SIDE_LENGTH, sharedCSS } from './shared'
+import {
+  BORDER_WIDTH,
+  CENTER_PIXEL_INDEX,
+  NUMBER_OF_PIXELS_IN_PREVIEW,
+  PIXEL_SIDE_LENGTH,
+  sharedCSS,
+} from './shared'
 
 const CanvasAndPalette = ({
   photo,
@@ -104,7 +110,7 @@ const CanvasAndPalette = ({
 
       const newColors = sampleColorsAtPosition(xRect, yRect)
       updateSwatch(draggingIndex, {
-        color: newColors[4], // Center of a 3x3 grid is 4
+        color: newColors[CENTER_PIXEL_INDEX],
         percentLocation: [(xRect / rect.width) * 100, (yRect / rect.height) * 100],
       })
       setNeighbors(newColors)
@@ -133,10 +139,10 @@ const CanvasAndPalette = ({
       (rect.height * swatch.percentLocation[1]) / 100
     )
     setNeighbors(newColors)
-  }, [draggingIndex, hoveringIndex, palette, sampleColorsAtPosition, updateSwatch])
+  }, [draggingIndex, hoveringIndex, palette, sampleColorsAtPosition, updateSwatch, updatePalette])
 
   useEffect(() => {
-    // Draw swatches on screen.
+    // Draw swatches on screen on load.
     if (palette) {
       palette.forEach((swatch, index) => {
         updateSwatch(index, swatch)
@@ -176,7 +182,7 @@ const CanvasAndPalette = ({
         ],
       }))
     )
-  }, [updatePalette])
+  }, [draggableSwatchRefs, updatePalette])
 
   const setPhotoOnCanvas = useCallback((photo: File) => {
     const image = new Image()
