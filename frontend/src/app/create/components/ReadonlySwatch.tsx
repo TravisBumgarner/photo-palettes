@@ -1,5 +1,6 @@
 import { Box } from '@mui/material'
 import { forwardRef, useCallback } from 'react'
+import { TSwatch } from '../../../types'
 
 const ReadonlySwatch = forwardRef(
   (
@@ -8,8 +9,10 @@ const ReadonlySwatch = forwardRef(
       handleMouseEnterCallback,
       handleMouseLeaveCallback,
       isActive,
+      swatch,
     }: {
       index: number
+      swatch: TSwatch
       handleMouseEnterCallback: (index: number) => void
       handleMouseLeaveCallback: (index: null) => void
       isActive: boolean
@@ -28,7 +31,7 @@ const ReadonlySwatch = forwardRef(
       <Box
         ref={ref}
         sx={{
-          // Additional styles set by parent via refs.
+          backgroundColor: swatch.color,
           height: '50px',
           display: 'flex',
           justifyContent: 'center',
@@ -41,7 +44,7 @@ const ReadonlySwatch = forwardRef(
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
       >
-        {/* Set by parent via refs. */}
+        {swatch.color}
       </Box>
     )
   }
