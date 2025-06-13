@@ -1,6 +1,20 @@
 import { motion } from 'framer-motion'
 import { forwardRef, useCallback } from 'react'
 import { BORDER_WIDTH, PIXEL_SIDE_LENGTH } from './shared'
+
+const SIDE_LENGTH = PIXEL_SIDE_LENGTH * 3 + BORDER_WIDTH * 2
+const SIDE_LENGTH_SCALED = SIDE_LENGTH * 3
+
+const ACTIVE_STYLES = {
+  width: `${SIDE_LENGTH_SCALED}px`,
+  height: `${SIDE_LENGTH_SCALED}px`,
+}
+
+const INACTIVE_STYLES = {
+  width: `${SIDE_LENGTH}px`,
+  height: `${SIDE_LENGTH}px`,
+}
+
 const DraggableSwatch = forwardRef<
   HTMLDivElement,
   {
@@ -34,31 +48,22 @@ const DraggableSwatch = forwardRef<
     return (
       <motion.div
         ref={ref}
-        whileHover={{
-          scale: 3,
-        }}
-        whileDrag={{
-          scale: 3,
-        }}
+        whileHover={ACTIVE_STYLES}
+        whileDrag={ACTIVE_STYLES}
         initial={{
-          scale: isHovering || isDragging ? 3 : 1,
-        }}
-        animate={{
-          scale: isHovering || isDragging ? 3 : 1,
+          ...INACTIVE_STYLES,
+          x: '-50%',
+          y: '-50%',
         }}
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
         style={{
           // Additional styles set by parent via refs.
           position: 'absolute',
-          width: `${PIXEL_SIDE_LENGTH * 3 + BORDER_WIDTH * 2}px`,
           cursor: 'none',
-          height: `${PIXEL_SIDE_LENGTH * 3 + BORDER_WIDTH * 2}px`,
-          borderRadius: '50%',
-          border: `${BORDER_WIDTH}px solid black`,
+          border: `2px solid black`,
           overflow: 'hidden',
           boxShadow: '0 0 10px rgba(0,0,0,0.3)',
-          transform: 'translate(-50%, -50%)',
           display: 'grid',
           gridTemplateColumns: 'repeat(3, 1fr)',
           gridTemplateRows: 'repeat(3, 1fr)',
@@ -69,6 +74,7 @@ const DraggableSwatch = forwardRef<
             <div
               key={i}
               style={{
+                border: `0.5px solid color-mix(in srgb, ${neighbor} 90%, white 10%)`,
                 backgroundColor: neighbor,
               }}
             />
