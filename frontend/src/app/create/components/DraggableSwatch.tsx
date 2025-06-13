@@ -98,8 +98,6 @@ const DraggableSwatch = forwardRef<
     useEffect(() => {
       // Update neighbors when dragging or hovering over a swatch.
 
-      if (!readyToDrawSwatches) return
-
       const container = canvasContainerRef.current
       if (!container) return
       const rect = container.getBoundingClientRect()
@@ -153,20 +151,24 @@ const DraggableSwatch = forwardRef<
           position: 'absolute',
           left: `${position.left}%`,
           top: `${position.top}%`,
-          cursor: 'grab',
+          cursor: 'none',
           border: `2px solid black`,
           overflow: 'hidden',
           boxShadow: '0 0 10px rgba(0,0,0,0.3)',
           display: 'grid',
           gridTemplateColumns: 'repeat(3, 1fr)',
           gridTemplateRows: 'repeat(3, 1fr)',
+          touchAction: 'none',
         }}
       >
         {neighbors.map((neighbor, i) => (
           <div
             key={i}
             style={{
-              border: `0.5px solid color-mix(in srgb, ${neighbor} ${i === CENTER_PIXEL_INDEX ? '20%' : '80%'}, white ${i === CENTER_PIXEL_INDEX ? '80%' : '20%'})`,
+              border:
+                isActive || isDragging
+                  ? `0.5px solid color-mix(in srgb, ${neighbor} ${i === CENTER_PIXEL_INDEX ? '20%' : '80%'}, white ${i === CENTER_PIXEL_INDEX ? '80%' : '20%'})`
+                  : `0.5px solid ${neighbor}`,
               backgroundColor: neighbor,
             }}
           />
