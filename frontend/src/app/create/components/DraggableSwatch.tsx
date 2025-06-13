@@ -63,7 +63,7 @@ const DraggableSwatch = forwardRef<
           <div
             key={i}
             style={{
-              border: `0.5px solid color-mix(in srgb, ${neighbor} 90%, white 10%)`,
+              border: `0.5px solid color-mix(in srgb, ${neighbor} ${i === 4 ? '20%' : '80%'}, white ${i === 4 ? '80%' : '20%'})`,
               backgroundColor: neighbor,
             }}
           />
