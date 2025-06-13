@@ -16,11 +16,11 @@ import { sharedCSS } from './shared'
 const CanvasAndPalette = ({
   photo,
   palette,
-  updatePalette,
+  updateSwatch,
 }: {
   photo: File | null
   palette: TGeneratedPalette | null
-  updatePalette: (palette: TGeneratedPalette) => void
+  updateSwatch: (index: number, color: string) => void
 }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const canvasContainerRef = useRef<HTMLDivElement>(null)
@@ -121,6 +121,7 @@ const CanvasAndPalette = ({
                 canvasContainerRef={canvasContainerRef}
                 canvasRef={canvasRef}
                 readyToDrawSwatches={readyToDrawSwatches}
+                updateSwatch={updateSwatch}
               />
             ))}
         </div>

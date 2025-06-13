@@ -32,6 +32,7 @@ const DraggableSwatch = forwardRef<
     canvasContainerRef: React.RefObject<HTMLDivElement | null>
     canvasRef: React.RefObject<HTMLCanvasElement | null>
     readyToDrawSwatches: boolean
+    updateSwatch: (index: number, color: string) => void
   }
 >(
   (
@@ -43,6 +44,7 @@ const DraggableSwatch = forwardRef<
       canvasContainerRef,
       canvasRef,
       startingPosition,
+      updateSwatch,
       readyToDrawSwatches,
     },
     ref
@@ -123,20 +125,21 @@ const DraggableSwatch = forwardRef<
       handleMouseLeaveCallback(null)
     }, [handleMouseLeaveCallback])
 
-    const bind = useDrag(({ active, xy: [clientX, clientY] }) => {
+    const bind = useDrag(({ active, last, xy: [clientX, clientY] }) => {
       if (!canvasContainerRef.current) return
       const rect = canvasContainerRef.current.getBoundingClientRect()
-      // Calculate position relative to container
       const left = ((clientX - rect.left) / rect.width) * 100
       const top = ((clientY - rect.top) / rect.height) * 100
       setPosition({ left, top })
       setIsDragging(active)
+      if (last) {
+        updateSwatch(index, neighbors[CENTER_PIXEL_INDEX])
+      }
     })
 
     return (
       <motion.div
         ref={ref}
-        {...bind()}
         whileHover={ACTIVE_STYLES}
         whileDrag={ACTIVE_STYLES}
         initial={{
@@ -161,18 +164,25 @@ const DraggableSwatch = forwardRef<
           touchAction: 'none',
         }}
       >
-        {neighbors.map((neighbor, i) => (
-          <div
-            key={i}
-            style={{
-              border:
-                isActive || isDragging
-                  ? `0.5px solid color-mix(in srgb, ${neighbor} ${i === CENTER_PIXEL_INDEX ? '20%' : '80%'}, white ${i === CENTER_PIXEL_INDEX ? '80%' : '20%'})`
-                  : `0.5px solid ${neighbor}`,
-              backgroundColor: neighbor,
-            }}
-          />
-        ))}
+        <div
+          {...bind()}
+          style={{
+            display: 'contents',
+          }}
+        >
+          {neighbors.map((neighbor, i) => (
+            <div
+              key={i}
+              style={{
+                border:
+                  isActive || isDragging
+                    ? `0.5px solid color-mix(in srgb, ${neighbor} ${i === CENTER_PIXEL_INDEX ? '20%' : '80%'}, white ${i === CENTER_PIXEL_INDEX ? '80%' : '20%'})`
+                    : `0.5px solid ${neighbor}`,
+                backgroundColor: neighbor,
+              }}
+            />
+          ))}
+        </div>
       </motion.div>
     )
   }
