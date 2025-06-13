@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion'
 import { forwardRef, useCallback } from 'react'
-import { PREVIEW_SIDE_LENGTH, SWATCH_SIZE } from './shared'
+import { BORDER_WIDTH, PIXEL_SIDE_LENGTH } from './shared'
 const DraggableSwatch = forwardRef<
   HTMLDivElement,
   {
@@ -51,16 +51,17 @@ const DraggableSwatch = forwardRef<
         style={{
           // Additional styles set by parent via refs.
           position: 'absolute',
-          width: `${SWATCH_SIZE}px`,
+          width: `${PIXEL_SIDE_LENGTH * 3 + BORDER_WIDTH * 2}px`,
           cursor: 'none',
-          height: `${SWATCH_SIZE}px`,
+          height: `${PIXEL_SIDE_LENGTH * 3 + BORDER_WIDTH * 2}px`,
           borderRadius: '50%',
-          // border: `1px solid black`,
-          // overflow: 'hidden',
+          border: `${BORDER_WIDTH}px solid black`,
+          overflow: 'hidden',
           boxShadow: '0 0 10px rgba(0,0,0,0.3)',
           transform: 'translate(-50%, -50%)',
-          display: 'flex',
-          flexWrap: 'wrap',
+          display: 'grid',
+          gridTemplateColumns: 'repeat(3, 1fr)',
+          gridTemplateRows: 'repeat(3, 1fr)',
         }}
       >
         {(isHovering || isDragging) &&
@@ -68,8 +69,6 @@ const DraggableSwatch = forwardRef<
             <div
               key={i}
               style={{
-                width: `${SWATCH_SIZE / PREVIEW_SIDE_LENGTH}px`,
-                height: `${SWATCH_SIZE / PREVIEW_SIDE_LENGTH}px`,
                 backgroundColor: neighbor,
               }}
             />

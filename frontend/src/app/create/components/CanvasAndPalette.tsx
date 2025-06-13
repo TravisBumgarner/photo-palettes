@@ -13,7 +13,7 @@ import { TGeneratedPalette, TSwatch } from '../../../types'
 import { getContrastColor } from '../../../utils'
 import DraggableSwatch from './DraggableSwatch'
 import ReadonlySwatch from './ReadonlySwatch'
-import { sharedCSS, SWATCH_SIZE, PREVIEW_SIDE_LENGTH } from './shared'
+import { BORDER_WIDTH, NUMBER_OF_PIXELS_IN_PREVIEW, PIXEL_SIDE_LENGTH, sharedCSS } from './shared'
 
 const CanvasAndPalette = ({
   photo,
@@ -35,7 +35,6 @@ const CanvasAndPalette = ({
     width: 1,
     height: 1,
   })
-
   const sampleColorAtPosition = useCallback((x: number, y: number) => {
     const canvas = canvasRef.current
     if (!canvas) return '#000000'
@@ -68,7 +67,7 @@ const CanvasAndPalette = ({
 
   const sampleColorsAtPosition = useCallback(
     (x: number, y: number) => {
-      const coordinates = getGridCoordinates(x, y, PREVIEW_SIDE_LENGTH)
+      const coordinates = getGridCoordinates(x, y, NUMBER_OF_PIXELS_IN_PREVIEW)
       return coordinates.map(position => sampleColorAtPosition(...position))
     },
     [sampleColorAtPosition]
@@ -97,27 +96,44 @@ const CanvasAndPalette = ({
 
       const rect = container.getBoundingClientRect()
 
-      // The math below seems correct, I have no idea why.
-      // Clamp absolute coordinates to container bounds
-      const x = Math.max(
-        0,
-        Math.min(rect.width - SWATCH_SIZE, clientX - rect.left - SWATCH_SIZE / 2)
-      )
-      const y = Math.max(
-        0,
-        Math.min(rect.height - SWATCH_SIZE, clientY - rect.top - SWATCH_SIZE / 2)
-      )
+      const swatchSize = PIXEL_SIDE_LENGTH * 3 + 2 * BORDER_WIDTH
+      const swatchCenter = swatchSize / 2
 
-      const newColors = sampleColorsAtPosition(x + SWATCH_SIZE / 2, y + SWATCH_SIZE / 2)
-      const center = Math.floor((PREVIEW_SIDE_LENGTH * PREVIEW_SIDE_LENGTH) / 2)
+      const xRect = clientX - rect.left - swatchCenter
+      const yRect = clientY - rect.top - swatchCenter
+
+      const newColors = sampleColorsAtPosition(xRect, yRect)
       updateSwatch(draggingIndex, {
-        color: newColors[center],
-        percentLocation: [(x / rect.width) * 100, (y / rect.height) * 100],
+        color: newColors[4], // Center of a 3x3 grid is 4
+        percentLocation: [(xRect / rect.width) * 100, (yRect / rect.height) * 100],
       })
       setNeighbors(newColors)
     },
     [draggingIndex, updateSwatch, sampleColorsAtPosition]
   )
+
+  useEffect(() => {
+    // Update neighbors when dragging or hovering over a swatch.
+    let indexLookup: number | null = null
+    if (draggingIndex !== null) indexLookup = draggingIndex
+    if (hoveringIndex !== null) indexLookup = hoveringIndex
+    if (indexLookup === null) {
+      setNeighbors([])
+      return
+    }
+    if (!palette) return
+
+    const container = containerRef.current
+    if (!container) return
+
+    const rect = container.getBoundingClientRect()
+    const swatch = palette[indexLookup]
+    const newColors = sampleColorsAtPosition(
+      (rect.width * swatch.percentLocation[0]) / 100,
+      (rect.height * swatch.percentLocation[1]) / 100
+    )
+    setNeighbors(newColors)
+  }, [draggingIndex, hoveringIndex, palette, sampleColorsAtPosition, updateSwatch])
 
   useEffect(() => {
     // Draw swatches on screen.
@@ -151,7 +167,6 @@ const CanvasAndPalette = ({
 
   const handleEnd = useCallback(() => {
     setDraggingIndex(null)
-    setNeighbors([])
     updatePalette(
       draggableSwatchRefs.current.map(swatch => ({
         color: rgbToHex(swatch?.style.backgroundColor || ''),
