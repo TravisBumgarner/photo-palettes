@@ -274,8 +274,7 @@ const CanvasAndPalette = ({
           {new Array(6).fill(null).map((_, index) => (
             <DraggableSwatch
               ref={setDraggableSwatchRef(index)}
-              isHovering={hoveringIndex === index}
-              isDragging={draggingIndex === index}
+              isActive={hoveringIndex === index || draggingIndex === index}
               neighbors={neighbors}
               key={index}
               index={index}
@@ -306,8 +305,7 @@ const CanvasAndPalette = ({
             key={index}
             ref={setReadonlySwatchRef(index)}
             index={index}
-            isHovering={hoveringIndex === index}
-            isDragging={draggingIndex === index}
+            isActive={hoveringIndex === index || draggingIndex === index}
             handleMouseEnterCallback={setHoveringIndex}
             handleMouseLeaveCallback={setHoveringIndex}
           />
