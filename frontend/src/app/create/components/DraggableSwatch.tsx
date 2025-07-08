@@ -126,8 +126,9 @@ const DraggableSwatch = forwardRef<
 
       if (active) {
         const rect = canvasContainerRef.current.getBoundingClientRect()
-        const left = ((clientX - rect.left) / rect.width) * 100
-        const top = ((clientY - rect.top) / rect.height) * 100
+        const left = Math.max(0, Math.min(100, ((clientX - rect.left) / rect.width) * 100))
+        const top = Math.max(0, Math.min(100, ((clientY - rect.top) / rect.height) * 100))
+
         setPosition({ left, top })
       }
 
