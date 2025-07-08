@@ -16,7 +16,7 @@ import { ModalID } from '../_sharedComponents/Modal/Modal.consts'
 import CanvasAndPalette from './components/CanvasAndPalette'
 import Dropzone from './components/Dropzone'
 import { sharedCSS } from './components/shared'
-import { PageTitle, PageWrapper } from '../../styles/Shared'
+import { PageWrapper } from '../../styles/Shared'
 
 enum UploadStatus {
   INITIAL = 'INITIAL',
@@ -133,7 +133,7 @@ const Create = () => {
 
   return (
     <PageWrapper width="full">
-      <PageTitle marginBottom text="Create" />
+      {/* <PageTitle marginBottom text="Create" /> */}
       {uploadStatus === UploadStatus.INITIAL && <Dropzone onDrop={onDrop} />}
       {(uploadStatus === UploadStatus.UPLOADING || uploadStatus === UploadStatus.SUBMITTED) && (
         <Box
@@ -157,6 +157,7 @@ const Create = () => {
       )}
       {(uploadStatus === UploadStatus.UPLOADED || uploadStatus === UploadStatus.SUBMITTING) && (
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: SPACING.SMALL.PX }}>
+          <CanvasAndPalette photo={photo} palette={palette} updateSwatch={updateSwatch} />
           <TextField
             variant="outlined"
             fullWidth
@@ -165,7 +166,6 @@ const Create = () => {
             value={name}
             onChange={handleNameChange}
           />
-          <CanvasAndPalette photo={photo} palette={palette} updateSwatch={updateSwatch} />
           <Box
             sx={{
               display: 'flex',

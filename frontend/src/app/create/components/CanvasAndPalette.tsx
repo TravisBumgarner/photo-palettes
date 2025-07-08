@@ -60,7 +60,7 @@ const CanvasAndPalette = ({
           display: 'flex',
           justifyContent: 'center',
           alignItems: 'center',
-          padding: SPACING.SMALL.PX,
+          padding: SPACING.TINY.PX,
         }}
       >
         <div
