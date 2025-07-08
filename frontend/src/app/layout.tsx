@@ -10,7 +10,6 @@ import { LoadUserIntoStore } from './_components/LoadUserIntoState'
 import Navigation from './_components/Navigation'
 import './global.css'
 import RenderModal from './_sharedComponents/Modal'
-import GlobalHooks from './_components/GlobalHooks'
 import { Suspense } from 'react'
 
 const satoshi = localFont({
@@ -52,7 +51,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 <AlertsManager />
                 <Navigation />
                 <QueryProvider>{children}</QueryProvider>
-                <GlobalHooks />
                 <RenderModal />
                 <Footer />
               </AppThemeProvider>
