@@ -38,6 +38,16 @@ const Create = () => {
   const [name, setName] = useState('')
   const [palette, setPalette] = useState<TGeneratedPalette | null>(null)
 
+  const updateSwatch = useCallback(
+    (index: number, color: string) => {
+      if (!palette) return
+      const updatedPalette = [...palette]
+      updatedPalette[index].color = color
+      setPalette(updatedPalette)
+    },
+    [palette]
+  )
+
   const generatePaletteMutation = useMutation({
     mutationFn: generatePalette,
     onSuccess: () => {
@@ -155,7 +165,7 @@ const Create = () => {
             value={name}
             onChange={handleNameChange}
           />
-          <CanvasAndPalette photo={photo} palette={palette} updatePalette={setPalette} />
+          <CanvasAndPalette photo={photo} palette={palette} updateSwatch={updateSwatch} />
           <Box
             sx={{
               display: 'flex',
