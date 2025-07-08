@@ -9,7 +9,7 @@ import {
 } from './shared'
 
 const SIDE_LENGTH = PIXEL_SIDE_LENGTH * 3 + BORDER_WIDTH * 2
-const SIDE_LENGTH_SCALED = SIDE_LENGTH * 7
+const SIDE_LENGTH_SCALED = SIDE_LENGTH * 3
 
 const DraggableSwatch = ({
   index,
@@ -89,7 +89,7 @@ const DraggableSwatch = ({
     )
     setNeighbors(newColors)
     // This next line adds an infinite rerender. If I'm going to add it back in I need a better solution.
-    // updateSwatch(index, newColors[CENTER_PIXEL_INDEX])
+    updateSwatch(index, newColors[CENTER_PIXEL_INDEX])
   }, [
     sampleColorsAtPosition,
     canvasContainerRef,
@@ -97,6 +97,7 @@ const DraggableSwatch = ({
     position.left,
     position.top,
     readyToDrawSwatches,
+    updateSwatch,
   ])
 
   const bind = useDrag(({ first, active, last, xy: [clientX, clientY] }) => {

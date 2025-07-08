@@ -13,7 +13,7 @@ const CanvasAndPalette = ({
   palette,
   updateSwatch,
 }: {
-  photo: File | null
+  photo: Blob | null
   palette: TGeneratedPalette | null
   updateSwatch: (index: number, color: string) => void
 }) => {
@@ -26,7 +26,7 @@ const CanvasAndPalette = ({
     height: 1,
   })
 
-  const setPhotoOnCanvas = useCallback((photo: File) => {
+  const setPhotoOnCanvas = useCallback((photo: Blob) => {
     const image = new Image()
     image.src = URL.createObjectURL(photo)
     image.onload = () => {
@@ -102,17 +102,6 @@ const CanvasAndPalette = ({
       <Box
         sx={{
           display: 'flex',
-          flexDirection: 'row',
-          flexWrap: 'wrap',
-          '& > *': {
-            flex: '1 0 16.66%', // 6 per row by default
-            boxSizing: 'border-box',
-          },
-          '@media (max-width: 700px)': {
-            '& > *': {
-              flex: '1 0 33.33%', // 3 per row at <=700px
-            },
-          },
         }}
       >
         {palette &&
@@ -122,8 +111,8 @@ const CanvasAndPalette = ({
               index={index}
               swatch={palette[index]}
               isActive={activeIndex === index}
-              handleMouseEnterCallback={setActiveIndex}
-              handleMouseLeaveCallback={setActiveIndex}
+              isOtherActive={activeIndex !== null && activeIndex !== index}
+              setActiveIndex={setActiveIndex}
             />
           ))}
       </Box>
