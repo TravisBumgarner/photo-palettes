@@ -1,10 +1,5 @@
 'use client'
 
-// Some Notes on this File.
-// - Preact Signals don't seem to work with NextJS.
-// - Storing the palette in Zustand causes mobile to not work on drag.
-// - Now we use lots of refs to control all the colors.
-
 import { Box } from '@mui/material'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { SPACING } from '../../../styles/styleConsts'
@@ -54,9 +49,7 @@ const CanvasAndPalette = ({
   }, [])
 
   useEffect(() => {
-    if (photo) {
-      setPhotoOnCanvas(photo)
-    }
+    if (photo) setPhotoOnCanvas(photo)
   }, [photo, setPhotoOnCanvas])
 
   const setDraggableSwatchRef = useCallback(
@@ -89,7 +82,6 @@ const CanvasAndPalette = ({
       >
         <div
           ref={canvasContainerRef}
-          // {...bind()}
           style={{
             touchAction: 'none',
             position: 'relative',
