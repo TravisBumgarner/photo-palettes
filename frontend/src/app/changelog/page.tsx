@@ -30,13 +30,13 @@ const Update = ({ title, summary, date, updates }: Update) => {
 
 const UPDATES: Update[] = [
   {
-    title: 'Mobile Improvements',
+    title: 'Mobile Improvements & Move to Open Alpha',
     date: '2025-07-07',
-    summary:
-      'I tested the mobile experience when creating photo palettes today and it was unusable. This update fixes the mobile experience.',
+    summary: '',
     updates: [
       'Cleanup UI on mobile creation page.',
       'Improve process of selecting colors when creating photo palette.',
+      'App is now in open alpha.',
     ],
   },
   {

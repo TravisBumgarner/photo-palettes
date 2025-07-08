@@ -4,13 +4,12 @@ import { Button, TextField, Typography } from '@mui/material'
 import { useRouter } from 'next/navigation'
 import { ChangeEvent, useCallback, useState } from 'react'
 import { z } from 'zod'
-import { MINIMUM_PASSWORD_LENGTH, ROUTES, SUPER_SECRET_INVITATION_KEY } from '../../consts'
+import { MINIMUM_PASSWORD_LENGTH, ROUTES } from '../../consts'
 import { signup } from '../../services/supabase/actions'
 import useGlobalStore from '../../store'
 import { ModalID } from '../_sharedComponents/Modal/Modal.consts'
 import { authFormCSS, PageTitle, PageWrapper } from '../../styles/Shared'
 import Link from '../_sharedComponents/Link'
-import { getLocalStorage, LOCAL_STORAGE_KEYS } from '../../utils/localStorage'
 
 const SignupSchema = z.object({
   email: z.string().email(),
@@ -18,15 +17,12 @@ const SignupSchema = z.object({
   repeatPassword: z.string().min(MINIMUM_PASSWORD_LENGTH),
 })
 
-
 export default function SignupPage() {
   const [error, setError] = useState<string | null>(null)
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [repeatPassword, setRepeatPassword] = useState('')
-  const [invitationKey, setInvitationKey] = useState<string>(
-    getLocalStorage(LOCAL_STORAGE_KEYS.SIGNUP_CODE, '')
-  )
+
   const router = useRouter()
   const setIsAppAuthenticating = useGlobalStore(state => state.setIsAppAuthenticating)
   const setActiveModal = useGlobalStore(state => state.setActiveModal)
@@ -52,11 +48,6 @@ export default function SignupPage() {
   const handleSubmit = useCallback(
     async (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault()
-
-      if (invitationKey !== SUPER_SECRET_INVITATION_KEY) {
-        setError('Invalid invitation key')
-        return
-      }
 
       if (password !== repeatPassword) {
         setError('Passwords do not match')
@@ -92,15 +83,7 @@ export default function SignupPage() {
         setError(err instanceof Error ? err.message : 'An error occurred during signup')
       }
     },
-    [email, password, repeatPassword, invitationKey, router, setIsAppAuthenticating, setActiveModal]
-  )
-
-  const handleInvitationKeyChange = useCallback(
-    (e: ChangeEvent<HTMLInputElement>) => {
-      setError(null)
-      setInvitationKey(e.target.value)
-    },
-    [setInvitationKey]
+    [email, password, repeatPassword, router, setIsAppAuthenticating, setActiveModal]
   )
 
   const handleEmailChange = useCallback(
@@ -116,20 +99,6 @@ export default function SignupPage() {
       <form onSubmit={handleSubmit} style={authFormCSS}>
         <PageTitle center text="Sign Up" />
         {error && <p style={{ color: 'red' }}>{error}</p>}
-        <TextField
-          id="invitationKey"
-          name="invitationKey"
-          type="text"
-          required
-          value={invitationKey}
-          onChange={handleInvitationKeyChange}
-          label="Invitation key"
-          fullWidth
-          autoComplete="off"
-          slotProps={{
-            inputLabel: { shrink: true },
-          }}
-        />
         <TextField
           id="email"
           name="email"
@@ -174,7 +143,7 @@ export default function SignupPage() {
         />
         <Button
           variant="contained"
-          disabled={!invitationKey || !password || !repeatPassword || !email}
+          disabled={!password || !repeatPassword || !email}
           type="submit"
           fullWidth
         >

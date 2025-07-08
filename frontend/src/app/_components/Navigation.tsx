@@ -70,7 +70,12 @@ const Navigation = () => {
           sx={{ fontWeight: 900, color: 'text.primary', fontSize: FONT_SIZES.LARGE.PX }}
           href={ROUTES.home.href}
         >
-          <Typography variant="h1">{ROUTES.home.label}</Typography>
+          <Typography variant="h1">
+            {ROUTES.home.label}
+            <sup style={{ fontSize: '10px', position: 'relative', top: '-5px', left: '5px' }}>
+              Alpha
+            </sup>
+          </Typography>
         </Link>
       </Box>
       <Box

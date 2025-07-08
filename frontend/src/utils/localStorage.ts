@@ -1,9 +1,7 @@
 import { logger } from '../services/logging'
 
 // Define keys used in localStorage
-export const LOCAL_STORAGE_KEYS = {
-  SIGNUP_CODE: 'signup_code',
-} as const
+export const LOCAL_STORAGE_KEYS = {} as const
 
 type LocalStorageKey = (typeof LOCAL_STORAGE_KEYS)[keyof typeof LOCAL_STORAGE_KEYS]
 
