@@ -27,8 +27,7 @@ const DraggableSwatch = forwardRef<
     startingPosition: [number, number]
     index: number
     isActive: boolean
-    handleMouseEnterCallback: (index: number) => void
-    handleMouseLeaveCallback: (index: null) => void
+    setActiveIndex: (index: number | null) => void
     canvasContainerRef: React.RefObject<HTMLDivElement | null>
     canvasRef: React.RefObject<HTMLCanvasElement | null>
     readyToDrawSwatches: boolean
@@ -39,8 +38,7 @@ const DraggableSwatch = forwardRef<
     {
       index,
       isActive,
-      handleMouseEnterCallback,
-      handleMouseLeaveCallback,
+      setActiveIndex,
       canvasContainerRef,
       canvasRef,
       startingPosition,
@@ -50,7 +48,6 @@ const DraggableSwatch = forwardRef<
     ref
   ) => {
     const [neighbors, setNeighbors] = useState<string[]>([])
-    const [isDragging, setIsDragging] = useState(false)
     const [position, setPosition] = useState<{ left: number; top: number }>({
       left: startingPosition[0],
       top: startingPosition[1],
@@ -98,7 +95,7 @@ const DraggableSwatch = forwardRef<
     )
 
     useEffect(() => {
-      // Update neighbors when dragging or hovering over a swatch.
+      // Update pixel's neighbors when dragging or hovering over a swatch.
 
       const container = canvasContainerRef.current
       if (!container) return
@@ -108,6 +105,8 @@ const DraggableSwatch = forwardRef<
         (rect.height * position.top) / 100
       )
       setNeighbors(newColors)
+      // This next line adds an infinite rerender. If I'm going to add it back in I need a better solution.
+      // updateSwatch(index, newColors[CENTER_PIXEL_INDEX])
     }, [
       sampleColorsAtPosition,
       canvasContainerRef,
@@ -115,25 +114,26 @@ const DraggableSwatch = forwardRef<
       position.left,
       position.top,
       readyToDrawSwatches,
+      // updateSwatch,
     ])
 
-    const handleMouseEnter = useCallback(() => {
-      handleMouseEnterCallback(index)
-    }, [index, handleMouseEnterCallback])
-
-    const handleMouseLeave = useCallback(() => {
-      handleMouseLeaveCallback(null)
-    }, [handleMouseLeaveCallback])
-
-    const bind = useDrag(({ active, last, xy: [clientX, clientY] }) => {
+    const bind = useDrag(({ first, active, last, xy: [clientX, clientY] }) => {
       if (!canvasContainerRef.current) return
-      const rect = canvasContainerRef.current.getBoundingClientRect()
-      const left = ((clientX - rect.left) / rect.width) * 100
-      const top = ((clientY - rect.top) / rect.height) * 100
-      setPosition({ left, top })
-      setIsDragging(active)
+
+      if (first) {
+        setActiveIndex(index)
+      }
+
+      if (active) {
+        const rect = canvasContainerRef.current.getBoundingClientRect()
+        const left = ((clientX - rect.left) / rect.width) * 100
+        const top = ((clientY - rect.top) / rect.height) * 100
+        setPosition({ left, top })
+      }
+
       if (last) {
         updateSwatch(index, neighbors[CENTER_PIXEL_INDEX])
+        setActiveIndex(null)
       }
     })
 
@@ -147,9 +147,7 @@ const DraggableSwatch = forwardRef<
           x: '-50%',
           y: '-50%',
         }}
-        animate={isDragging || isActive ? ACTIVE_STYLES : INACTIVE_STYLES}
-        onMouseEnter={handleMouseEnter}
-        onMouseLeave={handleMouseLeave}
+        animate={isActive ? ACTIVE_STYLES : INACTIVE_STYLES}
         style={{
           position: 'absolute',
           left: `${position.left}%`,
@@ -162,23 +160,23 @@ const DraggableSwatch = forwardRef<
           gridTemplateColumns: 'repeat(3, 1fr)',
           gridTemplateRows: 'repeat(3, 1fr)',
           touchAction: 'none',
-          zIndex: isDragging || isActive ? 2 : 1,
+          zIndex: isActive ? 2 : 1,
         }}
       >
         <div
           {...bind()}
           style={{
             display: 'contents',
+            touchAction: 'none',
           }}
         >
           {neighbors.map((neighbor, i) => (
             <div
               key={i}
               style={{
-                border:
-                  isActive || isDragging
-                    ? `0.5px solid color-mix(in srgb, ${neighbor} ${i === CENTER_PIXEL_INDEX ? '20%' : '80%'}, white ${i === CENTER_PIXEL_INDEX ? '80%' : '20%'})`
-                    : `0.5px solid ${neighbor}`,
+                border: isActive
+                  ? `0.5px solid color-mix(in srgb, ${neighbor} ${i === CENTER_PIXEL_INDEX ? '20%' : '80%'}, white ${i === CENTER_PIXEL_INDEX ? '80%' : '20%'})`
+                  : `0.5px solid ${neighbor}`,
                 backgroundColor: neighbor,
               }}
             />
