@@ -162,6 +162,7 @@ const DraggableSwatch = forwardRef<
           gridTemplateColumns: 'repeat(3, 1fr)',
           gridTemplateRows: 'repeat(3, 1fr)',
           touchAction: 'none',
+          zIndex: isDragging || isActive ? 2 : 1,
         }}
       >
         <div
