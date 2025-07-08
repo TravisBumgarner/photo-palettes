@@ -77,7 +77,6 @@ const CanvasAndPalette = ({
           justifyContent: 'center',
           alignItems: 'center',
           padding: SPACING.SMALL.PX,
-          touchAction: 'none',
         }}
       >
         <div
