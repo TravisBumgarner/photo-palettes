@@ -31,12 +31,12 @@ const Update = ({ title, summary, date, updates }: Update) => {
 const UPDATES: Update[] = [
   {
     title: 'Mobile Improvements',
-    date: '2025-07-08',
+    date: '2025-07-07',
     summary:
-      'I tested the mobile experience when creating photo palettes today and it was unusable. This update fixes the mobile experience and makes the overall experience better.',
+      'I tested the mobile experience when creating photo palettes today and it was unusable. This update fixes the mobile experience.',
     updates: [
-      "Can't scroll while on mobile.",
-      'Make it easier to use the color picker to select a specific pixel.',
+      'Cleanup UI on mobile creation page.',
+      'Improve process of selecting colors when creating photo palette.',
     ],
   },
   {
