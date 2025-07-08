@@ -16,7 +16,8 @@ import { ModalID } from '../_sharedComponents/Modal/Modal.consts'
 import CanvasAndPalette from './components/CanvasAndPalette'
 import Dropzone from './components/Dropzone'
 import { sharedCSS } from './components/shared'
-import { PageTitle, PageWrapper } from '../../styles/Shared'
+import { PageWrapper } from '../../styles/Shared'
+import { resizeImage } from '../../utils/resizeImage'
 
 enum UploadStatus {
   INITIAL = 'INITIAL',
@@ -31,23 +32,21 @@ const MAX_NAME_LENGTH = 50
 
 const Create = () => {
   const [uploadStatus, setUploadStatus] = useState<UploadStatus>(UploadStatus.INITIAL)
-  const [photo, setPhoto] = useState<File | null>(null)
+  const [photo, setPhoto] = useState<Blob | null>(null)
   const router = useRouter()
   const [paletteId, setPaletteId] = useState<string | null>(null)
   const setActiveModal = useGlobalStore(state => state.setActiveModal)
   const [name, setName] = useState('')
   const [palette, setPalette] = useState<TGeneratedPalette | null>(null)
 
-  const updateSwatch = useCallback(
-    (index: number, color: string) => {
-      if (!palette) return
-      const updatedPalette = [...palette]
-      updatedPalette[index].color = color
-      setPalette(updatedPalette)
-    },
-    [palette]
-  )
-
+  const updateSwatch = useCallback((index: number, color: string) => {
+    setPalette(prev => {
+      if (!prev) return prev
+      const updated = [...prev]
+      updated[index].color = color
+      return updated
+    })
+  }, [])
   const generatePaletteMutation = useMutation({
     mutationFn: generatePalette,
     onSuccess: () => {
@@ -63,8 +62,9 @@ const Create = () => {
     async (acceptedFiles: File[]) => {
       setUploadStatus(UploadStatus.UPLOADING)
       const photo = acceptedFiles[0]
-      setPhoto(photo)
-      const response = await generatePaletteMutation.mutateAsync(photo)
+      const resizedPhoto = await resizeImage(photo)
+      setPhoto(resizedPhoto)
+      const response = await generatePaletteMutation.mutateAsync(resizedPhoto)
       if (response.success) {
         setPalette(response.palette)
         setPaletteId(response.paletteId)
@@ -133,7 +133,7 @@ const Create = () => {
 
   return (
     <PageWrapper width="full">
-      <PageTitle marginBottom text="Create" />
+      {/* <PageTitle marginBottom text="Create" /> */}
       {uploadStatus === UploadStatus.INITIAL && <Dropzone onDrop={onDrop} />}
       {(uploadStatus === UploadStatus.UPLOADING || uploadStatus === UploadStatus.SUBMITTED) && (
         <Box
@@ -157,6 +157,7 @@ const Create = () => {
       )}
       {(uploadStatus === UploadStatus.UPLOADED || uploadStatus === UploadStatus.SUBMITTING) && (
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: SPACING.SMALL.PX }}>
+          <CanvasAndPalette photo={photo} palette={palette} updateSwatch={updateSwatch} />
           <TextField
             variant="outlined"
             fullWidth
@@ -165,7 +166,6 @@ const Create = () => {
             value={name}
             onChange={handleNameChange}
           />
-          <CanvasAndPalette photo={photo} palette={palette} updateSwatch={updateSwatch} />
           <Box
             sx={{
               display: 'flex',

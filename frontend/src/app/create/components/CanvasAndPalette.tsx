@@ -13,14 +13,12 @@ const CanvasAndPalette = ({
   palette,
   updateSwatch,
 }: {
-  photo: File | null
+  photo: Blob | null
   palette: TGeneratedPalette | null
   updateSwatch: (index: number, color: string) => void
 }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const canvasContainerRef = useRef<HTMLDivElement>(null)
-  const draggableSwatchRefs = useRef<(HTMLDivElement | null)[]>([])
-  const readonlySwatchRefs = useRef<(HTMLDivElement | null)[]>([])
   const [activeIndex, setActiveIndex] = useState<number | null>(null)
   const [readyToDrawSwatches, setReadyToDrawSwatches] = useState(false)
   const [imageDimensions, setImageDimensions] = useState<{ width: number; height: number }>({
@@ -28,7 +26,7 @@ const CanvasAndPalette = ({
     height: 1,
   })
 
-  const setPhotoOnCanvas = useCallback((photo: File) => {
+  const setPhotoOnCanvas = useCallback((photo: Blob) => {
     const image = new Image()
     image.src = URL.createObjectURL(photo)
     image.onload = () => {
@@ -52,20 +50,6 @@ const CanvasAndPalette = ({
     if (photo) setPhotoOnCanvas(photo)
   }, [photo, setPhotoOnCanvas])
 
-  const setDraggableSwatchRef = useCallback(
-    (index: number) => (el: HTMLDivElement | null) => {
-      draggableSwatchRefs.current[index] = el
-    },
-    []
-  )
-
-  const setReadonlySwatchRef = useCallback(
-    (index: number) => (el: HTMLDivElement | null) => {
-      readonlySwatchRefs.current[index] = el
-    },
-    []
-  )
-
   return (
     <>
       <Box
@@ -76,8 +60,7 @@ const CanvasAndPalette = ({
           display: 'flex',
           justifyContent: 'center',
           alignItems: 'center',
-          padding: SPACING.SMALL.PX,
-          touchAction: 'none',
+          padding: SPACING.TINY.PX,
         }}
       >
         <div
@@ -103,13 +86,11 @@ const CanvasAndPalette = ({
           {palette &&
             palette.map((swatch, index) => (
               <DraggableSwatch
-                ref={setDraggableSwatchRef(index)}
                 isActive={activeIndex === index}
                 key={index}
                 index={index}
                 startingPosition={swatch.percentLocation}
-                handleMouseEnterCallback={setActiveIndex}
-                handleMouseLeaveCallback={setActiveIndex}
+                setActiveIndex={setActiveIndex}
                 canvasContainerRef={canvasContainerRef}
                 canvasRef={canvasRef}
                 readyToDrawSwatches={readyToDrawSwatches}
@@ -121,29 +102,17 @@ const CanvasAndPalette = ({
       <Box
         sx={{
           display: 'flex',
-          flexDirection: 'row',
-          flexWrap: 'wrap',
-          '& > *': {
-            flex: '1 0 16.66%', // 6 per row by default
-            boxSizing: 'border-box',
-          },
-          '@media (max-width: 700px)': {
-            '& > *': {
-              flex: '1 0 33.33%', // 3 per row at <=700px
-            },
-          },
         }}
       >
         {palette &&
           palette.map((_, index) => (
             <ReadonlySwatch
               key={index}
-              ref={setReadonlySwatchRef(index)}
               index={index}
               swatch={palette[index]}
               isActive={activeIndex === index}
-              handleMouseEnterCallback={setActiveIndex}
-              handleMouseLeaveCallback={setActiveIndex}
+              isOtherActive={activeIndex !== null && activeIndex !== index}
+              setActiveIndex={setActiveIndex}
             />
           ))}
       </Box>

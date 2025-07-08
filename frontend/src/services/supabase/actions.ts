@@ -1,6 +1,7 @@
 'use server'
 import { revalidatePath } from 'next/cache'
 import { createClient } from './server'
+import { logger } from '../logging'
 
 type Response = { success: true } | { error: string; success: false }
 
@@ -14,7 +15,8 @@ export async function login(formData: FormData): Promise<Response> {
   }
   const { error } = await supabase.auth.signInWithPassword(data)
   if (error) {
-    return { error: error.message, success: false }
+    logger.error(`Login failed ${JSON.stringify(error)}`)
+    return { error: 'Login Failed', success: false }
   }
 
   revalidatePath('/', 'layout')
@@ -31,7 +33,8 @@ export async function signup(formData: FormData): Promise<Response> {
   }
   const { error } = await supabase.auth.signUp(data)
   if (error) {
-    return { error: error.message, success: false }
+    logger.error(`Signup failed ${JSON.stringify(error)}`)
+    return { error: 'Signup failed', success: false }
   }
   revalidatePath('/', 'layout')
   return { success: true }

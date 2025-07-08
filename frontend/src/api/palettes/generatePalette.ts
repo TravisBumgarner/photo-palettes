@@ -19,12 +19,12 @@ const zodResponse = z.discriminatedUnion('success', [
   }),
 ])
 
-export const generatePalette = async (photo: File) => {
+export const generatePalette = async (photo: Blob) => {
   const token = await getToken()
 
   const formData = new FormData()
   formData.append('photo', photo)
-  formData.append('extension', photo.name.split('.').pop() || '')
+  formData.append('extension', 'jpeg')
   const response = await fetch(`${config.apiUrl}/palettes/generate`, {
     method: 'POST',
     body: formData,
