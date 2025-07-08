@@ -5,6 +5,7 @@
 const { withSentryConfig } = require('@sentry/nextjs')
 
 const config = {
+  allowedDevOrigins: ['*'],
   env: {
     NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL,
     NEXT_SHOW_NAVIGATION: process.env.NEXT_SHOW_NAVIGATION,

@@ -38,6 +38,7 @@ echo "######################### Setting up frontend #########################"
 
 echo "Installing dependencies..."
 cd ../frontend && npm install
+make set-ip
 
 echo "######################### Starting up project #########################"
 

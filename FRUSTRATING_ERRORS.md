@@ -29,3 +29,9 @@ npm install react-dropzone
 HOT RELOADING BACKEND - WatchFiles doesn't see all new files in backend.
 
 Can't find something common? Like importing from theme? Need to make it 'use client'
+
+# Why did I use `http://backend:8000`?
+
+I remember running into some issue that forced me to have to change NEXT_PUBLIC_API_URL=http://127.0.0.1:8000 to backend:8000?
+
+For now I can't remember. I want to be able to test things on my iPhone so I'm going to chnage the route to backend:8000 for now. 
