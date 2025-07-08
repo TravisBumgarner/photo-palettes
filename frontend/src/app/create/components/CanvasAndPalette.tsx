@@ -19,8 +19,6 @@ const CanvasAndPalette = ({
 }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const canvasContainerRef = useRef<HTMLDivElement>(null)
-  const draggableSwatchRefs = useRef<(HTMLDivElement | null)[]>([])
-  const readonlySwatchRefs = useRef<(HTMLDivElement | null)[]>([])
   const [activeIndex, setActiveIndex] = useState<number | null>(null)
   const [readyToDrawSwatches, setReadyToDrawSwatches] = useState(false)
   const [imageDimensions, setImageDimensions] = useState<{ width: number; height: number }>({
@@ -51,20 +49,6 @@ const CanvasAndPalette = ({
   useEffect(() => {
     if (photo) setPhotoOnCanvas(photo)
   }, [photo, setPhotoOnCanvas])
-
-  const setDraggableSwatchRef = useCallback(
-    (index: number) => (el: HTMLDivElement | null) => {
-      draggableSwatchRefs.current[index] = el
-    },
-    []
-  )
-
-  const setReadonlySwatchRef = useCallback(
-    (index: number) => (el: HTMLDivElement | null) => {
-      readonlySwatchRefs.current[index] = el
-    },
-    []
-  )
 
   return (
     <>
@@ -102,7 +86,6 @@ const CanvasAndPalette = ({
           {palette &&
             palette.map((swatch, index) => (
               <DraggableSwatch
-                ref={setDraggableSwatchRef(index)}
                 isActive={activeIndex === index}
                 key={index}
                 index={index}
@@ -136,7 +119,6 @@ const CanvasAndPalette = ({
           palette.map((_, index) => (
             <ReadonlySwatch
               key={index}
-              ref={setReadonlySwatchRef(index)}
               index={index}
               swatch={palette[index]}
               isActive={activeIndex === index}
