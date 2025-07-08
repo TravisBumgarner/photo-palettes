@@ -10,6 +10,8 @@ help:
 	@echo "  make deploy-backend - Deploy backend"
 	@echo "  make deploy-frontend - Deploy frontend"
 	@echo "  make nuke-docker - Remove all docker containers, volumes, and images"
+	@echo "  make set-ip    - Update IP address to the current machine's IP to be used for mobile development particularly."
+
 	
 bootstrap:
 	@chmod +x scripts/bootstrap.sh
@@ -40,3 +42,8 @@ nuke-docker:
 	@docker compose down --volumes --remove-orphans
 	@docker compose rm -f
 	@docker system prune -a --volumes -f
+
+set-ip:
+	@echo "Setting IP address for mobile development..."
+	@chmod +x ./scripts/set-ip.sh
+	@./scripts/set-ip.sh

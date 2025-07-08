@@ -12,4 +12,6 @@ WORKDIR /app
 COPY --from=builder /app /app
 
 EXPOSE 3000
-CMD ["npm", "run", "dev"]
+
+# Bind to 0.0.0.0 so it's accessible on LAN
+CMD ["npm", "run", "dev", "--", "-H", "0.0.0.0"]
