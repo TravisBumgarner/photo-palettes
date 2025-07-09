@@ -1,7 +1,7 @@
 'use client'
 
 import { Button, TextField, Typography } from '@mui/material'
-import { useRouter } from 'next/navigation'
+import { redirect, useRouter } from 'next/navigation'
 import { ChangeEvent, useCallback, useState } from 'react'
 import { z } from 'zod'
 import { MINIMUM_PASSWORD_LENGTH, ROUTES } from '../../consts'
@@ -23,9 +23,11 @@ export default function SignupPage() {
   const [password, setPassword] = useState('')
   const [repeatPassword, setRepeatPassword] = useState('')
 
-  const router = useRouter()
+  const appUserDetails = useGlobalStore(state => state.appUserDetails)
   const setIsAppAuthenticating = useGlobalStore(state => state.setIsAppAuthenticating)
   const setActiveModal = useGlobalStore(state => state.setActiveModal)
+
+  const router = useRouter()
 
   const handlePasswordChange = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
@@ -93,6 +95,10 @@ export default function SignupPage() {
     },
     [setEmail]
   )
+
+  if (appUserDetails) {
+    return redirect('/')
+  }
 
   return (
     <PageWrapper minHeight verticallyAlign width="small">
