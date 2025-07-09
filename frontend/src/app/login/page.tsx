@@ -1,7 +1,7 @@
 'use client'
 
 import { Button, TextField, Typography } from '@mui/material'
-import { useRouter } from 'next/navigation'
+import { redirect, useRouter } from 'next/navigation'
 import { ChangeEvent, useCallback, useState } from 'react'
 import { z } from 'zod'
 import { MINIMUM_PASSWORD_LENGTH, ROUTES } from '../../consts'
@@ -21,6 +21,7 @@ export default function LoginPage() {
   const [email, setEmail] = useState('')
   const router = useRouter()
   const setIsAppAuthenticating = useGlobalStore(state => state.setIsAppAuthenticating)
+  const appUserDetails = useGlobalStore(state => state.appUserDetails)
 
   const handleEmailChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
     setError(null)
@@ -57,6 +58,10 @@ export default function LoginPage() {
     },
     [router, setIsAppAuthenticating]
   )
+
+  if (appUserDetails) {
+    return redirect('/')
+  }
 
   return (
     <PageWrapper minHeight verticallyAlign width="small">
