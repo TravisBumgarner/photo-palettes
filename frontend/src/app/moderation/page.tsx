@@ -13,6 +13,8 @@ import ModerationPanel from '../_sharedComponents/ModerationPanel'
 import PaletteThumbnail from '../_sharedComponents/PaletteThumbnail'
 import useGlobalStore from '../../store'
 import { notFound } from 'next/navigation'
+import { PAGINATION_SIZE } from '../../consts'
+import Pagination from '../_sharedComponents/Pagination'
 
 const tabs = [
   { label: 'Pending', status: EModerationStatus.AWAITING_MODERATION },
@@ -21,12 +23,20 @@ const tabs = [
   { label: 'Submitting', status: EModerationStatus.AWAITING_SUBMISSION },
 ]
 
+// TODO - FIgure out why the wrong number of pages are loaded at start.
+
 const Moderation = () => {
   const [tab, setTab] = useState(0)
+  const [page, setPage] = useState(1)
   const appUserDetails = useGlobalStore(state => state.appUserDetails)
   const { data, isLoading, error, refetch } = useQuery({
-    queryKey: ['moderation', tabs[tab].status],
-    queryFn: () => getListAsModerator(tabs[tab].status),
+    queryKey: ['moderation', tabs[tab].status, page],
+    queryFn: () =>
+      getListAsModerator({
+        status: tabs[tab].status,
+        size: PAGINATION_SIZE,
+        offset: (page - 1) * PAGINATION_SIZE,
+      }),
     retry: false,
   })
 
@@ -34,9 +44,14 @@ const Moderation = () => {
     if (error) logger.error(error)
   }, [error])
 
+  const handlePageChange = useCallback((newPage: number) => {
+    setPage(newPage)
+  }, [])
+
   const handleTabChange = useCallback(
     (_event: unknown, v: number) => {
       setTab(v)
+      setPage(1)
       refetch()
     },
     [refetch]
@@ -49,20 +64,23 @@ const Moderation = () => {
     if (data.palettes.length === 0) return <Message message="No palettes" color="info" />
 
     return (
-      <ThumbnailGridDisplay>
-        {data.palettes.map(palette => (
-          <Box key={palette.id} sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-            <PaletteThumbnail palette={palette} />
-            <ModerationPanel
-              refetch={refetch}
-              moderationStatus={tabs[tab].status}
-              paletteId={palette.id}
-            />
-          </Box>
-        ))}
-      </ThumbnailGridDisplay>
+      <>
+        <ThumbnailGridDisplay>
+          {data.palettes.map(palette => (
+            <Box key={palette.id} sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+              <PaletteThumbnail palette={palette} />
+              <ModerationPanel
+                refetch={refetch}
+                moderationStatus={tabs[tab].status}
+                paletteId={palette.id}
+              />
+            </Box>
+          ))}
+        </ThumbnailGridDisplay>
+        <Pagination total={data.total} onPageChange={handlePageChange} />
+      </>
     )
-  }, [data, error, isLoading, refetch, tab])
+  }, [data, error, isLoading, refetch, tab, handlePageChange])
 
   if (!appUserDetails || appUserDetails?.permissionLevel < EPermissionLevel.MODERATOR) {
     notFound()

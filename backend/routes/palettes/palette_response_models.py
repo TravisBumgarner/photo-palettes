@@ -84,3 +84,4 @@ def map_generate_palette_array_to_response(
         map_generate_palette_to_response(item["color"], item["percent_location"])
         for item in palette_data
     ]
+

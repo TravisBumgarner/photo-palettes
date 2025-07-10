@@ -7,6 +7,7 @@ const zodResponse = z.discriminatedUnion('success', [
   z.object({
     success: z.literal(true),
     palettes: z.array(zodPalette),
+    total: z.number(),
   }),
   z.object({
     success: z.literal(false),
@@ -14,9 +15,9 @@ const zodResponse = z.discriminatedUnion('success', [
   }),
 ])
 
-const getPaletteListModerated = async () => {
+const getPaletteListModerated = async ({ size, offset }: { size: number; offset: number }) => {
   const token = await getToken()
-  const response = await fetch(`${config.apiUrl}/palettes`, {
+  const response = await fetch(`${config.apiUrl}/palettes?size=${size}&offset=${offset}`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',

@@ -7,24 +7,29 @@ from database.engine import SessionLocal
 from database.models import ModerationStatus, Palette
 
 
-def get_moderated_palettes() -> List[Palette]:
+def get_palettes_count(
+    moderation_status: ModerationStatus,
+) -> int:
     session = SessionLocal()
-    return (
-        session.query(Palette)
-        .options(joinedload(Palette.colors))
-        .filter(Palette.moderation_status == ModerationStatus.APPROVED)
-        .all()
-    )
+    query = session.query(Palette)
+    query = query.filter(Palette.moderation_status == moderation_status)
+    return query.count()
 
 
-def get_palettes_by_moderation_status(moderation_status: ModerationStatus) -> List[Palette]:
+def get_palettes(
+    moderation_status: ModerationStatus | None = None,
+    size: int | None = None,
+    offset: int | None = None,
+) -> List[Palette]:
     session = SessionLocal()
-    return (
-        session.query(Palette)
-        .options(joinedload(Palette.colors))
-        .filter(Palette.moderation_status == moderation_status)
-        .all()
-    )
+    query = session.query(Palette).options(joinedload(Palette.colors))
+    if moderation_status is not None:
+        query = query.filter(Palette.moderation_status == moderation_status)
+    if offset is not None:
+        query = query.offset(offset)
+    if size is not None:
+        query = query.limit(size)
+    return query.all()
 
 
 def get_palette_by_id(palette_id: uuid.UUID) -> Palette | None:
