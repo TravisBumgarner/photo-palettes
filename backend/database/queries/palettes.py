@@ -2,6 +2,7 @@ import uuid
 from typing import List
 
 from sqlalchemy.orm import joinedload
+from sqlmodel import desc
 
 from database.engine import SessionLocal
 from database.models import ModerationStatus, Palette
@@ -25,6 +26,7 @@ def get_palettes(
     query = session.query(Palette).options(joinedload(Palette.colors))
     if moderation_status is not None:
         query = query.filter(Palette.moderation_status == moderation_status)
+    query = query.order_by(desc(Palette.created_at)) 
     if offset is not None:
         query = query.offset(offset)
     if size is not None:
