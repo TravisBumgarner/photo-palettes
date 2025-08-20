@@ -23,7 +23,7 @@ const getPaletteListModerated = async ({
   offset: number;
 }) => {
   const tokenResponse = await getToken();
-
+  console.log("doot doot?", tokenResponse);
   if (!tokenResponse) {
     return {
       success: false,
@@ -42,6 +42,8 @@ const getPaletteListModerated = async ({
     }
   );
   const json = await response.json();
+
+  console.log(size, offset, json);
   return zodResponse.parse(json);
 };
 

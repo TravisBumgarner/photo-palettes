@@ -14,9 +14,9 @@ const zodSchemaForAddFeatureRequest = z.discriminatedUnion("success", [
 ]);
 
 const addFeatureRequest = async (title: string, description: string) => {
-  const token = await getToken();
+  const tokenResponse = await getToken();
 
-  if (!token)
+  if (!tokenResponse)
     return {
       success: false,
       error: "No token",
@@ -25,7 +25,7 @@ const addFeatureRequest = async (title: string, description: string) => {
   const response = await fetch(`${config.apiUrl}/feature_requests`, {
     method: "POST",
     headers: {
-      Authorization: `Bearer ${token}`,
+      Authorization: `Bearer ${tokenResponse.token}`,
       "Content-Type": "application/json",
     },
     body: JSON.stringify({ title, description }),

@@ -13,6 +13,7 @@ import Signup from "../pages/Signup";
 import Profile from "../pages/Profile";
 import Logout from "../pages/Logout";
 import Moderation from "../pages/Moderation";
+import Donations from "../pages/Donations";
 
 const Router = () => {
   return (
@@ -32,6 +33,7 @@ const Router = () => {
       <Route path="/profile" element={<Profile />} />
       <Route path="/profile/:id" element={<Profile />} />
       <Route path="/moderation" element={<Moderation />} />
+      <Route path="/donations" element={<Donations />} />
     </Routes>
   );
 };

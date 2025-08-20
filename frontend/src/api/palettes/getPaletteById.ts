@@ -30,7 +30,7 @@ export const getPaletteById = async (
   let requestUrl = `${config.apiUrl}/palettes/id/${id}`;
 
   if (isServerSideRequest && !config.is_production) {
-    requestUrl = `http://backend:8000/palettes/id/${id}`;
+    requestUrl = `http://localhost:8000/palettes/id/${id}`;
   }
 
   const response = await fetch(requestUrl, {
