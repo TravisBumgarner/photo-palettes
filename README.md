@@ -4,7 +4,7 @@ Social platform for generating color palettes from photos.
 
 # Local Setup
 
-make setup
+`make bootstrap` - Follow all instructions output to terminal. 
 
 On network changes you'll need to run `make set-ip`.
 
