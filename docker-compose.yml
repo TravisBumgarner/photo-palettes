@@ -21,6 +21,18 @@ services:
       context: ./frontend
       dockerfile: Dockerfile
     ports:
+      - "3001:3000"
+    volumes:
+      - ./frontend:/app
+
+    env_file:
+      - ./frontend/.env
+
+  frontendnext:
+    build:
+      context: ./frontendnext
+      dockerfile: Dockerfile
+    ports:
       - "3000:3000"
     volumes:
       - ./frontend:/app
