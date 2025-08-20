@@ -6,9 +6,12 @@ import { z } from "zod";
 import { MINIMUM_PASSWORD_LENGTH, ROUTES } from "../consts";
 import { signup } from "../services/supabase";
 import useGlobalStore from "../store";
-import { authFormCSS, PageTitle, PageWrapper } from "../styles/Shared";
+import authFormCSS from "../styles/shared/authFormCSS";
+import PageTitle from "../styles/shared/PageTitle";
+import PageWrapper from "../styles/shared/PageWrapper";
 import Link from "../sharedComponents/Link";
 import { Navigate, useNavigate } from "react-router-dom";
+import { loadUserIntoState } from "../utils";
 
 const SignupSchema = z.object({
   email: z.string().email(),
@@ -23,9 +26,6 @@ export default function SignupPage() {
   const [repeatPassword, setRepeatPassword] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const setTriggerFetchUser = useGlobalStore(
-    (state) => state.setTriggerFetchUser
-  );
   const setActiveModal = useGlobalStore((state) => state.setActiveModal);
   const appUserDetails = useGlobalStore((state) => state.appUserDetails);
   const navigate = useNavigate();
@@ -72,12 +72,12 @@ export default function SignupPage() {
       try {
         const response = await signup({ email, password });
         if (response.success) {
-          setTriggerFetchUser(true);
+          await loadUserIntoState();
           setActiveModal({
             id: "ConfirmationModal",
             title: "Signup Successful",
             body: "Check your email for a confirmation.",
-            confirmationCallback: () => {
+            confirmationCallback: async () => {
               navigate("/");
             },
           });
@@ -92,14 +92,7 @@ export default function SignupPage() {
         setIsSubmitting(false);
       }
     },
-    [
-      email,
-      password,
-      repeatPassword,
-      setTriggerFetchUser,
-      setActiveModal,
-      navigate,
-    ]
+    [email, password, repeatPassword, setActiveModal, navigate]
   );
 
   const handleEmailChange = useCallback(

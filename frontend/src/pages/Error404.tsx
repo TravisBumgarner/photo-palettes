@@ -1,7 +1,8 @@
 "use client";
 
 import { Typography } from "@mui/material";
-import { PageWrapper } from "../styles/Shared";
+import PageWrapper from "../styles/shared/PageWrapper";
+
 import WhatWentWrongContactForm from "../sharedComponents/WhatWentWrongContactForm";
 
 const Error404 = () => {

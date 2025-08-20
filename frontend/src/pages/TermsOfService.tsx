@@ -1,8 +1,10 @@
 "use client";
 
 import { Typography } from "@mui/material";
-import { PageTitle, PageWrapper } from "../styles/Shared";
+import PageTitle from "../styles/shared/PageTitle";
+import PageWrapper from "../styles/shared/PageWrapper";
 import Link from "../sharedComponents/Link";
+
 const TermsOfService = () => {
   return (
     <PageWrapper width="medium" staticContent>

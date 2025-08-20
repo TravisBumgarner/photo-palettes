@@ -6,7 +6,9 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { getPaletteListByAppUserId } from "../api/palettes/getPaletteListByAppUserId";
 import { logger } from "../services/logging";
 import useGlobalStore from "../store";
-import { PageTitle, PageWrapper, ThumbnailGridDisplay } from "../styles/Shared";
+import PageTitle from "../styles/shared/PageTitle";
+import PageWrapper from "../styles/shared/PageWrapper";
+import ThumbnailGridDisplay from "../styles/shared/ThumbnailGallery";
 import { SPACING } from "../styles/styleConsts";
 import { MODERATION_STATUS } from "../types";
 import { getContrastColor, getUserColorFromUUID } from "../utils";
@@ -26,7 +28,6 @@ const Profile = () => {
   const params = useParams();
   const navigate = useNavigate();
   const appUserDetails = useGlobalStore((state) => state.appUserDetails);
-  const triggerFetchUser = useGlobalStore((state) => state.triggerFetchUser);
 
   const profileUserId =
     (Array.isArray(params.id) ? params.id[0] : params.id) ||
@@ -44,10 +45,10 @@ const Profile = () => {
   }, [error]);
 
   useEffect(() => {
-    if (!profileUserId && !triggerFetchUser) {
+    if (!profileUserId) {
       navigate("/error404");
     }
-  }, [profileUserId, triggerFetchUser, navigate]);
+  }, [profileUserId, navigate]);
 
   const handleTabChange = useCallback(
     (_event: unknown, v: number) => {

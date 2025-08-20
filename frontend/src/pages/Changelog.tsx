@@ -1,5 +1,6 @@
 import { Box, Typography } from "@mui/material";
-import { PageTitle, PageWrapper } from "../styles/Shared";
+import PageTitle from "../styles/shared/PageTitle";
+import PageWrapper from "../styles/shared/PageWrapper";
 import { SPACING } from "../styles/styleConsts";
 
 type Update = {

@@ -1,6 +1,6 @@
 import { Routes, Route } from "react-router-dom";
 import Browse from "../pages/Browse";
-import TermsOfService from "../pages/TermsOfServices";
+import TermsOfService from "../pages/TermsOfService";
 import PrivacyPolicy from "../pages/PrivacyPolicy";
 import Changelog from "../pages/Changelog";
 import Feedback from "../pages/Feedback";

@@ -1,6 +1,5 @@
 import { createClient } from "@supabase/supabase-js";
 import { logger } from "./logging";
-import { getClient } from "@sentry/react";
 
 //TODO - FIx
 type Response =
@@ -18,6 +17,7 @@ export async function getUser() {
     logger.error(`Get user failed ${JSON.stringify(error)}`);
     return { error: "Get user failed", success: false };
   }
+
   return { user: data.user, success: true };
 }
 

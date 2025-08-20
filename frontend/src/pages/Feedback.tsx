@@ -3,7 +3,8 @@
 import { Box, Button, TextField, Typography } from "@mui/material";
 import React, { useCallback, useMemo, useState } from "react";
 import { ROUTES } from "../consts";
-import { PageTitle, PageWrapper } from "../styles/Shared";
+import PageTitle from "../styles/shared/PageTitle";
+import PageWrapper from "../styles/shared/PageWrapper";
 import Link from "../sharedComponents/Link";
 
 const Contact = () => {

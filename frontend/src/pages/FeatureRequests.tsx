@@ -13,7 +13,8 @@ import { PERMISSION_LEVEL, type TFeatureRequest } from "../types";
 import Link from "../sharedComponents/Link";
 import Loading from "../sharedComponents/Loading";
 import Message from "../sharedComponents/Message";
-import { PageTitle, PageWrapper } from "../styles/Shared";
+import PageTitle from "../styles/shared/PageTitle";
+import PageWrapper from "../styles/shared/PageWrapper";
 import { Navigate } from "react-router-dom";
 
 const FeatureRequestCard = ({

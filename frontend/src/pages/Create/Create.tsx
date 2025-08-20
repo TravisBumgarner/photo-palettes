@@ -14,7 +14,7 @@ import Message from "../../sharedComponents/Message";
 import CanvasAndPalette from "./components/CanvasAndPalette";
 import Dropzone from "./components/Dropzone";
 import { sharedCSS } from "./components/shared";
-import { PageWrapper } from "../../styles/Shared";
+import PageWrapper from "../../styles/shared/PageWrapper";
 import { resizeImage } from "../../utils/resizeImage";
 import { useNavigate } from "react-router-dom";
 

@@ -6,9 +6,13 @@ import { z } from "zod";
 import { MINIMUM_PASSWORD_LENGTH, ROUTES } from "../consts";
 import { login } from "../services/supabase";
 import useGlobalStore from "../store";
-import { authFormCSS, PageTitle, PageWrapper } from "../styles/Shared";
+import authFormCSS from "../styles/shared/authFormCSS";
+import PageTitle from "../styles/shared/PageTitle";
+import PageWrapper from "../styles/shared/PageWrapper";
+
 import Link from "../sharedComponents/Link";
 import { Navigate, useNavigate } from "react-router-dom";
+import { loadUserIntoState } from "../utils";
 
 const LoginSchema = z.object({
   email: z.email(),
@@ -20,9 +24,6 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
   const navigate = useNavigate();
-  const setTriggerFetchUser = useGlobalStore(
-    (state) => state.setTriggerFetchUser
-  );
   const appUserDetails = useGlobalStore((state) => state.appUserDetails);
 
   const handleEmailChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
@@ -52,16 +53,16 @@ export default function LoginPage() {
       }
 
       const response = await login({ email, password });
-      console.log("ruda", response);
+
       if (response.success) {
-        setTriggerFetchUser(true);
+        await loadUserIntoState();
         navigate("/");
       } else {
         setError(response.error);
         navigate("/error500");
       }
     },
-    [setTriggerFetchUser, navigate, email, password]
+    [navigate, email, password]
   );
 
   if (appUserDetails) {

@@ -12,7 +12,7 @@ import Link from "../sharedComponents/Link";
 
 const DropdownLinks = ({ onClose }: { onClose: () => void }) => {
   const appUserDetails = useGlobalStore((state) => state.appUserDetails);
-  console.log("nav showing", appUserDetails);
+
   const routeKeys = useMemo((): (keyof typeof ROUTES)[] => {
     if (!appUserDetails) return ["login", "signup", "featureRequests"];
 

@@ -8,13 +8,12 @@ const useGlobalStore = create<State>()(
   devtools(
     (set, get) => ({
       authId: undefined,
-      triggerFetchUser: true,
+      loadingUser: true,
       appUserDetails: undefined,
       setAppUserDetails: (appUserDetails: AppUserDetails | null) =>
         set({ appUserDetails }),
       setAuthId: (authId: User["id"] | null) => set({ authId }),
-      setTriggerFetchUser: (triggerFetchUser: boolean) =>
-        set({ triggerFetchUser }),
+      setLoadingUser: (loadingUser: boolean) => set({ loadingUser }),
       alerts: [],
       getAndRemoveNextAlert: () => {
         const alerts = get().alerts;
