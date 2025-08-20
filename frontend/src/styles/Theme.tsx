@@ -1,11 +1,15 @@
-'use client'
+"use client";
 
-import { useMediaQuery } from '@mui/material'
-import CssBaseline from '@mui/material/CssBaseline'
-import { createTheme, type ThemeOptions, ThemeProvider } from '@mui/material/styles'
-import _ from 'lodash'
-import { useMemo } from 'react'
-import { FONT_SIZES, PALETTE, BORDER_RADIUS } from './styleConsts'
+import { useMediaQuery } from "@mui/material";
+import CssBaseline from "@mui/material/CssBaseline";
+import {
+  createTheme,
+  type ThemeOptions,
+  ThemeProvider,
+} from "@mui/material/styles";
+import _ from "lodash";
+import { useMemo } from "react";
+import { FONT_SIZES, PALETTE, BORDER_RADIUS } from "./styleConsts";
 
 // Base theme options shared between light and dark
 const baseThemeOptions: ThemeOptions = {
@@ -28,11 +32,11 @@ const baseThemeOptions: ThemeOptions = {
       styleOverrides: {
         root: {
           borderRadius: BORDER_RADIUS.ZERO.PX,
-          boxShadow: 'none',
-          cursor: 'pointer',
+          boxShadow: "none",
+          cursor: "pointer",
           fontWeight: 600,
-          '&:hover': {
-            boxShadow: 'none',
+          "&:hover": {
+            boxShadow: "none",
           },
         },
       },
@@ -46,6 +50,7 @@ const baseThemeOptions: ThemeOptions = {
     },
   },
   typography: {
+    fontFamily: '"Satoshi", "Roboto", "Helvetica", "Arial", sans-serif',
     h1: {
       fontSize: FONT_SIZES.HUGE.PX,
       fontWeight: 900,
@@ -65,11 +70,11 @@ const baseThemeOptions: ThemeOptions = {
       fontSize: FONT_SIZES.SMALL.PX,
     },
   },
-}
+};
 
 const lightThemeOptions: ThemeOptions = {
   palette: {
-    mode: 'light',
+    mode: "light",
     background: {
       default: PALETTE.grayscale[100],
       paper: PALETTE.grayscale[50],
@@ -98,11 +103,11 @@ const lightThemeOptions: ThemeOptions = {
       fontSize: FONT_SIZES.SMALL.PX,
     },
   },
-}
+};
 
 const darkThemeOptions: ThemeOptions = {
   palette: {
-    mode: 'dark',
+    mode: "dark",
     background: {
       default: PALETTE.grayscale[900],
       paper: PALETTE.grayscale[800],
@@ -130,22 +135,25 @@ const darkThemeOptions: ThemeOptions = {
       color: PALETTE.grayscale[100],
     },
   },
-}
+};
 
-const darkTheme = createTheme(_.merge(baseThemeOptions, darkThemeOptions))
-const lightTheme = createTheme(_.merge(baseThemeOptions, lightThemeOptions))
+const darkTheme = createTheme(_.merge(baseThemeOptions, darkThemeOptions));
+const lightTheme = createTheme(_.merge(baseThemeOptions, lightThemeOptions));
 
 const AppThemeProvider = ({ children }: { children: React.ReactNode }) => {
-  const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)')
+  const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
 
-  const theme = useMemo(() => (prefersDarkMode ? darkTheme : lightTheme), [prefersDarkMode])
+  const theme = useMemo(
+    () => (prefersDarkMode ? darkTheme : lightTheme),
+    [prefersDarkMode]
+  );
 
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
       {children}
     </ThemeProvider>
-  )
-}
+  );
+};
 
-export default AppThemeProvider
+export default AppThemeProvider;
