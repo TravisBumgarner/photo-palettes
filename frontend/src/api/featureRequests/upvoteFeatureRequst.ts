@@ -1,8 +1,8 @@
-import { z } from 'zod'
-import config from '../../config'
-import { getToken } from '../../services/supabase/utils'
+import { z } from "zod";
+import config from "../../config";
+import { getToken } from "../../services/supabase";
 
-const zodSchema = z.discriminatedUnion('success', [
+const zodSchema = z.discriminatedUnion("success", [
   z.object({
     success: z.literal(true),
     featureRequestId: z.string(),
@@ -11,29 +11,29 @@ const zodSchema = z.discriminatedUnion('success', [
     success: z.literal(false),
     error: z.string(),
   }),
-])
+]);
 
 const upvoteFeatureRequest = async (featureRequestId: string) => {
-  const token = await getToken()
+  const token = await getToken();
 
   if (!token) {
     return {
       success: false,
-      error: 'No token',
-    } as const
+      error: "No token",
+    } as const;
   }
 
   const response = await fetch(`${config.apiUrl}/feature_requests/upvote`, {
-    method: 'POST',
+    method: "POST",
     headers: {
       Authorization: `Bearer ${token}`,
-      'Content-Type': 'application/json',
+      "Content-Type": "application/json",
     },
     body: JSON.stringify({ feature_request_id: featureRequestId }),
-  })
+  });
 
-  const data = await response.json()
-  return zodSchema.parse(data)
-}
+  const data = await response.json();
+  return zodSchema.parse(data);
+};
 
-export default upvoteFeatureRequest
+export default upvoteFeatureRequest;

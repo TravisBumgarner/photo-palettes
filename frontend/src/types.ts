@@ -23,7 +23,8 @@ export const MODERATION_STATUS = {
   REJECTED: 2,
 };
 
-export type EModerationStatus = keyof typeof MODERATION_STATUS;
+export type EModerationStatus =
+  (typeof MODERATION_STATUS)[keyof typeof MODERATION_STATUS];
 
 export type TPaletteColor = {
   id: string;
@@ -41,11 +42,14 @@ export type TPaletteAndColors = {
   colors: TPaletteColor[];
 };
 
-export type EFeatureRequestStatus = {
-  PENDING: 0;
-  APPROVED: 1;
-  REJECTED: 2;
+export const FEATURE_REQUESTS = {
+  PENDING: 0,
+  APPROVED: 1,
+  REJECTED: 2,
 };
+
+export type EFeatureRequestStatus =
+  (typeof FEATURE_REQUESTS)[keyof typeof FEATURE_REQUESTS];
 
 export type TFeatureRequest = {
   id: string;

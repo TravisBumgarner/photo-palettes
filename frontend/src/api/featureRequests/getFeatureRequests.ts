@@ -1,8 +1,8 @@
-import { z } from 'zod'
-import config from '../../config'
-import { EFeatureRequestStatus } from '../../types'
+import { z } from "zod";
+import config from "../../config";
+import { FEATURE_REQUESTS } from "../../types";
 
-const zodSchema = z.discriminatedUnion('success', [
+const zodSchema = z.discriminatedUnion("success", [
   z.object({
     success: z.literal(true),
     featureRequests: z.array(
@@ -10,7 +10,7 @@ const zodSchema = z.discriminatedUnion('success', [
         id: z.string(),
         title: z.string(),
         description: z.string(),
-        status: z.nativeEnum(EFeatureRequestStatus),
+        status: z.enum(FEATURE_REQUESTS),
         votes: z.array(z.string()),
       })
     ),
@@ -19,13 +19,13 @@ const zodSchema = z.discriminatedUnion('success', [
     success: z.literal(false),
     error: z.string(),
   }),
-])
+]);
 
 const getFeatureRequests = async () => {
-  const response = await fetch(`${config.apiUrl}/feature_requests/`, {})
-  const data = await response.json()
+  const response = await fetch(`${config.apiUrl}/feature_requests/`, {});
+  const data = await response.json();
 
-  return zodSchema.parse(data)
-}
+  return zodSchema.parse(data);
+};
 
-export default getFeatureRequests
+export default getFeatureRequests;
