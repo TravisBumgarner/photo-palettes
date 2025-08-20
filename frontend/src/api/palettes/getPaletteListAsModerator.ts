@@ -7,6 +7,7 @@ const zodResponse = z.discriminatedUnion('success', [
   z.object({
     success: z.literal(true),
     palettes: z.array(zodPalette),
+    total: z.number(),
   }),
   z.object({
     success: z.literal(false),
@@ -14,15 +15,26 @@ const zodResponse = z.discriminatedUnion('success', [
   }),
 ])
 
-export const getListAsModerator = async (status: EModerationStatus) => {
+export const getListAsModerator = async ({
+  status,
+  size,
+  offset,
+}: {
+  status: EModerationStatus
+  size: number
+  offset: number
+}) => {
   const token = await getToken()
 
-  const response = await fetch(`${config.apiUrl}/palettes/moderator?status=${status}`, {
-    method: 'GET',
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  })
+  const response = await fetch(
+    `${config.apiUrl}/palettes/moderator?status=${status}&size=${size}&status=${offset}`,
+    {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  )
   const json = await response.json()
   return zodResponse.parse(json)
 }

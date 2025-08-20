@@ -1,24 +1,33 @@
 'use client'
 
 import { useQuery } from '@tanstack/react-query'
-import { useEffect, useMemo } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import getPaletteListModerated from '../../api/palettes/getPaletteListModerated'
 import { logger } from '../../services/logging'
 import { PageWrapper, ThumbnailGridDisplay } from '../../styles/Shared'
 import Loading from '../_sharedComponents/Loading'
 import Message from '../_sharedComponents/Message'
 import PaletteThumbnail from '../_sharedComponents/PaletteThumbnail'
+import Pagination from '../_sharedComponents/Pagination'
+import { PAGINATION_SIZE } from '../../consts'
 
 const Browse = () => {
+  const [page, setPage] = useState(1)
+
   const { data, isLoading, error } = useQuery({
-    queryKey: ['palettes'],
-    queryFn: getPaletteListModerated,
+    queryKey: ['palettes', page],
+    queryFn: () =>
+      getPaletteListModerated({ size: PAGINATION_SIZE, offset: (page - 1) * PAGINATION_SIZE }),
     retry: false,
   })
 
   useEffect(() => {
     if (error) logger.error(error)
   }, [error])
+
+  const handlePageChange = useCallback((newPage: number) => {
+    setPage(newPage)
+  }, [])
 
   const loading = isLoading || !data
   const hasErrored = error || (data && !data.success)
@@ -30,11 +39,14 @@ const Browse = () => {
     if (noPalettes) return <Message message="No palettes found" color="info" />
 
     return (
-      <ThumbnailGridDisplay>
-        {data?.palettes.map(palette => <PaletteThumbnail key={palette.id} palette={palette} />)}
-      </ThumbnailGridDisplay>
+      <>
+        <ThumbnailGridDisplay>
+          {data?.palettes.map(palette => <PaletteThumbnail key={palette.id} palette={palette} />)}
+        </ThumbnailGridDisplay>
+        <Pagination total={data.total} onPageChange={handlePageChange} />
+      </>
     )
-  }, [hasErrored, noPalettes, data, loading])
+  }, [hasErrored, noPalettes, data, loading, handlePageChange])
 
   return (
     <PageWrapper width="full" minHeight>

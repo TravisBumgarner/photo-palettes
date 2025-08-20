@@ -84,3 +84,5 @@ export const ROUTES = {
     label: 'Changelog',
   },
 }
+
+export const PAGINATION_SIZE = 9
