@@ -14,10 +14,7 @@ const zodResponse = z.discriminatedUnion("success", [
   }),
 ]);
 
-export const getPaletteById = async (
-  id: string,
-  isServerSideRequest: boolean = false
-) => {
+export const getPaletteById = async (id: string) => {
   const tokenResponse = await getToken();
 
   if (!tokenResponse) {
@@ -29,7 +26,7 @@ export const getPaletteById = async (
 
   let requestUrl = `${config.apiUrl}/palettes/id/${id}`;
 
-  if (isServerSideRequest && !config.is_production) {
+  if (!config.is_production) {
     requestUrl = `http://localhost:8000/palettes/id/${id}`;
   }
 

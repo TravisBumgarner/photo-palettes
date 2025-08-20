@@ -14,6 +14,7 @@ import Profile from "../pages/Profile";
 import Logout from "../pages/Logout";
 import Moderation from "../pages/Moderation";
 import Donations from "../pages/Donations";
+import Palette from "../pages/Palette";
 
 const Router = () => {
   return (
@@ -34,6 +35,7 @@ const Router = () => {
       <Route path="/profile/:id" element={<Profile />} />
       <Route path="/moderation" element={<Moderation />} />
       <Route path="/donations" element={<Donations />} />
+      <Route path="/palette/:id" element={<Palette />} />
     </Routes>
   );
 };

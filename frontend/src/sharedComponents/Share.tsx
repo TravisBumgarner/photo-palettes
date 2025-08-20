@@ -57,7 +57,7 @@ const Share = ({
   text: string;
   media: string;
 }) => {
-  const absoluteUrl = process.env.NEXT_PUBLIC_FE_URL + "/" + url;
+  const absoluteUrl = import.meta.env.VITE_PUBLIC_FE_URL + "/" + url;
 
   return (
     <Box
