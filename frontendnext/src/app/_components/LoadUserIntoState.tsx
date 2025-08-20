@@ -11,12 +11,12 @@ import Loading from '../_sharedComponents/Loading'
 export function LoadUserIntoStore() {
   const supabase = createClient()
   const setAuthId = useGlobalStore(state => state.setAuthId)
-  const isAppAuthenticating = useGlobalStore(state => state.isAppAuthenticating)
-  const setIsAppAuthenticating = useGlobalStore(state => state.setIsAppAuthenticating)
+  const triggerFetchUser = useGlobalStore(state => state.triggerFetchUser)
+  const setTriggerFetchUser = useGlobalStore(state => state.setTriggerFetchUser)
   const setAppUserDetails = useGlobalStore(state => state.setAppUserDetails)
 
   useEffect(() => {
-    if (!isAppAuthenticating) {
+    if (!triggerFetchUser) {
       return
     }
 
@@ -32,15 +32,15 @@ export function LoadUserIntoStore() {
         setAppUserDetails(userDetails)
       }
 
-      setIsAppAuthenticating(false)
+      setTriggerFetchUser(false)
     }
 
     loadUser()
-  }, [setAuthId, supabase, setIsAppAuthenticating, isAppAuthenticating, setAppUserDetails])
+  }, [setAuthId, supabase, setTriggerFetchUser, triggerFetchUser, setAppUserDetails])
 
   const isDark = useMediaQuery('(prefers-color-scheme: dark)')
 
-  return isAppAuthenticating ? (
+  return triggerFetchUser ? (
     <Box
       sx={{
         left: 0,

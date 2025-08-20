@@ -20,7 +20,14 @@ const zodResponse = z.discriminatedUnion("success", [
 ]);
 
 export const generatePalette = async (photo: Blob) => {
-  const token = await getToken();
+  const tokenResponse = await getToken();
+
+  if (!tokenResponse) {
+    return {
+      success: false,
+      error: "No token found",
+    } as const;
+  }
 
   const formData = new FormData();
   formData.append("photo", photo);
@@ -29,7 +36,7 @@ export const generatePalette = async (photo: Blob) => {
     method: "POST",
     body: formData,
     headers: {
-      Authorization: `Bearer ${token}`,
+      Authorization: `Bearer ${tokenResponse.token}`,
     },
   });
   const json = await response.json();

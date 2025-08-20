@@ -10,6 +10,7 @@ import Error500 from "../pages/Error500";
 import Error404 from "../pages/Error404";
 import FeatureRequests from "../pages/FeatureRequests";
 import Signup from "../pages/Signup";
+import Profile from "../pages/Profile";
 
 const Router = () => {
   return (
@@ -25,6 +26,8 @@ const Router = () => {
       <Route path="/error500" element={<Error500 />} />
       <Route path="/error404" element={<Error404 />} />
       <Route path="/feature_requests" element={<FeatureRequests />} />
+      <Route path="/profile" element={<Profile />} />
+      <Route path="/profile/:id" element={<Profile />} />
     </Routes>
   );
 };

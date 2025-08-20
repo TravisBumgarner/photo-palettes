@@ -21,13 +21,13 @@ export default function SignupPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [repeatPassword, setRepeatPassword] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const appUserDetails = useGlobalStore((state) => state.appUserDetails);
-  const setIsAppAuthenticating = useGlobalStore(
-    (state) => state.setIsAppAuthenticating
+  const setTriggerFetchUser = useGlobalStore(
+    (state) => state.setTriggerFetchUser
   );
   const setActiveModal = useGlobalStore((state) => state.setActiveModal);
-
+  const appUserDetails = useGlobalStore((state) => state.appUserDetails);
   const navigate = useNavigate();
 
   const handlePasswordChange = useCallback(
@@ -67,10 +67,12 @@ export default function SignupPage() {
         return;
       }
 
+      setIsSubmitting(true);
+
       try {
         const response = await signup({ email, password });
         if (response.success) {
-          setIsAppAuthenticating(true);
+          setTriggerFetchUser(true);
           setActiveModal({
             id: "ConfirmationModal",
             title: "Signup Successful",
@@ -86,13 +88,15 @@ export default function SignupPage() {
         setError(
           err instanceof Error ? err.message : "An error occurred during signup"
         );
+      } finally {
+        setIsSubmitting(false);
       }
     },
     [
       email,
       password,
       repeatPassword,
-      setIsAppAuthenticating,
+      setTriggerFetchUser,
       setActiveModal,
       navigate,
     ]
@@ -159,7 +163,7 @@ export default function SignupPage() {
         />
         <Button
           variant="contained"
-          disabled={!password || !repeatPassword || !email}
+          disabled={!password || !repeatPassword || !email || isSubmitting}
           type="submit"
           fullWidth
         >

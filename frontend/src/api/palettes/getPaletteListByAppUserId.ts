@@ -25,7 +25,14 @@ export const getPaletteListByAppUserId = async (
     } as const;
   }
 
-  const token = await getToken();
+  const tokenResponse = await getToken();
+
+  if (!tokenResponse) {
+    return {
+      success: false,
+      error: "No token found",
+    } as const;
+  }
 
   const response = await fetch(
     `${config.apiUrl}/palettes/app_user_id/${appUserId}?status=${status}`,
@@ -33,7 +40,7 @@ export const getPaletteListByAppUserId = async (
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${tokenResponse.token}`,
       },
     }
   );

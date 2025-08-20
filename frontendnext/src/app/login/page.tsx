@@ -20,7 +20,7 @@ export default function LoginPage() {
   const [password, setPassword] = useState('')
   const [email, setEmail] = useState('')
   const router = useRouter()
-  const setIsAppAuthenticating = useGlobalStore(state => state.setIsAppAuthenticating)
+  const setTriggerFetchUser = useGlobalStore(state => state.setTriggerFetchUser)
   const appUserDetails = useGlobalStore(state => state.appUserDetails)
 
   const handleEmailChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
@@ -49,14 +49,14 @@ export default function LoginPage() {
 
       const response = await login(formData)
       if (response.success) {
-        setIsAppAuthenticating(true)
+        setTriggerFetchUser(true)
         router.push('/')
       } else {
         setError(response.error)
         router.push('/error')
       }
     },
-    [router, setIsAppAuthenticating]
+    [router, setTriggerFetchUser]
   )
 
   if (appUserDetails) {

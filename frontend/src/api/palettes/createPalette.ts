@@ -23,7 +23,14 @@ export const createPalette = async ({
   paletteId: string;
   name: string;
 }) => {
-  const token = await getToken();
+  const tokenResponse = await getToken();
+
+  if (!tokenResponse) {
+    return {
+      success: false,
+      error: "No token found",
+    } as const;
+  }
 
   // Extract hex colors from palette
   const hexColors = palette.map((swatch) => swatch.color.toUpperCase());
@@ -40,7 +47,7 @@ export const createPalette = async ({
     body: JSON.stringify(requestBody),
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
+      Authorization: `Bearer ${tokenResponse.token}`,
     },
   });
   const json = await response.json();

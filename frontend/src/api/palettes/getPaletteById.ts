@@ -18,9 +18,14 @@ export const getPaletteById = async (
   id: string,
   isServerSideRequest: boolean = false
 ) => {
-  const token = await getToken();
-  // Requests running from NextJS are run on the server, within Docker, and so localhost:8000 is not accessible.
-  // This function is called to populate the OG tags.
+  const tokenResponse = await getToken();
+
+  if (!tokenResponse) {
+    return {
+      success: false,
+      error: "No token found",
+    } as const;
+  }
 
   let requestUrl = `${config.apiUrl}/palettes/id/${id}`;
 
@@ -32,7 +37,7 @@ export const getPaletteById = async (
     method: "GET",
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
+      Authorization: `Bearer ${tokenResponse.token}`,
     },
   });
   const json = await response.json();

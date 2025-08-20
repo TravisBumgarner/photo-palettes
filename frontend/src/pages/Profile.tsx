@@ -26,9 +26,7 @@ const Profile = () => {
   const params = useParams();
   const navigate = useNavigate();
   const appUserDetails = useGlobalStore((state) => state.appUserDetails);
-  const isAppAuthenticating = useGlobalStore(
-    (state) => state.isAppAuthenticating
-  );
+  const triggerFetchUser = useGlobalStore((state) => state.triggerFetchUser);
 
   const profileUserId =
     (Array.isArray(params.id) ? params.id[0] : params.id) ||
@@ -46,10 +44,10 @@ const Profile = () => {
   }, [error]);
 
   useEffect(() => {
-    if (!profileUserId && !isAppAuthenticating) {
+    if (!profileUserId && !triggerFetchUser) {
       navigate("/error404");
     }
-  }, [profileUserId, isAppAuthenticating, navigate]);
+  }, [profileUserId, triggerFetchUser, navigate]);
 
   const handleTabChange = useCallback(
     (_event: unknown, v: number) => {

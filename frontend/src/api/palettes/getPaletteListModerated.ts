@@ -22,14 +22,22 @@ const getPaletteListModerated = async ({
   size: number;
   offset: number;
 }) => {
-  const token = await getToken();
+  const tokenResponse = await getToken();
+
+  if (!tokenResponse) {
+    return {
+      success: false,
+      error: "No token found",
+    } as const;
+  }
+
   const response = await fetch(
     `${config.apiUrl}/palettes?size=${size}&offset=${offset}`,
     {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${tokenResponse.token}`,
       },
     }
   );

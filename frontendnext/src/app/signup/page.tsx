@@ -24,7 +24,7 @@ export default function SignupPage() {
   const [repeatPassword, setRepeatPassword] = useState('')
 
   const appUserDetails = useGlobalStore(state => state.appUserDetails)
-  const setIsAppAuthenticating = useGlobalStore(state => state.setIsAppAuthenticating)
+  const setTriggerFetchUser = useGlobalStore(state => state.setTriggerFetchUser)
   const setActiveModal = useGlobalStore(state => state.setActiveModal)
 
   const router = useRouter()
@@ -69,7 +69,7 @@ export default function SignupPage() {
       try {
         const response = await signup(formData)
         if (response.success) {
-          setIsAppAuthenticating(true)
+          setTriggerFetchUser(true)
           setActiveModal({
             id: ModalID.ConfirmationModal,
             title: 'Signup Successful',
@@ -85,7 +85,7 @@ export default function SignupPage() {
         setError(err instanceof Error ? err.message : 'An error occurred during signup')
       }
     },
-    [email, password, repeatPassword, router, setIsAppAuthenticating, setActiveModal]
+    [email, password, repeatPassword, router, setTriggerFetchUser, setActiveModal]
   )
 
   const handleEmailChange = useCallback(

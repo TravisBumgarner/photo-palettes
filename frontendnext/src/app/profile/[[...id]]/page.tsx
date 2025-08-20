@@ -25,7 +25,7 @@ const Profile = () => {
   const [tab, setTab] = useState(0)
   const params = useParams()
   const appUserDetails = useGlobalStore(state => state.appUserDetails)
-  const isAppAuthenticating = useGlobalStore(state => state.isAppAuthenticating)
+  const triggerFetchUser = useGlobalStore(state => state.triggerFetchUser)
 
   const router = useRouter()
   const profileUserId =
@@ -42,10 +42,10 @@ const Profile = () => {
   }, [error])
 
   useEffect(() => {
-    if (!profileUserId && !isAppAuthenticating) {
+    if (!profileUserId && !triggerFetchUser) {
       notFound()
     }
-  }, [profileUserId, router, isAppAuthenticating])
+  }, [profileUserId, router, triggerFetchUser])
 
   const handleTabChange = useCallback(
     (_event: unknown, v: number) => {

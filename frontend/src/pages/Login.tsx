@@ -20,8 +20,8 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
   const navigate = useNavigate();
-  const setIsAppAuthenticating = useGlobalStore(
-    (state) => state.setIsAppAuthenticating
+  const setTriggerFetchUser = useGlobalStore(
+    (state) => state.setTriggerFetchUser
   );
   const appUserDetails = useGlobalStore((state) => state.appUserDetails);
 
@@ -54,14 +54,14 @@ export default function LoginPage() {
       const response = await login({ email, password });
       console.log("ruda", response);
       if (response.success) {
-        setIsAppAuthenticating(true);
+        setTriggerFetchUser(true);
         navigate("/");
       } else {
         setError(response.error);
         navigate("/error500");
       }
     },
-    [setIsAppAuthenticating, navigate, email, password]
+    [setTriggerFetchUser, navigate, email, password]
   );
 
   if (appUserDetails) {

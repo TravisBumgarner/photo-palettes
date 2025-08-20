@@ -18,8 +18,8 @@ export interface TAlert {
 export interface State {
   authId: User["id"] | null;
   setAuthId: (authId: User["id"] | null) => void;
-  isAppAuthenticating: boolean;
-  setIsAppAuthenticating: (isAppAuthenticating: boolean) => void;
+  triggerFetchUser: boolean;
+  setTriggerFetchUser: (triggerFetchUser: boolean) => void;
   appUserDetails: AppUserDetails | null;
   setAppUserDetails: (appUserDetails: AppUserDetails | null) => void;
   alerts: TAlert[];

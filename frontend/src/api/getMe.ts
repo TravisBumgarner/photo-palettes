@@ -17,9 +17,9 @@ const zodResponse = z.discriminatedUnion("success", [
 ]);
 
 export const getMe = async () => {
-  const token = await getToken();
+  const tokenResponse = await getToken();
 
-  if (!token)
+  if (!tokenResponse.success)
     return {
       success: false,
       error: "No token",
@@ -29,7 +29,7 @@ export const getMe = async () => {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
+      Authorization: `Bearer ${tokenResponse.token}`,
     },
   });
 
