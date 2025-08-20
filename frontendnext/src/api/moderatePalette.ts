@@ -1,6 +1,6 @@
 import { z } from 'zod'
 import config from '../config'
-import { getToken } from '../services/supabase'
+import { getToken } from '../services/supabase/actions'
 import { EModerationStatus } from '../types'
 
 const zodResponse = z.discriminatedUnion('success', [

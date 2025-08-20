@@ -12,6 +12,7 @@ import FeatureRequests from "../pages/FeatureRequests";
 import Signup from "../pages/Signup";
 import Profile from "../pages/Profile";
 import Logout from "../pages/Logout";
+import Moderation from "../pages/Moderation";
 
 const Router = () => {
   return (
@@ -30,6 +31,7 @@ const Router = () => {
       <Route path="/feature_requests" element={<FeatureRequests />} />
       <Route path="/profile" element={<Profile />} />
       <Route path="/profile/:id" element={<Profile />} />
+      <Route path="/moderation" element={<Moderation />} />
     </Routes>
   );
 };
