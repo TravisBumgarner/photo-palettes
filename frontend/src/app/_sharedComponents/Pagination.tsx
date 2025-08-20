@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useMemo, useState } from 'react'
 import { PAGINATION_SIZE } from '../../consts'
 import { Button } from '@mui/material'
 
@@ -62,7 +62,7 @@ const Pagination: React.FC<PaginationProps> = ({ total, onPageChange }) => {
   )
 
   // Show up to 5 page numbers, with ellipsis if needed
-  const getPageNumbers = useCallback(() => {
+  const pageNumbers = useMemo(() => {
     const pages = []
     let start = Math.max(1, currentPage - 2)
     let end = Math.min(totalPages, currentPage + 2)
@@ -73,8 +73,6 @@ const Pagination: React.FC<PaginationProps> = ({ total, onPageChange }) => {
     }
     return pages
   }, [currentPage, totalPages])
-
-  const pageNumbers = getPageNumbers()
 
   return (
     <div
