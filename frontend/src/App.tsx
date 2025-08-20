@@ -1,13 +1,20 @@
 import { BrowserRouter } from "react-router-dom";
 import Footer from "./components/Footer";
 import Navigation from "./components/Navigation";
+import Router from "./components/Router";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+
+const queryClient = new QueryClient();
 
 function App() {
   return (
-    <BrowserRouter>
-      <Footer />
-      <Navigation />
-    </BrowserRouter>
+    <QueryClientProvider client={queryClient}>
+      <BrowserRouter>
+        <Navigation />
+        <Router />
+        <Footer />
+      </BrowserRouter>
+    </QueryClientProvider>
   );
 }
 
