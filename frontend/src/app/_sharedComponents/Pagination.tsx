@@ -1,5 +1,6 @@
 import React, { useCallback, useState } from 'react'
 import { PAGINATION_SIZE } from '../../consts'
+import { Button } from '@mui/material'
 
 interface PaginationProps {
   total: number
@@ -20,13 +21,17 @@ const PageNumber = ({
   }, [handlePage, page])
 
   return (
-    <button
+    <Button
+      variant="outlined"
       onClick={handleOnClick}
-      style={{ fontWeight: isActive ? 'bold' : 'normal', margin: '0 4px' }}
-      disabled={isActive}
+      style={{
+        fontWeight: isActive ? 'bold' : 'normal',
+        margin: '0 4px',
+        border: isActive ? '2px solid' : 'none',
+      }}
     >
       {page}
-    </button>
+    </Button>
   )
 }
 
@@ -57,7 +62,7 @@ const Pagination: React.FC<PaginationProps> = ({ total, onPageChange }) => {
   )
 
   // Show up to 5 page numbers, with ellipsis if needed
-  const getPageNumbers = () => {
+  const getPageNumbers = useCallback(() => {
     const pages = []
     let start = Math.max(1, currentPage - 2)
     let end = Math.min(totalPages, currentPage + 2)
@@ -67,7 +72,7 @@ const Pagination: React.FC<PaginationProps> = ({ total, onPageChange }) => {
       pages.push(i)
     }
     return pages
-  }
+  }, [currentPage, totalPages])
 
   const pageNumbers = getPageNumbers()
 
@@ -81,9 +86,9 @@ const Pagination: React.FC<PaginationProps> = ({ total, onPageChange }) => {
         margin: '16px 0',
       }}
     >
-      <button onClick={handlePrev} disabled={currentPage === 1}>
+      <Button variant="outlined" onClick={handlePrev} disabled={currentPage === 1}>
         &laquo; Prev
-      </button>
+      </Button>
       {pageNumbers[0] > 1 && <span>...</span>}
       {pageNumbers.map(page => (
         <PageNumber
@@ -94,9 +99,9 @@ const Pagination: React.FC<PaginationProps> = ({ total, onPageChange }) => {
         />
       ))}
       {pageNumbers[pageNumbers.length - 1] < totalPages && <span>...</span>}
-      <button onClick={handleNext} disabled={currentPage === totalPages}>
+      <Button variant="outlined" onClick={handleNext} disabled={currentPage === totalPages}>
         Next &raquo;
-      </button>
+      </Button>
     </div>
   )
 }
