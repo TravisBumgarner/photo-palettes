@@ -4,6 +4,7 @@ import TermsOfService from "../pages/TermsOfServices";
 import PrivacyPolicy from "../pages/PrivacyPolicy";
 import Changelog from "../pages/Changelog";
 import Feedback from "../pages/Feedback";
+import Create from "../pages/Create/Create";
 
 const Router = () => {
   return (
@@ -13,6 +14,7 @@ const Router = () => {
       <Route path="/privacy" element={<PrivacyPolicy />} />
       <Route path="/changelog" element={<Changelog />} />
       <Route path="/feedback" element={<Feedback />} />
+      <Route path="/create" element={<Create />} />
     </Routes>
   );
 };
