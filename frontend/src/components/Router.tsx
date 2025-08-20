@@ -11,6 +11,7 @@ import Error404 from "../pages/Error404";
 import FeatureRequests from "../pages/FeatureRequests";
 import Signup from "../pages/Signup";
 import Profile from "../pages/Profile";
+import Logout from "../pages/Logout";
 
 const Router = () => {
   return (
@@ -23,6 +24,7 @@ const Router = () => {
       <Route path="/create" element={<Create />} />
       <Route path="/login" element={<Login />} />
       <Route path="/signup" element={<Signup />} />
+      <Route path="/logout" element={<Logout />} />
       <Route path="/error500" element={<Error500 />} />
       <Route path="/error404" element={<Error404 />} />
       <Route path="/feature_requests" element={<FeatureRequests />} />
