@@ -1,9 +1,9 @@
-import { Box, Typography } from "@mui/material";
+import { Box, Typography } from '@mui/material'
 // import Image from "next/image";
-import { BORDER_RADIUS, SPACING } from "../styles/styleConsts";
-import { type TPalette } from "../types";
-import { getUserColorFromUUID } from "../utils";
-import Link from "./Link";
+import { BORDER_RADIUS, SPACING } from '../styles/styleConsts'
+import { type TPalette } from '../types'
+import { getUserColorFromUUID } from '../utils'
+import Link from './Link'
 // import { blurHashToDataURL } from "../utils/blurhashToDataURL";
 // import { useMemo } from "react";
 
@@ -17,11 +17,11 @@ const PaletteThumbnail = ({ palette }: { palette: TPalette }) => {
     <Link href={`/palette/${palette.id}`} hideUnderline>
       <Box
         sx={{
-          border: "1px solid",
-          borderColor: "divider",
+          border: '1px solid',
+          borderColor: 'divider',
           borderRadius: BORDER_RADIUS.ZERO.PX,
           padding: SPACING.SMALL.PX,
-          height: "100%",
+          height: '100%',
         }}
         key={palette.id}
       >
@@ -44,15 +44,15 @@ const PaletteThumbnail = ({ palette }: { palette: TPalette }) => {
           src={palette.photoUrl}
           alt={palette.name}
           style={{
-            width: "100%",
+            width: '100%',
             height: 200,
-            objectFit: "cover",
-            objectPosition: "center",
+            objectFit: 'cover',
+            objectPosition: 'center',
           }}
         />
 
         {palette.colors.length > 0 && (
-          <Box sx={{ display: "flex" }}>
+          <Box sx={{ display: 'flex' }}>
             {palette.colors.map((color) => (
               <Box
                 key={color.id}
@@ -72,7 +72,7 @@ const PaletteThumbnail = ({ palette }: { palette: TPalette }) => {
         </Typography>
       </Box>
     </Link>
-  );
-};
+  )
+}
 
-export default PaletteThumbnail;
+export default PaletteThumbnail

@@ -28,7 +28,7 @@ export const resizeImage = (file: File): Promise<Blob> => {
 
       ctx.drawImage(img, 0, 0, width, height)
       canvas.toBlob(
-        blob => {
+        (blob) => {
           if (blob) resolve(blob)
           else reject(new Error('Conversion to blob failed'))
         },

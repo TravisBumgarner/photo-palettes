@@ -1,9 +1,9 @@
-import { z } from "zod";
-import config from "../config";
-import { getToken } from "../services/supabase";
-import { type EModerationStatus } from "../types";
+import { z } from 'zod'
+import config from '../config'
+import { getToken } from '../services/supabase'
+import { type EModerationStatus } from '../types'
 
-const zodResponse = z.discriminatedUnion("success", [
+const zodResponse = z.discriminatedUnion('success', [
   z.object({
     success: z.literal(true),
   }),
@@ -11,29 +11,29 @@ const zodResponse = z.discriminatedUnion("success", [
     success: z.literal(false),
     error: z.string(),
   }),
-]);
+])
 
 export const moderatePalette = async (
   paletteId: string,
   status: EModerationStatus
 ) => {
-  const tokenResponse = await getToken();
+  const tokenResponse = await getToken()
 
   if (!tokenResponse.success)
     return {
       success: false,
-      error: "No token",
-    } as const;
+      error: 'No token',
+    } as const
 
   const response = await fetch(`${config.apiUrl}/palettes/moderate`, {
-    method: "POST",
+    method: 'POST',
     body: JSON.stringify({ palette_id: paletteId, status }),
     headers: {
-      "Content-Type": "application/json",
+      'Content-Type': 'application/json',
       Authorization: `Bearer ${tokenResponse.token}`,
     },
-  });
+  })
 
-  const data = await response.json();
-  return zodResponse.parse(data);
-};
+  const data = await response.json()
+  return zodResponse.parse(data)
+}

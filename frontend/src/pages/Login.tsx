@@ -1,79 +1,79 @@
-"use client";
+'use client'
 
-import { Button, TextField, Typography } from "@mui/material";
-import { type ChangeEvent, useCallback, useState } from "react";
-import { z } from "zod";
-import { MINIMUM_PASSWORD_LENGTH, ROUTES } from "../consts";
-import { login } from "../services/supabase";
-import useGlobalStore from "../store";
-import authFormCSS from "../styles/shared/authFormCSS";
-import PageTitle from "../styles/shared/PageTitle";
-import PageWrapper from "../styles/shared/PageWrapper";
+import { Button, TextField, Typography } from '@mui/material'
+import { type ChangeEvent, useCallback, useState } from 'react'
+import { z } from 'zod'
+import { MINIMUM_PASSWORD_LENGTH, ROUTES } from '../consts'
+import { login } from '../services/supabase'
+import useGlobalStore from '../store'
+import authFormCSS from '../styles/shared/authFormCSS'
+import PageTitle from '../styles/shared/PageTitle'
+import PageWrapper from '../styles/shared/PageWrapper'
 
-import Link from "../sharedComponents/Link";
-import { Navigate, useNavigate } from "react-router-dom";
-import { loadUserIntoState } from "../utils";
+import Link from '../sharedComponents/Link'
+import { Navigate, useNavigate } from 'react-router-dom'
+import { loadUserIntoState } from '../utils'
 
 const LoginSchema = z.object({
   email: z.email(),
   password: z.string().min(MINIMUM_PASSWORD_LENGTH),
-});
+})
 
 export default function LoginPage() {
-  const [error, setError] = useState<string | null>(null);
-  const [password, setPassword] = useState("");
-  const [email, setEmail] = useState("");
-  const navigate = useNavigate();
-  const appUserDetails = useGlobalStore((state) => state.appUserDetails);
+  const [error, setError] = useState<string | null>(null)
+  const [password, setPassword] = useState('')
+  const [email, setEmail] = useState('')
+  const navigate = useNavigate()
+  const appUserDetails = useGlobalStore((state) => state.appUserDetails)
 
   const handleEmailChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
-    setError(null);
-    setEmail(e.target.value);
-  }, []);
+    setError(null)
+    setEmail(e.target.value)
+  }, [])
 
   const handlePasswordChange = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
-      setError(null);
-      setPassword(e.target.value);
+      setError(null)
+      setPassword(e.target.value)
     },
     []
-  );
+  )
 
   const handleSubmit = useCallback(
     async (e: React.FormEvent<HTMLFormElement>) => {
-      e.preventDefault();
+      e.preventDefault()
       const result = LoginSchema.safeParse({
         email,
         password,
-      });
+      })
 
       if (!result.success) {
-        setError(result.error.message);
-        return;
+        setError(result.error.message)
+        return
       }
 
-      const response = await login({ email, password });
+      const response = await login({ email, password })
 
       if (response.success) {
-        await loadUserIntoState();
-        navigate("/");
+        await loadUserIntoState()
+        navigate('/')
       } else {
-        setError(response.error);
-        navigate("/error500");
+        setError(response.error)
+        navigate('/error500')
       }
     },
     [navigate, email, password]
-  );
+  )
 
   if (appUserDetails) {
-    return <Navigate to="/" />;
+    return <Navigate to="/" />
   }
 
   return (
     <PageWrapper minHeight verticallyAlign width="small">
       <form onSubmit={handleSubmit} style={authFormCSS}>
         <PageTitle text="Log In" center />
-        {error && <p style={{ color: "red" }}>{error}</p>}
+        {error && <p style={{ color: 'red' }}>{error}</p>}
         <TextField
           id="email"
           name="email"
@@ -111,5 +111,5 @@ export default function LoginPage() {
         </Typography>
       </form>
     </PageWrapper>
-  );
+  )
 }

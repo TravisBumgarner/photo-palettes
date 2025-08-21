@@ -1,9 +1,9 @@
-import { SPACING } from "../styleConsts";
+import { SPACING } from '../styleConsts'
 
 const authFormCSS: React.CSSProperties = {
-  display: "flex",
+  display: 'flex',
   gap: SPACING.MEDIUM.PX,
-  flexDirection: "column",
-};
+  flexDirection: 'column',
+}
 
-export default authFormCSS;
+export default authFormCSS

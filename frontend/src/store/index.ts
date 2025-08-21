@@ -1,8 +1,8 @@
-import { type User } from "@supabase/supabase-js";
-import { create } from "zustand";
-import { devtools } from "zustand/middleware";
-import { type ActiveModal } from "../sharedComponents/Modal/Modal.types";
-import { type AppUserDetails, type State } from "./types";
+import { type User } from '@supabase/supabase-js'
+import { create } from 'zustand'
+import { devtools } from 'zustand/middleware'
+import { type ActiveModal } from '../sharedComponents/Modal/Modal.types'
+import { type AppUserDetails, type State } from './types'
 
 const useGlobalStore = create<State>()(
   devtools(
@@ -12,16 +12,16 @@ const useGlobalStore = create<State>()(
       appUserDetails: undefined,
       setAppUserDetails: (appUserDetails: AppUserDetails | null) =>
         set({ appUserDetails }),
-      setAuthId: (authId: User["id"] | null) => set({ authId }),
+      setAuthId: (authId: User['id'] | null) => set({ authId }),
       setLoadingUser: (loadingUser: boolean) => set({ loadingUser }),
       alerts: [],
       getAndRemoveNextAlert: () => {
-        const alerts = get().alerts;
-        if (alerts.length === 0) return null;
+        const alerts = get().alerts
+        if (alerts.length === 0) return null
 
-        const nextAlert = alerts[0];
-        set({ alerts: alerts.slice(1) });
-        return nextAlert;
+        const nextAlert = alerts[0]
+        set({ alerts: alerts.slice(1) })
+        return nextAlert
       },
       addAlert: (text, color) =>
         set((state) => ({
@@ -34,9 +34,9 @@ const useGlobalStore = create<State>()(
       setActiveModal: (activeModal: ActiveModal | null) => set({ activeModal }),
     }),
     {
-      name: "store",
+      name: 'store',
     }
   )
-);
+)
 
-export default useGlobalStore;
+export default useGlobalStore

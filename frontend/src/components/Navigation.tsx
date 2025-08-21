@@ -1,26 +1,26 @@
-"use client";
+'use client'
 
-import { GiHamburgerMenu } from "react-icons/gi";
+import { GiHamburgerMenu } from 'react-icons/gi'
 
-import { Box, IconButton, Menu, MenuItem, Typography } from "@mui/material";
-import { useCallback, useMemo, useState } from "react";
-import { ROUTES } from "../consts";
-import useGlobalStore from "../store";
-import { BORDER_RADIUS, FONT_SIZES, SPACING } from "../styles/styleConsts";
-import { PERMISSION_LEVEL } from "../types";
-import Link from "../sharedComponents/Link";
+import { Box, IconButton, Menu, MenuItem, Typography } from '@mui/material'
+import { useCallback, useMemo, useState } from 'react'
+import { ROUTES } from '../consts'
+import useGlobalStore from '../store'
+import { BORDER_RADIUS, FONT_SIZES, SPACING } from '../styles/styleConsts'
+import { PERMISSION_LEVEL } from '../types'
+import Link from '../sharedComponents/Link'
 
 const DropdownLinks = ({ onClose }: { onClose: () => void }) => {
-  const appUserDetails = useGlobalStore((state) => state.appUserDetails);
+  const appUserDetails = useGlobalStore((state) => state.appUserDetails)
 
   const routeKeys = useMemo((): (keyof typeof ROUTES)[] => {
-    if (!appUserDetails) return ["login", "signup", "featureRequests"];
+    if (!appUserDetails) return ['login', 'signup', 'featureRequests']
 
     if (appUserDetails.permissionLevel >= PERMISSION_LEVEL.MODERATOR)
-      return ["profile", "moderation", "feedback", "featureRequests", "logout"];
+      return ['profile', 'moderation', 'feedback', 'featureRequests', 'logout']
 
-    return ["profile", "feedback", "featureRequests", "logout"];
-  }, [appUserDetails]);
+    return ['profile', 'feedback', 'featureRequests', 'logout']
+  }, [appUserDetails])
   return (
     <>
       {routeKeys.map((key) => (
@@ -29,47 +29,47 @@ const DropdownLinks = ({ onClose }: { onClose: () => void }) => {
         </Link>
       ))}
     </>
-  );
-};
+  )
+}
 
 const Navigation = () => {
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const open = Boolean(anchorEl);
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
+  const open = Boolean(anchorEl)
 
   const handleClick = useCallback((event: React.MouseEvent<HTMLElement>) => {
-    setAnchorEl(event.currentTarget);
-  }, []);
+    setAnchorEl(event.currentTarget)
+  }, [])
 
   const handleClose = useCallback(() => {
-    setAnchorEl(null);
-  }, []);
+    setAnchorEl(null)
+  }, [])
 
   return (
     <Box
       sx={{
-        display: "flex",
-        flexDirection: "row",
-        justifyContent: "space-between",
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
         marginTop: SPACING.MEDIUM.PX,
         paddingBottom: SPACING.MEDIUM.PX,
         marginBottom: SPACING.MEDIUM.PX,
-        alignItems: "center",
-        borderBottom: "2px solid",
-        borderBottomColor: "divider",
+        alignItems: 'center',
+        borderBottom: '2px solid',
+        borderBottomColor: 'divider',
       }}
     >
       <Box
         sx={{
-          display: "flex",
-          flexDirection: "row",
-          gap: "14px",
+          display: 'flex',
+          flexDirection: 'row',
+          gap: '14px',
         }}
       >
         <Link
           hideUnderline
           sx={{
             fontWeight: 900,
-            color: "text.primary",
+            color: 'text.primary',
             fontSize: FONT_SIZES.LARGE.PX,
           }}
           href={ROUTES.home.href}
@@ -78,10 +78,10 @@ const Navigation = () => {
             {ROUTES.home.label}
             <sup
               style={{
-                fontSize: "10px",
-                position: "relative",
-                top: "-5px",
-                left: "5px",
+                fontSize: '10px',
+                position: 'relative',
+                top: '-5px',
+                left: '5px',
               }}
             >
               Alpha
@@ -91,21 +91,21 @@ const Navigation = () => {
       </Box>
       <Box
         sx={{
-          display: "flex",
-          flexDirection: "row",
+          display: 'flex',
+          flexDirection: 'row',
           gap: SPACING.MEDIUM.PX,
-          alignItems: "center",
+          alignItems: 'center',
         }}
       >
         <Link
           hideUnderline
           sx={{
             fontWeight: 900,
-            backgroundColor: "text.primary",
-            color: "background.paper",
-            padding: "10px",
-            border: "1px solid",
-            borderColor: "divider",
+            backgroundColor: 'text.primary',
+            color: 'background.paper',
+            padding: '10px',
+            border: '1px solid',
+            borderColor: 'divider',
             borderRadius: BORDER_RADIUS.ZERO.PX,
           }}
           href={ROUTES.create.href}
@@ -114,9 +114,9 @@ const Navigation = () => {
         </Link>
         <IconButton
           aria-label="menu"
-          aria-controls={open ? "navigation-menu" : undefined}
+          aria-controls={open ? 'navigation-menu' : undefined}
           aria-haspopup="true"
-          aria-expanded={open ? "true" : undefined}
+          aria-expanded={open ? 'true' : undefined}
           onClick={handleClick}
         >
           <GiHamburgerMenu />
@@ -132,7 +132,7 @@ const Navigation = () => {
         </Menu>
       </Box>
     </Box>
-  );
-};
+  )
+}
 
-export default Navigation;
+export default Navigation

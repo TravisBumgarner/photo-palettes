@@ -1,8 +1,8 @@
-import { z } from "zod";
-import config from "../../config";
-import { getToken } from "../../services/supabase";
+import { z } from 'zod'
+import config from '../../config'
+import { getToken } from '../../services/supabase'
 
-const zodResponse = z.discriminatedUnion("success", [
+const zodResponse = z.discriminatedUnion('success', [
   z.object({
     success: z.literal(true),
   }),
@@ -10,26 +10,26 @@ const zodResponse = z.discriminatedUnion("success", [
     success: z.literal(false),
     error: z.string(),
   }),
-]);
+])
 
 export const deletePalette = async (paletteId: string) => {
-  const tokenResponse = await getToken();
+  const tokenResponse = await getToken()
 
   if (!tokenResponse) {
     return {
       success: false,
-      error: "No token found",
-    } as const;
+      error: 'No token found',
+    } as const
   }
 
   const response = await fetch(`${config.apiUrl}/palettes/id/${paletteId}`, {
-    method: "DELETE",
+    method: 'DELETE',
     headers: {
-      "Content-Type": "application/json",
+      'Content-Type': 'application/json',
       Authorization: `Bearer ${tokenResponse.token}`,
     },
-  });
+  })
 
-  const data = await response.json();
-  return zodResponse.parse(data);
-};
+  const data = await response.json()
+  return zodResponse.parse(data)
+}

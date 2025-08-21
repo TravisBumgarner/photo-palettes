@@ -72,7 +72,7 @@ const DraggableSwatch = ({
   const sampleColorsAtPosition = useCallback(
     (x: number, y: number) => {
       const coordinates = getGridCoordinates(x, y, NUMBER_OF_PIXELS_IN_PREVIEW)
-      return coordinates.map(position => sampleColorAtPosition(...position))
+      return coordinates.map((position) => sampleColorAtPosition(...position))
     },
     [sampleColorAtPosition]
   )
@@ -109,8 +109,14 @@ const DraggableSwatch = ({
 
     if (active) {
       const rect = canvasContainerRef.current.getBoundingClientRect()
-      const left = Math.max(0, Math.min(100, ((clientX - rect.left) / rect.width) * 100))
-      const top = Math.max(0, Math.min(100, ((clientY - rect.top) / rect.height) * 100))
+      const left = Math.max(
+        0,
+        Math.min(100, ((clientX - rect.left) / rect.width) * 100)
+      )
+      const top = Math.max(
+        0,
+        Math.min(100, ((clientY - rect.top) / rect.height) * 100)
+      )
 
       setPosition({ left, top })
     }

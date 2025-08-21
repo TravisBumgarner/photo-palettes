@@ -1,4 +1,4 @@
-import { Box, Tooltip, Button } from "@mui/material";
+import { Box, Tooltip, Button } from '@mui/material'
 import {
   BlueskyIcon,
   BlueskyShareButton,
@@ -8,20 +8,20 @@ import {
   ThreadsShareButton,
   TwitterIcon,
   TwitterShareButton,
-} from "react-share";
-import { SPACING } from "../styles/styleConsts";
-import { useCallback } from "react";
-import useGlobalStore from "../store";
+} from 'react-share'
+import { SPACING } from '../styles/styleConsts'
+import { useCallback } from 'react'
+import useGlobalStore from '../store'
 
-const ICON_SIZE = 32;
+const ICON_SIZE = 32
 
 const CopyLink = ({ url }: { url: string }) => {
-  const addAlert = useGlobalStore((store) => store.addAlert);
+  const addAlert = useGlobalStore((store) => store.addAlert)
 
   const copyToClipboard = useCallback(() => {
-    navigator.clipboard.writeText(url);
-    addAlert("Link copied to clipboard", "success");
-  }, [url, addAlert]);
+    navigator.clipboard.writeText(url)
+    addAlert('Link copied to clipboard', 'success')
+  }, [url, addAlert])
 
   return (
     <Tooltip title="Copy Link" arrow>
@@ -29,43 +29,43 @@ const CopyLink = ({ url }: { url: string }) => {
         variant="contained"
         onClick={copyToClipboard}
         sx={{
-          "&:hover": {
-            boxShadow: "none",
+          '&:hover': {
+            boxShadow: 'none',
           },
-          color: "primary.main",
-          boxShadow: "none",
+          color: 'primary.main',
+          boxShadow: 'none',
           padding: `0 ${SPACING.TINY.PX}`,
           height: ICON_SIZE,
-          border: "none",
-          cursor: "pointer",
+          border: 'none',
+          cursor: 'pointer',
           fontWeight: 600,
-          backgroundColor: "divider",
+          backgroundColor: 'divider',
         }}
       >
         Copy Link
       </Button>
     </Tooltip>
-  );
-};
+  )
+}
 
 const Share = ({
   url,
   text,
   media,
 }: {
-  url: string;
-  text: string;
-  media: string;
+  url: string
+  text: string
+  media: string
 }) => {
-  const absoluteUrl = import.meta.env.VITE_PUBLIC_FE_URL + "/" + url;
+  const absoluteUrl = import.meta.env.VITE_PUBLIC_FE_URL + '/' + url
 
   return (
     <Box
       sx={{
-        display: "flex",
+        display: 'flex',
         gap: SPACING.SMALL.PX,
-        "& svg > rect": { fill: (theme) => theme.palette.divider },
-        "& svg > path": { fill: (theme) => theme.palette.primary.main },
+        '& svg > rect': { fill: (theme) => theme.palette.divider },
+        '& svg > path': { fill: (theme) => theme.palette.primary.main },
       }}
     >
       <Tooltip title="Copy Link" arrow>
@@ -82,7 +82,7 @@ const Share = ({
         </PinterestShareButton>
       </Tooltip>
 
-      <Tooltip title="Share on Bluesky" arrow sx={{ borderRadius: "0%" }}>
+      <Tooltip title="Share on Bluesky" arrow sx={{ borderRadius: '0%' }}>
         <BlueskyShareButton
           url={absoluteUrl}
           title={`${text}\n#photopalettes #colorpalettes #color`}
@@ -95,7 +95,7 @@ const Share = ({
         <TwitterShareButton
           url={absoluteUrl}
           title={text}
-          hashtags={["palette", "color", "photopalette"]}
+          hashtags={['palette', 'color', 'photopalette']}
         >
           <TwitterIcon size={ICON_SIZE} />
         </TwitterShareButton>
@@ -121,7 +121,7 @@ const Share = ({
         </RedditShareButton>
       </Tooltip> */}
     </Box>
-  );
-};
+  )
+}
 
-export default Share;
+export default Share

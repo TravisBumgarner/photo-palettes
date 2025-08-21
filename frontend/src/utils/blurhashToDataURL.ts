@@ -1,8 +1,10 @@
 //https://gist.github.com/mattiaz9/53cb67040fa135cb395b1d015a200aff
 // Convert blurhash to dataURL without the need for HTML Canvas.
-import { decode } from "blurhash"
+import { decode } from 'blurhash'
 
-export function blurHashToDataURL(hash: string | undefined): string | undefined {
+export function blurHashToDataURL(
+  hash: string | undefined
+): string | undefined {
   if (!hash) return undefined
 
   const pixels = decode(hash, 32, 32)
@@ -12,12 +14,15 @@ export function blurHashToDataURL(hash: string | undefined): string | undefined 
 
 // thanks to https://github.com/wheany/js-png-encoder
 function parsePixels(pixels: Uint8ClampedArray, width: number, height: number) {
-  const pixelsString = [...pixels].map(byte => String.fromCharCode(byte)).join("")
+  const pixelsString = [...pixels]
+    .map((byte) => String.fromCharCode(byte))
+    .join('')
   const pngString = generatePng(width, height, pixelsString)
-  const dataURL = typeof Buffer !== "undefined"
-    ? Buffer.from(getPngArray(pngString)).toString("base64")
-    : btoa(pngString)
-  return "data:image/png;base64," + dataURL
+  const dataURL =
+    typeof Buffer !== 'undefined'
+      ? Buffer.from(getPngArray(pngString)).toString('base64')
+      : btoa(pngString)
+  return 'data:image/png;base64,' + dataURL
 }
 
 function getPngArray(pngString: string) {
@@ -52,13 +57,13 @@ function generatePng(width: number, height: number, rgbaString: string) {
   // Functions
   function inflateStore(data: string) {
     const MAX_STORE_LENGTH = 65535
-    let storeBuffer = ""
+    let storeBuffer = ''
     let remaining
     let blockType
 
     for (let i = 0; i < data.length; i += MAX_STORE_LENGTH) {
       remaining = data.length - i
-      blockType = ""
+      blockType = ''
 
       if (remaining <= MAX_STORE_LENGTH) {
         blockType = String.fromCharCode(0x01)
@@ -67,8 +72,13 @@ function generatePng(width: number, height: number, rgbaString: string) {
         blockType = String.fromCharCode(0x00)
       }
       // little-endian
-      storeBuffer += blockType + String.fromCharCode((remaining & 0xFF), (remaining & 0xFF00) >>> 8)
-      storeBuffer += String.fromCharCode(((~remaining) & 0xFF), ((~remaining) & 0xFF00) >>> 8)
+      storeBuffer +=
+        blockType +
+        String.fromCharCode(remaining & 0xff, (remaining & 0xff00) >>> 8)
+      storeBuffer += String.fromCharCode(
+        ~remaining & 0xff,
+        (~remaining & 0xff00) >>> 8
+      )
 
       storeBuffer += data.substring(i, i + remaining)
     }
@@ -106,17 +116,17 @@ function generatePng(width: number, height: number, rgbaString: string) {
 
   function dwordAsString(dword: number) {
     return String.fromCharCode(
-      (dword & 0xFF000000) >>> 24, (dword & 0x00FF0000) >>> 16, (dword & 0x0000FF00) >>> 8, (dword & 0x000000FF)
+      (dword & 0xff000000) >>> 24,
+      (dword & 0x00ff0000) >>> 16,
+      (dword & 0x0000ff00) >>> 8,
+      dword & 0x000000ff
     )
   }
 
   function createChunk(length: number, type: string, data: string) {
     const CRC = crc(type + data)
 
-    return dwordAsString(length) +
-      type +
-      data +
-      dwordAsString(CRC)
+    return dwordAsString(length) + type + data + dwordAsString(CRC)
   }
 
   function createIHDR(width: number, height: number) {
@@ -134,15 +144,15 @@ function generatePng(width: number, height: number, rgbaString: string) {
       // interlacing: 0=none
       String.fromCharCode(0)
 
-    return createChunk(13, "IHDR", IHDRdata)
+    return createChunk(13, 'IHDR', IHDRdata)
   }
 
   // PNG creations
 
-  const IEND = createChunk(0, "IEND", "")
+  const IEND = createChunk(0, 'IEND', '')
   const IHDR = createIHDR(width, height)
 
-  let scanlines = ""
+  let scanlines = ''
   let scanline
 
   for (let y = 0; y < rgbaString.length; y += width * 4) {
@@ -157,8 +167,13 @@ function generatePng(width: number, height: number, rgbaString: string) {
     scanlines += scanline
   }
 
-  const compressedScanlines = DEFLATE_METHOD + inflateStore(scanlines) + dwordAsString(adler32(scanlines))
-  const IDAT = createChunk(compressedScanlines.length, "IDAT", compressedScanlines)
+  const compressedScanlines =
+    DEFLATE_METHOD + inflateStore(scanlines) + dwordAsString(adler32(scanlines))
+  const IDAT = createChunk(
+    compressedScanlines.length,
+    'IDAT',
+    compressedScanlines
+  )
 
   const pngString = SIGNATURE + IHDR + IDAT + IEND
   return pngString

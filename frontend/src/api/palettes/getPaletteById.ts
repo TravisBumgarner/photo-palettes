@@ -1,9 +1,9 @@
-import { z } from "zod";
-import config from "../../config";
-import { getToken } from "../../services/supabase";
-import { zodPalette } from "../../types";
+import { z } from 'zod'
+import config from '../../config'
+import { getToken } from '../../services/supabase'
+import { zodPalette } from '../../types'
 
-const zodResponse = z.discriminatedUnion("success", [
+const zodResponse = z.discriminatedUnion('success', [
   z.object({
     success: z.literal(false),
     error: z.string(),
@@ -12,32 +12,32 @@ const zodResponse = z.discriminatedUnion("success", [
     success: z.literal(true),
     palette: zodPalette,
   }),
-]);
+])
 
 export const getPaletteById = async (id: string) => {
-  const tokenResponse = await getToken();
+  const tokenResponse = await getToken()
 
   if (!tokenResponse) {
     return {
       success: false,
-      error: "No token found",
-    } as const;
+      error: 'No token found',
+    } as const
   }
 
-  let requestUrl = `${config.apiUrl}/palettes/id/${id}`;
+  let requestUrl = `${config.apiUrl}/palettes/id/${id}`
 
   if (!config.is_production) {
-    requestUrl = `http://localhost:8000/palettes/id/${id}`;
+    requestUrl = `http://localhost:8000/palettes/id/${id}`
   }
 
   const response = await fetch(requestUrl, {
-    method: "GET",
+    method: 'GET',
     headers: {
-      "Content-Type": "application/json",
+      'Content-Type': 'application/json',
       Authorization: `Bearer ${tokenResponse.token}`,
     },
-  });
-  const json = await response.json();
+  })
+  const json = await response.json()
 
-  return zodResponse.parse(json);
-};
+  return zodResponse.parse(json)
+}

@@ -1,6 +1,6 @@
-import { Box, type SxProps } from "@mui/material";
-import { SPACING } from "../styleConsts";
-import React, { useMemo } from "react";
+import { Box, type SxProps } from '@mui/material'
+import { SPACING } from '../styleConsts'
+import React, { useMemo } from 'react'
 
 /**
  *
@@ -18,53 +18,53 @@ const PageWrapper = ({
   staticContent,
   sx,
 }: {
-  children: React.ReactNode;
-  width: "small" | "medium" | "full";
-  minHeight?: boolean;
-  verticallyAlign?: boolean;
-  staticContent?: boolean;
-  sx?: SxProps;
+  children: React.ReactNode
+  width: 'small' | 'medium' | 'full'
+  minHeight?: boolean
+  verticallyAlign?: boolean
+  staticContent?: boolean
+  sx?: SxProps
 }) => {
   const widthCSS = useMemo((): React.CSSProperties => {
-    if (width === "small") {
+    if (width === 'small') {
       return {
-        width: "400px",
-        maxWidth: "95%",
-        margin: "0 auto",
-      };
+        width: '400px',
+        maxWidth: '95%',
+        margin: '0 auto',
+      }
     }
 
-    if (width === "medium") {
+    if (width === 'medium') {
       return {
-        width: "600px",
-        maxWidth: "95%",
-        margin: "0 auto",
-      };
+        width: '600px',
+        maxWidth: '95%',
+        margin: '0 auto',
+      }
     }
 
-    return {};
-  }, [width]);
+    return {}
+  }, [width])
 
   return (
     <Box
       sx={{
-        display: "flex",
-        flexDirection: "column",
+        display: 'flex',
+        flexDirection: 'column',
         ...widthCSS,
         ...(minHeight
           ? {
-              minHeight: "70vh",
+              minHeight: '70vh',
             }
           : {}),
         ...(verticallyAlign
           ? {
-              justifyContent: "center",
+              justifyContent: 'center',
             }
           : {}),
         ...(staticContent
           ? {
               gap: SPACING.MEDIUM.PX,
-              boxSizing: "border-box",
+              boxSizing: 'border-box',
               ul: {
                 marginLeft: SPACING.LARGE.PX,
               },
@@ -75,7 +75,7 @@ const PageWrapper = ({
     >
       {children}
     </Box>
-  );
-};
+  )
+}
 
 export default PageWrapper

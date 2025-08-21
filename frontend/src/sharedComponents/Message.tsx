@@ -1,5 +1,5 @@
-import { Box, Button, Typography } from "@mui/material";
-import { BORDER_RADIUS, SPACING } from "../styles/styleConsts";
+import { Box, Button, Typography } from '@mui/material'
+import { BORDER_RADIUS, SPACING } from '../styles/styleConsts'
 
 const Message = ({
   message,
@@ -7,23 +7,23 @@ const Message = ({
   callback,
   callbackText,
 }: {
-  message: string;
-  color: "info" | "error";
-  callback?: () => void;
-  callbackText?: string;
+  message: string
+  color: 'info' | 'error'
+  callback?: () => void
+  callbackText?: string
 }) => {
   return (
     <Box
       sx={{
         border: `1px solid`,
-        borderColor: "divider",
+        borderColor: 'divider',
         borderRadius: BORDER_RADIUS.ZERO.PX,
         padding: SPACING.LARGE.PX,
         margin: `${SPACING.MEDIUM.PX} 0`,
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "center",
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
         flexGrow: 1,
       }}
     >
@@ -32,7 +32,7 @@ const Message = ({
       </Typography>
       {callback && <Button onClick={callback}>{callbackText}</Button>}
     </Box>
-  );
-};
+  )
+}
 
-export default Message;
+export default Message

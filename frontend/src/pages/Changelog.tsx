@@ -1,21 +1,21 @@
-import { Box, Typography } from "@mui/material";
-import PageTitle from "../styles/shared/PageTitle";
-import PageWrapper from "../styles/shared/PageWrapper";
-import { SPACING } from "../styles/styleConsts";
+import { Box, Typography } from '@mui/material'
+import PageTitle from '../styles/shared/PageTitle'
+import PageWrapper from '../styles/shared/PageWrapper'
+import { SPACING } from '../styles/styleConsts'
 
 type Update = {
-  title: string;
-  summary: string;
-  date: string;
-  updates: string[];
-};
+  title: string
+  summary: string
+  date: string
+  updates: string[]
+}
 
 const Update = ({ title, summary, date, updates }: Update) => {
   return (
     <Box
       sx={{
-        border: "1px solid",
-        borderColor: "divider",
+        border: '1px solid',
+        borderColor: 'divider',
         padding: SPACING.MEDIUM.PX,
       }}
     >
@@ -32,36 +32,36 @@ const Update = ({ title, summary, date, updates }: Update) => {
         </ul>
       )}
     </Box>
-  );
-};
+  )
+}
 
 const UPDATES: Update[] = [
   {
-    title: "Mobile Improvements & Move to Open Alpha",
-    date: "2025-07-07",
-    summary: "",
+    title: 'Mobile Improvements & Move to Open Alpha',
+    date: '2025-07-07',
+    summary: '',
     updates: [
-      "Cleanup UI on mobile creation page.",
-      "Improve process of selecting colors when creating photo palette.",
-      "App is now in open alpha.",
+      'Cleanup UI on mobile creation page.',
+      'Improve process of selecting colors when creating photo palette.',
+      'App is now in open alpha.',
     ],
   },
   {
-    title: "Closed Alpha Release",
-    date: "2025-05-18",
+    title: 'Closed Alpha Release',
+    date: '2025-05-18',
     summary:
-      "This is the initial launch of Photo Palettes for internal testing.",
+      'This is the initial launch of Photo Palettes for internal testing.',
     updates: [
-      "Basic sign up and log in flow",
-      "Create, browse, and moderate photo palettes",
-      "Generate color palettes from KMeans algorithm",
-      "Request new features",
-      "Give feedback",
-      "Privacy Policy & Terms of Service",
-      "Light and dark theme support",
+      'Basic sign up and log in flow',
+      'Create, browse, and moderate photo palettes',
+      'Generate color palettes from KMeans algorithm',
+      'Request new features',
+      'Give feedback',
+      'Privacy Policy & Terms of Service',
+      'Light and dark theme support',
     ],
   },
-];
+]
 
 const Changelog = () => {
   return (
@@ -71,7 +71,7 @@ const Changelog = () => {
         <Update key={update.title + update.date} {...update} />
       ))}
     </PageWrapper>
-  );
-};
+  )
+}
 
-export default Changelog;
+export default Changelog

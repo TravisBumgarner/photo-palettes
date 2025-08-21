@@ -1,10 +1,10 @@
-import { useEffect } from "react";
-import { loadUserIntoState } from "../utils";
+import { useEffect } from 'react'
+import { loadUserIntoState } from '../utils'
 
 const useLoadUserIntoState = () => {
   useEffect(() => {
-    loadUserIntoState();
-  }, []);
-};
+    loadUserIntoState()
+  }, [])
+}
 
-export default useLoadUserIntoState;
+export default useLoadUserIntoState

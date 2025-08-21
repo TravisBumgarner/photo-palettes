@@ -1,8 +1,8 @@
-import { z } from "zod";
-import config from "../config";
-import { getToken } from "../services/supabase";
+import { z } from 'zod'
+import config from '../config'
+import { getToken } from '../services/supabase'
 
-const zodResponse = z.discriminatedUnion("success", [
+const zodResponse = z.discriminatedUnion('success', [
   z.object({
     success: z.literal(true),
     permissionLevel: z.number(),
@@ -14,26 +14,26 @@ const zodResponse = z.discriminatedUnion("success", [
     success: z.literal(false),
     error: z.string(),
   }),
-]);
+])
 
 export const getMe = async () => {
-  const tokenResponse = await getToken();
+  const tokenResponse = await getToken()
 
   if (!tokenResponse.success)
     return {
       success: false,
-      error: "No token",
-    } as const;
+      error: 'No token',
+    } as const
 
   const response = await fetch(`${config.apiUrl}/users/me`, {
-    method: "GET",
+    method: 'GET',
     headers: {
-      "Content-Type": "application/json",
+      'Content-Type': 'application/json',
       Authorization: `Bearer ${tokenResponse.token}`,
     },
-  });
+  })
 
-  const json = await response.json();
+  const json = await response.json()
 
-  return zodResponse.parse(json);
-};
+  return zodResponse.parse(json)
+}

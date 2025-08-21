@@ -1,9 +1,9 @@
-"use client";
+'use client'
 
-import { Typography } from "@mui/material";
-import PageTitle from "../styles/shared/PageTitle";
-import PageWrapper from "../styles/shared/PageWrapper";
-import Link from "../sharedComponents/Link";
+import { Typography } from '@mui/material'
+import PageTitle from '../styles/shared/PageTitle'
+import PageWrapper from '../styles/shared/PageWrapper'
+import Link from '../sharedComponents/Link'
 
 const TermsOfService = () => {
   return (
@@ -83,14 +83,14 @@ const TermsOfService = () => {
 
       <Typography variant="h3">8. Contact</Typography>
       <Typography variant="body1">
-        If you have questions or concerns, contact us at{" "}
+        If you have questions or concerns, contact us at{' '}
         <Link href="mailto:support@photopalettes.com">
           support@photopalettes.com
         </Link>
         .
       </Typography>
     </PageWrapper>
-  );
-};
+  )
+}
 
-export default TermsOfService;
+export default TermsOfService

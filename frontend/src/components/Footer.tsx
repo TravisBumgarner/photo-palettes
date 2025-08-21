@@ -1,21 +1,21 @@
-"use client";
+'use client'
 
-import { Box, List, ListItem, Typography } from "@mui/material";
-import { ROUTES } from "../consts";
-import useGlobalStore from "../store";
-import { FONT_SIZES, SPACING } from "../styles/styleConsts";
-import { PERMISSION_LEVEL, type EPermissionLevel } from "../types";
-import Link from "../sharedComponents/Link";
+import { Box, List, ListItem, Typography } from '@mui/material'
+import { ROUTES } from '../consts'
+import useGlobalStore from '../store'
+import { FONT_SIZES, SPACING } from '../styles/styleConsts'
+import { PERMISSION_LEVEL, type EPermissionLevel } from '../types'
+import Link from '../sharedComponents/Link'
 
 const Section = ({
   links,
   header,
 }: {
-  links: (keyof typeof ROUTES)[];
-  header: string;
+  links: (keyof typeof ROUTES)[]
+  header: string
 }) => {
   return (
-    <Box sx={{ width: "150px" }}>
+    <Box sx={{ width: '150px' }}>
       <Typography
         variant="h6"
         sx={{
@@ -38,8 +38,8 @@ const Section = ({
         ))}
       </List>
     </Box>
-  );
-};
+  )
+}
 
 const getBasedOnPermissionLevel = (
   user: EPermissionLevel | undefined,
@@ -48,58 +48,58 @@ const getBasedOnPermissionLevel = (
   moderator: (keyof typeof ROUTES)[]
 ) => {
   if (user === PERMISSION_LEVEL.MODERATOR || user === PERMISSION_LEVEL.ADMIN) {
-    return moderator;
+    return moderator
   }
 
   if (user === PERMISSION_LEVEL.MEMBER) {
-    return loggedIn;
+    return loggedIn
   }
 
-  return loggedOut;
-};
+  return loggedOut
+}
 
 const sections = (
   user: EPermissionLevel | undefined
 ): { header: string; links: (keyof typeof ROUTES)[] }[] => {
   return [
     {
-      header: "Community",
-      links: ["discord", "bluesky", "donate"],
+      header: 'Community',
+      links: ['discord', 'bluesky', 'donate'],
     },
     {
-      header: "Feedback",
-      links: ["feedback", "featureRequests"],
+      header: 'Feedback',
+      links: ['feedback', 'featureRequests'],
     },
     {
-      header: "Site Info",
-      links: ["changelog", "privacy", "tos"],
+      header: 'Site Info',
+      links: ['changelog', 'privacy', 'tos'],
     },
     {
-      header: "User",
+      header: 'User',
       links: getBasedOnPermissionLevel(
         user,
-        ["login", "signup"],
-        ["profile", "logout"],
-        ["profile", "moderation", "logout"]
+        ['login', 'signup'],
+        ['profile', 'logout'],
+        ['profile', 'moderation', 'logout']
       ),
     },
-  ];
-};
+  ]
+}
 
 const Footer = () => {
-  const appUserDetails = useGlobalStore((state) => state.appUserDetails);
+  const appUserDetails = useGlobalStore((state) => state.appUserDetails)
 
   return (
     <Box
       sx={{
-        borderTop: "2px solid",
-        borderColor: "divider",
+        borderTop: '2px solid',
+        borderColor: 'divider',
         padding: SPACING.MEDIUM.PX,
         marginTop: SPACING.MEDIUM.PX,
-        display: "flex",
-        flexDirection: "row",
-        flexWrap: "wrap",
-        justifyContent: "space-between",
+        display: 'flex',
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        justifyContent: 'space-between',
       }}
     >
       {sections(appUserDetails?.permissionLevel).map((section) => (
@@ -110,7 +110,7 @@ const Footer = () => {
         />
       ))}
     </Box>
-  );
-};
+  )
+}
 
-export default Footer;
+export default Footer

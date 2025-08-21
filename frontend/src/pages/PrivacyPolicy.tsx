@@ -1,9 +1,9 @@
-"use client";
+'use client'
 
-import { Typography } from "@mui/material";
-import PageTitle from "../styles/shared/PageTitle";
-import PageWrapper from "../styles/shared/PageWrapper";
-import Link from "../sharedComponents/Link";
+import { Typography } from '@mui/material'
+import PageTitle from '../styles/shared/PageTitle'
+import PageWrapper from '../styles/shared/PageWrapper'
+import Link from '../sharedComponents/Link'
 
 const Privacy = () => {
   return (
@@ -27,12 +27,12 @@ const Privacy = () => {
       </Typography>
       <ul>
         <li>
-          <strong>Usage data</strong> collected via{" "}
+          <strong>Usage data</strong> collected via{' '}
           <strong>Google Analytics</strong>, such as pages visited, session
           duration, and basic technical details (device type, browser, etc.).
         </li>
         <li>
-          <strong>Error and crash data</strong> collected via{" "}
+          <strong>Error and crash data</strong> collected via{' '}
           <strong>Sentry.io</strong>, which may include stack traces, device
           information, and actions leading up to an error.
         </li>
@@ -76,7 +76,7 @@ const Privacy = () => {
       </Typography>
       <Typography variant="body1">
         You can opt out of Google Analytics tracking by installing the Google
-        Analytics Opt-out Browser Add-on{" "}
+        Analytics Opt-out Browser Add-on{' '}
         <Link href="https://tools.google.com/dlpage/gaoptout" target="_blank">
           https://tools.google.com/dlpage/gaoptout
         </Link>
@@ -106,14 +106,14 @@ const Privacy = () => {
       <Typography variant="h3">7. Contact Us</Typography>
       <Typography variant="body1">
         If you have any questions or concerns about this Privacy Policy, please
-        contact us at:{" "}
+        contact us at:{' '}
         <Link href="mailto:support@photopalettes.com">
           support@photopalettes.com
         </Link>
         .
       </Typography>
     </PageWrapper>
-  );
-};
+  )
+}
 
-export default Privacy;
+export default Privacy

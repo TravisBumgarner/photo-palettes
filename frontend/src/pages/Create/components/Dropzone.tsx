@@ -5,7 +5,7 @@ import useGlobalStore from '../../../store'
 import { sharedCSS } from './shared'
 
 const Dropzone = ({ onDrop }: { onDrop: (acceptedFiles: File[]) => void }) => {
-  const addAlert = useGlobalStore(state => state.addAlert)
+  const addAlert = useGlobalStore((state) => state.addAlert)
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
@@ -14,8 +14,13 @@ const Dropzone = ({ onDrop }: { onDrop: (acceptedFiles: File[]) => void }) => {
     accept: {
       'image/*': ['.png', '.jpg', '.jpeg'],
     },
-    onDropRejected: fileRejections => {
-      addAlert(fileRejections.map(rejection => rejection.errors[0].message).join(', '), 'error')
+    onDropRejected: (fileRejections) => {
+      addAlert(
+        fileRejections
+          .map((rejection) => rejection.errors[0].message)
+          .join(', '),
+        'error'
+      )
     },
   })
 

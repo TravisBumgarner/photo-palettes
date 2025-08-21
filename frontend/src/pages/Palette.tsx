@@ -1,25 +1,25 @@
-"use client";
+'use client'
 
-import { Box, Link } from "@mui/material";
-import { SPACING } from "../styles/styleConsts";
-import { MODERATION_STATUS } from "../types";
-import { getContrastColor } from "../utils";
-import Message from "../sharedComponents/Message";
-import ModerationPanel from "../sharedComponents/ModerationPanel";
-import PageTitle from "../styles/shared/PageTitle";
-import PageWrapper from "../styles/shared/PageWrapper";
-import Share from "../sharedComponents/Share";
-import { useCallback } from "react";
-import { useQuery } from "@tanstack/react-query";
-import { getPaletteById } from "../api/palettes/getPaletteById";
-import { useParams } from "react-router-dom";
-import Loading from "../sharedComponents/Loading";
+import { Box, Link } from '@mui/material'
+import { SPACING } from '../styles/styleConsts'
+import { MODERATION_STATUS } from '../types'
+import { getContrastColor } from '../utils'
+import Message from '../sharedComponents/Message'
+import ModerationPanel from '../sharedComponents/ModerationPanel'
+import PageTitle from '../styles/shared/PageTitle'
+import PageWrapper from '../styles/shared/PageWrapper'
+import Share from '../sharedComponents/Share'
+import { useCallback } from 'react'
+import { useQuery } from '@tanstack/react-query'
+import { getPaletteById } from '../api/palettes/getPaletteById'
+import { useParams } from 'react-router-dom'
+import Loading from '../sharedComponents/Loading'
 
 const Palette = () => {
-  const params = useParams();
+  const params = useParams()
   const refetch = useCallback(() => {
-    location.reload();
-  }, []);
+    location.reload()
+  }, [])
 
   //   const blurDataURL = useMemo(
   //     () => blurHashToDataURL(palette.blurhash),
@@ -27,11 +27,11 @@ const Palette = () => {
   //   );
 
   const { data, isLoading, error } = useQuery({
-    queryKey: ["palette", Array.isArray(params.id) ? params.id[0] : params.id],
+    queryKey: ['palette', Array.isArray(params.id) ? params.id[0] : params.id],
     queryFn: () =>
       getPaletteById(Array.isArray(params.id) ? params.id[0] : params.id),
     retry: false,
-  });
+  })
 
   if (!data?.success || error) {
     return (
@@ -39,11 +39,11 @@ const Palette = () => {
         color="error"
         message="Palette not found or an error occurred."
       />
-    );
+    )
   }
 
   if (isLoading) {
-    return <Loading />;
+    return <Loading />
   }
 
   return (
@@ -58,21 +58,21 @@ const Palette = () => {
       <Box>
         <Box
           sx={{
-            display: "flex",
-            alignItems: "baseline",
+            display: 'flex',
+            alignItems: 'baseline',
             gap: SPACING.MEDIUM.PX,
           }}
         >
           <PageTitle text={data.palette.name} />
           <Box
             sx={{
-              display: "flex",
-              flexDirection: "row",
-              gap: "10px",
-              alignItems: "baseline",
+              display: 'flex',
+              flexDirection: 'row',
+              gap: '10px',
+              alignItems: 'baseline',
             }}
           >
-            {"By"}
+            {'By'}
             <Link href={`/profile/${data.palette.appUserId}`}>
               #{data.palette.appUserId.slice(0, 6)}
             </Link>
@@ -80,14 +80,14 @@ const Palette = () => {
         </Box>
         <Box
           sx={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            overflow: "hidden",
-            border: "1px solid",
-            borderColor: "divider",
-            width: "100%",
-            height: "65dvh",
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            overflow: 'hidden',
+            border: '1px solid',
+            borderColor: 'divider',
+            width: '100%',
+            height: '65dvh',
             margin: `${SPACING.MEDIUM.PX} 0`,
           }}
         >
@@ -109,25 +109,25 @@ const Palette = () => {
             src={data.palette.photoUrl}
             alt="Palette"
             style={{
-              objectFit: "contain",
-              width: "100%",
-              height: "100%",
+              objectFit: 'contain',
+              width: '100%',
+              height: '100%',
               padding: SPACING.SMALL.PX,
             }}
           />
         </Box>
         <Box
           sx={{
-            display: "flex",
-            flexDirection: "row",
-            flexWrap: "wrap",
-            "& > *": {
-              flex: "1 0 16.66%", // 6 per row by default
-              boxSizing: "border-box",
+            display: 'flex',
+            flexDirection: 'row',
+            flexWrap: 'wrap',
+            '& > *': {
+              flex: '1 0 16.66%', // 6 per row by default
+              boxSizing: 'border-box',
             },
-            "@media (max-width: 700px)": {
-              "& > *": {
-                flex: "1 0 33.33%", // 3 per row at <=700px
+            '@media (max-width: 700px)': {
+              '& > *': {
+                flex: '1 0 33.33%', // 3 per row at <=700px
               },
             },
           }}
@@ -137,11 +137,11 @@ const Palette = () => {
               key={color.id}
               style={{
                 backgroundColor: color.hex,
-                height: "50px",
-                display: "flex",
-                justifyContent: "center",
-                fontSize: "20px",
-                alignItems: "center",
+                height: '50px',
+                display: 'flex',
+                justifyContent: 'center',
+                fontSize: '20px',
+                alignItems: 'center',
                 flexGrow: 1,
                 color: getContrastColor(color.hex),
               }}
@@ -154,8 +154,8 @@ const Palette = () => {
       {data.palette.moderationStatus === MODERATION_STATUS.APPROVED && (
         <Box
           sx={{
-            display: "flex",
-            justifyContent: "flex-end",
+            display: 'flex',
+            justifyContent: 'flex-end',
             marginTop: SPACING.MEDIUM.PX,
           }}
         >
@@ -175,7 +175,7 @@ const Palette = () => {
         paletteId={data.palette.id}
       />
     </PageWrapper>
-  );
-};
+  )
+}
 
-export default Palette;
+export default Palette

@@ -1,4 +1,4 @@
-"use client";
+'use client'
 
 import {
   Table as MuiTable,
@@ -9,17 +9,17 @@ import {
   TableHead,
   TableRow,
   Typography,
-} from "@mui/material";
-import PageTitle from "../styles/shared/PageTitle";
-import PageWrapper from "../styles/shared/PageWrapper";
-import { BORDER_RADIUS } from "../styles/styleConsts";
-import Link from "../sharedComponents/Link";
+} from '@mui/material'
+import PageTitle from '../styles/shared/PageTitle'
+import PageWrapper from '../styles/shared/PageWrapper'
+import { BORDER_RADIUS } from '../styles/styleConsts'
+import Link from '../sharedComponents/Link'
 
 interface TableProps {
   items: Array<{
-    item: string;
-    cost: number;
-  }>;
+    item: string
+    cost: number
+  }>
 }
 
 const Table: React.FC<TableProps> = ({ items }) => {
@@ -43,28 +43,28 @@ const Table: React.FC<TableProps> = ({ items }) => {
             </TableRow>
           ))}
           <TableRow>
-            <TableCell sx={{ fontWeight: "bold" }}>Total</TableCell>
-            <TableCell sx={{ fontWeight: "bold" }} align="right">
+            <TableCell sx={{ fontWeight: 'bold' }}>Total</TableCell>
+            <TableCell sx={{ fontWeight: 'bold' }} align="right">
               ${(items.reduce((acc, row) => acc + row.cost, 0) + 1).toFixed(2)}
             </TableCell>
           </TableRow>
         </TableBody>
       </MuiTable>
     </TableContainer>
-  );
-};
+  )
+}
 
 const Donations = () => {
   const items = [
-    { item: "Domain", cost: 1 },
-    { item: "Frontend Hosting", cost: 7 },
-    { item: "Backend Hosting", cost: 7 },
-    { item: "Database", cost: 12 },
-    { item: "Email Sending", cost: 0 },
-  ];
+    { item: 'Domain', cost: 1 },
+    { item: 'Frontend Hosting', cost: 7 },
+    { item: 'Backend Hosting', cost: 7 },
+    { item: 'Database', cost: 12 },
+    { item: 'Email Sending', cost: 0 },
+  ]
 
-  const monthlyCost = items.reduce((acc, row) => acc + row.cost, 0);
-  const yearlyCost = monthlyCost * 12;
+  const monthlyCost = items.reduce((acc, row) => acc + row.cost, 0)
+  const yearlyCost = monthlyCost * 12
 
   return (
     <PageWrapper minHeight staticContent width="medium">
@@ -80,7 +80,7 @@ const Donations = () => {
       </Link>
       <Table items={items} />
     </PageWrapper>
-  );
-};
+  )
+}
 
-export default Donations;
+export default Donations

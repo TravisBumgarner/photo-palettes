@@ -1,5 +1,5 @@
-import { Typography, type SxProps } from "@mui/material";
-import { SPACING } from "../styleConsts";
+import { Typography, type SxProps } from '@mui/material'
+import { SPACING } from '../styleConsts'
 
 const PageTitle = ({
   text,
@@ -7,23 +7,23 @@ const PageTitle = ({
   center,
   sx,
 }: {
-  text: string;
-  marginBottom?: boolean;
-  center?: boolean;
-  sx?: SxProps;
+  text: string
+  marginBottom?: boolean
+  center?: boolean
+  sx?: SxProps
 }) => {
   return (
     <Typography
       variant="h2"
       sx={{
-        marginBottom: marginBottom ? SPACING.MEDIUM.PX : "0px",
-        textAlign: center ? "center" : "left",
+        marginBottom: marginBottom ? SPACING.MEDIUM.PX : '0px',
+        textAlign: center ? 'center' : 'left',
         ...(sx ? sx : {}),
       }}
     >
       {text}
     </Typography>
-  );
-};
+  )
+}
 
-export default PageTitle;
+export default PageTitle

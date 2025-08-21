@@ -1,18 +1,18 @@
-import { Box, Button, Typography } from "@mui/material";
-import { useCallback } from "react";
-import useGlobalStore from "../../../store";
-import { type ModalID } from "../Modal.types";
-import DefaultModal from "./DefaultModal";
+import { Box, Button, Typography } from '@mui/material'
+import { useCallback } from 'react'
+import useGlobalStore from '../../../store'
+import { type ModalID } from '../Modal.types'
+import DefaultModal from './DefaultModal'
 
 export interface ConfirmationModalProps {
-  id: ModalID;
-  title: string;
-  body: string;
-  confirmationCallback?: () => void;
-  cancelCallback?: () => void;
-  isConfirmDestructive?: boolean;
-  isCancelDestructive?: boolean;
-  showCancel?: boolean;
+  id: ModalID
+  title: string
+  body: string
+  confirmationCallback?: () => void
+  cancelCallback?: () => void
+  isConfirmDestructive?: boolean
+  isCancelDestructive?: boolean
+  showCancel?: boolean
 }
 
 const ConfirmationModal = ({
@@ -24,35 +24,35 @@ const ConfirmationModal = ({
   isConfirmDestructive,
   showCancel,
 }: ConfirmationModalProps) => {
-  const { setActiveModal } = useGlobalStore();
+  const { setActiveModal } = useGlobalStore()
 
   const handleCancel = useCallback(() => {
-    cancelCallback?.();
-    setActiveModal(null);
-  }, [cancelCallback, setActiveModal]);
+    cancelCallback?.()
+    setActiveModal(null)
+  }, [cancelCallback, setActiveModal])
 
   const handleConfirm = useCallback(() => {
-    confirmationCallback?.();
-    setActiveModal(null);
-  }, [confirmationCallback, setActiveModal]);
+    confirmationCallback?.()
+    setActiveModal(null)
+  }, [confirmationCallback, setActiveModal])
 
   return (
     <DefaultModal hideCloseButton>
-      <Box sx={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+      <Box sx={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
         <Typography variant="h6">{title}</Typography>
         <Typography variant="body1">{body}</Typography>
         <Box
           sx={{
-            display: "flex",
-            gap: "10px",
-            flexDirection: "row",
-            justifyContent: "flex-end",
+            display: 'flex',
+            gap: '10px',
+            flexDirection: 'row',
+            justifyContent: 'flex-end',
           }}
         >
           {showCancel && (
             <Button
               variant="outlined"
-              color={isCancelDestructive ? "error" : "primary"}
+              color={isCancelDestructive ? 'error' : 'primary'}
               onClick={handleCancel}
             >
               Cancel
@@ -60,7 +60,7 @@ const ConfirmationModal = ({
           )}
           <Button
             variant="contained"
-            color={isConfirmDestructive ? "error" : "primary"}
+            color={isConfirmDestructive ? 'error' : 'primary'}
             onClick={handleConfirm}
           >
             Ok
@@ -68,7 +68,7 @@ const ConfirmationModal = ({
         </Box>
       </Box>
     </DefaultModal>
-  );
-};
+  )
+}
 
-export default ConfirmationModal;
+export default ConfirmationModal
