@@ -9,6 +9,7 @@ def setup_cors(app: FastAPI, is_production: bool):
             allow_origins=[
                 "https://photo-palettes-frontend-bb66abc40c21.herokuapp.com",
                 "https://photopalettes.com",
+                "capacitor://localhost",
             ],
             allow_credentials=True,
             allow_methods=["*"],
