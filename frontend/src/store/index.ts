@@ -1,18 +1,19 @@
-import { User } from '@supabase/supabase-js'
+import { type User } from '@supabase/supabase-js'
 import { create } from 'zustand'
 import { devtools } from 'zustand/middleware'
-import { ActiveModal } from '../app/_sharedComponents/Modal/Modal.types'
-import { AppUserDetails, State } from './types'
+import { type ActiveModal } from '../sharedComponents/Modal/Modal.types'
+import { type AppUserDetails, type State } from './types'
 
 const useGlobalStore = create<State>()(
   devtools(
     (set, get) => ({
       authId: undefined,
-      isAppAuthenticating: true,
+      loadingUser: true,
       appUserDetails: undefined,
-      setAppUserDetails: (appUserDetails: AppUserDetails | null) => set({ appUserDetails }),
+      setAppUserDetails: (appUserDetails: AppUserDetails | null) =>
+        set({ appUserDetails }),
       setAuthId: (authId: User['id'] | null) => set({ authId }),
-      setIsAppAuthenticating: (isAppAuthenticating: boolean) => set({ isAppAuthenticating }),
+      setLoadingUser: (loadingUser: boolean) => set({ loadingUser }),
       alerts: [],
       getAndRemoveNextAlert: () => {
         const alerts = get().alerts
@@ -23,7 +24,12 @@ const useGlobalStore = create<State>()(
         return nextAlert
       },
       addAlert: (text, color) =>
-        set(state => ({ alerts: [...state.alerts, { message: text, color, id: Math.random() }] })),
+        set((state) => ({
+          alerts: [
+            ...state.alerts,
+            { message: text, color, id: Math.random() },
+          ],
+        })),
       activeModal: null,
       setActiveModal: (activeModal: ActiveModal | null) => set({ activeModal }),
     }),

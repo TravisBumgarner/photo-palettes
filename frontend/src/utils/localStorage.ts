@@ -3,10 +3,14 @@ import { logger } from '../services/logging'
 // Define keys used in localStorage
 export const LOCAL_STORAGE_KEYS = {} as const
 
-type LocalStorageKey = (typeof LOCAL_STORAGE_KEYS)[keyof typeof LOCAL_STORAGE_KEYS]
+type LocalStorageKey =
+  (typeof LOCAL_STORAGE_KEYS)[keyof typeof LOCAL_STORAGE_KEYS]
 
 // Get from localStorage
-export const getLocalStorage = <T = string>(key: LocalStorageKey, fallback: T): T => {
+export const getLocalStorage = <T = string>(
+  key: LocalStorageKey,
+  fallback: T
+): T => {
   try {
     const item = localStorage.getItem(key)
     return item ? (JSON.parse(item) as T) : fallback
@@ -17,7 +21,10 @@ export const getLocalStorage = <T = string>(key: LocalStorageKey, fallback: T): 
 }
 
 // Set to localStorage
-export const setLocalStorage = <T = string>(key: LocalStorageKey, value: T): void => {
+export const setLocalStorage = <T = string>(
+  key: LocalStorageKey,
+  value: T
+): void => {
   if (typeof window === 'undefined') return
   try {
     localStorage.setItem(key, JSON.stringify(value))

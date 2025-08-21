@@ -1,7 +1,7 @@
 import { z } from 'zod'
 import config from '../../config'
-import { getToken } from '../../services/supabase/utils'
-import { EModerationStatus, zodPalette } from '../../types'
+import { getToken } from '../../services/supabase'
+import { type EModerationStatus, zodPalette } from '../../types'
 
 const zodResponse = z.discriminatedUnion('success', [
   z.object({
@@ -24,14 +24,21 @@ export const getListAsModerator = async ({
   size: number
   offset: number
 }) => {
-  const token = await getToken()
+  const tokenResponse = await getToken()
+
+  if (!tokenResponse) {
+    return {
+      success: false,
+      error: 'No token found',
+    } as const
+  }
 
   const response = await fetch(
     `${config.apiUrl}/palettes/moderator?status=${status}&size=${size}&status=${offset}`,
     {
       method: 'GET',
       headers: {
-        Authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${tokenResponse.token}`,
       },
     }
   )

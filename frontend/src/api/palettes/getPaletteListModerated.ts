@@ -1,6 +1,6 @@
 import { z } from 'zod'
 import config from '../../config'
-import { getToken } from '../../services/supabase/utils'
+import { getToken } from '../../services/supabase'
 import { zodPalette } from '../../types'
 
 const zodResponse = z.discriminatedUnion('success', [
@@ -15,16 +15,35 @@ const zodResponse = z.discriminatedUnion('success', [
   }),
 ])
 
-const getPaletteListModerated = async ({ size, offset }: { size: number; offset: number }) => {
-  const token = await getToken()
-  const response = await fetch(`${config.apiUrl}/palettes?size=${size}&offset=${offset}`, {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${token}`,
-    },
-  })
+const getPaletteListModerated = async ({
+  size,
+  offset,
+}: {
+  size: number
+  offset: number
+}) => {
+  const tokenResponse = await getToken()
+  console.log('doot doot?', tokenResponse)
+  if (!tokenResponse) {
+    return {
+      success: false,
+      error: 'No token found',
+    } as const
+  }
+
+  const response = await fetch(
+    `${config.apiUrl}/palettes?size=${size}&offset=${offset}`,
+    {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${tokenResponse.token}`,
+      },
+    }
+  )
   const json = await response.json()
+
+  console.log(size, offset, json)
   return zodResponse.parse(json)
 }
 

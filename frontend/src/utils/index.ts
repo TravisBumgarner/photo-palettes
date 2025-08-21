@@ -1,3 +1,7 @@
+import { getMe } from '../api/getMe'
+import { getUser } from '../services/supabase'
+import useGlobalStore from '../store'
+
 /**
  * Takes in a hex color background and returns white or black based on what the contrast should be.
  */
@@ -18,7 +22,8 @@ export const getContrastColor = (hexColor: string, invert = false): string => {
   }
 
   // Calculate luminance
-  const luminance = 0.2126 * toLinear(r) + 0.7152 * toLinear(g) + 0.0722 * toLinear(b)
+  const luminance =
+    0.2126 * toLinear(r) + 0.7152 * toLinear(g) + 0.0722 * toLinear(b)
 
   let shouldReturnDark = luminance > 0.179
   shouldReturnDark = invert ? !shouldReturnDark : shouldReturnDark
@@ -32,10 +37,23 @@ export const rgbToHex = (rgb: string) => {
   if (!match) return null
 
   return `#${match
-    .map(num => parseInt(num).toString(16).padStart(2, '0')) // Convert to hex
+    .map((num) => parseInt(num).toString(16).padStart(2, '0')) // Convert to hex
     .join('')}` // Join and ensure uppercase
 }
 
 export const getUserColorFromUUID = (uuid: string) => {
   return `#${uuid.slice(0, 6).toLocaleUpperCase()}`
+}
+
+export const loadUserIntoState = async () => {
+  const { user } = await getUser()
+
+  const store = useGlobalStore.getState()
+  if (user) {
+    store.setAuthId(user.id)
+    const userDetails = await getMe()
+    if (userDetails.success) store.setAppUserDetails(userDetails)
+  }
+
+  store.setLoadingUser(false)
 }

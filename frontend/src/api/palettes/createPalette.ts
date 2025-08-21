@@ -1,7 +1,7 @@
 import { z } from 'zod'
 import config from '../../config'
-import { getToken } from '../../services/supabase/utils'
-import { TGeneratedPalette } from '../../types'
+import { getToken } from '../../services/supabase'
+import { type TGeneratedPalette } from '../../types'
 
 const zodResponse = z.discriminatedUnion('success', [
   z.object({
@@ -23,10 +23,17 @@ export const createPalette = async ({
   paletteId: string
   name: string
 }) => {
-  const token = await getToken()
+  const tokenResponse = await getToken()
+
+  if (!tokenResponse) {
+    return {
+      success: false,
+      error: 'No token found',
+    } as const
+  }
 
   // Extract hex colors from palette
-  const hexColors = palette.map(swatch => swatch.color.toUpperCase())
+  const hexColors = palette.map((swatch) => swatch.color.toUpperCase())
 
   // Create the request body
   const requestBody = {
@@ -40,7 +47,7 @@ export const createPalette = async ({
     body: JSON.stringify(requestBody),
     headers: {
       'Content-Type': 'application/json',
-      Authorization: `Bearer ${token}`,
+      Authorization: `Bearer ${tokenResponse.token}`,
     },
   })
   const json = await response.json()

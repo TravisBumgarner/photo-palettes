@@ -1,6 +1,6 @@
 import { z } from 'zod'
 import config from '../../config'
-import { getToken } from '../../services/supabase/utils'
+import { getToken } from '../../services/supabase'
 
 const zodSchemaForAddFeatureRequest = z.discriminatedUnion('success', [
   z.object({
@@ -14,9 +14,9 @@ const zodSchemaForAddFeatureRequest = z.discriminatedUnion('success', [
 ])
 
 const addFeatureRequest = async (title: string, description: string) => {
-  const token = await getToken()
+  const tokenResponse = await getToken()
 
-  if (!token)
+  if (!tokenResponse)
     return {
       success: false,
       error: 'No token',
@@ -25,10 +25,13 @@ const addFeatureRequest = async (title: string, description: string) => {
   const response = await fetch(`${config.apiUrl}/feature_requests`, {
     method: 'POST',
     headers: {
-      Authorization: `Bearer ${token}`,
+      Authorization: `Bearer ${tokenResponse.token}`,
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({ title, description }),
+    body: JSON.stringify({
+      title,
+      description,
+    }),
   })
   const data = await response.json()
   return zodSchemaForAddFeatureRequest.parse(data)

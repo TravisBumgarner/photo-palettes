@@ -7,18 +7,24 @@ export type TSwatch = {
 
 export type TGeneratedPalette = TSwatch[]
 
-export enum EPermissionLevel {
-  MEMBER = 0,
-  MODERATOR = 2,
-  ADMIN = 5,
+export const PERMISSION_LEVEL = {
+  MEMBER: 0,
+  MODERATOR: 2,
+  ADMIN: 5,
 }
 
-export enum EModerationStatus {
-  AWAITING_SUBMISSION = -1,
-  AWAITING_MODERATION = 0,
-  APPROVED = 1,
-  REJECTED = 2,
+export type EPermissionLevel =
+  (typeof PERMISSION_LEVEL)[keyof typeof PERMISSION_LEVEL]
+
+export const MODERATION_STATUS = {
+  AWAITING_SUBMISSION: -1,
+  AWAITING_MODERATION: 0,
+  APPROVED: 1,
+  REJECTED: 2,
 }
+
+export type EModerationStatus =
+  (typeof MODERATION_STATUS)[keyof typeof MODERATION_STATUS]
 
 export type TPaletteColor = {
   id: string
@@ -36,11 +42,14 @@ export type TPaletteAndColors = {
   colors: TPaletteColor[]
 }
 
-export enum EFeatureRequestStatus {
-  PENDING = 0,
-  APPROVED = 1,
-  REJECTED = 2,
+export const FEATURE_REQUESTS = {
+  PENDING: 0,
+  APPROVED: 1,
+  REJECTED: 2,
 }
+
+export type EFeatureRequestStatus =
+  (typeof FEATURE_REQUESTS)[keyof typeof FEATURE_REQUESTS]
 
 export type TFeatureRequest = {
   id: string

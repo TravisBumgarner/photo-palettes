@@ -1,6 +1,6 @@
 import { z } from 'zod'
 import config from '../../config'
-import { EFeatureRequestStatus } from '../../types'
+import { FEATURE_REQUESTS } from '../../types'
 
 const zodSchema = z.discriminatedUnion('success', [
   z.object({
@@ -10,7 +10,7 @@ const zodSchema = z.discriminatedUnion('success', [
         id: z.string(),
         title: z.string(),
         description: z.string(),
-        status: z.nativeEnum(EFeatureRequestStatus),
+        status: z.enum(FEATURE_REQUESTS),
         votes: z.array(z.string()),
       })
     ),

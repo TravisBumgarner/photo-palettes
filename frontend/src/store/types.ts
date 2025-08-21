@@ -1,8 +1,9 @@
-import { User } from '@supabase/supabase-js'
-import { ActiveModal } from '../app/_sharedComponents/Modal/Modal.types'
+import { type User } from '@supabase/supabase-js'
+import type { EPermissionLevel } from '../types'
+import { type ActiveModal } from '../sharedComponents/Modal/Modal.types'
 
 export interface AppUserDetails {
-  permissionLevel: number
+  permissionLevel: EPermissionLevel
   displayName: string
   email: string
   id: string
@@ -17,8 +18,8 @@ export interface TAlert {
 export interface State {
   authId: User['id'] | null
   setAuthId: (authId: User['id'] | null) => void
-  isAppAuthenticating: boolean
-  setIsAppAuthenticating: (isAppAuthenticating: boolean) => void
+  loadingUser: boolean
+  setLoadingUser: (loadingUser: boolean) => void
   appUserDetails: AppUserDetails | null
   setAppUserDetails: (appUserDetails: AppUserDetails | null) => void
   alerts: TAlert[]

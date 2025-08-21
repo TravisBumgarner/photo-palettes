@@ -2,7 +2,11 @@
 
 import { useMediaQuery } from '@mui/material'
 import CssBaseline from '@mui/material/CssBaseline'
-import { createTheme, ThemeOptions, ThemeProvider } from '@mui/material/styles'
+import {
+  createTheme,
+  type ThemeOptions,
+  ThemeProvider,
+} from '@mui/material/styles'
 import _ from 'lodash'
 import { useMemo } from 'react'
 import { FONT_SIZES, PALETTE, BORDER_RADIUS } from './styleConsts'
@@ -46,6 +50,7 @@ const baseThemeOptions: ThemeOptions = {
     },
   },
   typography: {
+    fontFamily: '"Satoshi", "Roboto", "Helvetica", "Arial", sans-serif',
     h1: {
       fontSize: FONT_SIZES.HUGE.PX,
       fontWeight: 900,
@@ -138,7 +143,10 @@ const lightTheme = createTheme(_.merge(baseThemeOptions, lightThemeOptions))
 const AppThemeProvider = ({ children }: { children: React.ReactNode }) => {
   const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)')
 
-  const theme = useMemo(() => (prefersDarkMode ? darkTheme : lightTheme), [prefersDarkMode])
+  const theme = useMemo(
+    () => (prefersDarkMode ? darkTheme : lightTheme),
+    [prefersDarkMode]
+  )
 
   return (
     <ThemeProvider theme={theme}>

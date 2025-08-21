@@ -38,7 +38,7 @@ echo "######################### Setting up frontend #########################"
 
 echo "Installing dependencies..."
 cd ../frontend && npm install
-make set-ip
+# make set-ip I don't think this is needed anymore
 
 echo "######################### Manual Setup #########################"
 
