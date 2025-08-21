@@ -98,7 +98,7 @@ const Profile = () => {
   return (
     <PageWrapper width="full" minHeight>
       <PageTitle
-        text={`${displayName} (${appUserDetails?.email})`}
+        text={displayName}
         marginBottom
         sx={{
           fontWeight: 700,
