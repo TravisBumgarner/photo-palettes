@@ -63,6 +63,12 @@ const Moderation = () => {
     [refetch]
   )
 
+  useEffect(() => {
+    if (error) {
+      logger.error('Error fetching moderation palettes', error, data?.success)
+    }
+  }, [error, data?.success])
+
   const content = useMemo(() => {
     if (isLoading || !data) return <Loading />
     if (error)

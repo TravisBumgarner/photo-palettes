@@ -48,7 +48,7 @@ const Profile = () => {
       }),
     retry: false,
   })
-  console.log('ruda', data)
+
   const handlePageChange = useCallback((newPage: number) => {
     setPage(newPage)
   }, [])
@@ -70,6 +70,12 @@ const Profile = () => {
     },
     [refetch]
   )
+
+  useEffect(() => {
+    if (error) {
+      logger.error('Error fetching profile palettes', error, data?.success)
+    }
+  }, [error, data?.success])
 
   const content = useMemo(() => {
     if (isLoading || !data) return <Loading />

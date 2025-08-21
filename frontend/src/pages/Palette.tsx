@@ -32,7 +32,7 @@ const Palette = () => {
       getPaletteById(Array.isArray(params.id) ? params.id[0] : params.id),
     retry: false,
   })
-  console.log('ruda', isLoading, error, data)
+
   if (isLoading) {
     return <Loading />
   }

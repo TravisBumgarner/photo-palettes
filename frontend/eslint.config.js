@@ -20,6 +20,7 @@ export default tseslint.config([
       globals: globals.browser,
     },
     rules: {
+      'no-console': 'error',
       'no-restricted-syntax': [
         'error',
         {
