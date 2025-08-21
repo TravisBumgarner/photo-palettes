@@ -12,6 +12,7 @@ import {
 import { SPACING } from '../styles/styleConsts'
 import { useCallback } from 'react'
 import useGlobalStore from '../store'
+import config from '../config'
 
 const ICON_SIZE = 32
 
@@ -57,7 +58,7 @@ const Share = ({
   text: string
   media: string
 }) => {
-  const absoluteUrl = import.meta.env.VITE_PUBLIC_FE_URL + '/' + url
+  const absoluteUrl = config.frontendUrl + '/' + url
 
   return (
     <Box
