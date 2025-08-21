@@ -3,15 +3,15 @@ import { moderatePalette } from '../api/moderatePalette'
 import { useCallback, useState } from 'react'
 
 import {
+  MODERATION_STATUS,
   PERMISSION_LEVEL,
   type EModerationStatus,
-  MODERATION_STATUS,
 } from '../types'
 
 import { Box, Button } from '@mui/material'
+import { deletePalette } from '../api/palettes/deletePalette'
 import useGlobalStore from '../store'
 import { BORDER_RADIUS, SPACING } from '../styles/styleConsts'
-import { deletePalette } from '../api/palettes/deletePalette'
 
 const ModerationPanel = ({
   refetch,
@@ -51,8 +51,7 @@ const ModerationPanel = ({
   const handleDeleteCallback = useCallback(async () => {
     setIsFetching(true)
     await deletePalette(paletteId)
-    refetch()
-  }, [paletteId, refetch, setIsFetching])
+  }, [paletteId, setIsFetching])
 
   const handleDelete = useCallback(async () => {
     setActiveModal({

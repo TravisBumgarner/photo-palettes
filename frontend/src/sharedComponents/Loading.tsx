@@ -26,7 +26,7 @@ const Loading = () => {
           style={{
             width: 75,
             height: 75,
-            border: `20px solid`,
+            border: `10px solid`,
             borderColor: 'divider',
             borderTopColor: 'transparent',
             borderRadius: '50%',

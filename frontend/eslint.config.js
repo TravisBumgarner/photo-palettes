@@ -19,5 +19,21 @@ export default tseslint.config([
       ecmaVersion: 2020,
       globals: globals.browser,
     },
+    rules: {
+      'no-console': 'error',
+      'no-restricted-syntax': [
+        'error',
+        {
+          selector: "MemberExpression[property.name='env']",
+          message: 'Use import.meta.env only in src/config.ts',
+        },
+      ],
+    },
+  },
+  {
+    files: ['src/config.ts'],
+    rules: {
+      'no-restricted-syntax': 'off',
+    },
   },
 ])

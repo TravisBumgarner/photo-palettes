@@ -5,14 +5,16 @@ from config import get_config
 
 config = get_config()
 
-# Synchronous PostgreSQL connection URL
-# Create an engine for synchronous PostgreSQL connection
-engine = create_engine(config.database_url, echo=True)
+# Engine with connection pooling
+db_engine = create_engine(
+    config.database_url,
+    echo=True,
+    pool_size=5,  # persistent connections per worker
+    max_overflow=10,  # extra temporary connections allowed
+    pool_timeout=30,  # seconds to wait before giving up
+    pool_recycle=1800,  # recycle connections every 30 min
+)
 
-# Synchronous session factory
-SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
-
-# Declarative base for models
 class Base(DeclarativeBase):
     pass

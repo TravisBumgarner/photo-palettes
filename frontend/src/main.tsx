@@ -11,7 +11,7 @@ Sentry.init({
   // Setting this option to true will send default PII data to Sentry.
   // For example, automatic IP address collection on events
   sendDefaultPii: true,
-  enabled: config.is_production,
+  enabled: config.isProduction,
 })
 
 createRoot(document.getElementById('root')!).render(

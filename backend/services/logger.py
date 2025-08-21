@@ -7,6 +7,8 @@ config = get_config()
 
 def log_error(error: Exception, name: str):
     if config.is_production:
-        sentry_sdk.capture_exception(error, name)
+        with sentry_sdk.push_scope() as scope:
+            scope.set_extra("name", name)
+            sentry_sdk.capture_exception(error)
     else:
         print("sentry_error", name, error)  # noqa: T201
