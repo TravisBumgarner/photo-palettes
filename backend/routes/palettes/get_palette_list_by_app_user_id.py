@@ -1,7 +1,7 @@
 from uuid import UUID
 
 from database.models import ModerationStatus
-from database.queries.palettes import get_palettes_by_app_user_id
+from database.queries.palettes import get_palettes_by_app_user_id, get_palettes_count
 from database.queries.users import get_app_user_by_app_user_id
 from middleware.auth import RequestWithAuthState
 from services.logger import log_error
@@ -39,10 +39,12 @@ async def get_by_app_user_id(
                 app_user_id=UUID(app_user_id),
                 status=status,
             )
+        total_count = get_palettes_count(moderation_status=status, app_user_id=UUID(app_user_id))
 
         return {
             "success": True,
             "palettes": map_palette_array_to_response(palettes),
+            "total": total_count,
         }
 
     except Exception as e:

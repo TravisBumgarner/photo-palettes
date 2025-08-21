@@ -7,6 +7,7 @@ const zodResponse = z.discriminatedUnion('success', [
   z.object({
     success: z.literal(true),
     palettes: z.array(zodPalette),
+    total: z.number(),
   }),
   z.object({
     success: z.literal(false),
@@ -14,10 +15,17 @@ const zodResponse = z.discriminatedUnion('success', [
   }),
 ])
 
-export const getPaletteListByAppUserId = async (
-  appUserId: string,
+export const getPaletteListByAppUserId = async ({
+  appUserId,
+  status,
+  size,
+  offset,
+}: {
+  appUserId: string
   status: EModerationStatus
-) => {
+  size: number
+  offset: number
+}) => {
   if (!appUserId) {
     return {
       success: false,
@@ -35,7 +43,7 @@ export const getPaletteListByAppUserId = async (
   }
 
   const response = await fetch(
-    `${config.apiUrl}/palettes/app_user_id/${appUserId}?status=${status}`,
+    `${config.apiUrl}/palettes/app_user_id/${appUserId}?status=${status}&size=${size}&offset=${offset}`,
     {
       method: 'GET',
       headers: {

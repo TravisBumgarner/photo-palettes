@@ -26,7 +26,7 @@ export const getPaletteById = async (id: string) => {
 
   let requestUrl = `${config.apiUrl}/palettes/id/${id}`
 
-  if (!config.is_production) {
+  if (!config.isProduction) {
     requestUrl = `http://localhost:8000/palettes/id/${id}`
   }
 

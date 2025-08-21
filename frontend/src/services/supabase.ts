@@ -1,15 +1,13 @@
 import { createClient } from '@supabase/supabase-js'
 import { logger } from './logging'
+import config from '../config'
 
 //TODO - FIx
 type Response =
   | { success: true; data?: unknown }
   | { error: string; success: false }
 
-const client = createClient(
-  import.meta.env.VITE_PUBLIC_SUPABASE_URL,
-  import.meta.env.VITE_PUBLIC_SUPABASE_ANON_KEY
-)
+const client = createClient(config.supabaseUrl, config.supabaseAnonKey)
 
 export async function getUser() {
   const { data, error } = await client.auth.getUser()

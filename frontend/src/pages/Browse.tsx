@@ -1,7 +1,7 @@
 'use client'
 
 import { useQuery } from '@tanstack/react-query'
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import getPaletteListModerated from '../api/palettes/getPaletteListModerated'
 import { logger } from '../services/logging'
 import PageWrapper from '../styles/shared/PageWrapper'
@@ -37,27 +37,39 @@ const Browse = () => {
   const hasErrored = error || (data && !data.success)
   const noPalettes = !data || (data.success && data.palettes.length === 0)
 
-  const content = useMemo(() => {
-    if (hasErrored)
-      return <Message message="Error fetching palettes" color="error" />
-    if (loading) return <Loading />
-    if (noPalettes) return <Message message="No palettes found" color="info" />
-
+  if (hasErrored) {
+    logger.error('Error fetching palettes', error, data?.success)
     return (
-      <>
-        <ThumbnailGridDisplay>
-          {data?.palettes.map((palette) => (
-            <PaletteThumbnail key={palette.id} palette={palette} />
-          ))}
-        </ThumbnailGridDisplay>
-        <Pagination total={data.total} onPageChange={handlePageChange} />
-      </>
+      <PageWrapper width="full" minHeight>
+        <Message message="Error fetching palettes" color="error" />
+      </PageWrapper>
     )
-  }, [hasErrored, noPalettes, data, loading, handlePageChange])
+  }
+
+  if (loading) {
+    return (
+      <PageWrapper width="full" minHeight>
+        <Loading />
+      </PageWrapper>
+    )
+  }
+
+  if (noPalettes) {
+    return (
+      <PageWrapper width="full" minHeight>
+        <Message message="No palettes found" color="info" />
+      </PageWrapper>
+    )
+  }
 
   return (
     <PageWrapper width="full" minHeight>
-      {content}
+      <ThumbnailGridDisplay>
+        {data.palettes.map((palette) => (
+          <PaletteThumbnail key={palette.id} palette={palette} />
+        ))}
+      </ThumbnailGridDisplay>
+      <Pagination total={data.total} onPageChange={handlePageChange} />
     </PageWrapper>
   )
 }

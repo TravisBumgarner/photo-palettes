@@ -34,7 +34,7 @@ export const getListAsModerator = async ({
   }
 
   const response = await fetch(
-    `${config.apiUrl}/palettes/moderator?status=${status}&size=${size}&status=${offset}`,
+    `${config.apiUrl}/palettes/moderator?status=${status}&size=${size}&offset=${offset}`,
     {
       method: 'GET',
       headers: {

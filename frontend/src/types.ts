@@ -23,6 +23,13 @@ export const MODERATION_STATUS = {
   REJECTED: 2,
 }
 
+export const MODERATION_STATUS_LABEL = {
+  [MODERATION_STATUS.AWAITING_SUBMISSION]: 'Pending Submission',
+  [MODERATION_STATUS.AWAITING_MODERATION]: 'Pending Approval',
+  [MODERATION_STATUS.APPROVED]: 'Approved',
+  [MODERATION_STATUS.REJECTED]: 'Rejected',
+}
+
 export type EModerationStatus =
   (typeof MODERATION_STATUS)[keyof typeof MODERATION_STATUS]
 
