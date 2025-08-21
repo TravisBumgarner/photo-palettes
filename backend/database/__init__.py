@@ -1,6 +1,6 @@
 # __init__.py
 
-from .engine import Base, SessionLocal, db_engine
+from .engine import Base, db_engine
 from .models import *
 
-__all__ = ["Base", "SessionLocal", "db_engine", "models"]
+__all__ = ["Base", "db_engine", "models"]

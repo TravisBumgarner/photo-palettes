@@ -15,8 +15,6 @@ db_engine = create_engine(
     pool_recycle=1800,  # recycle connections every 30 min
 )
 
-SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=db_engine)
-
 
 class Base(DeclarativeBase):
     pass
