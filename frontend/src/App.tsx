@@ -12,17 +12,7 @@ import AppThemeProvider from './styles/Theme'
 import AlertsManager from './components/AlertsManager'
 
 const queryClient = new QueryClient()
-function ErrorButton() {
-  return (
-    <button
-      onClick={() => {
-        throw new Error('This is your first error!')
-      }}
-    >
-      Break the world
-    </button>
-  )
-}
+
 function App() {
   useLoadUserIntoState()
   const loadingUser = useGlobalStore((state) => state.loadingUser)
@@ -47,7 +37,6 @@ function App() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <ErrorButton />
       <BrowserRouter>
         <AlertsManager />
         <Navigation />
