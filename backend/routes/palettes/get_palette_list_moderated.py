@@ -1,3 +1,4 @@
+import sentry_sdk
 from fastapi import Query
 
 from database.models import ModerationStatus
@@ -27,6 +28,8 @@ async def get_list_moderated(
 
     except Exception as error:
         log_error(error, "get_palette_list_moderated")
+        print("ruda", error)
+        sentry_sdk.capture_exception(error, "ruda")
         return {
             "success": False,
             "error": "Failed to get moderated palettes",
