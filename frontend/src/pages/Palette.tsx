@@ -32,6 +32,10 @@ const Palette = () => {
       getPaletteById(Array.isArray(params.id) ? params.id[0] : params.id),
     retry: false,
   })
+  console.log('ruda', isLoading, error, data)
+  if (isLoading) {
+    return <Loading />
+  }
 
   if (!data?.success || error) {
     return (
@@ -40,10 +44,6 @@ const Palette = () => {
         message="Palette not found or an error occurred."
       />
     )
-  }
-
-  if (isLoading) {
-    return <Loading />
   }
 
   return (

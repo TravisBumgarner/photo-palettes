@@ -12,6 +12,7 @@ import { Box, Button } from '@mui/material'
 import useGlobalStore from '../store'
 import { BORDER_RADIUS, SPACING } from '../styles/styleConsts'
 import { deletePalette } from '../api/palettes/deletePalette'
+import { useNavigate } from 'react-router-dom'
 
 const ModerationPanel = ({
   refetch,
@@ -25,6 +26,7 @@ const ModerationPanel = ({
   const [isFetching, setIsFetching] = useState(false)
   const appUserDetails = useGlobalStore((state) => state.appUserDetails)
   const setActiveModal = useGlobalStore((state) => state.setActiveModal)
+  const navigate = useNavigate()
 
   const handleApprove = useCallback(async () => {
     setIsFetching(true)
@@ -51,8 +53,8 @@ const ModerationPanel = ({
   const handleDeleteCallback = useCallback(async () => {
     setIsFetching(true)
     await deletePalette(paletteId)
-    refetch()
-  }, [paletteId, refetch, setIsFetching])
+    navigate('/')
+  }, [paletteId, setIsFetching, navigate])
 
   const handleDelete = useCallback(async () => {
     setActiveModal({

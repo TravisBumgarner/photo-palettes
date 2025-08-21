@@ -1,5 +1,5 @@
 import uuid
-from typing import List
+from typing import List, Optional
 
 from sqlalchemy.orm import joinedload
 from sqlmodel import desc
@@ -9,11 +9,13 @@ from database.models import ModerationStatus, Palette
 
 
 def get_palettes_count(
-    moderation_status: ModerationStatus,
+    moderation_status: ModerationStatus, app_user_id: Optional[uuid.UUID] = None
 ) -> int:
     session = SessionLocal()
     query = session.query(Palette)
     query = query.filter(Palette.moderation_status == moderation_status)
+    if app_user_id is not None:
+        query = query.filter(Palette.app_user_id == app_user_id)
     return query.count()
 
 
@@ -26,7 +28,7 @@ def get_palettes(
     query = session.query(Palette).options(joinedload(Palette.colors))
     if moderation_status is not None:
         query = query.filter(Palette.moderation_status == moderation_status)
-    query = query.order_by(desc(Palette.created_at)) 
+    query = query.order_by(desc(Palette.created_at))
     if offset is not None:
         query = query.offset(offset)
     if size is not None:

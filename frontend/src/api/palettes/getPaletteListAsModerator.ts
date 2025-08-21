@@ -24,6 +24,7 @@ export const getListAsModerator = async ({
   size: number
   offset: number
 }) => {
+  console.log('fetching with params', status, size, offset)
   const tokenResponse = await getToken()
 
   if (!tokenResponse) {
@@ -34,7 +35,7 @@ export const getListAsModerator = async ({
   }
 
   const response = await fetch(
-    `${config.apiUrl}/palettes/moderator?status=${status}&size=${size}&status=${offset}`,
+    `${config.apiUrl}/palettes/moderator?status=${status}&size=${size}&offset=${offset}`,
     {
       method: 'GET',
       headers: {

@@ -10,49 +10,62 @@ import PageTitle from '../styles/shared/PageTitle'
 import PageWrapper from '../styles/shared/PageWrapper'
 import ThumbnailGridDisplay from '../styles/shared/ThumbnailGallery'
 import { SPACING } from '../styles/styleConsts'
-import { MODERATION_STATUS } from '../types'
+import { MODERATION_STATUS, MODERATION_STATUS_LABEL } from '../types'
 import { getContrastColor, getUserColorFromUUID } from '../utils'
 import Loading from '../sharedComponents/Loading'
 import Message from '../sharedComponents/Message'
 import PaletteThumbnail from '../sharedComponents/PaletteThumbnail'
 import { useNavigate, useParams } from 'react-router-dom'
+import Pagination from '../sharedComponents/Pagination'
+import { PAGINATION_SIZE } from '../consts'
 
-const TABS = [
-  { label: 'Approved', status: MODERATION_STATUS.APPROVED },
-  { label: 'Pending', status: MODERATION_STATUS.AWAITING_MODERATION },
-  { label: 'Rejected', status: MODERATION_STATUS.REJECTED },
+const STATUS_TABS = [
+  MODERATION_STATUS.APPROVED,
+  MODERATION_STATUS.AWAITING_MODERATION,
+  MODERATION_STATUS.REJECTED,
 ]
 
 const Profile = () => {
-  const [tab, setTab] = useState(MODERATION_STATUS.APPROVED)
+  const [filterTabIndex, setFilterTabIndex] = useState(0)
   const params = useParams()
+  const [page, setPage] = useState(1)
   const navigate = useNavigate()
   const appUserDetails = useGlobalStore((state) => state.appUserDetails)
 
-  const profileUserId =
+  const appUserId =
     (Array.isArray(params.id) ? params.id[0] : params.id) ||
     appUserDetails?.id ||
     ''
 
   const { data, isLoading, error, refetch } = useQuery({
-    queryKey: ['profile', profileUserId, tab],
-    queryFn: () => getPaletteListByAppUserId(profileUserId, TABS[tab].status),
+    queryKey: ['profile', appUserId, filterTabIndex, page],
+    queryFn: () =>
+      getPaletteListByAppUserId({
+        size: PAGINATION_SIZE,
+        offset: (page - 1) * PAGINATION_SIZE,
+        appUserId,
+        status: STATUS_TABS[filterTabIndex],
+      }),
     retry: false,
   })
+  console.log('ruda', data)
+  const handlePageChange = useCallback((newPage: number) => {
+    setPage(newPage)
+  }, [])
 
   useEffect(() => {
     if (error) logger.error(error)
   }, [error])
 
   useEffect(() => {
-    if (!profileUserId) {
+    if (!appUserId) {
       navigate('/error404')
     }
-  }, [profileUserId, navigate])
+  }, [appUserId, navigate])
 
   const handleTabChange = useCallback(
     (_event: unknown, v: number) => {
-      setTab(v)
+      setFilterTabIndex(v)
       refetch()
     },
     [refetch]
@@ -67,17 +80,20 @@ const Profile = () => {
       return <Message message="No palettes found" color="info" />
 
     return (
-      <ThumbnailGridDisplay>
-        {data.palettes.map((palette) => (
-          <PaletteThumbnail key={palette.id} palette={palette} />
-        ))}
-      </ThumbnailGridDisplay>
+      <>
+        <ThumbnailGridDisplay>
+          {data.palettes.map((palette) => (
+            <PaletteThumbnail key={palette.id} palette={palette} />
+          ))}
+        </ThumbnailGridDisplay>
+        <Pagination total={data.total} onPageChange={handlePageChange} />
+      </>
     )
-  }, [data, error, isLoading])
+  }, [data, error, isLoading, handlePageChange])
 
-  const isProfileUser = profileUserId === appUserDetails?.id
+  const isProfileUser = appUserId === appUserDetails?.id
 
-  const displayName = getUserColorFromUUID(profileUserId)
+  const displayName = getUserColorFromUUID(appUserId)
 
   return (
     <PageWrapper width="full" minHeight>
@@ -93,12 +109,16 @@ const Profile = () => {
       />
       {isProfileUser && (
         <Tabs
-          value={tab}
+          value={filterTabIndex}
           onChange={handleTabChange}
           sx={{ marginBottom: SPACING.MEDIUM.PX }}
         >
-          {TABS.map((t, i) => (
-            <Tab disabled={isLoading} key={i} label={t.label} />
+          {STATUS_TABS.map((key) => (
+            <Tab
+              disabled={isLoading}
+              key={key}
+              label={MODERATION_STATUS_LABEL[key]}
+            />
           ))}
         </Tabs>
       )}

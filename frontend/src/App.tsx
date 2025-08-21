@@ -10,6 +10,7 @@ import { Box } from '@mui/material'
 import Loading from './sharedComponents/Loading'
 import AppThemeProvider from './styles/Theme'
 import AlertsManager from './components/AlertsManager'
+import RenderModal from './sharedComponents/Modal'
 
 const queryClient = new QueryClient()
 
@@ -42,6 +43,7 @@ function App() {
         <Navigation />
         <Router />
         <Footer />
+        <RenderModal />
       </BrowserRouter>
     </QueryClientProvider>
   )
