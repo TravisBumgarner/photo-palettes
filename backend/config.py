@@ -45,9 +45,7 @@ class Config(BaseSettings):
 @lru_cache
 def get_config() -> Config:
     try:
-        config = Config()
-        print("ruda", config)
-        return config
+        return Config()
     except ValidationError as e:
         print("🚨 Configuration error:")  # noqa: T201
         for err in e.errors():
