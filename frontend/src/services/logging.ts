@@ -6,7 +6,7 @@ export const logger = {
     console.log(message)
   },
   error: (...args: (string | Error | unknown)[]) => {
-    if (config.is_production) {
+    if (config.isProduction) {
       Sentry.captureException(JSON.stringify(args))
     } else {
       console.error(args.map((arg) => JSON.stringify(arg)).join(' '))
