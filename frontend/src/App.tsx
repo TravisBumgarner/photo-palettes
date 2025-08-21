@@ -9,6 +9,7 @@ import useGlobalStore from "./store";
 import { Box } from "@mui/material";
 import Loading from "./sharedComponents/Loading";
 import AppThemeProvider from "./styles/Theme";
+import AlertsManager from "./components/AlertsManager";
 
 const queryClient = new QueryClient();
 function ErrorButton() {
@@ -48,6 +49,7 @@ function App() {
     <QueryClientProvider client={queryClient}>
       <ErrorButton />
       <BrowserRouter>
+        <AlertsManager />
         <Navigation />
         <Router />
         <Footer />
