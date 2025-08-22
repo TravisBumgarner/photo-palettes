@@ -1,37 +1,19 @@
 import express from 'express'
 import path from 'path'
 import { fileURLToPath } from 'url'
-import fs from 'fs'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const app = express()
 const port = process.env.PORT || 3000
 
 const frontendDist = path.join(__dirname, 'dist')
-const indexHtml = fs.readFileSync(
-  path.join(frontendDist, 'index.html'),
-  'utf-8'
-)
+app.set('view engine', 'ejs')
+app.set('views', frontendDist)
 
-app.use(express.static(frontendDist))
-
-const DATABASE = {
-  one: { title: 'Foo One' },
-  two: { title: 'Foo Two' },
-}
-
-const mockFetchFromDB = (key) => {
-  return (
-    DATABASE[key] || {
-      title: 'Default Title',
-    }
-  )
-}
+app.use('/public', express.static(path.join(frontendDist, 'public')))
 
 const fetchFromDB = async (id) => {
-  console.log('fetching', id)
   const response = await fetch(`http://localhost:8000/palettes/id/${id}`)
-
   const data = await response.json()
   if (data.success) {
     return {
@@ -42,30 +24,26 @@ const fetchFromDB = async (id) => {
 }
 
 app.get(/.*/, async (req, res) => {
-  const parts = req.path.split('/') // ["", "palette", UUID]
+  try {
+    const parts = req.path.split('/') // For a hit - ["", "palette", UUID]
+    let ogTitle = 'Photo Palettes'
+    let pageTitle = 'Photo Palettes'
 
-  if (parts[1] !== 'palette') {
-    res.send(indexHtml)
-    return
+    if (parts[1] === 'palette') {
+      const data = await fetchFromDB(parts[2])
+      if (data && data.name) {
+        ogTitle = data.name
+        pageTitle = `Photo Palette - ${data.name}`
+      }
+    }
+
+    res.render('index', { ogTitle, pageTitle })
+  } catch {
+    res.render('index', {
+      ogTitle: 'Photo Palettes',
+      pageTitle: 'Photo Palettes',
+    })
   }
-
-  const data = await fetchFromDB(parts[2])
-
-  if (data === null) {
-    res.send(indexHtml)
-    return
-  }
-
-  let ogInjectedHTML = indexHtml
-    .replace(
-      /<meta property="og:title" content="[^"]*" \/>/,
-      `<meta property="og:title" content="${data.name}" />`
-    )
-    .replace(
-      /<title>.*<\/title>/,
-      `<title>Photo Palette - ${data.name}</title>`
-    )
-  res.send(ogInjectedHTML)
 })
 
 app.listen(port, () => {
