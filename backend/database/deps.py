@@ -2,9 +2,9 @@ from typing import Generator
 
 from sqlalchemy.orm import Session
 
-from .engine import SessionLocal
+from .engine import db_engine
 
 
 def get_db() -> Generator[Session, None, None]:
-    with SessionLocal() as session:
+    with Session(db_engine) as session:
         yield session

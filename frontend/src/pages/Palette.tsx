@@ -33,6 +33,10 @@ const Palette = () => {
     retry: false,
   })
 
+  if (isLoading) {
+    return <Loading />
+  }
+
   if (!data?.success || error) {
     return (
       <Message
@@ -40,10 +44,6 @@ const Palette = () => {
         message="Palette not found or an error occurred."
       />
     )
-  }
-
-  if (isLoading) {
-    return <Loading />
   }
 
   return (

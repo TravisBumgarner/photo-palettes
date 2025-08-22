@@ -1,12 +1,14 @@
 'use client'
 
 import { Box, Button, TextField, Typography } from '@mui/material'
-import React, { useCallback, useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
+import useGlobalStore from '../store'
 
 const WhatWentWrongContactForm = () => {
   const [success, setSuccess] = useState(false)
   const [failure, setFailure] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const addAlert = useGlobalStore((store) => store.addAlert)
 
   const [formData, setFormData] = useState({
     name: '',
@@ -54,27 +56,16 @@ const WhatWentWrongContactForm = () => {
     [formData]
   )
 
-  const resetButtonText = useCallback(() => {
-    setTimeout(() => {
-      setSuccess(false)
-      setFailure(false)
-    }, 3_000)
-  }, [])
-
-  const buttonText = useMemo(() => {
-    if (isSubmitting) {
-      return 'Sending...'
-    }
+  useEffect(() => {
     if (success) {
-      resetButtonText()
-      return 'Thanks for your help!'
+      addAlert('Thank you for your feedback!', 'success')
+      setSuccess(false)
     }
     if (failure) {
-      resetButtonText()
-      return 'Failed to send message.'
+      addAlert('Failed to send message.', 'error')
+      setFailure(false)
     }
-    return 'Send'
-  }, [isSubmitting, success, failure, resetButtonText])
+  }, [success, failure, addAlert])
 
   return (
     <>
@@ -101,7 +92,7 @@ const WhatWentWrongContactForm = () => {
             type="submit"
             disabled={isSubmitting || formData.message.length === 0}
           >
-            {buttonText}
+            {isSubmitting ? 'Sending...' : 'Send'}
           </Button>
         </form>
       </Box>

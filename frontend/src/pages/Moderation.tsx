@@ -8,7 +8,11 @@ import { logger } from '../services/logging'
 import PageTitle from '../styles/shared/PageTitle'
 import PageWrapper from '../styles/shared/PageWrapper'
 import ThumbnailGridDisplay from '../styles/shared/ThumbnailGallery'
-import { MODERATION_STATUS, PERMISSION_LEVEL } from '../types'
+import {
+  MODERATION_STATUS,
+  MODERATION_STATUS_LABEL,
+  PERMISSION_LEVEL,
+} from '../types'
 import Loading from '../sharedComponents/Loading'
 import Message from '../sharedComponents/Message'
 import ModerationPanel from '../sharedComponents/ModerationPanel'
@@ -18,24 +22,24 @@ import { PAGINATION_SIZE } from '../consts'
 import Pagination from '../sharedComponents/Pagination'
 import { Navigate } from 'react-router-dom'
 
-const tabs = [
-  { label: 'Pending', status: MODERATION_STATUS.AWAITING_MODERATION },
-  { label: 'Approved', status: MODERATION_STATUS.APPROVED },
-  { label: 'Rejected', status: MODERATION_STATUS.REJECTED },
-  { label: 'Submitting', status: MODERATION_STATUS.AWAITING_SUBMISSION },
+const STATUS_TABS = [
+  MODERATION_STATUS.AWAITING_SUBMISSION,
+  MODERATION_STATUS.AWAITING_MODERATION,
+  MODERATION_STATUS.APPROVED,
+  MODERATION_STATUS.REJECTED,
 ]
 
 // TODO - FIgure out why the wrong number of pages are loaded at start.
 
 const Moderation = () => {
-  const [tab, setTab] = useState(0)
+  const [filterTabIndex, setFilterTabIndex] = useState(0)
   const [page, setPage] = useState(1)
   const appUserDetails = useGlobalStore((state) => state.appUserDetails)
   const { data, isLoading, error, refetch } = useQuery({
-    queryKey: ['moderation', tabs[tab].status, page],
+    queryKey: ['moderation', filterTabIndex, page],
     queryFn: () =>
       getListAsModerator({
-        status: tabs[tab].status,
+        status: STATUS_TABS[filterTabIndex],
         size: PAGINATION_SIZE,
         offset: (page - 1) * PAGINATION_SIZE,
       }),
@@ -52,12 +56,18 @@ const Moderation = () => {
 
   const handleTabChange = useCallback(
     (_event: unknown, v: number) => {
-      setTab(v)
+      setFilterTabIndex(v)
       setPage(1)
       refetch()
     },
     [refetch]
   )
+
+  useEffect(() => {
+    if (error) {
+      logger.error('Error fetching moderation palettes', error, data?.success)
+    }
+  }, [error, data?.success])
 
   const content = useMemo(() => {
     if (isLoading || !data) return <Loading />
@@ -78,7 +88,7 @@ const Moderation = () => {
               <PaletteThumbnail palette={palette} />
               <ModerationPanel
                 refetch={refetch}
-                moderationStatus={tabs[tab].status}
+                moderationStatus={STATUS_TABS[filterTabIndex]}
                 paletteId={palette.id}
               />
             </Box>
@@ -87,7 +97,7 @@ const Moderation = () => {
         <Pagination total={data.total} onPageChange={handlePageChange} />
       </>
     )
-  }, [data, error, isLoading, refetch, tab, handlePageChange])
+  }, [data, error, isLoading, refetch, filterTabIndex, handlePageChange])
 
   if (
     !appUserDetails ||
@@ -99,13 +109,12 @@ const Moderation = () => {
   return (
     <PageWrapper width="full" minHeight>
       <PageTitle text="Moderation" marginBottom />
-      <Tabs value={tab} onChange={handleTabChange}>
-        {tabs.map((t, i) => (
+      <Tabs value={filterTabIndex} onChange={handleTabChange}>
+        {STATUS_TABS.map((key) => (
           <Tab
             disabled={isLoading}
-            key={i}
-            label={t.label}
-            sx={{ padding: 0 }}
+            key={key}
+            label={MODERATION_STATUS_LABEL[key]}
           />
         ))}
       </Tabs>
