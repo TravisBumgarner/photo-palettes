@@ -1,6 +1,7 @@
 import time
 import uuid
 from io import BytesIO
+from pydoc import html
 
 from fastapi import Form, UploadFile
 from PIL import Image
@@ -32,6 +33,7 @@ def validate_request(photo: UploadFile):
         }
 
     return None
+
 
 
 @palettes_router.post("/generate")

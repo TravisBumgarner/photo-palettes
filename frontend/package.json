@@ -6,8 +6,9 @@
   "scripts": {
     "dev": "vite",
     "dev:ios": "npx cap run ios",
-    "build": "tsc -b && vite build --mode production && node ../scripts/postbuild-ejs.js",
-    "build:development": "tsc -b && vite build --mode development && node ../scripts/postbuild-ejs.js",
+    "mv-html-to-ejs": "mv dist/index.html dist/index.ejs",
+    "build": "tsc -b && vite build --mode production && npm run mv-html-to-ejs",
+    "build:development": "tsc -b && vite build --mode development && npm run mv-html-to-ejs",
     "lint": "eslint .",
     "preview": "vite preview",
     "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,css,scss,md}\"",
