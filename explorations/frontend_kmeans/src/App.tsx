@@ -8,6 +8,8 @@ function App() {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [pixelArray, setPixelArray] = useState<number[][]>([]);
   const [kmeans, setKmeans] = useState<number[][] | null>(null);
+  const [scaling, setScaling] = useState<number>(1);
+  const [kmeansTime, setKmeansTime] = useState<number | null>(null);
 
   // Helper to read image and extract pixel data
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -18,13 +20,18 @@ function App() {
       reader.onload = function (event) {
         const img = new window.Image();
         img.onload = function () {
+          // SCALING: if 1, use original size; otherwise, resize
+          const scale = scaling;
+          const width = scale === 1 ? img.width : Math.round(img.width * scale);
+          const height =
+            scale === 1 ? img.height : Math.round(img.height * scale);
           const canvas = document.createElement("canvas");
-          canvas.width = img.width;
-          canvas.height = img.height;
+          canvas.width = width;
+          canvas.height = height;
           const ctx = canvas.getContext("2d");
           if (!ctx) return;
-          ctx.drawImage(img, 0, 0);
-          const imageData = ctx.getImageData(0, 0, img.width, img.height);
+          ctx.drawImage(img, 0, 0, width, height);
+          const imageData = ctx.getImageData(0, 0, width, height);
           const data = imageData.data;
           const pixels: number[][] = [];
           for (let i = 0; i < data.length; i += 4) {
@@ -43,14 +50,29 @@ function App() {
 
   const handleKmeans = () => {
     console.log("started");
+    const startTime = performance.now();
     const result = calculateKmeans(pixelArray, 5);
+    const endTime = performance.now();
     setKmeans(result);
+    setKmeansTime(endTime - startTime);
     console.log("ended");
   };
 
   return (
     <div className="App">
       <h1>File Picker Example</h1>
+      <label>
+        Scaling:
+        <input
+          type="number"
+          min="0.01"
+          max="1"
+          step="0.01"
+          value={scaling}
+          onChange={(e) => setScaling(Number(e.target.value))}
+          style={{ width: 60, marginLeft: 8 }}
+        />
+      </label>
       <input type="file" accept="image/*" onChange={handleFileChange} />
       {selectedFile && (
         <div>
@@ -66,13 +88,16 @@ function App() {
               .map((i) => i.join(", "))
               .join("\n")}
           </pre>
-          <p>Total pixels: {pixelArray.length}</p>
+          <p>Total pixels: {pixelArray.length.toLocaleString()}</p>
           <button onClick={handleKmeans}>Do Kmeans</button>
         </div>
       )}
       {kmeans && (
         <div>
           <h2>Kmeans Result:</h2>
+          {kmeansTime && (
+            <p>Kmeans took {kmeansTime.toFixed(2)} ms to compute</p>
+          )}
           {kmeans.map((color) => (
             <Color key={color.join(",")} rgb={color} />
           ))}
