@@ -49,12 +49,11 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-
 .env
 .next/
 .venv-root/
 .venv-backend/
-.env.prod
+
 
 # postgres
 postgres_data/
