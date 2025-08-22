@@ -7,7 +7,7 @@
     "dev": "vite",
     "dev:ios": "npx cap run ios",
     "build": "tsc -b && vite build --mode production",
-    "build:local": "tsc -b && vite build --mode local",
+    "build:development": "tsc -b && vite build --mode development",
     "lint": "eslint .",
     "preview": "vite preview",
     "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,css,scss,md}\"",
