@@ -1,6 +1,15 @@
 import express from 'express'
 import path from 'path'
 import { fileURLToPath } from 'url'
+import * as Sentry from '@sentry/node'
+
+Sentry.init({
+  dsn: 'https://09e385e8da03f5dbbdbf102e7ae6b53a@o196886.ingest.us.sentry.io/4509889456766977',
+
+  // Setting this option to true will send default PII data to Sentry.
+  // For example, automatic IP address collection on events
+  sendDefaultPii: true,
+})
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const app = express()
@@ -44,12 +53,24 @@ app.get(/.*/, async (req, res) => {
     }
 
     res.render('index', { ogTitle, ogImage })
-  } catch {
+  } catch (error) {
+    Sentry.captureException(error)
     res.render('index', {
       ogTitle: 'Photo Palettes',
       ogImage: '/static/og.png',
     })
   }
+})
+
+// The error handler must be registered before any other error middleware and after all controllers
+Sentry.setupExpressErrorHandler(app)
+
+// Optional fallthrough error handler
+app.use(function onError(err, req, res, next) {
+  // The error id is attached to `res.sentry` to be returned
+  // and optionally displayed to the user for support.
+  res.statusCode = 500
+  res.end(res.sentry + '\n')
 })
 
 app.listen(port, () => {
