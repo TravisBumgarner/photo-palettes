@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "vite",
     "dev:ios": "npx cap run ios",
-    "build:production": "tsc -b && vite build --mode production",
+    "build": "tsc -b && vite build --mode production",
     "build:local": "tsc -b && vite build --mode local",
     "lint": "eslint .",
     "preview": "vite preview",
@@ -49,6 +49,7 @@
   "devDependencies": {
     "@capacitor/cli": "^7.4.3",
     "@eslint/js": "^9.33.0",
+    "@swc/core": "^1.13.4",
     "@types/lodash": "^4.17.20",
     "@types/react": "^19.1.10",
     "@types/react-dom": "^19.1.7",
@@ -66,6 +67,6 @@
     "@rollup/rollup-linux-x64-gnu": "^4.46.3"
   },
   "engines": {
-    "node": ">=20.x"
+    "node": "22.18.x"
   }
 }

@@ -19,7 +19,8 @@ mkdir "$DEPLOY_DIR"
 # Copy everything from frontend/, including dotfiles and excluding node_modules/.next
 rsync -av "$LOCAL_DIR/" "$DEPLOY_DIR/" \
   --exclude=node_modules \
-  --exclude=.next
+  --exclude=android \
+  --exclude=ios 
 
 # Sanity check: confirm key files are copied
 echo "📁 Contents of deploy folder:"
