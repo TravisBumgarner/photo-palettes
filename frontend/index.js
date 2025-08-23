@@ -19,45 +19,64 @@ const frontendDist = path.join(__dirname, 'dist')
 app.set('view engine', 'ejs')
 app.set('views', frontendDist)
 
-app.use('/public', express.static(path.join(frontendDist, 'public')))
+// Serve static assets first
+app.use('/assets', express.static(path.join(frontendDist, 'assets')))
+app.use('/static', express.static(frontendDist)) // serve everything in dist, including og.png and favicon.png
+
+const IS_PRODUCTION = true // switch this manually. I don't want index.js to have a fancy setup.
+
+const base_url = IS_PRODUCTION
+  ? 'https://photo-palettes-backend-e167a56444f0.herokuapp.com'
+  : 'http://localhost:8000'
 
 const fetchFromDB = async (id) => {
-  const response = await fetch(
-    `https://photo-palettes-backend-e167a56444f0.herokuapp.com/palettes/id/${id}`
-  )
+  const response = await fetch(`${base_url}/palettes/id/${id}`)
   const data = await response.json()
+
   if (data.success) {
     return {
       name: data.palette.name,
-      ogPhotoUrl: data.palette.ogPhotoUrl,
+      photoUrl: data.palette.ogPhotoUrl,
+      colors: data.palette.colors.map((color) => color.hex),
     }
   }
   return null
 }
 
-app.get(/.*/, async (req, res) => {
+const BASE_TITLE = 'Photo Palettes'
+const BASE_DESCRIPTION = 'Find color inspiration in the everyday.'
+const BASE_IMAGE = 'https://photopalettes.com/static/og2.png' // I have no idea what the fuck is caching og.png but it's serving as an index.html file.
+
+// Match only non file routes.
+app.get(/^\/(?!.*\.[a-zA-Z0-9]+$).*/, async (req, res) => {
   try {
     const parts = req.path.split('/') // For a hit - ["", "palette", UUID]
-    let ogTitle = 'Photo Palettes'
-    let ogImage = '/static/og.png'
-
+    let ogTitle = BASE_TITLE
+    let ogImage = BASE_IMAGE
+    let ogDescription = BASE_DESCRIPTION
     if (parts[1] === 'palette') {
       const data = await fetchFromDB(parts[2])
+
       if (data && data.name) {
-        ogTitle = data.name
+        ogTitle = `${BASE_TITLE} - ${data.name}`
       }
 
-      if (data && data.ogPhotoUrl) {
-        ogImage = data.ogPhotoUrl
+      if (data && data.photoUrl) {
+        ogImage = data.photoUrl
+      }
+
+      if (data && data.colors) {
+        ogDescription = `${data.colors.join(' ')}\n${ogDescription}`
       }
     }
 
-    res.render('index', { ogTitle, ogImage })
+    res.render('index', { ogTitle, ogImage, ogDescription })
   } catch (error) {
     Sentry.captureException(error)
     res.render('index', {
-      ogTitle: 'Photo Palettes',
-      ogImage: '/static/og.png',
+      ogTitle: BASE_TITLE,
+      ogImage: BASE_IMAGE,
+      ogDescription: BASE_DESCRIPTION,
     })
   }
 })
