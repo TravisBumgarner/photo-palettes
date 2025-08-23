@@ -19,7 +19,9 @@ const frontendDist = path.join(__dirname, 'dist')
 app.set('view engine', 'ejs')
 app.set('views', frontendDist)
 
-app.use('/public', express.static(path.join(frontendDist, 'public')))
+// Serve static assets first
+app.use('/assets', express.static(path.join(frontendDist, 'assets')))
+app.use(express.static(frontendDist)) // serve everything in dist, including og.png and favicon.png
 
 const IS_PRODUCTION = false // switch this manually. I don't want index.js to have a fancy setup.
 
@@ -30,7 +32,7 @@ const base_url = IS_PRODUCTION
 const fetchFromDB = async (id) => {
   const response = await fetch(`${base_url}/palettes/id/${id}`)
   const data = await response.json()
-  console.log('fetchFromDB', data)
+
   if (data.success) {
     return {
       name: data.palette.name,
@@ -43,7 +45,12 @@ const fetchFromDB = async (id) => {
 
 const BASE_TITLE = 'Photo Palettes'
 const BASE_DESCRIPTION = 'Find color inspiration in the everyday.'
-const BASE_IMAGE = '/static/og.png'
+const BASE_IMAGE = 'https://photopalettes.com/og.png'
+
+app.use((req, res, next) => {
+  console.log('REQUEST:', req.url)
+  next()
+})
 
 app.get(/.*/, async (req, res) => {
   try {
@@ -63,7 +70,7 @@ app.get(/.*/, async (req, res) => {
       }
 
       if (data && data.colors) {
-        ogDescription = `${ogDescription} - ${data.colors.join(', ')}`
+        ogDescription = `${data.colors.join(' ')}\n${ogDescription}`
       }
     }
 
