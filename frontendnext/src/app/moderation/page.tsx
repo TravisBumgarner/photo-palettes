@@ -23,8 +23,6 @@ const tabs = [
   { label: 'Submitting', status: EModerationStatus.AWAITING_SUBMISSION },
 ]
 
-// TODO - FIgure out why the wrong number of pages are loaded at start.
-
 const Moderation = () => {
   const [tab, setTab] = useState(0)
   const [page, setPage] = useState(1)

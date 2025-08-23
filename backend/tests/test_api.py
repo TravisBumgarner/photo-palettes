@@ -4,6 +4,7 @@ import uuid
 import pytest
 import requests
 
+from database.models import ModerationStatus
 from database.queries.palettes import create_palette, delete_palette_by_id
 
 from .utils import (
@@ -55,6 +56,68 @@ def test_me_authorized():
     assert "email" in response.json()
     assert "id" in response.json()
     assert response.json()["email"] == os.getenv("TEST_USER_EMAIL")
+
+
+def test_get_palettes_list():
+    color = generate_color()
+    app_user_id = get_user_app_user_id()
+    palette_approved_1 = generate_palette(app_user_id)
+    palette_approved_1.colors.append(color)
+    create_palette(palette=palette_approved_1)
+
+    palette_approved_2 = generate_palette(app_user_id)
+    palette_approved_2.colors.append(color)
+    create_palette(palette=palette_approved_2)
+
+    palette_unapproved = generate_palette(app_user_id, moderation_status=ModerationStatus.REJECTED)
+    palette_unapproved.colors.append(color)
+    create_palette(palette=palette_unapproved)
+    try:
+        # A user, when requesting without a moderation status, should only see approved palettes
+        response = requests.get(f"{BASE_URL}/palettes", headers=get_user_auth_headers())
+        assert response.status_code == 200
+        assert "palettes" in response.json()
+        assert len(response.json()["palettes"]) == len([palette_approved_1, palette_approved_2])
+
+        # A user, when requesting with an approved moderation status, should see only the palettes with that status
+        response = requests.get(
+            f"{BASE_URL}/palettes?moderation_status={ModerationStatus.APPROVED}&app_user_id={app_user_id}",
+            headers=get_user_auth_headers(),
+        )
+        assert response.status_code == 200
+        assert "palettes" in response.json()
+        assert len(response.json()["palettes"]) == len([palette_approved_1, palette_approved_2])
+
+        # A user, when requesting with a rejected moderation status, should see only the palettes with that status
+        response = requests.get(
+            f"{BASE_URL}/palettes?moderation_status={ModerationStatus.REJECTED}&app_user_id={app_user_id}",
+            headers=get_user_auth_headers(),
+        )
+        assert response.status_code == 200
+        assert "palettes" in response.json()
+        assert len(response.json()["palettes"]) == len([palette_unapproved])
+
+        # A user, not the original author, should only see approved palettes.
+        response = requests.get(
+            f"{BASE_URL}/palettes?moderation_status={ModerationStatus.APPROVED}&app_user_id={app_user_id}",
+            headers=get_moderator_auth_headers(),
+        )
+        assert response.status_code == 200
+        assert "palettes" in response.json()
+        assert len(response.json()["palettes"]) == len([palette_approved_1, palette_approved_2])
+
+        # A user, not the original author, should not see rejected palettes.
+        response = requests.get(
+            f"{BASE_URL}/palettes?moderation_status={ModerationStatus.REJECTED}&app_user_id={app_user_id}",
+            headers=get_moderator_auth_headers(),
+        )
+        assert response.status_code == 200
+        assert "palettes" in response.json()
+        assert len(response.json()["palettes"]) == len([palette_approved_1, palette_approved_2])
+    finally:
+        delete_palette_by_id(palette_approved_1.id)
+        delete_palette_by_id(palette_approved_2.id)
+        delete_palette_by_id(palette_unapproved.id)
 
 
 def test_generate_palette_file_too_large():

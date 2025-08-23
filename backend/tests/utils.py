@@ -6,7 +6,7 @@ from dotenv import load_dotenv
 from supabase import create_client
 
 from config import get_config
-from database.models import Palette, PaletteColor
+from database.models import ModerationStatus, Palette, PaletteColor
 from database.queries.users import get_app_user_by_email
 
 # Load environment variables from tests/.env
@@ -83,7 +83,9 @@ def get_moderator_app_user_id() -> uuid.UUID:
         )
 
 
-def generate_palette(app_user_id: uuid.UUID):
+def generate_palette(
+    app_user_id: uuid.UUID, moderation_status: ModerationStatus = ModerationStatus.APPROVED
+):
     return Palette(
         app_user_id=app_user_id,
         name="Test Palette",
@@ -91,6 +93,7 @@ def generate_palette(app_user_id: uuid.UUID):
         og_photo_details="test_og_photo.jpg",
         blurhash="LKO2?U%2Tw=w]~RBVZRi};RPxuwH",
         aspect_ratio=1.0,
+        moderation_status=moderation_status,
     )
 
 

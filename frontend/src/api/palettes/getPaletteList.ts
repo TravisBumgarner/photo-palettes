@@ -1,7 +1,7 @@
 import { z } from 'zod'
 import config from '../../config'
 import { getToken } from '../../services/supabase'
-import { type EModerationStatus, zodPalette } from '../../types'
+import { zodPalette } from '../../types'
 
 const zodResponse = z.discriminatedUnion('success', [
   z.object({
@@ -15,24 +15,17 @@ const zodResponse = z.discriminatedUnion('success', [
   }),
 ])
 
-export const getPaletteListByAppUserId = async ({
-  appUserId,
-  status,
+const getPaletteList = async ({
   size,
   offset,
+  appUserId,
+  moderationStatus,
 }: {
-  appUserId: string
-  status: EModerationStatus
   size: number
   offset: number
+  appUserId?: string
+  moderationStatus?: number
 }) => {
-  if (!appUserId) {
-    return {
-      success: false,
-      error: 'No user found',
-    } as const
-  }
-
   const tokenResponse = await getToken()
 
   if (!tokenResponse) {
@@ -42,8 +35,15 @@ export const getPaletteListByAppUserId = async ({
     } as const
   }
 
+  const params = new URLSearchParams()
+  params.append('size', String(size))
+  params.append('offset', String(offset))
+  if (appUserId !== undefined) params.append('app_user_id', appUserId)
+  if (moderationStatus !== undefined)
+    params.append('moderation_status', `${moderationStatus}`)
+
   const response = await fetch(
-    `${config.apiUrl}/palettes/app_user_id/${appUserId}?status=${status}&size=${size}&offset=${offset}`,
+    `${config.apiUrl}/palettes?${params.toString()}`,
     {
       method: 'GET',
       headers: {
@@ -56,3 +56,5 @@ export const getPaletteListByAppUserId = async ({
 
   return zodResponse.parse(json)
 }
+
+export default getPaletteList
