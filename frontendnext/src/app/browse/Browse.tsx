@@ -2,7 +2,7 @@
 
 import { useQuery } from '@tanstack/react-query'
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import getPaletteListModerated from '../../api/palettes/getPaletteListModerated'
+import getPaletteList from '../../api/palettes/getPaletteList'
 import { logger } from '../../services/logging'
 import { PageWrapper, ThumbnailGridDisplay } from '../../styles/Shared'
 import Loading from '../_sharedComponents/Loading'
@@ -16,8 +16,7 @@ const Browse = () => {
 
   const { data, isLoading, error } = useQuery({
     queryKey: ['palettes', page],
-    queryFn: () =>
-      getPaletteListModerated({ size: PAGINATION_SIZE, offset: (page - 1) * PAGINATION_SIZE }),
+    queryFn: () => getPaletteList({ size: PAGINATION_SIZE, offset: (page - 1) * PAGINATION_SIZE }),
     retry: false,
   })
 

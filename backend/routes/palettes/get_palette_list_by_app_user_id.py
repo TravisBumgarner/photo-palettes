@@ -1,7 +1,9 @@
 from uuid import UUID
 
+from fastapi import Query
+
 from database.models import ModerationStatus
-from database.queries.palettes import get_palettes_by_app_user_id, get_palettes_count
+from database.queries.palettes import get_palettes, get_palettes_count
 from database.queries.users import get_app_user_by_app_user_id
 from middleware.auth import RequestWithAuthState
 from services.logger import log_error
@@ -12,7 +14,11 @@ from .palette_response_models import map_palette_array_to_response
 
 @palettes_router.get("/app_user_id/{app_user_id}")
 async def get_by_app_user_id(
-    request: RequestWithAuthState, app_user_id: str, status: ModerationStatus
+    request: RequestWithAuthState,
+    app_user_id: str,
+    status: ModerationStatus,
+    size: int = Query(25, ge=1, le=100),
+    offset: int = Query(0, ge=0),
 ):
     try:
         user_exists = get_app_user_by_app_user_id(UUID(app_user_id))
@@ -28,17 +34,13 @@ async def get_by_app_user_id(
         else:
             is_viewing_other_user = request.state.app_user_id != UUID(app_user_id)
 
-        # If the user is viewing another user's palettes, only show approved palettes.
-        if is_viewing_other_user:
-            palettes = get_palettes_by_app_user_id(
-                app_user_id=UUID(app_user_id),
-                status=ModerationStatus.APPROVED,
-            )
-        else:
-            palettes = get_palettes_by_app_user_id(
-                app_user_id=UUID(app_user_id),
-                status=status,
-            )
+        palettes = get_palettes(
+            app_user_id=UUID(app_user_id),
+            moderation_status=ModerationStatus.APPROVED if is_viewing_other_user else status,
+            offset=offset,
+            size=size,
+        )
+
         total_count = get_palettes_count(moderation_status=status, app_user_id=UUID(app_user_id))
 
         return {

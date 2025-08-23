@@ -2,7 +2,6 @@ import uuid
 from typing import List, Optional
 
 from sqlalchemy.orm import Session, joinedload
-from sqlmodel import desc
 
 from database.engine import db_engine
 from database.models import ModerationStatus, Palette
@@ -20,15 +19,17 @@ def get_palettes_count(
 
 
 def get_palettes(
-    moderation_status: ModerationStatus | None = None,
+    moderation_status: ModerationStatus | None = ModerationStatus.APPROVED,
     size: int | None = None,
     offset: int | None = None,
+    app_user_id: Optional[uuid.UUID] = None,
 ) -> List[Palette]:
     with Session(db_engine) as session:
         query = session.query(Palette).options(joinedload(Palette.colors))
-        if moderation_status is not None:
-            query = query.filter(Palette.moderation_status == moderation_status)
-        query = query.order_by(desc(Palette.created_at))
+        query = query.filter(Palette.moderation_status == moderation_status)
+        if app_user_id is not None:
+            query = query.filter(Palette.app_user_id == app_user_id)
+        query = query.order_by(Palette.created_at.asc())
         if offset is not None:
             query = query.offset(offset)
         if size is not None:
@@ -84,20 +85,6 @@ def update_palette(palette_id: uuid.UUID, **kwargs):
         session.commit()
         session.refresh(palette)
         return palette
-
-
-def get_palettes_by_app_user_id(
-    app_user_id: uuid.UUID,
-    status: ModerationStatus = ModerationStatus.APPROVED,
-) -> List[Palette]:
-    with Session(db_engine) as session:
-        return (
-            session.query(Palette)
-            .options(joinedload(Palette.colors))
-            .filter(Palette.app_user_id == app_user_id)
-            .filter(Palette.moderation_status == status)
-            .all()
-        )
 
 
 def delete_palette_by_id(palette_id: uuid.UUID) -> bool:

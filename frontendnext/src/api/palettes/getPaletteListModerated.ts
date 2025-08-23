@@ -15,7 +15,7 @@ const zodResponse = z.discriminatedUnion('success', [
   }),
 ])
 
-const getPaletteListModerated = async ({ size, offset }: { size: number; offset: number }) => {
+const getPaletteList = async ({ size, offset }: { size: number; offset: number }) => {
   const token = await getToken()
   const response = await fetch(`${config.apiUrl}/palettes?size=${size}&offset=${offset}`, {
     method: 'GET',
@@ -28,4 +28,4 @@ const getPaletteListModerated = async ({ size, offset }: { size: number; offset:
   return zodResponse.parse(json)
 }
 
-export default getPaletteListModerated
+export default getPaletteList

@@ -1,9 +1,10 @@
-import React, { useCallback, useMemo, useState } from 'react'
+import React, { useCallback, useMemo } from 'react'
 import { PAGINATION_SIZE } from '../consts'
 import { Button } from '@mui/material'
 
 interface PaginationProps {
   total: number
+  currentPage: number
   onPageChange: (page: number) => void
 }
 
@@ -35,27 +36,27 @@ const PageNumber = ({
   )
 }
 
-const Pagination: React.FC<PaginationProps> = ({ total, onPageChange }) => {
-  const [currentPage, setCurrentPage] = useState(1)
+const Pagination: React.FC<PaginationProps> = ({
+  total,
+  currentPage,
+  onPageChange,
+}) => {
   const totalPages = Math.ceil(total / PAGINATION_SIZE)
 
   const handlePrev = useCallback(() => {
     if (currentPage > 1) {
-      setCurrentPage(currentPage - 1)
       onPageChange?.(currentPage - 1)
     }
   }, [currentPage, onPageChange])
 
   const handleNext = useCallback(() => {
     if (currentPage < totalPages) {
-      setCurrentPage(currentPage + 1)
       onPageChange?.(currentPage + 1)
     }
   }, [currentPage, onPageChange, totalPages])
 
   const handlePage = useCallback(
     (page: number) => {
-      setCurrentPage(page)
       onPageChange?.(page)
     },
     [onPageChange]

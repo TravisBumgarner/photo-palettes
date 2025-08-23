@@ -29,8 +29,6 @@ const STATUS_TABS = [
   MODERATION_STATUS.REJECTED,
 ]
 
-// TODO - FIgure out why the wrong number of pages are loaded at start.
-
 const Moderation = () => {
   const [filterTabIndex, setFilterTabIndex] = useState(0)
   const [page, setPage] = useState(1)
@@ -94,10 +92,14 @@ const Moderation = () => {
             </Box>
           ))}
         </ThumbnailGridDisplay>
-        <Pagination total={data.total} onPageChange={handlePageChange} />
+        <Pagination
+          currentPage={page}
+          total={data.total}
+          onPageChange={handlePageChange}
+        />
       </>
     )
-  }, [data, error, isLoading, refetch, filterTabIndex, handlePageChange])
+  }, [data, error, isLoading, refetch, filterTabIndex, handlePageChange, page])
 
   if (
     !appUserDetails ||

@@ -3,7 +3,7 @@
 import { Tab, Tabs } from '@mui/material'
 import { useQuery } from '@tanstack/react-query'
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import { getPaletteListByAppUserId } from '../api/palettes/getPaletteListByAppUserId'
+import getPaletteList from '../api/palettes/getPaletteList'
 import { logger } from '../services/logging'
 import useGlobalStore from '../store'
 import PageTitle from '../styles/shared/PageTitle'
@@ -37,14 +37,14 @@ const Profile = () => {
     appUserDetails?.id ||
     ''
 
-  const { data, isLoading, error, refetch } = useQuery({
+  const { data, isLoading, error } = useQuery({
     queryKey: ['profile', appUserId, filterTabIndex, page],
     queryFn: () =>
-      getPaletteListByAppUserId({
+      getPaletteList({
         size: PAGINATION_SIZE,
         offset: (page - 1) * PAGINATION_SIZE,
         appUserId,
-        status: STATUS_TABS[filterTabIndex],
+        moderationStatus: STATUS_TABS[filterTabIndex],
       }),
     retry: false,
   })
@@ -63,13 +63,10 @@ const Profile = () => {
     }
   }, [appUserId, navigate])
 
-  const handleTabChange = useCallback(
-    (_event: unknown, v: number) => {
-      setFilterTabIndex(v)
-      refetch()
-    },
-    [refetch]
-  )
+  const handleTabChange = useCallback((_event: unknown, v: number) => {
+    setFilterTabIndex(v)
+    setPage(1)
+  }, [])
 
   useEffect(() => {
     if (error) {
@@ -92,10 +89,14 @@ const Profile = () => {
             <PaletteThumbnail key={palette.id} palette={palette} />
           ))}
         </ThumbnailGridDisplay>
-        <Pagination total={data.total} onPageChange={handlePageChange} />
+        <Pagination
+          currentPage={page}
+          total={data.total}
+          onPageChange={handlePageChange}
+        />
       </>
     )
-  }, [data, error, isLoading, handlePageChange])
+  }, [data, error, isLoading, handlePageChange, page])
 
   const isProfileUser = appUserId === appUserDetails?.id
 
