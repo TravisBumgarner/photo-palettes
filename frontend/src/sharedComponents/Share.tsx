@@ -84,22 +84,30 @@ const Share = ({
       </Tooltip>
 
       <Tooltip title="Share on Bluesky" arrow sx={{ borderRadius: '0%' }}>
-        <BlueskyShareButton
-          url={absoluteUrl}
-          title={`${text}\n#photopalettes #colorpalettes #color`}
-        >
-          <BlueskyIcon size={ICON_SIZE} />
-        </BlueskyShareButton>
+        <>
+          {' '}
+          {/* Tooltip gets big mad if a child has a title prop */}
+          <BlueskyShareButton
+            url={absoluteUrl}
+            title={`${text}\n#photopalettes #colorpalettes #color`}
+          >
+            <BlueskyIcon size={ICON_SIZE} />
+          </BlueskyShareButton>
+        </>
       </Tooltip>
 
       <Tooltip title="Share on Twitter" arrow>
-        <TwitterShareButton
-          url={absoluteUrl}
-          title={text}
-          hashtags={['palette', 'color', 'photopalette']}
-        >
-          <TwitterIcon size={ICON_SIZE} />
-        </TwitterShareButton>
+        <>
+          {' '}
+          {/* Tooltip gets big mad if a child has a title prop */}
+          <TwitterShareButton
+            url={absoluteUrl}
+            title={text}
+            hashtags={['palette', 'color', 'photopalette']}
+          >
+            <TwitterIcon size={ICON_SIZE} />
+          </TwitterShareButton>
+        </>
       </Tooltip>
 
       {/* Not working */}
@@ -110,9 +118,13 @@ const Share = ({
       </Tooltip> */}
 
       <Tooltip title="Share on Threads" arrow>
-        <ThreadsShareButton url={absoluteUrl} title={text}>
-          <ThreadsIcon size={ICON_SIZE} />
-        </ThreadsShareButton>
+        <>
+          {' '}
+          {/* Tooltip gets big mad if a child has a title prop */}
+          <ThreadsShareButton url={absoluteUrl} title={text}>
+            <ThreadsIcon size={ICON_SIZE} />
+          </ThreadsShareButton>
+        </>
       </Tooltip>
 
       {/* Not currently working. */}
