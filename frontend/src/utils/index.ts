@@ -47,8 +47,8 @@ export const getUserColorFromUUID = (uuid: string) => {
 
 export const loadUserIntoState = async () => {
   const { user } = await getUser()
-
   const store = useGlobalStore.getState()
+
   if (user) {
     store.setAuthId(user.id)
     const userDetails = await getMe()
