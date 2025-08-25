@@ -23,7 +23,7 @@ app.set('views', frontendDist)
 app.use('/assets', express.static(path.join(frontendDist, 'assets')))
 app.use('/static', express.static(frontendDist)) // serve everything in dist, including og.png and favicon.png
 
-const IS_PRODUCTION = false // switch this manually. I don't want index.js to have a fancy setup.
+const IS_PRODUCTION = true // switch this manually. I don't want index.js to have a fancy setup.
 
 const base_url = IS_PRODUCTION
   ? 'https://photo-palettes-backend-e167a56444f0.herokuapp.com'
