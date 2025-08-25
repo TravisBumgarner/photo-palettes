@@ -20,7 +20,7 @@ async def get_by_id(request: RequestWithAuthState, id: str):
 
         return {
             "success": True,
-            "palette": map_palette_to_response(palette[0], palette[1]),
+            "palette": map_palette_to_response(palette),
         }
     except Exception as e:
         log_error(e, "get_palette_by_id")

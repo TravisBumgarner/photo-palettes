@@ -1,5 +1,5 @@
 import uuid
-from typing import List, Optional, Tuple
+from typing import List, Optional
 
 from sqlalchemy import func
 from sqlalchemy.orm import Session, aliased, joinedload
@@ -24,7 +24,7 @@ def get_palettes(
     size: int | None = None,
     offset: int | None = None,
     app_user_id: Optional[uuid.UUID] = None,
-) -> List[Tuple[Palette, int]]:
+) -> List[Palette]:
     with Session(db_engine) as session:
         favorites_alias = aliased(PaletteFavorite)
         query = (
@@ -41,11 +41,17 @@ def get_palettes(
             query = query.offset(offset)
         if size is not None:
             query = query.limit(size)
-        # Returns list of (Palette, favorites_count)
-        return query.all()
+        results = query.all()  # List of (Palette, favorites_count)
+        palettes = []
+        # Note - this query is not of concern because at max it fetches 9 items. Should the max
+        # count be changed in the future it might have performance hits.
+        for palette, favorites_count in results:
+            palette.favorites_count = favorites_count
+            palettes.append(palette)
+        return palettes
 
 
-def get_palette_by_id(palette_id: uuid.UUID) -> Optional[Tuple[Palette, int]]:
+def get_palette_by_id(palette_id: uuid.UUID) -> Optional[Palette]:
     with Session(db_engine) as session:
         result = (
             session.query(Palette, func.count(PaletteFavorite.palette_id).label("favorites_count"))
@@ -55,7 +61,11 @@ def get_palette_by_id(palette_id: uuid.UUID) -> Optional[Tuple[Palette, int]]:
             .group_by(Palette.id)
             .first()
         )
-        return result  # (Palette, favorites_count)
+        if result is None:
+            return None
+        palette, favorites_count = result
+        palette.favorites_count = favorites_count
+        return palette
 
 
 def update_palette_moderation_status(palette_id: uuid.UUID, moderation_status: ModerationStatus):

@@ -63,6 +63,7 @@ class ModerationStatus(IntEnum):
 
 class Palette(Base):
     __tablename__ = "palettes"
+    favorites_count: int = 0  # Not a DB column, used for runtime annotation
 
     id: Mapped[uuid.UUID] = mapped_column(primary_key=True, default=uuid.uuid4)
     app_user_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("app_users.id"))
