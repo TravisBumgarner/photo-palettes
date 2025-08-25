@@ -39,13 +39,19 @@ async def get_palette_list(
 
         # Can't view other user's unapproved palettes
         moderation_status = ModerationStatus.APPROVED if limit_to_approved else moderation_status
-
+        print("a)")
         palettes = get_palettes(
             size=size,
             offset=offset,
             moderation_status=moderation_status,
             app_user_id=app_user_id,
         )
+
+        # for palette in palettes:
+        #     print("Palette ID:", palette.id)
+        #     print("Palette Name:", palette.name)
+        #     print("favorites", palette.favorites_count)
+        print("b)")
         total_count = get_palettes_count(
             moderation_status=moderation_status, app_user_id=app_user_id
         )
@@ -56,7 +62,7 @@ async def get_palette_list(
         }
 
     except Exception as error:
-        log_error(error, "get_palette_list_moderated")
+        log_error(error, "get_palette_list")
 
         return {
             "success": False,

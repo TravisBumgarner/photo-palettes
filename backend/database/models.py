@@ -4,6 +4,7 @@ from enum import IntEnum
 from typing import List
 
 from sqlalchemy import UUID, DateTime, Float, ForeignKey, Integer, String
+from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from .engine import Base
@@ -36,6 +37,7 @@ class AppUser(Base):
     permission_level: Mapped[PermissionLevel] = mapped_column(
         Integer, default=PermissionLevel.MEMBER
     )
+    favorites = relationship("PaletteFavorite", back_populates="user")
 
 
 class PaletteColor(Base):
@@ -78,6 +80,24 @@ class Palette(Base):
     )
     blurhash: Mapped[str] = mapped_column(String)
     aspect_ratio: Mapped[float] = mapped_column(Float)
+    favorites: Mapped[List["PaletteFavorite"]] = relationship(
+        "PaletteFavorite", back_populates="palette", cascade="all, delete-orphan"
+    )
+
+    @hybrid_property
+    def favorites_count(self):
+        return len(self.favorites)
+
+
+class PaletteFavorite(Base):
+    __tablename__ = "palette_favorites"
+
+    app_user_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("app_users.id"), primary_key=True)
+    palette_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("palettes.id"), primary_key=True)
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.now)
+
+    user: Mapped["AppUser"] = relationship("AppUser", back_populates="favorites")
+    palette: Mapped["Palette"] = relationship("Palette", back_populates="favorites")
 
 
 class FeatureRequestStatus(IntEnum):

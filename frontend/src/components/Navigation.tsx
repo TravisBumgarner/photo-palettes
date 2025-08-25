@@ -2,7 +2,14 @@
 
 import { GiHamburgerMenu } from 'react-icons/gi'
 
-import { Box, IconButton, Menu, MenuItem, Typography } from '@mui/material'
+import {
+  Box,
+  IconButton,
+  Menu,
+  MenuItem,
+  Tooltip,
+  Typography,
+} from '@mui/material'
 import { useCallback, useMemo, useState } from 'react'
 import { ROUTES } from '../consts'
 import useGlobalStore from '../store'
@@ -112,15 +119,17 @@ const Navigation = () => {
         >
           {ROUTES.create.label}
         </Link>
-        <IconButton
-          aria-label="menu"
-          aria-controls={open ? 'navigation-menu' : undefined}
-          aria-haspopup="true"
-          aria-expanded={open ? 'true' : undefined}
-          onClick={handleClick}
-        >
-          <GiHamburgerMenu />
-        </IconButton>
+        <Tooltip title="Menu">
+          <IconButton
+            aria-label="menu"
+            aria-controls={open ? 'navigation-menu' : undefined}
+            aria-haspopup="true"
+            aria-expanded={open ? 'true' : undefined}
+            onClick={handleClick}
+          >
+            <GiHamburgerMenu />
+          </IconButton>
+        </Tooltip>
         <Menu
           slotProps={{ paper: { sx: { borderRadius: BORDER_RADIUS.ZERO.PX } } }}
           id="navigation-menu"

@@ -25,7 +25,12 @@ def get_palettes(
     app_user_id: Optional[uuid.UUID] = None,
 ) -> List[Palette]:
     with Session(db_engine) as session:
-        query = session.query(Palette).options(joinedload(Palette.colors))
+        query = (
+            session.query(Palette)
+            .options(joinedload(Palette.colors))
+            .options(joinedload(Palette.favorites))
+        )
+
         query = query.filter(Palette.moderation_status == moderation_status)
         if app_user_id is not None:
             query = query.filter(Palette.app_user_id == app_user_id)
@@ -42,6 +47,7 @@ def get_palette_by_id(palette_id: uuid.UUID) -> Palette | None:
         return (
             session.query(Palette)
             .options(joinedload(Palette.colors))
+            .options(joinedload(Palette.favorites))
             .filter(Palette.id == palette_id)
             .first()
         )

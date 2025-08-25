@@ -77,6 +77,8 @@ export const zodPalette = z.object({
   appUserId: z.string(),
   blurhash: z.string(),
   aspectRatio: z.number(),
+  favoritesCount: z.number(),
+  hasUserFavorited: z.boolean(),
   colors: z.array(
     z.object({
       id: z.string(),

@@ -14,6 +14,7 @@ import { useQuery } from '@tanstack/react-query'
 import { getPaletteById } from '../api/palettes/getPaletteById'
 import { useParams } from 'react-router-dom'
 import Loading from '../sharedComponents/Loading'
+import Favorite from '../sharedComponents/Favorite'
 
 const Palette = () => {
   const params = useParams()
@@ -77,6 +78,13 @@ const Palette = () => {
               #{data.palette.appUserId.slice(0, 6)}
             </Link>
           </Box>
+        </Box>
+        <Box>
+          <Favorite
+            paletteId={data.palette.id}
+            favorites={data.palette.favoritesCount}
+            hasUserFavorited={data.palette.hasUserFavorited}
+          />
         </Box>
         <Box
           sx={{
