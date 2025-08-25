@@ -1,34 +1,59 @@
 import { IconButton, Tooltip } from '@mui/material'
-import { FaHeart } from 'react-icons/fa'
-import { FaRegHeart } from 'react-icons/fa'
+import { FaHeart, FaRegHeart } from 'react-icons/fa'
+import { useMutation } from '@tanstack/react-query'
 import addToFavorites from '../api/favorites/addToFavorites'
 import removeFromFavorites from '../api/favorites/removeFromFavorites'
+
+interface FavoriteProps {
+  paletteId: string
+  favorites: number
+  hasUserFavorited: boolean
+}
+
+import { useState } from 'react'
 
 const Favorite = ({
   paletteId,
   favorites,
   hasUserFavorited,
-}: {
-  paletteId: string
-  favorites: number
-  hasUserFavorited: boolean
-}) => {
-  const handleAddToFavoritesClick = () => {
-    addToFavorites({ paletteId })
-  }
-  const handleRemoveFromFavoritesClick = () => {
-    removeFromFavorites({ paletteId })
-  }
+}: FavoriteProps) => {
+  const [localFavorited, setLocalFavorited] = useState(hasUserFavorited)
+  const [localFavorites, setLocalFavorites] = useState(favorites)
+
+  const addMutation = useMutation({
+    mutationFn: () => addToFavorites({ paletteId }),
+    onMutate: async () => {
+      setLocalFavorited(true)
+      setLocalFavorites((prev) => prev + 1)
+    },
+    onError: () => {
+      setLocalFavorited(false)
+      setLocalFavorites((prev) => prev - 1)
+    },
+  })
+
+  const removeMutation = useMutation({
+    mutationFn: () => removeFromFavorites({ paletteId }),
+    onMutate: async () => {
+      setLocalFavorited(false)
+      setLocalFavorites((prev) => prev - 1)
+    },
+    onError: () => {
+      setLocalFavorited(true)
+      setLocalFavorites((prev) => prev + 1)
+    },
+  })
 
   return (
     <div>
-      <span>{favorites}</span>
-      {hasUserFavorited ? (
+      <span>{localFavorites}</span>
+      {localFavorited ? (
         <Tooltip title="Remove from favorites">
           <IconButton
             aria-label="unfavorite-palette"
             aria-controls={'unfavorite-palette'}
-            onClick={handleRemoveFromFavoritesClick}
+            onClick={() => removeMutation.mutate()}
+            disabled={removeMutation.isPending}
           >
             <FaHeart color="red" />
           </IconButton>
@@ -38,7 +63,8 @@ const Favorite = ({
           <IconButton
             aria-label="favorite-palette"
             aria-controls={'favorite-palette'}
-            onClick={handleAddToFavoritesClick}
+            onClick={() => addMutation.mutate()}
+            disabled={addMutation.isPending}
           >
             <FaRegHeart color="grey" />
           </IconButton>

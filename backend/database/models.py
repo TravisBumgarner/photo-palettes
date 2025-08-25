@@ -43,7 +43,7 @@ class PaletteColor(Base):
     __tablename__ = "palette_colors"
 
     id: Mapped[uuid.UUID] = mapped_column(primary_key=True, default=uuid.uuid4)
-    palette_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("palettes.id"))
+    palette_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("palettes.id", ondelete="CASCADE"))
     hex: Mapped[str] = mapped_column(String)
     r: Mapped[int] = mapped_column(Integer)
     g: Mapped[int] = mapped_column(Integer)
@@ -67,9 +67,9 @@ class Palette(Base):
     has_user_favorited: bool = False  # Not a DB column, used for runtime annotation
 
     id: Mapped[uuid.UUID] = mapped_column(primary_key=True, default=uuid.uuid4)
-    app_user_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("app_users.id"))
+    app_user_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("app_users.id", ondelete="CASCADE"))
     created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.now)
-    name: Mapped[str] = mapped_column(String, max_length=50)
+    name: Mapped[str] = mapped_column(String(50))
     photo_details: Mapped[str] = mapped_column(String)
     og_photo_details: Mapped[str] = mapped_column(String)
     colors: Mapped[List["PaletteColor"]] = relationship(
@@ -86,24 +86,25 @@ class Palette(Base):
     )
 
     def check_has_user_favorited(self, user_id: uuid.UUID, session) -> bool:
-        return (
-            session.execute(
-                select(
-                    exists().where(
-                        PaletteFavorite.palette_id == self.id,
-                        PaletteFavorite.app_user_id == user_id,
-                    )
+        return session.execute(
+            select(
+                exists().where(
+                    PaletteFavorite.palette_id == self.id,
+                    PaletteFavorite.app_user_id == user_id,
                 )
-            ).scalar_one()
-            is not None
-        )
+            )
+        ).scalar_one()
 
 
 class PaletteFavorite(Base):
     __tablename__ = "palette_favorites"
 
-    app_user_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("app_users.id"), primary_key=True)
-    palette_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("palettes.id"), primary_key=True)
+    app_user_id: Mapped[uuid.UUID] = mapped_column(
+        ForeignKey("app_users.id", ondelete="CASCADE"), primary_key=True
+    )
+    palette_id: Mapped[uuid.UUID] = mapped_column(
+        ForeignKey("palettes.id", ondelete="CASCADE"), primary_key=True
+    )
     created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.now)
 
     user: Mapped["AppUser"] = relationship("AppUser", back_populates="favorites")
@@ -120,8 +121,10 @@ class FeatureRequestVote(Base):
     __tablename__ = "feature_request_votes"
 
     id: Mapped[uuid.UUID] = mapped_column(primary_key=True, default=uuid.uuid4)
-    request_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("feature_requests.id"))
-    app_user_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("app_users.id"))
+    request_id: Mapped[uuid.UUID] = mapped_column(
+        ForeignKey("feature_requests.id", ondelete="CASCADE")
+    )
+    app_user_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("app_users.id", ondelete="CASCADE"))
 
     request: Mapped["FeatureRequest"] = relationship("FeatureRequest", back_populates="votes")
 
