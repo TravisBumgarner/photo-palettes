@@ -1,3 +1,5 @@
+import traceback
+
 import sentry_sdk
 
 from config import get_config
@@ -12,3 +14,4 @@ def log_error(error: Exception, name: str):
             sentry_sdk.capture_exception(error)
     else:
         print("sentry_error", name, error)  # noqa: T201
+        print(traceback.format_exc())  # noqa: T201

@@ -1,10 +1,11 @@
 import uuid
-from typing import List, Optional
+from typing import List, Optional, Tuple
 
-from sqlalchemy.orm import Session, joinedload
+from sqlalchemy import func
+from sqlalchemy.orm import Session, aliased, joinedload
 
 from database.engine import db_engine
-from database.models import ModerationStatus, Palette
+from database.models import ModerationStatus, Palette, PaletteFavorite
 
 
 def get_palettes_count(
@@ -23,34 +24,38 @@ def get_palettes(
     size: int | None = None,
     offset: int | None = None,
     app_user_id: Optional[uuid.UUID] = None,
-) -> List[Palette]:
+) -> List[Tuple[Palette, int]]:
     with Session(db_engine) as session:
+        favorites_alias = aliased(PaletteFavorite)
         query = (
-            session.query(Palette)
+            session.query(Palette, func.count(favorites_alias.palette_id).label("favorites_count"))
+            .outerjoin(favorites_alias, Palette.id == favorites_alias.palette_id)
             .options(joinedload(Palette.colors))
-            .options(joinedload(Palette.favorites))
+            .filter(Palette.moderation_status == moderation_status)
         )
-
-        query = query.filter(Palette.moderation_status == moderation_status)
         if app_user_id is not None:
             query = query.filter(Palette.app_user_id == app_user_id)
+        query = query.group_by(Palette.id)
         query = query.order_by(Palette.created_at.asc())
         if offset is not None:
             query = query.offset(offset)
         if size is not None:
             query = query.limit(size)
+        # Returns list of (Palette, favorites_count)
         return query.all()
 
 
-def get_palette_by_id(palette_id: uuid.UUID) -> Palette | None:
+def get_palette_by_id(palette_id: uuid.UUID) -> Optional[Tuple[Palette, int]]:
     with Session(db_engine) as session:
-        return (
-            session.query(Palette)
+        result = (
+            session.query(Palette, func.count(PaletteFavorite.palette_id).label("favorites_count"))
+            .outerjoin(PaletteFavorite, Palette.id == PaletteFavorite.palette_id)
             .options(joinedload(Palette.colors))
-            .options(joinedload(Palette.favorites))
             .filter(Palette.id == palette_id)
+            .group_by(Palette.id)
             .first()
         )
+        return result  # (Palette, favorites_count)
 
 
 def update_palette_moderation_status(palette_id: uuid.UUID, moderation_status: ModerationStatus):

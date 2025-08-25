@@ -22,8 +22,8 @@ const Favorite = ({
 
   return (
     <div>
-      <span>{favorites} favorites</span>
-      {!hasUserFavorited ? (
+      <span>{favorites}</span>
+      {hasUserFavorited ? (
         <Tooltip title="Remove from favorites">
           <IconButton
             aria-label="unfavorite-palette"

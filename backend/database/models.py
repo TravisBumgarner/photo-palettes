@@ -3,8 +3,7 @@ from datetime import datetime
 from enum import IntEnum
 from typing import List
 
-from sqlalchemy import UUID, DateTime, Float, ForeignKey, Integer, String
-from sqlalchemy.ext.hybrid import hybrid_property
+from sqlalchemy import UUID, DateTime, Float, ForeignKey, Integer, String, exists, select
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from .engine import Base
@@ -84,9 +83,14 @@ class Palette(Base):
         "PaletteFavorite", back_populates="palette", cascade="all, delete-orphan"
     )
 
-    @hybrid_property
-    def favorites_count(self):
-        return len(self.favorites)
+    def has_user_favorited(self, user_id: uuid.UUID, session) -> bool:
+        return session.execute(
+            select(
+                exists().where(
+                    PaletteFavorite.palette_id == self.id, PaletteFavorite.app_user_id == user_id
+                )
+            )
+        ).scalar_one()
 
 
 class PaletteFavorite(Base):

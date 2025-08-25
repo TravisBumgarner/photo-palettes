@@ -28,10 +28,10 @@ class PaletteResponse(BaseModel):
     blurhash: str
     aspectRatio: float
     favoritesCount: int
-    hasUserFavorited: bool
+    # hasUserFavorited: bool
 
 
-def map_palette_to_response(palette: Palette) -> PaletteResponse:
+def map_palette_to_response(palette: Palette, favorites_count: int) -> PaletteResponse:
     return PaletteResponse(
         id=palette.id,
         name=palette.name,
@@ -52,13 +52,13 @@ def map_palette_to_response(palette: Palette) -> PaletteResponse:
         moderationStatus=palette.moderation_status,
         blurhash=palette.blurhash,
         aspectRatio=palette.aspect_ratio,
-        favoritesCount=palette.favorites_count,
-        hasUserFavorited=False,
+        favoritesCount=favorites_count,
+        # hasUserFavorited=palette.has_user_favorited,
     )
 
 
 def map_palette_array_to_response(palettes: List[Palette]) -> List[PaletteResponse]:
-    return [map_palette_to_response(palette) for palette in palettes]
+    return [map_palette_to_response(palette[0], palette[1]) for palette in palettes]
 
 
 class GeneratePaletteResponse(BaseModel):

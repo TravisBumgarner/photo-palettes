@@ -12,7 +12,6 @@ from .palette_response_models import map_palette_to_response
 async def get_by_id(request: RequestWithAuthState, id: str):
     try:
         palette = get_palette_by_id(UUID(id))
-
         if not palette:
             return {
                 "success": False,
@@ -21,7 +20,7 @@ async def get_by_id(request: RequestWithAuthState, id: str):
 
         return {
             "success": True,
-            "palette": map_palette_to_response(palette),
+            "palette": map_palette_to_response(palette[0], palette[1]),
         }
     except Exception as e:
         log_error(e, "get_palette_by_id")

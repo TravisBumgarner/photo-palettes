@@ -27,7 +27,7 @@ def validate_request(request: RequestWithAuthState):
 @favorites_router.post("/add")
 async def add_to_favorites(request: RequestWithAuthState, body: AddToFavoritesRequest):
     validate_request(request)
-    print("we get here")
+
     if request.state.app_user_id is None:
         # Cheap way to get type validation on call to add_palette_to_favorites
         return

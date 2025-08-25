@@ -4,6 +4,7 @@ import { BORDER_RADIUS, SPACING } from '../styles/styleConsts'
 import { type TPalette } from '../types'
 import { getUserColorFromUUID } from '../utils'
 import Link from './Link'
+import Favorite from './Favorite'
 // import { blurHashToDataURL } from "../utils/blurhashToDataURL";
 // import { useMemo } from "react";
 
@@ -65,11 +66,24 @@ const PaletteThumbnail = ({ palette }: { palette: TPalette }) => {
             ))}
           </Box>
         )}
-
-        <Typography variant="body1">{palette.name}</Typography>
-        <Typography variant="body2">
-          By {getUserColorFromUUID(palette.appUserId)}
-        </Typography>
+        <Box
+          sx={{
+            display: 'flex',
+            justifyContent: 'space-between',
+          }}
+        >
+          <Box>
+            <Typography variant="body1">{palette.name}</Typography>
+            <Typography variant="body2">
+              By {getUserColorFromUUID(palette.appUserId)}
+            </Typography>
+          </Box>
+          <Favorite
+            paletteId={palette.id}
+            favorites={palette.favoritesCount}
+            hasUserFavorited={false}
+          />
+        </Box>
       </Box>
     </Link>
   )

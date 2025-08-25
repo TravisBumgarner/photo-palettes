@@ -60,31 +60,31 @@ const Palette = () => {
         <Box
           sx={{
             display: 'flex',
-            alignItems: 'baseline',
-            gap: SPACING.MEDIUM.PX,
+            flexDirection: 'row',
+            justifyContent: 'space-between',
           }}
         >
-          <PageTitle text={data.palette.name} />
           <Box
             sx={{
               display: 'flex',
-              flexDirection: 'row',
-              gap: '10px',
               alignItems: 'baseline',
+              gap: SPACING.SMALL.PX,
             }}
           >
+            <PageTitle text={data.palette.name} />
             {'By'}
             <Link href={`/profile/${data.palette.appUserId}`}>
               #{data.palette.appUserId.slice(0, 6)}
             </Link>
           </Box>
-        </Box>
-        <Box>
-          <Favorite
-            paletteId={data.palette.id}
-            favorites={data.palette.favoritesCount}
-            hasUserFavorited={data.palette.hasUserFavorited}
-          />
+
+          <Box>
+            <Favorite
+              paletteId={data.palette.id}
+              favorites={data.palette.favoritesCount}
+              hasUserFavorited={false}
+            />
+          </Box>
         </Box>
         <Box
           sx={{
