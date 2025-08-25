@@ -10,6 +10,12 @@ type Response =
 const client = createClient(config.supabaseUrl, config.supabaseAnonKey)
 
 export async function getUser() {
+  const sessionExists = await client.auth.getSession()
+
+  if (!sessionExists.data.session) {
+    return { user: null, success: true }
+  }
+
   const { data, error } = await client.auth.getUser()
   if (error) {
     logger.error(`Get user failed ${JSON.stringify(error)}`)
