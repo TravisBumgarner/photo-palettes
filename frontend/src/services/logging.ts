@@ -3,8 +3,12 @@ import config from '../config'
 
 export const logger = {
   info: (message: string) => {
-    // eslint-disable-next-line no-console
-    console.log(message)
+    if (config.isProduction) {
+      Sentry.captureMessage(message)
+    } else {
+      // eslint-disable-next-line no-console
+      console.log(message)
+    }
   },
   error: (...args: (string | Error | unknown)[]) => {
     if (config.isProduction) {
