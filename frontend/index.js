@@ -21,7 +21,7 @@ app.set('views', frontendDist)
 
 // Serve static assets first
 app.use('/assets', express.static(path.join(frontendDist, 'assets')))
-app.use('/static', express.static(frontendDist)) // serve everything in dist, including og.png and favicon.png
+app.use('/public', express.static(frontendDist)) // serve everything in dist, including og.png and favicon.png
 
 const IS_PRODUCTION = true // switch this manually. I don't want index.js to have a fancy setup.
 
@@ -45,7 +45,7 @@ const fetchFromDB = async (id) => {
 
 const BASE_TITLE = 'Photo Palettes'
 const BASE_DESCRIPTION = 'Find color inspiration in the everyday.'
-const BASE_IMAGE = 'https://photopalettes.com/static/og2.png' // I have no idea what the fuck is caching og.png but it's serving as an index.html file.
+const BASE_IMAGE = 'https://photopalettes.com/public/og.png'
 const BASE_URL = 'https://photopalettes.com'
 
 // Match only non file routes.

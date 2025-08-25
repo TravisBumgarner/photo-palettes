@@ -58,6 +58,10 @@ const Create = () => {
 
   const onDrop = useCallback(
     async (acceptedFiles: File[]) => {
+      if (acceptedFiles.length === 0) {
+        // An error was thrown, it's handled internally by Dropzone.tsx
+        return
+      }
       setUploadStatus('UPLOADING')
       const photo = acceptedFiles[0]
       const resizedPhoto = await resizeImage(photo)
