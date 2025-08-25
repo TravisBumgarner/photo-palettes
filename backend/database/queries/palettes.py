@@ -47,11 +47,14 @@ def get_palettes(
         # count be changed in the future it might have performance hits.
         for palette, favorites_count in results:
             palette.favorites_count = favorites_count
+            palette.has_user_favorited = palette.check_has_user_favorited(app_user_id, session)
             palettes.append(palette)
         return palettes
 
 
-def get_palette_by_id(palette_id: uuid.UUID) -> Optional[Palette]:
+def get_palette_by_id(
+    palette_id: uuid.UUID, app_user_id: Optional[uuid.UUID] = None
+) -> Optional[Palette]:
     with Session(db_engine) as session:
         result = (
             session.query(Palette, func.count(PaletteFavorite.palette_id).label("favorites_count"))
@@ -65,6 +68,7 @@ def get_palette_by_id(palette_id: uuid.UUID) -> Optional[Palette]:
             return None
         palette, favorites_count = result
         palette.favorites_count = favorites_count
+        palette.has_user_favorited = palette.check_has_user_favorited(app_user_id, session)
         return palette
 
 

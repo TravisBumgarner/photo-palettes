@@ -82,7 +82,7 @@ const Palette = () => {
             <Favorite
               paletteId={data.palette.id}
               favorites={data.palette.favoritesCount}
-              hasUserFavorited={false}
+              hasUserFavorited={data.palette.hasUserFavorited}
             />
           </Box>
         </Box>

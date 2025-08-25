@@ -34,7 +34,7 @@ async def delete_palette(
     request: RequestWithAuthState,
     id: str,
 ):
-    palette = get_palette_by_id(uuid.UUID(id))
+    palette = get_palette_by_id(uuid.UUID(id), request.state.app_user_id)
     if not palette:
         return {"success": False, "error": "Palette not found"}
 

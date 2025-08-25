@@ -11,7 +11,7 @@ from .palette_response_models import map_palette_to_response
 @palettes_router.get("/id/{id}")
 async def get_by_id(request: RequestWithAuthState, id: str):
     try:
-        palette = get_palette_by_id(UUID(id))
+        palette = get_palette_by_id(UUID(id), request.state.app_user_id)
         if not palette:
             return {
                 "success": False,

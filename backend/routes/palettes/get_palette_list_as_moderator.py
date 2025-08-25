@@ -32,7 +32,12 @@ def get_list_as_moderator(
         return validation_error
 
     try:
-        palettes = get_palettes(moderation_status=status, size=size, offset=offset)
+        palettes = get_palettes(
+            moderation_status=status,
+            size=size,
+            offset=offset,
+            app_user_id=request.state.app_user_id,
+        )
         total_count = get_palettes_count(moderation_status=status)
 
         return {

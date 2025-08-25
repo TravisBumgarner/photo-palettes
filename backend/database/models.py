@@ -64,6 +64,7 @@ class ModerationStatus(IntEnum):
 class Palette(Base):
     __tablename__ = "palettes"
     favorites_count: int = 0  # Not a DB column, used for runtime annotation
+    has_user_favorited: bool = False  # Not a DB column, used for runtime annotation
 
     id: Mapped[uuid.UUID] = mapped_column(primary_key=True, default=uuid.uuid4)
     app_user_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("app_users.id"))
@@ -84,14 +85,18 @@ class Palette(Base):
         "PaletteFavorite", back_populates="palette", cascade="all, delete-orphan"
     )
 
-    def has_user_favorited(self, user_id: uuid.UUID, session) -> bool:
-        return session.execute(
-            select(
-                exists().where(
-                    PaletteFavorite.palette_id == self.id, PaletteFavorite.app_user_id == user_id
+    def check_has_user_favorited(self, user_id: uuid.UUID, session) -> bool:
+        return (
+            session.execute(
+                select(
+                    exists().where(
+                        PaletteFavorite.palette_id == self.id,
+                        PaletteFavorite.app_user_id == user_id,
+                    )
                 )
-            )
-        ).scalar_one()
+            ).scalar_one()
+            is not None
+        )
 
 
 class PaletteFavorite(Base):

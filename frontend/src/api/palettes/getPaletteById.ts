@@ -38,6 +38,6 @@ export const getPaletteById = async (id: string) => {
     },
   })
   const json = await response.json()
-
+  console.log('ruda', json)
   return zodResponse.parse(json)
 }

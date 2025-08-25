@@ -32,7 +32,9 @@ async def create(
     palette_request: PaletteRequest,
 ):
     try:
-        palette = get_palette_by_id(uuid.UUID(palette_request.palette_id))
+        palette = get_palette_by_id(
+            uuid.UUID(palette_request.palette_id), request.state.app_user_id
+        )
 
         if not palette:
             return {

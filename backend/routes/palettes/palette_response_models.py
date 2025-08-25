@@ -28,7 +28,7 @@ class PaletteResponse(BaseModel):
     blurhash: str
     aspectRatio: float
     favoritesCount: int
-    # hasUserFavorited: bool
+    hasUserFavorited: bool
 
 
 def map_palette_to_response(palette: Palette) -> PaletteResponse:
@@ -53,7 +53,7 @@ def map_palette_to_response(palette: Palette) -> PaletteResponse:
         blurhash=palette.blurhash,
         aspectRatio=palette.aspect_ratio,
         favoritesCount=palette.favorites_count,
-        # hasUserFavorited=palette.has_user_favorited,
+        hasUserFavorited=palette.has_user_favorited,
     )
 
 

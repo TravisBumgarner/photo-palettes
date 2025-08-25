@@ -81,7 +81,7 @@ const PaletteThumbnail = ({ palette }: { palette: TPalette }) => {
           <Favorite
             paletteId={palette.id}
             favorites={palette.favoritesCount}
-            hasUserFavorited={false}
+            hasUserFavorited={palette.hasUserFavorited}
           />
         </Box>
       </Box>
