@@ -8,6 +8,7 @@ export type TSwatch = {
 export type TGeneratedPalette = TSwatch[]
 
 export const PERMISSION_LEVEL = {
+  VISITOR: -1,
   MEMBER: 0,
   MODERATOR: 2,
   ADMIN: 5,

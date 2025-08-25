@@ -9,8 +9,7 @@ const Error500 = () => {
   return (
     <PageWrapper width="small" minHeight staticContent>
       <Typography variant="h2">
-        Ohhh <span style={{ color: '#5AAAAD' }}>#5AAAAD</span>{' '}
-        <span style={{ color: '#C000D3' }}>#C000D3</span>
+        Ohhh <span style={{ color: '#C0DEAD' }}>#C0DEAD</span>{' '}
       </Typography>
       <Typography>Something went wrong.</Typography>
       <WhatWentWrongContactForm />

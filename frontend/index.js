@@ -46,6 +46,7 @@ const fetchFromDB = async (id) => {
 const BASE_TITLE = 'Photo Palettes'
 const BASE_DESCRIPTION = 'Find color inspiration in the everyday.'
 const BASE_IMAGE = 'https://photopalettes.com/static/og2.png' // I have no idea what the fuck is caching og.png but it's serving as an index.html file.
+const BASE_URL = 'https://photopalettes.com'
 
 // Match only non file routes.
 app.get(/^\/(?!.*\.[a-zA-Z0-9]+$).*/, async (req, res) => {
@@ -54,6 +55,8 @@ app.get(/^\/(?!.*\.[a-zA-Z0-9]+$).*/, async (req, res) => {
     let ogTitle = BASE_TITLE
     let ogImage = BASE_IMAGE
     let ogDescription = BASE_DESCRIPTION
+    let ogUrl = BASE_URL
+
     if (parts[1] === 'palette') {
       const data = await fetchFromDB(parts[2])
 
@@ -68,15 +71,18 @@ app.get(/^\/(?!.*\.[a-zA-Z0-9]+$).*/, async (req, res) => {
       if (data && data.colors) {
         ogDescription = `${data.colors.join(' ')}\n${ogDescription}`
       }
+
+      ogUrl = `${BASE_URL}/palette/${parts[2]}`
     }
 
-    res.render('index', { ogTitle, ogImage, ogDescription })
+    res.render('index', { ogTitle, ogImage, ogDescription, ogUrl })
   } catch (error) {
     Sentry.captureException(error)
     res.render('index', {
       ogTitle: BASE_TITLE,
       ogImage: BASE_IMAGE,
       ogDescription: BASE_DESCRIPTION,
+      ogUrl: BASE_URL,
     })
   }
 })
