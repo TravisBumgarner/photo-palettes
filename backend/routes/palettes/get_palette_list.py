@@ -1,3 +1,4 @@
+import logging
 import uuid
 
 from fastapi import Query
@@ -19,9 +20,19 @@ async def get_palette_list(
     offset: int = Query(0, ge=0),
     moderation_status: ModerationStatus = ModerationStatus.APPROVED,
     app_user_id: uuid.UUID | None = None,
+    favorites_only: bool = False,
 ):
     try:
         limit_to_approved = True
+
+        if favorites_only and app_user_id:
+            # User can only view their own favorites so throw an error if they try and view someone
+            # else's
+            logging.error("User was able to access favorites without proper permissions")
+            return {
+                "success": False,
+                "error": "User does not have permission.",
+            }
 
         if app_user_id:
             user_exists = get_app_user_by_app_user_id(app_user_id)
@@ -44,11 +55,14 @@ async def get_palette_list(
             size=size,
             offset=offset,
             moderation_status=moderation_status,
-            app_user_id=app_user_id,
+            app_user_id=request.state.app_user_id if favorites_only else app_user_id,
+            favorites_only=favorites_only,
         )
 
         total_count = get_palettes_count(
-            moderation_status=moderation_status, app_user_id=app_user_id
+            moderation_status=moderation_status,
+            app_user_id=request.state.app_user_id if favorites_only else app_user_id,
+            favorites_only=favorites_only,
         )
         return {
             "success": True,

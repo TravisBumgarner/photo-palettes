@@ -33,6 +33,11 @@ export const ROUTES = {
     href: '/profile',
     label: 'Profile',
   },
+  favorites: {
+    key: 'favorites',
+    href: '/favorites',
+    label: 'Favorites',
+  },
   create: {
     key: 'create',
     href: '/create',

@@ -59,6 +59,7 @@ def test_me_authorized():
 
 
 def test_get_palettes_list():
+    # If you're seeing errors with this test, stop using test user and test moderator to do things.
     color = generate_color()
     app_user_id = get_user_app_user_id()
     palette_approved_1 = generate_palette(app_user_id)

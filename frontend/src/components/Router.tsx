@@ -17,6 +17,7 @@ import Donations from '../pages/Donations'
 import Palette from '../pages/Palette'
 import useGlobalStore from '../store'
 import { PERMISSION_LEVEL } from '../types'
+import Favorites from '../pages/Favorites'
 
 const PrivateRoute = () => {
   const appUserDetails = useGlobalStore((state) => state.appUserDetails)
@@ -67,6 +68,7 @@ const Router = () => (
       <Route path="/create" element={<Create />} />
       <Route path="/logout" element={<Logout />} />
       <Route path="/profile" element={<Profile />} />
+      <Route path="/favorites" element={<Favorites />} />
     </Route>
 
     <Route path="/error500" element={<Error500 />} />

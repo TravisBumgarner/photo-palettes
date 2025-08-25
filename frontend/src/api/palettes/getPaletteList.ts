@@ -20,11 +20,13 @@ const getPaletteList = async ({
   offset,
   appUserId,
   moderationStatus,
+  favoritesOnly,
 }: {
   size: number
   offset: number
   appUserId?: string
   moderationStatus?: number
+  favoritesOnly?: boolean
 }) => {
   const tokenResponse = await getToken()
 
@@ -41,6 +43,8 @@ const getPaletteList = async ({
   if (appUserId !== undefined) params.append('app_user_id', appUserId)
   if (moderationStatus !== undefined)
     params.append('moderation_status', `${moderationStatus}`)
+  if (favoritesOnly !== undefined)
+    params.append('favorites_only', `${favoritesOnly}`)
 
   const response = await fetch(
     `${config.apiUrl}/palettes?${params.toString()}`,

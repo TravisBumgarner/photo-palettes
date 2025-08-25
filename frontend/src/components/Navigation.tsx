@@ -24,9 +24,16 @@ const DropdownLinks = ({ onClose }: { onClose: () => void }) => {
     if (!appUserDetails) return ['login', 'signup', 'featureRequests']
 
     if (appUserDetails.permissionLevel >= PERMISSION_LEVEL.MODERATOR)
-      return ['profile', 'moderation', 'feedback', 'featureRequests', 'logout']
+      return [
+        'favorites',
+        'profile',
+        'moderation',
+        'feedback',
+        'featureRequests',
+        'logout',
+      ]
 
-    return ['profile', 'feedback', 'featureRequests', 'logout']
+    return ['favorites', 'profile', 'feedback', 'featureRequests', 'logout']
   }, [appUserDetails])
   return (
     <>
