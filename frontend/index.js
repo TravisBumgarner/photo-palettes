@@ -75,7 +75,6 @@ app.get(/^\/(?!.*\.[a-zA-Z0-9]+$).*/, async (req, res) => {
       ogUrl = `${BASE_URL}/palette/${parts[2]}`
     }
 
-    console.log('setting ogurk', ogUrl)
     res.render('index', { ogTitle, ogImage, ogDescription, ogUrl })
   } catch (error) {
     Sentry.captureException(error)
