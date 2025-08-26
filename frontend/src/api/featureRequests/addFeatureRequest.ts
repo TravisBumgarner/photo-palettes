@@ -9,7 +9,7 @@ const zodSchemaForAddFeatureRequest = z.discriminatedUnion('success', [
   }),
   z.object({
     success: z.literal(false),
-    error: z.string(),
+    message: z.string(),
   }),
 ])
 
