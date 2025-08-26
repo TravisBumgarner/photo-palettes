@@ -5,6 +5,7 @@ from sqlalchemy.orm import Session, joinedload
 
 from database.engine import db_engine
 from database.models import ModerationStatus, Palette, PaletteFavorite, SortBy
+from database.queries.shared import ORDER_BY
 
 
 def add_palette_to_favorites(
@@ -41,12 +42,6 @@ def get_app_user_favorites(
     sort_by: SortBy = SortBy.NEWEST,
 ) -> list[Palette]:
     with Session(db_engine) as session:
-        order_by = {
-            SortBy.NEWEST: Palette.created_at.desc(),
-            SortBy.FAVORITES_COUNT: func.count(PaletteFavorite.palette_id).desc(),
-            SortBy.OLDEST: Palette.created_at.asc(),
-        }
-
         query = (
             session.query(
                 Palette,
@@ -57,7 +52,7 @@ def get_app_user_favorites(
             .filter(Palette.moderation_status == ModerationStatus.APPROVED)
             .filter(PaletteFavorite.app_user_id == app_user_id)
             .group_by(Palette.id)
-            .order_by(order_by.get(sort_by, Palette.created_at.asc()))
+            .order_by(ORDER_BY.get(sort_by, Palette.created_at.asc()))
             .offset(offset)
             .limit(size)
         )
