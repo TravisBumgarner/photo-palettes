@@ -11,17 +11,20 @@ import Message from '../sharedComponents/Message'
 import PaletteThumbnail from '../sharedComponents/PaletteThumbnail'
 import Pagination from '../sharedComponents/Pagination'
 import { PAGINATION_SIZE } from '../consts'
+import { type ESortBy, SORT_BY } from '../types'
+import SortsAndFilters from '../sharedComponents/SortsAndFilters'
 
 const Browse = () => {
   const [page, setPage] = useState(1)
+  const [sortBy, setSortBy] = useState<ESortBy>(SORT_BY.NEWEST)
 
-  const { data, isLoading, error } = useQuery({
-    queryKey: ['palettes', page],
+  const { data, isLoading, error, refetch } = useQuery({
+    queryKey: ['palettes', page, sortBy],
     queryFn: () =>
       getPaletteList({
         size: PAGINATION_SIZE,
         offset: (page - 1) * PAGINATION_SIZE,
-        
+        sortBy: sortBy,
       }),
     retry: false,
   })
@@ -65,9 +68,14 @@ const Browse = () => {
 
   return (
     <PageWrapper width="full" minHeight>
+      <SortsAndFilters sortBy={sortBy} setSortBy={setSortBy} />
       <ThumbnailGridDisplay>
         {data.palettes.map((palette) => (
-          <PaletteThumbnail key={palette.id} palette={palette} />
+          <PaletteThumbnail
+            refetch={refetch}
+            key={palette.id}
+            palette={palette}
+          />
         ))}
       </ThumbnailGridDisplay>
       <Pagination

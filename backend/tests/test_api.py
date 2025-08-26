@@ -59,6 +59,7 @@ def test_me_authorized():
 
 
 def test_get_palettes_list():
+    # If you're seeing errors with this test, stop using test user and test moderator to do things.
     color = generate_color()
     app_user_id = get_user_app_user_id()
     palette_approved_1 = generate_palette(app_user_id)
@@ -77,43 +78,57 @@ def test_get_palettes_list():
         response = requests.get(f"{BASE_URL}/palettes", headers=get_user_auth_headers())
         assert response.status_code == 200
         assert "palettes" in response.json()
-        assert len(response.json()["palettes"]) == len([palette_approved_1, palette_approved_2])
+        response_ids = [uuid.UUID(palette["id"]) for palette in response.json()["palettes"]]
+        assert palette_approved_1.id in response_ids
+        assert palette_approved_2.id in response_ids
+        assert palette_unapproved.id not in response_ids
 
         # A user, when requesting with an approved moderation status, should see only the palettes with that status
         response = requests.get(
-            f"{BASE_URL}/palettes?moderation_status={ModerationStatus.APPROVED}&app_user_id={app_user_id}",
+            f"{BASE_URL}/palettes?moderation_status={ModerationStatus.APPROVED}&author_user_id={app_user_id}",
             headers=get_user_auth_headers(),
         )
         assert response.status_code == 200
         assert "palettes" in response.json()
-        assert len(response.json()["palettes"]) == len([palette_approved_1, palette_approved_2])
+        response_ids = [uuid.UUID(palette["id"]) for palette in response.json()["palettes"]]
+        assert palette_approved_1.id in response_ids
+        assert palette_approved_2.id in response_ids
+        assert palette_unapproved.id not in response_ids
 
         # A user, when requesting with a rejected moderation status, should see only the palettes with that status
         response = requests.get(
-            f"{BASE_URL}/palettes?moderation_status={ModerationStatus.REJECTED}&app_user_id={app_user_id}",
+            f"{BASE_URL}/palettes?moderation_status={ModerationStatus.REJECTED}&author_user_id={app_user_id}",
             headers=get_user_auth_headers(),
         )
         assert response.status_code == 200
         assert "palettes" in response.json()
-        assert len(response.json()["palettes"]) == len([palette_unapproved])
+        response_ids = [uuid.UUID(palette["id"]) for palette in response.json()["palettes"]]
+        assert palette_unapproved.id in response_ids
+        assert palette_approved_1.id not in response_ids
 
         # A user, not the original author, should only see approved palettes.
         response = requests.get(
-            f"{BASE_URL}/palettes?moderation_status={ModerationStatus.APPROVED}&app_user_id={app_user_id}",
+            f"{BASE_URL}/palettes?moderation_status={ModerationStatus.APPROVED}&author_user_id={app_user_id}",
             headers=get_moderator_auth_headers(),
         )
         assert response.status_code == 200
         assert "palettes" in response.json()
-        assert len(response.json()["palettes"]) == len([palette_approved_1, palette_approved_2])
+        response_ids = [uuid.UUID(palette["id"]) for palette in response.json()["palettes"]]
+        assert palette_approved_1.id in response_ids
+        assert palette_approved_2.id in response_ids
+        assert palette_unapproved.id not in response_ids
 
         # A user, not the original author, should not see rejected palettes.
         response = requests.get(
-            f"{BASE_URL}/palettes?moderation_status={ModerationStatus.REJECTED}&app_user_id={app_user_id}",
+            f"{BASE_URL}/palettes?moderation_status={ModerationStatus.REJECTED}&author_user_id={app_user_id}",
             headers=get_moderator_auth_headers(),
         )
         assert response.status_code == 200
         assert "palettes" in response.json()
-        assert len(response.json()["palettes"]) == len([palette_approved_1, palette_approved_2])
+        response_ids = [uuid.UUID(palette["id"]) for palette in response.json()["palettes"]]
+        assert palette_unapproved.id not in response_ids
+        assert palette_approved_1.id in response_ids
+        assert palette_approved_2.id in response_ids
     finally:
         delete_palette_by_id(palette_approved_1.id)
         delete_palette_by_id(palette_approved_2.id)

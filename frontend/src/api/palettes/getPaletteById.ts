@@ -38,6 +38,5 @@ export const getPaletteById = async (id: string) => {
     },
   })
   const json = await response.json()
-
   return zodResponse.parse(json)
 }

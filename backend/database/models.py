@@ -1,9 +1,9 @@
 import uuid
 from datetime import datetime
-from enum import IntEnum
+from enum import Enum, IntEnum
 from typing import List
 
-from sqlalchemy import UUID, DateTime, Float, ForeignKey, Integer, String
+from sqlalchemy import UUID, DateTime, Float, ForeignKey, Integer, String, exists, select
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from .engine import Base
@@ -36,13 +36,14 @@ class AppUser(Base):
     permission_level: Mapped[PermissionLevel] = mapped_column(
         Integer, default=PermissionLevel.MEMBER
     )
+    favorites = relationship("PaletteFavorite", back_populates="user")
 
 
 class PaletteColor(Base):
     __tablename__ = "palette_colors"
 
     id: Mapped[uuid.UUID] = mapped_column(primary_key=True, default=uuid.uuid4)
-    palette_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("palettes.id"))
+    palette_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("palettes.id", ondelete="CASCADE"))
     hex: Mapped[str] = mapped_column(String)
     r: Mapped[int] = mapped_column(Integer)
     g: Mapped[int] = mapped_column(Integer)
@@ -60,13 +61,21 @@ class ModerationStatus(IntEnum):
     REJECTED = 2
 
 
+class SortBy(Enum):
+    NEWEST = "newest"
+    FAVORITES_COUNT = "favorites_count"
+    OLDEST = "oldest"
+
+
 class Palette(Base):
     __tablename__ = "palettes"
+    favorites_count: int = 0  # Not a DB column, used for runtime annotation
+    has_user_favorited: bool = False  # Not a DB column, used for runtime annotation
 
     id: Mapped[uuid.UUID] = mapped_column(primary_key=True, default=uuid.uuid4)
-    app_user_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("app_users.id"))
+    app_user_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("app_users.id", ondelete="CASCADE"))
     created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.now)
-    name: Mapped[str] = mapped_column(String, max_length=50)
+    name: Mapped[str] = mapped_column(String(50))
     photo_details: Mapped[str] = mapped_column(String)
     og_photo_details: Mapped[str] = mapped_column(String)
     colors: Mapped[List["PaletteColor"]] = relationship(
@@ -78,6 +87,34 @@ class Palette(Base):
     )
     blurhash: Mapped[str] = mapped_column(String)
     aspect_ratio: Mapped[float] = mapped_column(Float)
+    favorites: Mapped[List["PaletteFavorite"]] = relationship(
+        "PaletteFavorite", back_populates="palette", cascade="all, delete-orphan"
+    )
+
+    def check_has_user_favorited(self, user_id: uuid.UUID, session) -> bool:
+        return session.execute(
+            select(
+                exists().where(
+                    PaletteFavorite.palette_id == self.id,
+                    PaletteFavorite.app_user_id == user_id,
+                )
+            )
+        ).scalar_one()
+
+
+class PaletteFavorite(Base):
+    __tablename__ = "palette_favorites"
+
+    app_user_id: Mapped[uuid.UUID] = mapped_column(
+        ForeignKey("app_users.id", ondelete="CASCADE"), primary_key=True
+    )
+    palette_id: Mapped[uuid.UUID] = mapped_column(
+        ForeignKey("palettes.id", ondelete="CASCADE"), primary_key=True
+    )
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.now)
+
+    user: Mapped["AppUser"] = relationship("AppUser", back_populates="favorites")
+    palette: Mapped["Palette"] = relationship("Palette", back_populates="favorites")
 
 
 class FeatureRequestStatus(IntEnum):
@@ -90,8 +127,10 @@ class FeatureRequestVote(Base):
     __tablename__ = "feature_request_votes"
 
     id: Mapped[uuid.UUID] = mapped_column(primary_key=True, default=uuid.uuid4)
-    request_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("feature_requests.id"))
-    app_user_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("app_users.id"))
+    request_id: Mapped[uuid.UUID] = mapped_column(
+        ForeignKey("feature_requests.id", ondelete="CASCADE")
+    )
+    app_user_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("app_users.id", ondelete="CASCADE"))
 
     request: Mapped["FeatureRequest"] = relationship("FeatureRequest", back_populates="votes")
 

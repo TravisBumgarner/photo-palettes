@@ -11,7 +11,7 @@ from database import engine, models
 from middleware.auth import create_auth_middleware
 from middleware.cors import setup_cors
 from middleware.filesize import LimitUploadSizeMiddleware
-from routes import feature_requests, ok, palettes, users
+from routes import favorites, feature_requests, ok, palettes, users
 
 config = get_config()
 
@@ -52,3 +52,4 @@ app.include_router(ok.router)
 app.include_router(users.users_router, prefix="/users")
 app.include_router(palettes.palettes_router, prefix="/palettes")
 app.include_router(feature_requests.feature_requests_router, prefix="/feature_requests")
+app.include_router(favorites.favorites_router, prefix="/favorites")

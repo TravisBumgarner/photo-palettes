@@ -10,7 +10,7 @@ import PageTitle from '../styles/shared/PageTitle'
 import PageWrapper from '../styles/shared/PageWrapper'
 import ThumbnailGridDisplay from '../styles/shared/ThumbnailGallery'
 import { SPACING } from '../styles/styleConsts'
-import { MODERATION_STATUS, MODERATION_STATUS_LABEL } from '../types'
+import { MODERATION_STATUS, MODERATION_STATUS_LABEL, SORT_BY } from '../types'
 import { getContrastColor, getUserColorFromUUID } from '../utils'
 import Loading from '../sharedComponents/Loading'
 import Message from '../sharedComponents/Message'
@@ -32,19 +32,20 @@ const Profile = () => {
   const navigate = useNavigate()
   const appUserDetails = useGlobalStore((state) => state.appUserDetails)
 
-  const appUserId =
+  const authorUserId =
     (Array.isArray(params.id) ? params.id[0] : params.id) ||
     appUserDetails?.id ||
     ''
 
-  const { data, isLoading, error } = useQuery({
-    queryKey: ['profile', appUserId, filterTabIndex, page],
+  const { data, isLoading, error, refetch } = useQuery({
+    queryKey: ['profile', authorUserId, filterTabIndex, page],
     queryFn: () =>
       getPaletteList({
         size: PAGINATION_SIZE,
         offset: (page - 1) * PAGINATION_SIZE,
-        appUserId,
+        authorUserId,
         moderationStatus: STATUS_TABS[filterTabIndex],
+        sortBy: SORT_BY.NEWEST,
       }),
     retry: false,
   })
@@ -58,10 +59,10 @@ const Profile = () => {
   }, [error])
 
   useEffect(() => {
-    if (!appUserId) {
+    if (!authorUserId) {
       navigate('/error404')
     }
-  }, [appUserId, navigate])
+  }, [authorUserId, navigate])
 
   const handleTabChange = useCallback((_event: unknown, v: number) => {
     setFilterTabIndex(v)
@@ -86,7 +87,11 @@ const Profile = () => {
       <>
         <ThumbnailGridDisplay>
           {data.palettes.map((palette) => (
-            <PaletteThumbnail key={palette.id} palette={palette} />
+            <PaletteThumbnail
+              refetch={refetch}
+              key={palette.id}
+              palette={palette}
+            />
           ))}
         </ThumbnailGridDisplay>
         <Pagination
@@ -96,11 +101,11 @@ const Profile = () => {
         />
       </>
     )
-  }, [data, error, isLoading, handlePageChange, page])
+  }, [data, error, isLoading, handlePageChange, page, refetch])
 
-  const isProfileUser = appUserId === appUserDetails?.id
+  const isProfileUser = authorUserId === appUserDetails?.id
 
-  const displayName = getUserColorFromUUID(appUserId)
+  const displayName = getUserColorFromUUID(authorUserId)
 
   return (
     <PageWrapper width="full" minHeight>

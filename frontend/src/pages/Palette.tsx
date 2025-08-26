@@ -9,24 +9,21 @@ import ModerationPanel from '../sharedComponents/ModerationPanel'
 import PageTitle from '../styles/shared/PageTitle'
 import PageWrapper from '../styles/shared/PageWrapper'
 import Share from '../sharedComponents/Share'
-import { useCallback } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { getPaletteById } from '../api/palettes/getPaletteById'
 import { useParams } from 'react-router-dom'
 import Loading from '../sharedComponents/Loading'
+import Favorite from '../sharedComponents/Favorite'
 
 const Palette = () => {
   const params = useParams()
-  const refetch = useCallback(() => {
-    location.reload()
-  }, [])
 
   //   const blurDataURL = useMemo(
   //     () => blurHashToDataURL(palette.blurhash),
   //     [palette.blurhash]
   //   );
 
-  const { data, isLoading, error } = useQuery({
+  const { data, isLoading, error, refetch } = useQuery({
     queryKey: ['palette', Array.isArray(params.id) ? params.id[0] : params.id],
     queryFn: () =>
       getPaletteById(Array.isArray(params.id) ? params.id[0] : params.id),
@@ -59,23 +56,31 @@ const Palette = () => {
         <Box
           sx={{
             display: 'flex',
-            alignItems: 'baseline',
-            gap: SPACING.MEDIUM.PX,
+            flexDirection: 'row',
+            justifyContent: 'space-between',
           }}
         >
-          <PageTitle text={data.palette.name} />
           <Box
             sx={{
               display: 'flex',
-              flexDirection: 'row',
-              gap: '10px',
               alignItems: 'baseline',
+              gap: SPACING.SMALL.PX,
             }}
           >
+            <PageTitle text={data.palette.name} />
             {'By'}
             <Link href={`/profile/${data.palette.appUserId}`}>
               #{data.palette.appUserId.slice(0, 6)}
             </Link>
+          </Box>
+
+          <Box>
+            <Favorite
+              refetch={refetch}
+              paletteId={data.palette.id}
+              favorites={data.palette.favoritesCount}
+              hasUserFavorited={data.palette.hasUserFavorited}
+            />
           </Box>
         </Box>
         <Box

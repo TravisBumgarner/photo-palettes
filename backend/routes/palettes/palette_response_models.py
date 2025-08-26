@@ -27,6 +27,8 @@ class PaletteResponse(BaseModel):
     ogPhotoUrl: str
     blurhash: str
     aspectRatio: float
+    favoritesCount: int
+    hasUserFavorited: bool
 
 
 def map_palette_to_response(palette: Palette) -> PaletteResponse:
@@ -50,6 +52,8 @@ def map_palette_to_response(palette: Palette) -> PaletteResponse:
         moderationStatus=palette.moderation_status,
         blurhash=palette.blurhash,
         aspectRatio=palette.aspect_ratio,
+        favoritesCount=palette.favorites_count,
+        hasUserFavorited=palette.has_user_favorited,
     )
 
 
@@ -84,4 +88,3 @@ def map_generate_palette_array_to_response(
         map_generate_palette_to_response(item["color"], item["percent_location"])
         for item in palette_data
     ]
-
