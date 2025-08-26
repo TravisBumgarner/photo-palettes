@@ -11,17 +11,57 @@ import Message from '../sharedComponents/Message'
 import PaletteThumbnail from '../sharedComponents/PaletteThumbnail'
 import Pagination from '../sharedComponents/Pagination'
 import { PAGINATION_SIZE } from '../consts'
+import { type ESortBy, SORT_BY, SORT_BY_LABEL } from '../types'
+import { BORDER_RADIUS, SPACING } from '../styles/styleConsts'
+import { Box, MenuItem, Select, FormControl, InputLabel } from '@mui/material'
+
+const SortsAndFilters = ({
+  sortBy,
+  setSortBy,
+}: {
+  sortBy: ESortBy
+  setSortBy: (value: ESortBy) => void
+}) => {
+  return (
+    <Box
+      sx={{
+        border: '1px solid',
+        borderColor: 'divider',
+        borderRadius: BORDER_RADIUS.ZERO.PX,
+        padding: SPACING.SMALL.PX,
+        marginBottom: SPACING.MEDIUM.PX,
+      }}
+    >
+      <FormControl sx={{ width: '200px' }}>
+        <InputLabel id="sort-by-label">Sort By</InputLabel>
+        <Select
+          labelId="sort-by-label"
+          value={sortBy}
+          label="Sort By"
+          onChange={(e) => setSortBy(e.target.value as ESortBy)}
+        >
+          {Object.values(SORT_BY).map((value) => (
+            <MenuItem key={value} value={value}>
+              {SORT_BY_LABEL[value as keyof typeof SORT_BY_LABEL]}
+            </MenuItem>
+          ))}
+        </Select>
+      </FormControl>
+    </Box>
+  )
+}
 
 const Browse = () => {
   const [page, setPage] = useState(1)
+  const [sortBy, setSortBy] = useState<ESortBy>(SORT_BY.NEWEST)
 
   const { data, isLoading, error } = useQuery({
-    queryKey: ['palettes', page],
+    queryKey: ['palettes', page, sortBy],
     queryFn: () =>
       getPaletteList({
         size: PAGINATION_SIZE,
         offset: (page - 1) * PAGINATION_SIZE,
-        
+        sortBy: sortBy,
       }),
     retry: false,
   })
@@ -65,6 +105,7 @@ const Browse = () => {
 
   return (
     <PageWrapper width="full" minHeight>
+      <SortsAndFilters sortBy={sortBy} setSortBy={setSortBy} />
       <ThumbnailGridDisplay>
         {data.palettes.map((palette) => (
           <PaletteThumbnail key={palette.id} palette={palette} />

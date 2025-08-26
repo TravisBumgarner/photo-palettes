@@ -5,7 +5,7 @@ from sqlalchemy import func
 from sqlalchemy.orm import Session, aliased, joinedload
 
 from database.engine import db_engine
-from database.models import ModerationStatus, Palette, PaletteFavorite
+from database.models import ModerationStatus, Palette, PaletteFavorite, SortBy
 
 
 def get_palettes_count(
@@ -35,11 +35,17 @@ def get_palettes(
     offset: int | None = None,
     app_user_id: Optional[uuid.UUID] = None,
     favorites_only: bool = False,
+    sort_by: SortBy = SortBy.NEWEST,
 ) -> List[Palette]:
     with Session(db_engine) as session:
         favorites_alias = aliased(PaletteFavorite)
 
-        # Base query: palettes + global favorites count
+        order_by = {
+            SortBy.NEWEST: Palette.created_at.desc(),
+            SortBy.FAVORITES_COUNT: func.count(favorites_alias.palette_id).desc(),
+            SortBy.OLDEST: Palette.created_at.asc(),
+        }
+
         query = (
             session.query(
                 Palette,
@@ -49,7 +55,7 @@ def get_palettes(
             .options(joinedload(Palette.colors))
             .filter(Palette.moderation_status == moderation_status)
             .group_by(Palette.id)
-            .order_by(Palette.created_at.asc())
+            .order_by(order_by.get(sort_by, Palette.created_at.asc()))
         )
 
         if app_user_id:

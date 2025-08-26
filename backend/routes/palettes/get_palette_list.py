@@ -3,7 +3,7 @@ import uuid
 
 from fastapi import Query
 
-from database.models import ModerationStatus
+from database.models import ModerationStatus, SortBy
 from database.queries.palettes import get_palettes, get_palettes_count
 from database.queries.users import get_app_user_by_app_user_id
 from middleware.auth import RequestWithAuthState
@@ -21,6 +21,7 @@ async def get_palette_list(
     moderation_status: ModerationStatus = ModerationStatus.APPROVED,
     app_user_id: uuid.UUID | None = None,
     favorites_only: bool = False,
+    sort_by: SortBy = SortBy.NEWEST,
 ):
     try:
         limit_to_approved = True
@@ -57,6 +58,7 @@ async def get_palette_list(
             moderation_status=moderation_status,
             app_user_id=request.state.app_user_id if favorites_only else app_user_id,
             favorites_only=favorites_only,
+            sort_by=sort_by,
         )
 
         total_count = get_palettes_count(

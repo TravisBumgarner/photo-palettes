@@ -1,6 +1,6 @@
 import uuid
 from datetime import datetime
-from enum import IntEnum
+from enum import Enum, IntEnum
 from typing import List
 
 from sqlalchemy import UUID, DateTime, Float, ForeignKey, Integer, String, exists, select
@@ -59,6 +59,12 @@ class ModerationStatus(IntEnum):
     AWAITING_MODERATION = 0
     APPROVED = 1
     REJECTED = 2
+
+
+class SortBy(Enum):
+    NEWEST = "newest"
+    FAVORITES_COUNT = "favorites_count"
+    OLDEST = "oldest"
 
 
 class Palette(Base):

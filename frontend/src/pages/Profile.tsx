@@ -10,7 +10,7 @@ import PageTitle from '../styles/shared/PageTitle'
 import PageWrapper from '../styles/shared/PageWrapper'
 import ThumbnailGridDisplay from '../styles/shared/ThumbnailGallery'
 import { SPACING } from '../styles/styleConsts'
-import { MODERATION_STATUS, MODERATION_STATUS_LABEL } from '../types'
+import { MODERATION_STATUS, MODERATION_STATUS_LABEL, SORT_BY } from '../types'
 import { getContrastColor, getUserColorFromUUID } from '../utils'
 import Loading from '../sharedComponents/Loading'
 import Message from '../sharedComponents/Message'
@@ -45,6 +45,7 @@ const Profile = () => {
         offset: (page - 1) * PAGINATION_SIZE,
         appUserId,
         moderationStatus: STATUS_TABS[filterTabIndex],
+        sortBy: SORT_BY.NEWEST,
       }),
     retry: false,
   })

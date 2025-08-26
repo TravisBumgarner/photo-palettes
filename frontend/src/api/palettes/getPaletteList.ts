@@ -1,7 +1,7 @@
 import { z } from 'zod'
 import config from '../../config'
 import { getToken } from '../../services/supabase'
-import { zodPalette } from '../../types'
+import { zodPalette, type ESortBy } from '../../types'
 
 const zodResponse = z.discriminatedUnion('success', [
   z.object({
@@ -21,12 +21,14 @@ const getPaletteList = async ({
   appUserId,
   moderationStatus,
   favoritesOnly,
+  sortBy,
 }: {
   size: number
   offset: number
   appUserId?: string
   moderationStatus?: number
   favoritesOnly?: boolean
+  sortBy: ESortBy
 }) => {
   const tokenResponse = await getToken()
 
@@ -40,6 +42,7 @@ const getPaletteList = async ({
   const params = new URLSearchParams()
   params.append('size', String(size))
   params.append('offset', String(offset))
+  params.append('sort_by', sortBy)
   if (appUserId !== undefined) params.append('app_user_id', appUserId)
   if (moderationStatus !== undefined)
     params.append('moderation_status', `${moderationStatus}`)

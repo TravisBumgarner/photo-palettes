@@ -91,3 +91,17 @@ export const zodPalette = z.object({
 })
 
 export type TPalette = z.infer<typeof zodPalette>
+
+export const SORT_BY = {
+  NEWEST: 'newest',
+  OLDEST: 'oldest',
+  FAVORITES_COUNT: 'favorites_count',
+} as const
+
+export const SORT_BY_LABEL = {
+  [SORT_BY.NEWEST]: 'Newest',
+  [SORT_BY.OLDEST]: 'Oldest',
+  [SORT_BY.FAVORITES_COUNT]: 'Favorites Count',
+}
+
+export type ESortBy = (typeof SORT_BY)[keyof typeof SORT_BY]
