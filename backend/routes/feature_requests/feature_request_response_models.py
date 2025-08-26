@@ -1,5 +1,4 @@
 import uuid
-from typing import List
 
 from pydantic import BaseModel
 
@@ -11,7 +10,7 @@ class FeatureRequestResponse(BaseModel):
     title: str
     description: str
     status: int
-    votes: List[uuid.UUID]
+    votes: list[uuid.UUID]
 
 
 def map_feature_request_to_response(feature_request: FeatureRequest) -> FeatureRequestResponse:
@@ -25,8 +24,8 @@ def map_feature_request_to_response(feature_request: FeatureRequest) -> FeatureR
 
 
 def map_feature_request_array_to_response(
-    feature_requests: List[FeatureRequest],
-) -> List[FeatureRequestResponse]:
+    feature_requests: list[FeatureRequest],
+) -> list[FeatureRequestResponse]:
     return [
         map_feature_request_to_response(feature_request) for feature_request in feature_requests
     ]

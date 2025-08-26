@@ -13,7 +13,7 @@ from . import feature_requests_router
 
 
 class SuccessResponse(BaseModel):
-    featureRequestId: uuid.UUID
+    featureRequestId: uuid.UUID  # noqa #815
     success: bool = True
 
 
