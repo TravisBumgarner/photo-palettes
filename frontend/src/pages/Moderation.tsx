@@ -83,7 +83,7 @@ const Moderation = () => {
               key={palette.id}
               sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}
             >
-              <PaletteThumbnail palette={palette} />
+              <PaletteThumbnail palette={palette} refetch={refetch} />
               <ModerationPanel
                 refetch={refetch}
                 moderationStatus={STATUS_TABS[filterTabIndex]}
