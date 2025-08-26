@@ -2,7 +2,7 @@ import uuid
 from typing import List, Optional
 
 from sqlalchemy import func
-from sqlalchemy.orm import Session, aliased, joinedload
+from sqlalchemy.orm import Session, joinedload
 
 from database.engine import db_engine
 from database.models import ModerationStatus, Palette, PaletteFavorite, SortBy
@@ -10,21 +10,13 @@ from database.models import ModerationStatus, Palette, PaletteFavorite, SortBy
 
 def get_palettes_count(
     moderation_status: ModerationStatus,
-    app_user_id: Optional[uuid.UUID] = None,
-    favorites_only: bool = False,
+    author_user_id: Optional[uuid.UUID] = None,
 ) -> int:
     with Session(db_engine) as session:
         query = session.query(Palette).filter(Palette.moderation_status == moderation_status)
 
-        if app_user_id:
-            query = query.filter(Palette.app_user_id == app_user_id)
-
-        if favorites_only and app_user_id:
-            query = query.join(
-                PaletteFavorite,
-                (Palette.id == PaletteFavorite.palette_id)
-                & (PaletteFavorite.app_user_id == app_user_id),
-            )
+        if author_user_id:
+            query = query.filter(Palette.app_user_id == author_user_id)
 
         return query.count()
 
@@ -33,41 +25,32 @@ def get_palettes(
     moderation_status: ModerationStatus = ModerationStatus.APPROVED,
     size: int | None = None,
     offset: int | None = None,
-    app_user_id: Optional[uuid.UUID] = None,
-    favorites_only: bool = False,
+    author_user_id: Optional[uuid.UUID] = None,
     sort_by: SortBy = SortBy.NEWEST,
+    app_user_id: Optional[uuid.UUID] = None,
 ) -> List[Palette]:
+    print("args", moderation_status, size, offset, author_user_id, sort_by, app_user_id)
     with Session(db_engine) as session:
-        favorites_alias = aliased(PaletteFavorite)
-
         order_by = {
             SortBy.NEWEST: Palette.created_at.desc(),
-            SortBy.FAVORITES_COUNT: func.count(favorites_alias.palette_id).desc(),
+            SortBy.FAVORITES_COUNT: func.count(PaletteFavorite.palette_id).desc(),
             SortBy.OLDEST: Palette.created_at.asc(),
         }
 
         query = (
             session.query(
                 Palette,
-                func.count(favorites_alias.palette_id).label("favorites_count"),
+                func.count(PaletteFavorite.palette_id).label("favorites_count"),
             )
-            .outerjoin(favorites_alias, Palette.id == favorites_alias.palette_id)
+            .outerjoin(PaletteFavorite, Palette.id == PaletteFavorite.palette_id)
             .options(joinedload(Palette.colors))
             .filter(Palette.moderation_status == moderation_status)
             .group_by(Palette.id)
             .order_by(order_by.get(sort_by, Palette.created_at.asc()))
         )
 
-        if app_user_id:
-            query = query.filter(Palette.app_user_id == app_user_id)
-
-        if favorites_only and app_user_id:
-            # Only include palettes this user has favorited
-            query = query.join(
-                PaletteFavorite,
-                (Palette.id == PaletteFavorite.palette_id)
-                & (PaletteFavorite.app_user_id == app_user_id),
-            )
+        if author_user_id:
+            query = query.filter(Palette.app_user_id == author_user_id)
 
         if offset:
             query = query.offset(offset)
@@ -79,10 +62,7 @@ def get_palettes(
         palettes: list[Palette] = []
         for palette, favorites_count in results:
             palette.favorites_count = favorites_count
-            # Cheaper: we know it's True if favorites_only was requested
-            palette.has_user_favorited = (
-                True if favorites_only else palette.check_has_user_favorited(app_user_id, session)
-            )
+            palette.has_user_favorited = palette.check_has_user_favorited(app_user_id, session)
             palettes.append(palette)
 
         return palettes

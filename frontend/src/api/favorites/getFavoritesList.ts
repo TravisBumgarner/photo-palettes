@@ -15,17 +15,13 @@ const zodResponse = z.discriminatedUnion('success', [
   }),
 ])
 
-const getPaletteList = async ({
+const getFavoritesList = async ({
   size,
   offset,
-  authorUserId,
-  moderationStatus,
   sortBy,
 }: {
   size: number
   offset: number
-  authorUserId?: string
-  moderationStatus?: number
   sortBy: ESortBy
 }) => {
   const tokenResponse = await getToken()
@@ -41,12 +37,9 @@ const getPaletteList = async ({
   params.append('size', String(size))
   params.append('offset', String(offset))
   params.append('sort_by', sortBy)
-  if (authorUserId !== undefined) params.append('author_user_id', authorUserId)
-  if (moderationStatus !== undefined)
-    params.append('moderation_status', `${moderationStatus}`)
 
   const response = await fetch(
-    `${config.apiUrl}/palettes?${params.toString()}`,
+    `${config.apiUrl}/favorites?${params.toString()}`,
     {
       method: 'GET',
       headers: {
@@ -60,4 +53,4 @@ const getPaletteList = async ({
   return zodResponse.parse(json)
 }
 
-export default getPaletteList
+export default getFavoritesList

@@ -11,18 +11,21 @@ import Message from '../sharedComponents/Message'
 import PaletteThumbnail from '../sharedComponents/PaletteThumbnail'
 import Pagination from '../sharedComponents/Pagination'
 import { PAGINATION_SIZE, ROUTES } from '../consts'
-import getPalettes from '../api/palettes/getPaletteList'
+import { type ESortBy, SORT_BY } from '../types'
+import SortsAndFilters from '../sharedComponents/SortsAndFilters'
+import getFavoritesList from '../api/favorites/getFavoritesList'
 
 const Favorites = () => {
   const [page, setPage] = useState(1)
+  const [sortBy, setSortBy] = useState<ESortBy>(SORT_BY.NEWEST)
 
-  const { data, isLoading, error } = useQuery({
-    queryKey: ['profile', page],
+  const { data, isLoading, error, refetch } = useQuery({
+    queryKey: ['favorites', page, sortBy],
     queryFn: () =>
-      getPalettes({
+      getFavoritesList({
         size: PAGINATION_SIZE,
         offset: (page - 1) * PAGINATION_SIZE,
-        favoritesOnly: true,
+        sortBy,
       }),
     retry: false,
   })
@@ -53,9 +56,14 @@ const Favorites = () => {
 
     return (
       <>
+        <SortsAndFilters sortBy={sortBy} setSortBy={setSortBy} />
         <ThumbnailGridDisplay>
           {data.palettes.map((palette) => (
-            <PaletteThumbnail key={palette.id} palette={palette} />
+            <PaletteThumbnail
+              key={palette.id}
+              palette={palette}
+              refetch={refetch}
+            />
           ))}
         </ThumbnailGridDisplay>
         <Pagination
@@ -65,7 +73,7 @@ const Favorites = () => {
         />
       </>
     )
-  }, [data, error, isLoading, handlePageChange, page])
+  }, [data, error, isLoading, handlePageChange, page, sortBy, refetch])
 
   return (
     <PageWrapper width="full" minHeight>

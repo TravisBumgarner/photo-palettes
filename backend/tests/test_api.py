@@ -85,7 +85,7 @@ def test_get_palettes_list():
 
         # A user, when requesting with an approved moderation status, should see only the palettes with that status
         response = requests.get(
-            f"{BASE_URL}/palettes?moderation_status={ModerationStatus.APPROVED}&app_user_id={app_user_id}",
+            f"{BASE_URL}/palettes?moderation_status={ModerationStatus.APPROVED}&author_user_id={app_user_id}",
             headers=get_user_auth_headers(),
         )
         assert response.status_code == 200
@@ -97,7 +97,7 @@ def test_get_palettes_list():
 
         # A user, when requesting with a rejected moderation status, should see only the palettes with that status
         response = requests.get(
-            f"{BASE_URL}/palettes?moderation_status={ModerationStatus.REJECTED}&app_user_id={app_user_id}",
+            f"{BASE_URL}/palettes?moderation_status={ModerationStatus.REJECTED}&author_user_id={app_user_id}",
             headers=get_user_auth_headers(),
         )
         assert response.status_code == 200
@@ -108,7 +108,7 @@ def test_get_palettes_list():
 
         # A user, not the original author, should only see approved palettes.
         response = requests.get(
-            f"{BASE_URL}/palettes?moderation_status={ModerationStatus.APPROVED}&app_user_id={app_user_id}",
+            f"{BASE_URL}/palettes?moderation_status={ModerationStatus.APPROVED}&author_user_id={app_user_id}",
             headers=get_moderator_auth_headers(),
         )
         assert response.status_code == 200
@@ -120,7 +120,7 @@ def test_get_palettes_list():
 
         # A user, not the original author, should not see rejected palettes.
         response = requests.get(
-            f"{BASE_URL}/palettes?moderation_status={ModerationStatus.REJECTED}&app_user_id={app_user_id}",
+            f"{BASE_URL}/palettes?moderation_status={ModerationStatus.REJECTED}&author_user_id={app_user_id}",
             headers=get_moderator_auth_headers(),
         )
         assert response.status_code == 200

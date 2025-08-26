@@ -1,4 +1,3 @@
-import logging
 import uuid
 
 from fastapi import Query
@@ -19,24 +18,14 @@ async def get_palette_list(
     size: int = Query(25, ge=1, le=100),
     offset: int = Query(0, ge=0),
     moderation_status: ModerationStatus = ModerationStatus.APPROVED,
-    app_user_id: uuid.UUID | None = None,
-    favorites_only: bool = False,
+    author_user_id: uuid.UUID | None = None,
     sort_by: SortBy = SortBy.NEWEST,
 ):
     try:
         limit_to_approved = True
 
-        if favorites_only and app_user_id:
-            # User can only view their own favorites so throw an error if they try and view someone
-            # else's
-            logging.error("User was able to access favorites without proper permissions")
-            return {
-                "success": False,
-                "error": "User does not have permission.",
-            }
-
-        if app_user_id:
-            user_exists = get_app_user_by_app_user_id(app_user_id)
+        if author_user_id:
+            user_exists = get_app_user_by_app_user_id(author_user_id)
             if not user_exists:
                 return {
                     "success": False,
@@ -47,7 +36,7 @@ async def get_palette_list(
             if not getattr(request.state, "app_user_id", None):
                 limit_to_approved = True
             else:
-                limit_to_approved = request.state.app_user_id != app_user_id
+                limit_to_approved = request.state.app_user_id != author_user_id
 
         # Can't view other user's unapproved palettes
         moderation_status = ModerationStatus.APPROVED if limit_to_approved else moderation_status
@@ -56,15 +45,14 @@ async def get_palette_list(
             size=size,
             offset=offset,
             moderation_status=moderation_status,
-            app_user_id=request.state.app_user_id if favorites_only else app_user_id,
-            favorites_only=favorites_only,
+            author_user_id=author_user_id,
             sort_by=sort_by,
+            app_user_id=request.state.app_user_id,
         )
 
         total_count = get_palettes_count(
             moderation_status=moderation_status,
-            app_user_id=request.state.app_user_id if favorites_only else app_user_id,
-            favorites_only=favorites_only,
+            author_user_id=author_user_id,
         )
         return {
             "success": True,

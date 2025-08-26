@@ -9,7 +9,6 @@ import ModerationPanel from '../sharedComponents/ModerationPanel'
 import PageTitle from '../styles/shared/PageTitle'
 import PageWrapper from '../styles/shared/PageWrapper'
 import Share from '../sharedComponents/Share'
-import { useCallback } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { getPaletteById } from '../api/palettes/getPaletteById'
 import { useParams } from 'react-router-dom'
@@ -18,16 +17,13 @@ import Favorite from '../sharedComponents/Favorite'
 
 const Palette = () => {
   const params = useParams()
-  const refetch = useCallback(() => {
-    location.reload()
-  }, [])
 
   //   const blurDataURL = useMemo(
   //     () => blurHashToDataURL(palette.blurhash),
   //     [palette.blurhash]
   //   );
 
-  const { data, isLoading, error } = useQuery({
+  const { data, isLoading, error, refetch } = useQuery({
     queryKey: ['palette', Array.isArray(params.id) ? params.id[0] : params.id],
     queryFn: () =>
       getPaletteById(Array.isArray(params.id) ? params.id[0] : params.id),
@@ -80,6 +76,7 @@ const Palette = () => {
 
           <Box>
             <Favorite
+              refetch={refetch}
               paletteId={data.palette.id}
               favorites={data.palette.favoritesCount}
               hasUserFavorited={data.palette.hasUserFavorited}

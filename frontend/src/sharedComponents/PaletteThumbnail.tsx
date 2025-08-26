@@ -8,7 +8,13 @@ import Favorite from './Favorite'
 // import { blurHashToDataURL } from "../utils/blurhashToDataURL";
 // import { useMemo } from "react";
 
-const PaletteThumbnail = ({ palette }: { palette: TPalette }) => {
+const PaletteThumbnail = ({
+  palette,
+  refetch,
+}: {
+  palette: TPalette
+  refetch: () => void
+}) => {
   // const blurDataURL = useMemo(
   //   () => blurHashToDataURL(palette.blurhash),
   //   [palette.blurhash]
@@ -79,6 +85,7 @@ const PaletteThumbnail = ({ palette }: { palette: TPalette }) => {
             </Typography>
           </Box>
           <Favorite
+            refetch={refetch}
             paletteId={palette.id}
             favorites={palette.favoritesCount}
             hasUserFavorited={palette.hasUserFavorited}
