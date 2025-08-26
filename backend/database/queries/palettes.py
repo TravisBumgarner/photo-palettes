@@ -29,7 +29,6 @@ def get_palettes(
     sort_by: SortBy = SortBy.NEWEST,
     app_user_id: Optional[uuid.UUID] = None,
 ) -> List[Palette]:
-    print("args", moderation_status, size, offset, author_user_id, sort_by, app_user_id)
     with Session(db_engine) as session:
         order_by = {
             SortBy.NEWEST: Palette.created_at.desc(),
