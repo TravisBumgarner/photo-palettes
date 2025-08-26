@@ -1,4 +1,5 @@
 import uuid
+from typing import TypedDict
 
 from fastapi import HTTPException
 from pydantic import BaseModel
@@ -19,18 +20,19 @@ class RemoveFromFavoritesResponse(BaseModel):
     message: str | None = None
 
 
-def validate_request(request: RequestWithAuthState):
-    if not user_is_authed(request):
+class ValidatedRequest(TypedDict):
+    app_user_id: uuid.UUID
+
+
+def validate_request(request: RequestWithAuthState) -> ValidatedRequest:
+    if not user_is_authed(request) or request.state.app_user_id is None:
         raise HTTPException(status_code=400, detail="User must be authenticated")
+    return {"app_user_id": request.state.app_user_id}
 
 
 @favorites_router.post("/remove")
-async def fremove_to_favorites(request: RequestWithAuthState, body: RemoveFromFavoritesRequest):
-    validate_request(request)
+async def remove_to_favorites(request: RequestWithAuthState, body: RemoveFromFavoritesRequest):
+    validated_request = validate_request(request)
 
-    if request.state.app_user_id is None:
-        # Cheap way to get type validation on call to add_palette_to_favorites
-        return
-
-    result = remove_palette_from_favorites(request.state.app_user_id, body.palette_id)
+    result = remove_palette_from_favorites(validated_request["app_user_id"], body.palette_id)
     return RemoveFromFavoritesResponse(success=result is not None)
