@@ -1,5 +1,4 @@
 import uuid
-from typing import List
 
 from sqlalchemy.orm import Session, joinedload
 
@@ -23,7 +22,7 @@ def add_feature_request(title: str, description: str) -> uuid.UUID:
         return feature_request.id
 
 
-def get_votes() -> List[FeatureRequest]:
+def get_votes() -> list[FeatureRequest]:
     with Session(db_engine) as session:
         return session.query(FeatureRequest).options(joinedload(FeatureRequest.votes)).all()
 
