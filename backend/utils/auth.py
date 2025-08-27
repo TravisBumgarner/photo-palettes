@@ -10,3 +10,7 @@ def user_is_moderator(request: RequestWithAuthState) -> bool:
 
 def user_is_authed(request: RequestWithAuthState) -> bool:
     return request.state.app_user_id is not None
+
+
+def user_owns_resource(request: RequestWithAuthState, resource, key: str = "app_user_id") -> bool:
+    return request.state.app_user_id == getattr(resource, key, None)

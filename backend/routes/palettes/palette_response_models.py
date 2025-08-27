@@ -19,7 +19,7 @@ class PaletteColorResponse(BaseModel):
 class PaletteResponse(BaseModel):
     id: UUID
     name: str
-    createdAt: datetime
+    createdAt: datetime 
     photoUrl: str
     colors: list[PaletteColorResponse]
     moderationStatus: int

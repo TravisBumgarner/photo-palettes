@@ -3,7 +3,7 @@ from database.queries.feature_requests import get_votes
 from routes.feature_requests.feature_request_response_models import (
     map_feature_request_array_to_response,
 )
-from routes.shared import ErrorResponse
+from routes.shared import BaseErrorResponse
 from services.logger import log_error
 
 from . import feature_requests_router
@@ -26,4 +26,4 @@ async def get_list():
         }
     except Exception as error:
         log_error(error, "get_feature_request_list")
-        return ErrorResponse(success=False, message=ERROR_MSG.SOMETHING_WENT_WRONG)
+        return BaseErrorResponse(success=False, message=ERROR_MSG.SOMETHING_WENT_WRONG)

@@ -55,8 +55,9 @@ export default function LoginPage() {
       const response = await login({ email, password })
 
       if (response.success) {
-        await loadUserIntoState()
-        navigate('/')
+        const success = await loadUserIntoState()
+        if (success) navigate('/')
+        else setError('Failed to load user details')
       } else {
         setError(response.error)
         navigate('/error500')

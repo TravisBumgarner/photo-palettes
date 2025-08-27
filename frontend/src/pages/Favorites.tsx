@@ -50,7 +50,7 @@ const Favorites = () => {
       return (
         <Message message="Error fetching favorite palettes" color="error" />
       )
-    if (!data.success) return <Message message={data.error} color="error" />
+    if (!data.success) return <Message message={data.message} color="error" />
     if (data.palettes.length === 0)
       return <Message message="No favorite palettes found" color="info" />
 

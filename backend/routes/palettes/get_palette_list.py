@@ -2,14 +2,36 @@ import uuid
 
 from fastapi import Query
 
+from consts import ERROR_MSG
 from database.models import ModerationStatus, SortBy
 from database.queries.palettes import get_palettes, get_palettes_count
-from database.queries.users import get_app_user_by_app_user_id
 from middleware.auth import RequestWithAuthState
+from routes.shared import BaseErrorResponse, BaseSuccessResponse
 from services.logger import log_error
 
 from . import palettes_router
-from .palette_response_models import map_palette_array_to_response
+from .palette_response_models import PaletteResponse, map_palette_array_to_response
+
+
+def parse_request():
+    # Shows no parsing required.
+    pass
+
+
+class SuccessResponse(BaseSuccessResponse):
+    palettes: list[PaletteResponse]
+    total: int
+
+
+def calculate_can_see_all_moderation_statuses(
+    request: RequestWithAuthState, author_user_id: uuid.UUID | None
+) -> bool:
+    # Only users can view their own palettes that aren't moderated yet.
+
+    is_app_user_logged_in = request.state.app_user_id is not None
+    is_app_user_author = request.state.app_user_id == author_user_id
+
+    return is_app_user_logged_in and is_app_user_author
 
 
 @palettes_router.get("")
@@ -22,24 +44,15 @@ async def get_palette_list(
     sort_by: SortBy = SortBy.NEWEST,
 ):
     try:
-        limit_to_approved = True
+        parse_request()
 
-        if author_user_id:
-            user_exists = get_app_user_by_app_user_id(author_user_id)
-            if not user_exists:
-                return {
-                    "success": False,
-                    "error": "User does not exist",
-                }
+        can_see_all_moderation_statuses = calculate_can_see_all_moderation_statuses(
+            request=request, author_user_id=author_user_id
+        )
 
-            # If user is not logged in, they are viewing another user's palettes.
-            if not getattr(request.state, "app_user_id", None):
-                limit_to_approved = True
-            else:
-                limit_to_approved = request.state.app_user_id != author_user_id
-
-        # Can't view other user's unapproved palettes
-        moderation_status = ModerationStatus.APPROVED if limit_to_approved else moderation_status
+        moderation_status = (
+            moderation_status if can_see_all_moderation_statuses else ModerationStatus.APPROVED
+        )
 
         palettes = get_palettes(
             size=size,
@@ -54,16 +67,11 @@ async def get_palette_list(
             moderation_status=moderation_status,
             author_user_id=author_user_id,
         )
-        return {
-            "success": True,
-            "palettes": map_palette_array_to_response(palettes),
-            "total": total_count,
-        }
+        return SuccessResponse(
+            palettes=map_palette_array_to_response(palettes),
+            total=total_count,
+        )
 
     except Exception as error:
         log_error(error, "get_palette_list")
-
-        return {
-            "success": False,
-            "error": "Failed to get palettes",
-        }
+        return BaseErrorResponse(success=False, message=ERROR_MSG.SOMETHING_WENT_WRONG)

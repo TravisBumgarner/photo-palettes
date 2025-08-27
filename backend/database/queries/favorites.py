@@ -16,7 +16,7 @@ def add_palette_to_favorites(
         session.add(favorite)
         session.commit()
         session.refresh(favorite)
-        return True
+        return favorite
 
 
 def remove_palette_from_favorites(app_user_id: uuid.UUID, palette_id: uuid.UUID) -> bool:

@@ -1,43 +1,59 @@
+import uuid
+
+from consts import ERROR_MSG
 from database.queries.users import get_app_user_by_auth_id
 from middleware.auth import RequestWithAuthState
+from routes.shared import AuthedRequest, BaseErrorResponse, BaseSuccessResponse, InvalidRequest
 from services.logger import log_error
+from utils.auth import user_is_authed
 
 from . import users_router
 
 
+def parse_request(raw_request: RequestWithAuthState) -> AuthedRequest | InvalidRequest:
+    if not user_is_authed(raw_request):
+        log_error(
+            PermissionError("User is not authed"),
+            "get_me",
+        )
+        return InvalidRequest(error=ERROR_MSG.CANNOT_PERFORM_ACTION)
+
+    return AuthedRequest(
+        app_user_id=raw_request.state.app_user_id, auth_id=raw_request.state.auth_id
+    )
+
+
+class SuccessResponse(BaseSuccessResponse):
+    id: uuid.UUID
+    email: str
+    displayName: str  # noqa #815
+    permissionLevel: int  # noqa #815
+
+
 @users_router.get("/me")
-async def me(request: RequestWithAuthState):
+async def me(raw_request: RequestWithAuthState):
     try:
-        if not request.state.auth_id:
-            log_error(
-                PermissionError(
-                    "This route should never be called if the user is not authenticated - no auth_id"
-                ),
-                "get_me_not_authenticated",
-            )
-            return {"success": False, "error": "User not authenticated"}
+        parsed_request = parse_request(raw_request)
 
-        app_user = get_app_user_by_auth_id(request.state.auth_id)
+        match parsed_request:
+            case InvalidRequest(error=error):
+                log_error(RuntimeError(error), "get_me_invalid")
+                return BaseErrorResponse(message=error)
+            case AuthedRequest(app_user_id=_app_user_id, auth_id=auth_id):
+                app_user = get_app_user_by_auth_id(auth_id)
+                if app_user is None:
+                    log_error(
+                        PermissionError("User not found"),
+                        "get_me_not_found",
+                    )
+                    return BaseErrorResponse(message=ERROR_MSG.USER_DOES_NOT_EXIST)
 
-        if app_user is None:
-            log_error(
-                PermissionError(
-                    "This route should never be called if the user is not authenticated - no app_user"
-                ),
-                "get_me_not_found",
-            )
-            return {"success": False, "error": "User not found"}
-
-        return {
-            "success": True,
-            "id": app_user.id,
-            "email": app_user.email,
-            "displayName": app_user.display_name,
-            "permissionLevel": app_user.permission_level,
-        }
-    except Exception as e:
-        log_error(e, "get_me")
-        return {
-            "success": False,
-            "error": "Failed to get user",
-        }
+        return SuccessResponse(
+            id=app_user.id,
+            email=app_user.email,
+            displayName=app_user.display_name,
+            permissionLevel=app_user.permission_level,
+        )
+    except Exception as error:
+        log_error(error, "get_me")
+        return BaseErrorResponse(message=ERROR_MSG.SOMETHING_WENT_WRONG)

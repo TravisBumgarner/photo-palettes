@@ -10,7 +10,7 @@ const zodResponse = z.discriminatedUnion('success', [
   }),
   z.object({
     success: z.literal(false),
-    error: z.string(),
+    message: z.string(),
   }),
 ])
 
@@ -28,7 +28,7 @@ export const createPalette = async ({
   if (!tokenResponse) {
     return {
       success: false,
-      error: 'No token found',
+      message: 'No token found',
     } as const
   }
 

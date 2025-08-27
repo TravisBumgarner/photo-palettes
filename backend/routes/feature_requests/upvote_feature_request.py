@@ -2,34 +2,52 @@ import uuid
 
 from pydantic import BaseModel
 
+from consts import ERROR_MSG
 from database.queries.feature_requests import cast_vote, has_user_voted
 from middleware.auth import RequestWithAuthState
+from routes.shared import AuthedRequest, BaseErrorResponse, BaseSuccessResponse, InvalidRequest
 from services.logger import log_error
+from utils.auth import user_is_authed
 
 from . import feature_requests_router
 
 
-class UpvoteRequest(BaseModel):
+class Body(BaseModel):
     feature_request_id: uuid.UUID
 
 
-@feature_requests_router.post("/upvote")
-async def post_feature_request(request: RequestWithAuthState, upvote_request: UpvoteRequest):
-    if has_user_voted(upvote_request.feature_request_id, request.state.app_user_id):
-        return {
-            "success": False,
-            "error": "User has already voted",
-        }
+def parse_request(raw_request: RequestWithAuthState):
+    if not user_is_authed(raw_request):
+        log_error(
+            PermissionError("User is not authenticated"),
+            "add_feature_request_not_moderator",
+        )
+        return InvalidRequest(error=ERROR_MSG.CANNOT_PERFORM_ACTION)
 
+    return AuthedRequest(
+        app_user_id=raw_request.state.app_user_id, auth_id=raw_request.state.auth_id
+    )
+
+
+@feature_requests_router.post("/upvote")
+async def post_feature_request(request: RequestWithAuthState, upvote_request: Body):
     try:
-        cast_vote(upvote_request.feature_request_id, request.state.app_user_id)
-        return {
-            "success": True,
-            "featureRequestId": upvote_request.feature_request_id,
-        }
+        parsed_request = parse_request(request)
+
+        match parsed_request:
+            case InvalidRequest(error=error):
+                log_error(RuntimeError(error), "upvote_feature_request_invalid")
+                return {
+                    "success": False,
+                    "error": error,
+                }
+            case AuthedRequest(app_user_id=app_user_id):
+                if has_user_voted(upvote_request.feature_request_id, app_user_id):
+                    BaseErrorResponse(success=False, message="User has already voted")
+                    return
+
+                cast_vote(upvote_request.feature_request_id, app_user_id)
+                return BaseSuccessResponse()
     except Exception as e:
         log_error(e, "upvote_feature_request")
-        return {
-            "success": False,
-            "error": "Failed to upvote feature request",
-        }
+        return BaseErrorResponse(message="Failed to upvote feature request")

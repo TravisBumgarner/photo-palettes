@@ -6,11 +6,12 @@ from database.engine import db_engine
 from database.models import FeatureRequest, FeatureRequestVote
 
 
-def cast_vote(request_id: uuid.UUID, app_user_id: uuid.UUID) -> None:
+def cast_vote(request_id: uuid.UUID, app_user_id: uuid.UUID) -> bool:
     with Session(db_engine) as session:
         vote = FeatureRequestVote(request_id=request_id, app_user_id=app_user_id)
         session.add(vote)
         session.commit()
+        return True
 
 
 def add_feature_request(title: str, description: str) -> uuid.UUID:

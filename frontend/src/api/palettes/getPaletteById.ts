@@ -6,7 +6,7 @@ import { zodPalette } from '../../types'
 const zodResponse = z.discriminatedUnion('success', [
   z.object({
     success: z.literal(false),
-    error: z.string(),
+    message: z.string(),
   }),
   z.object({
     success: z.literal(true),
@@ -20,7 +20,7 @@ export const getPaletteById = async (id: string) => {
   if (!tokenResponse) {
     return {
       success: false,
-      error: 'No token found',
+      message: 'No token found',
     } as const
   }
 

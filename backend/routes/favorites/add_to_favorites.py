@@ -5,6 +5,7 @@ from pydantic import BaseModel
 from consts import ERROR_MSG
 from database.queries.favorites import add_palette_to_favorites
 from middleware.auth import RequestWithAuthState
+from routes.shared import AuthedRequest, BaseErrorResponse, BaseSuccessResponse, InvalidRequest
 from services.logger import log_error
 from utils.auth import user_is_authed
 
@@ -15,24 +16,13 @@ class Body(BaseModel):
     palette_id: uuid.UUID
 
 
-class Response(BaseModel):
-    success: bool
-    message: str | None = None
-
-
-class ValidRequest(BaseModel):
-    app_user_id: uuid.UUID
-
-
-class InvalidRequest(BaseModel):
-    error: str
-
-
-def parse_request(raw_request: RequestWithAuthState):
+def parse_request(raw_request: RequestWithAuthState) -> AuthedRequest | InvalidRequest:
     if not user_is_authed(raw_request):
         return InvalidRequest(error=ERROR_MSG.USER_NOT_AUTHENTICATED)
 
-    return ValidRequest(success=True, app_user_id=raw_request.state.app_user_id)
+    return AuthedRequest(
+        app_user_id=raw_request.state.app_user_id, auth_id=raw_request.state.auth_id
+    )
 
 
 @favorites_router.post("/add")
@@ -43,10 +33,10 @@ async def add_to_favorites(raw_request: RequestWithAuthState, body: Body):
         match parsed_request:
             case InvalidRequest(error=error):
                 log_error(RuntimeError(error), "add_to_favorites_invalid")
-                return Response(success=False, message=error)
-            case ValidRequest(app_user_id=app_user_id):
-                result = add_palette_to_favorites(app_user_id, body.palette_id)
-                return Response(success=result)
+                return BaseErrorResponse(success=False, message=error)
+            case AuthedRequest(app_user_id=app_user_id):
+                add_palette_to_favorites(app_user_id, body.palette_id)
+                return BaseSuccessResponse()
     except Exception as e:
         log_error(e, "add_to_favorites")
-        return Response(success=False, message=ERROR_MSG.SOMETHING_WENT_WRONG)
+        return BaseErrorResponse(success=False, message=ERROR_MSG.SOMETHING_WENT_WRONG)

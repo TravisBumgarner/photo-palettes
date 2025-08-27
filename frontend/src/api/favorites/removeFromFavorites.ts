@@ -8,6 +8,7 @@ const zodResponse = z.discriminatedUnion('success', [
   }),
   z.object({
     success: z.literal(false),
+    message: z.string(),
   }),
 ])
 
@@ -17,7 +18,7 @@ const removeFromFavorites = async ({ paletteId }: { paletteId: string }) => {
   if (!tokenResponse) {
     return {
       success: false,
-      error: 'No token found',
+      message: 'No token found',
     } as const
   }
 

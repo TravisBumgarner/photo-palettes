@@ -1,81 +1,88 @@
 import uuid
-from typing import List
 
-from fastapi import HTTPException
 from pydantic import BaseModel
 
+from consts import ERROR_MSG
 from database.models import ModerationStatus, Palette, PaletteColor
 from database.queries.palettes import get_palette_by_id, update_palette
 from middleware.auth import RequestWithAuthState
+from routes.shared import AuthedRequest, BaseErrorResponse, BaseSuccessResponse, InvalidRequest
 from services.logger import log_error
 from services.pushover import send_pushover_notification
-from utils.auth import user_is_moderator
+from utils.auth import user_is_authed
 from utils.colors import hex_to_rgb
 
 from . import palettes_router
 
 
-class PaletteRequest(BaseModel):
+class Body(BaseModel):
     name: str
-    hex_colors: List[str]
+    hex_colors: list[str]
     palette_id: str
 
 
-def validate_request(request: RequestWithAuthState, palette: Palette):
-    if not (user_is_moderator(request) or request.state.app_user_id == palette.app_user_id):
-        raise HTTPException(status_code=400, detail="User does not own resource")
+def parse_request(
+    raw_request: RequestWithAuthState, palette: Palette | None
+) -> tuple[AuthedRequest, Palette] | InvalidRequest:
+    if not user_is_authed(raw_request):
+        return InvalidRequest(error=ERROR_MSG.USER_NOT_AUTHENTICATED)
+
+    if not palette:
+        return InvalidRequest(error=ERROR_MSG.RESOURCE_NOT_FOUND)
+
+    if raw_request.state.app_user_id != palette.app_user_id:
+        return InvalidRequest(error=ERROR_MSG.USER_DOES_NOT_OWN_RESOURCE)
+
+    return (
+        AuthedRequest(app_user_id=raw_request.state.app_user_id, auth_id=raw_request.state.auth_id),
+        palette,
+    )
+
+
+class SuccessResponse(BaseSuccessResponse):
+    paletteId: uuid.UUID  # noqa #815
 
 
 @palettes_router.post("/create")
 async def create(
     request: RequestWithAuthState,
-    palette_request: PaletteRequest,
+    body: Body,
 ):
     try:
-        palette = get_palette_by_id(
-            uuid.UUID(palette_request.palette_id), request.state.app_user_id
-        )
+        raw_palette = get_palette_by_id(uuid.UUID(body.palette_id), request.state.app_user_id)
+        [parsed_request, palette] = parse_request(request, raw_palette)
 
-        if not palette:
-            return {
-                "success": False,
-                "error": "No palette found",
-            }
+        match parsed_request:
+            case InvalidRequest(error=error):
+                log_error(RuntimeError(error), "create_palette_invalid")
+                return BaseErrorResponse(message=error)
+            case AuthedRequest(app_user_id=_app_user_id):
+                colors = []
+                for hex_color in body.hex_colors:
+                    r, g, b = hex_to_rgb(hex_color)
+                    colors.append(
+                        PaletteColor(
+                            hex=hex_color,
+                            r=r,
+                            g=g,
+                            b=b,
+                            rgb_cube=f"({r},{g},{b})",
+                            palette_id=palette.id,
+                        )
+                    )
 
-        validation_error = validate_request(request, palette)
-        if validation_error:
-            return validation_error
-
-        colors = []
-        for hex_color in palette_request.hex_colors:
-            r, g, b = hex_to_rgb(hex_color)
-            colors.append(
-                PaletteColor(
-                    hex=hex_color,
-                    r=r,
-                    g=g,
-                    b=b,
-                    rgb_cube=f"({r},{g},{b})",
+                update_palette(
                     palette_id=palette.id,
+                    name=body.name,
+                    moderation_status=ModerationStatus.AWAITING_MODERATION,
+                    colors=colors,
                 )
-            )
 
-        update_palette(
-            palette.id,
-            name=palette_request.name,
-            moderation_status=ModerationStatus.AWAITING_MODERATION,
-            colors=colors,
-        )
-
-        send_pushover_notification(f"New palette submitted: {palette_request.name}")
-        return {
-            "success": True,
-            "paletteId": palette.id,
-        }
+                send_pushover_notification(f"New palette submitted: {body.name}")
+                return SuccessResponse(
+                    paletteId=palette.id,
+                )
 
     except Exception as e:
         log_error(e, "create_palette")
-        return {
-            "success": False,
-            "error": "Failed to create palette",
-        }
+        return BaseErrorResponse(success=False, message=ERROR_MSG.SOMETHING_WENT_WRONG)
