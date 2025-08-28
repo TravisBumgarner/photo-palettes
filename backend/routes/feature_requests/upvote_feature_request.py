@@ -30,9 +30,9 @@ def parse_request(raw_request: RequestWithAuthState):
 
 
 @feature_requests_router.post("/upvote")
-async def post_feature_request(request: RequestWithAuthState, upvote_request: Body):
+async def post_feature_request(raw_request: RequestWithAuthState, body: Body):
     try:
-        parsed_request = parse_request(request)
+        parsed_request = parse_request(raw_request)
 
         match parsed_request:
             case InvalidRequest(error=error):
@@ -42,11 +42,11 @@ async def post_feature_request(request: RequestWithAuthState, upvote_request: Bo
                     "error": error,
                 }
             case AuthedRequest(app_user_id=app_user_id):
-                if has_user_voted(upvote_request.feature_request_id, app_user_id):
+                if has_user_voted(body.feature_request_id, app_user_id):
                     BaseErrorResponse(success=False, message="User has already voted")
                     return
 
-                cast_vote(upvote_request.feature_request_id, app_user_id)
+                cast_vote(body.feature_request_id, app_user_id)
                 return BaseSuccessResponse()
     except Exception as e:
         log_error(e, "upvote_feature_request")

@@ -13,7 +13,7 @@ from utils.auth import user_is_moderator
 from . import palettes_router
 
 
-class ModerateRequest(BaseModel):
+class Body(BaseModel):
     palette_id: uuid.UUID
     status: ModerationStatus
 
@@ -35,19 +35,17 @@ def parse_request(raw_request: RequestWithAuthState) -> AuthedRequest | InvalidR
 
 @palettes_router.post("/moderate")
 async def moderate(
-    request: RequestWithAuthState,
-    moderate_request: ModerateRequest,
+    raw_request: RequestWithAuthState,
+    body: Body,
 ):
-    parsed_request = parse_request(request)
+    parsed_request = parse_request(raw_request)
     try:
         match parsed_request:
             case InvalidRequest(error=error):
                 log_error(RuntimeError(error), "get_palette_list_as_moderator")
                 return BaseErrorResponse(message=error)
             case AuthedRequest(app_user_id=_app_user_id):
-                update_palette_moderation_status(
-                    moderate_request.palette_id, moderate_request.status
-                )
+                update_palette_moderation_status(body.palette_id, body.status)
                 return BaseSuccessResponse()
     except Exception as error:
         log_error(error, "moderate_palette")

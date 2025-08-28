@@ -9,7 +9,7 @@ from middleware.auth import RequestWithAuthState
 from routes.shared import AuthedRequest, BaseErrorResponse, BaseSuccessResponse, InvalidRequest
 from services.logger import log_error
 from services.pushover import send_pushover_notification
-from utils.auth import user_is_authed
+from utils.auth import user_is_authed, user_owns_resource
 from utils.colors import hex_to_rgb
 
 from . import palettes_router
@@ -30,7 +30,7 @@ def parse_request(
     if not palette:
         return InvalidRequest(error=ERROR_MSG.RESOURCE_NOT_FOUND)
 
-    if raw_request.state.app_user_id != palette.app_user_id:
+    if not user_owns_resource(raw_request, palette):
         return InvalidRequest(error=ERROR_MSG.USER_DOES_NOT_OWN_RESOURCE)
 
     return (
@@ -45,12 +45,12 @@ class SuccessResponse(BaseSuccessResponse):
 
 @palettes_router.post("/create")
 async def create(
-    request: RequestWithAuthState,
+    raw_request: RequestWithAuthState,
     body: Body,
 ):
     try:
-        raw_palette = get_palette_by_id(uuid.UUID(body.palette_id), request.state.app_user_id)
-        [parsed_request, palette] = parse_request(request, raw_palette)
+        raw_palette = get_palette_by_id(uuid.UUID(body.palette_id), raw_request.state.app_user_id)
+        [parsed_request, palette] = parse_request(raw_request, raw_palette)
 
         match parsed_request:
             case InvalidRequest(error=error):

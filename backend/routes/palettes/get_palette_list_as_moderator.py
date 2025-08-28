@@ -34,13 +34,13 @@ class SuccessResponse(BaseSuccessResponse):
 
 @palettes_router.get("/moderator")
 def get_list_as_moderator(
-    request: RequestWithAuthState,
+    raw_request: RequestWithAuthState,
     status: ModerationStatus,
     size: int = Query(25, ge=1, le=100),
     offset: int = Query(0, ge=0),
 ):
     try:
-        parsed_request = parse_request(request)
+        parsed_request = parse_request(raw_request)
 
         match parsed_request:
             case InvalidRequest(error=error):

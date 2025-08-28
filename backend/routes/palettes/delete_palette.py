@@ -35,12 +35,12 @@ def parse_request(
 
 @palettes_router.delete("/id/{id}")
 async def delete_palette(
-    request: RequestWithAuthState,
+    raw_request: RequestWithAuthState,
     id: str,
 ):
     try:
-        palette = get_palette_by_id(uuid.UUID(id), request.state.app_user_id)
-        [parsed_request, palette] = parse_request(request, palette)
+        palette = get_palette_by_id(uuid.UUID(id), raw_request.state.app_user_id)
+        [parsed_request, palette] = parse_request(raw_request, palette)
 
         match parsed_request:
             case InvalidRequest(error=error):

@@ -20,11 +20,9 @@ class SuccessResponse(BaseSuccessResponse):
 
 
 @palettes_router.get("/id/{id}")
-async def get_by_id(request: RequestWithAuthState, id: str):
+async def get_by_id(raw_request: RequestWithAuthState, id: str):
     try:
-        parse_request()
-
-        palette = get_palette_by_id(UUID(id), request.state.app_user_id)
+        palette = get_palette_by_id(UUID(id), raw_request.state.app_user_id)
         if not palette:
             return BaseErrorResponse(message=ERROR_MSG.RESOURCE_NOT_FOUND)
 
