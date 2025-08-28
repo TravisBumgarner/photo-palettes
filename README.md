@@ -30,6 +30,16 @@ Run tests - docker-compose exec -T backend pytest
 
 Use simulator since it can more easily connect to Docker backend within my computer.
 
+Open Mac `Console` app and filter by `Process` -> `Photo Palettes` (in top left corner to get logs)
+
+```
+  server: {
+    // url: 'https://photopalettes.com',
+    cleartext: true,
+  },
+```
+I commented out the above setting and then deployed to my phone and now it can 
+
 **Adding new packages**
 
 Unsure if this is the best route but I believe it works if Docker gets mad about missing NPM packages.
