@@ -14,14 +14,17 @@ const Swatch = ({ color }: { color: string }) => {
     <ul
       style={{
         backgroundColor: color,
-        width: 200,
+        width: 100,
         border: "1px solid #000",
         listStyle: "none",
         padding: 10,
         color: getContrastColor(color),
+        fontSize: 8,
       }}
     >
-      <li>{colorDeets?.paletteTitle}</li>
+      <li style={{ overflow: "hidden", textWrap: "nowrap" }}>
+        {colorDeets?.paletteTitle}
+      </li>
       <li>Hex: {color.toUpperCase()}</li>
       <li>RGB: {convert.hex.rgb(color).join(", ")}</li>
       <li>HSL: {convert.hex.hsl(color).join(", ")}</li>

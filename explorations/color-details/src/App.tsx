@@ -2,6 +2,7 @@ import { useState } from "react";
 import "./App.css";
 import ColorPickers from "./ColorPickers";
 import Swatch from "./Swatch";
+import Gradient from "./Gradient";
 import convert from "color-convert";
 
 function getRandomColor() {
@@ -59,6 +60,11 @@ function App() {
         </div>
         {colors.map((color, index) => (
           <Swatch key={index} color={color} />
+        ))}
+      </div>
+      <div>
+        {colors.map((color) => (
+          <Gradient key={color} color={color} />
         ))}
       </div>
     </>
