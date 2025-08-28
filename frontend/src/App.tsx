@@ -13,6 +13,7 @@ import AlertsManager from './components/AlertsManager'
 import RenderModal from './sharedComponents/Modal'
 import { Capacitor } from '@capacitor/core'
 import { useMemo } from 'react'
+import { SplashScreen } from '@capacitor/splash-screen'
 
 const queryClient = new QueryClient()
 
@@ -21,6 +22,11 @@ function App() {
   const loadingUser = useGlobalStore((state) => state.loadingUser)
 
   if (loadingUser) {
+    if (Capacitor.isNativePlatform()) {
+      SplashScreen.show()
+      return
+    }
+
     return (
       <Box
         sx={{
@@ -37,6 +43,8 @@ function App() {
       </Box>
     )
   }
+
+  SplashScreen.hide()
 
   return (
     <QueryClientProvider client={queryClient}>
@@ -61,6 +69,7 @@ const PlatformSpecificStyling = ({
       return {
         padding:
           'env(safe-area-inset-top) 10px env(safe-area-inset-bottom) 10px',
+        minHeight: '100vh',
       }
     }
 

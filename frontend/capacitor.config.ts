@@ -10,7 +10,13 @@ const config: CapacitorConfig = {
   },
   ios: {
     // This makes the app draw under the status bar but you need safe-area insets
-    contentInset: 'always',
+    contentInset: 'never',
+  },
+  plugins: {
+    SplashScreen: {
+      launchAutoHide: false, // don’t auto-hide immediately
+      backgroundColor: '#FFFFFF',
+    },
   },
 }
 
