@@ -12,6 +12,7 @@ On network changes you'll need to run `make set-ip`.
 
 make deploy-all
 
-# Connect to Heroku
+# Heroku Stuff
 
-heroku ps:exec --app photo-palettes-backend
+Connect shell to Heroku - `heroku ps:exec --app photo-palettes-backend`
+Logs - `heroku logs --tail --app photo-palettes-backend`
