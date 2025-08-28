@@ -11,3 +11,7 @@ On network changes you'll need to run `make set-ip`.
 # Deploy to Prod
 
 make deploy-all
+
+# Connect to Heroku
+
+heroku ps:exec --app photo-palettes-backend

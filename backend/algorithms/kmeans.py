@@ -1,4 +1,3 @@
-import time
 from typing import TypedDict
 
 import numpy as np
@@ -16,7 +15,7 @@ class TSwatch(TypedDict):
 TGeneratedPalette = list[TSwatch]
 
 
-def get_image_colors(image: Image.Image, app_user_id: str, start_time: float) -> TGeneratedPalette:
+def get_image_colors(image: Image.Image) -> TGeneratedPalette:
     img_array = np.array(image)
     pixels = img_array.reshape(-1, 3)
     kmeans = KMeans(n_clusters=6, random_state=42)
@@ -73,5 +72,5 @@ def get_image_colors(image: Image.Image, app_user_id: str, start_time: float) ->
 
     return [
         {"color": color.upper(), "percent_location": loc}
-        for color, loc in zip(hex_colors, locations)
+        for color, loc in zip(hex_colors, locations, strict=True)
     ]

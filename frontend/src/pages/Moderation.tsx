@@ -71,7 +71,7 @@ const Moderation = () => {
     if (isLoading || !data) return <Loading />
     if (error)
       return <Message message="Error fetching palettes" color="error" />
-    if (!data.success) return <Message message={data.error} color="error" />
+    if (!data.success) return <Message message={data.message} color="error" />
     if (data.palettes.length === 0)
       return <Message message="No palettes" color="info" />
 
@@ -83,7 +83,7 @@ const Moderation = () => {
               key={palette.id}
               sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}
             >
-              <PaletteThumbnail palette={palette} />
+              <PaletteThumbnail palette={palette} refetch={refetch} />
               <ModerationPanel
                 refetch={refetch}
                 moderationStatus={STATUS_TABS[filterTabIndex]}

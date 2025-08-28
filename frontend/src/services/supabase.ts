@@ -68,7 +68,7 @@ export async function getToken() {
   const { data, error } = await client.auth.getSession()
   if (error) {
     logger.error(`Get token failed ${JSON.stringify(error)}`)
-    return { error: 'Get token failed', success: false }
+    return { message: 'Get token failed', success: false }
   }
   return { token: data.session?.access_token, success: true }
 }

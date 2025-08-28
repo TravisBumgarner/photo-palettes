@@ -5,11 +5,10 @@ import { getToken } from '../../services/supabase'
 const zodSchema = z.discriminatedUnion('success', [
   z.object({
     success: z.literal(true),
-    featureRequestId: z.string(),
   }),
   z.object({
     success: z.literal(false),
-    error: z.string(),
+    message: z.string(),
   }),
 ])
 

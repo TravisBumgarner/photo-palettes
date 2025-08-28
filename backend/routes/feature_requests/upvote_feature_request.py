@@ -2,34 +2,47 @@ import uuid
 
 from pydantic import BaseModel
 
+from consts import ERROR_MSG
 from database.queries.feature_requests import cast_vote, has_user_voted
 from middleware.auth import RequestWithAuthState
+from routes.shared import AuthedRequest, BaseErrorResponse, BaseSuccessResponse, InvalidRequest
 from services.logger import log_error
+from utils.auth import user_is_authed
 
 from . import feature_requests_router
 
+ROUTE_NAME = "upvote_feature_request"
 
-class UpvoteRequest(BaseModel):
+
+class Body(BaseModel):
     feature_request_id: uuid.UUID
 
 
-@feature_requests_router.post("/upvote")
-async def post_feature_request(request: RequestWithAuthState, upvote_request: UpvoteRequest):
-    if has_user_voted(upvote_request.feature_request_id, request.state.app_user_id):
-        return {
-            "success": False,
-            "error": "User has already voted",
-        }
+def parse_request(raw_request: RequestWithAuthState):
+    if not user_is_authed(raw_request):
+        return InvalidRequest(error=ERROR_MSG.CANNOT_PERFORM_ACTION)
 
+    return AuthedRequest(
+        app_user_id=raw_request.state.app_user_id, auth_id=raw_request.state.auth_id
+    )
+
+
+@feature_requests_router.post("/upvote")
+async def post_feature_request(raw_request: RequestWithAuthState, body: Body):
     try:
-        cast_vote(upvote_request.feature_request_id, request.state.app_user_id)
-        return {
-            "success": True,
-            "featureRequestId": upvote_request.feature_request_id,
-        }
+        parsed_request = parse_request(raw_request)
+
+        match parsed_request:
+            case InvalidRequest(error=error):
+                log_error(RuntimeError(error), ROUTE_NAME)
+                return BaseErrorResponse(message=error)
+            case AuthedRequest(app_user_id=app_user_id):
+                if has_user_voted(body.feature_request_id, app_user_id):
+                    log_error(RuntimeError(ERROR_MSG.CANNOT_PERFORM_ACTION), ROUTE_NAME)
+                    return BaseErrorResponse(message=ERROR_MSG.CANNOT_PERFORM_ACTION)
+
+                cast_vote(body.feature_request_id, app_user_id)
+                return BaseSuccessResponse()
     except Exception as e:
-        log_error(e, "upvote_feature_request")
-        return {
-            "success": False,
-            "error": "Failed to upvote feature request",
-        }
+        log_error(e, ROUTE_NAME)
+        return BaseErrorResponse(message="Failed to upvote feature request")
