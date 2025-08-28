@@ -5,16 +5,15 @@ from pydantic import BaseModel
 from consts import ERROR_MSG
 from database.queries.feature_requests import add_feature_request
 from middleware.auth import RequestWithAuthState
-from routes.shared import AuthedRequest, BaseErrorResponse, InvalidRequest
+from routes.shared import AuthedRequest, BaseErrorResponse, BaseSuccessResponse, InvalidRequest
 from services.logger import log_error
 from utils.auth import user_is_moderator
 
 from . import feature_requests_router
 
 
-class BaseSuccessResponse(BaseModel):
+class SuccessResponse(BaseSuccessResponse):
     featureRequestId: uuid.UUID  # noqa #815
-    success: bool = True
 
 
 class Body(BaseModel):
@@ -47,7 +46,7 @@ async def post_feature_request(raw_request: RequestWithAuthState, body: Body):
                 return BaseErrorResponse(message=error)
             case AuthedRequest(app_user_id=_app_user_id):
                 result = add_feature_request(body.title, body.description)
-                return BaseSuccessResponse(featureRequestId=result)
+                return SuccessResponse(featureRequestId=result)
     except Exception as e:
         log_error(e, ROUTE_NAME)
         return BaseErrorResponse(message=ERROR_MSG.SOMETHING_WENT_WRONG)
