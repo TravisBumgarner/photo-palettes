@@ -12,6 +12,8 @@ from services.logger import log_error
 from . import palettes_router
 from .palette_response_models import PaletteResponse, map_palette_array_to_response
 
+ROUTE_NAME = "get_palette_list"
+
 
 def parse_request():
     # Shows no parsing required.
@@ -73,5 +75,5 @@ async def get_palette_list(
         )
 
     except Exception as error:
-        log_error(error, "get_palette_list")
-        return BaseErrorResponse(success=False, message=ERROR_MSG.SOMETHING_WENT_WRONG)
+        log_error(error, ROUTE_NAME)
+        return BaseErrorResponse(message=ERROR_MSG.SOMETHING_WENT_WRONG)

@@ -22,14 +22,11 @@ class Body(BaseModel):
     description: str
 
 
+ROUTE_NAME = "add_feature_request"
+
+
 def parse_request(raw_request: RequestWithAuthState) -> AuthedRequest | InvalidRequest:
     if not user_is_moderator(raw_request):
-        log_error(
-            PermissionError(
-                f"User {raw_request.state.app_user_id} is not a moderator but attempted to moderate a palette"
-            ),
-            "add_feature_request_not_moderator",
-        )
         return InvalidRequest(error=ERROR_MSG.CANNOT_PERFORM_ACTION)
 
     return AuthedRequest(
@@ -44,11 +41,13 @@ async def post_feature_request(raw_request: RequestWithAuthState, body: Body):
 
         match parsed_request:
             case InvalidRequest(error=error):
-                log_error(RuntimeError(error), "add_feature_request_invalid")
-                return BaseErrorResponse(success=False, message=error)
+                log_error(
+                    RuntimeError(error), ROUTE_NAME, app_user_id=raw_request.state.app_user_id
+                )
+                return BaseErrorResponse(message=error)
             case AuthedRequest(app_user_id=_app_user_id):
                 result = add_feature_request(body.title, body.description)
                 return BaseSuccessResponse(featureRequestId=result)
     except Exception as e:
-        log_error(e, "add_feature_request")
-        return BaseErrorResponse(success=False, message=ERROR_MSG.SOMETHING_WENT_WRONG)
+        log_error(e, ROUTE_NAME)
+        return BaseErrorResponse(message=ERROR_MSG.SOMETHING_WENT_WRONG)

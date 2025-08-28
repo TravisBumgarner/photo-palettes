@@ -14,6 +14,8 @@ from utils.colors import hex_to_rgb
 
 from . import palettes_router
 
+ROUTE_NAME = "create_palette"
+
 
 class Body(BaseModel):
     name: str
@@ -54,7 +56,7 @@ async def create(
 
         match parsed_request:
             case InvalidRequest(error=error):
-                log_error(RuntimeError(error), "create_palette_invalid")
+                log_error(RuntimeError(error), ROUTE_NAME)
                 return BaseErrorResponse(message=error)
             case AuthedRequest(app_user_id=_app_user_id):
                 colors = []
@@ -84,5 +86,5 @@ async def create(
                 )
 
     except Exception as e:
-        log_error(e, "create_palette")
-        return BaseErrorResponse(success=False, message=ERROR_MSG.SOMETHING_WENT_WRONG)
+        log_error(e, ROUTE_NAME)
+        return BaseErrorResponse(message=ERROR_MSG.SOMETHING_WENT_WRONG)

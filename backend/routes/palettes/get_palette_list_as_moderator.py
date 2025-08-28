@@ -14,17 +14,14 @@ from .palette_response_models import PaletteResponse, map_palette_array_to_respo
 
 def parse_request(raw_request: RequestWithAuthState) -> AuthedRequest | InvalidRequest:
     if not user_is_moderator(raw_request):
-        log_error(
-            PermissionError(
-                f"User {raw_request.state.app_user_id} is not a moderator but attempted to get palette list"
-            ),
-            "get_palette_list_as_moderator",
-        )
         return InvalidRequest(error=ERROR_MSG.CANNOT_PERFORM_ACTION)
 
     return AuthedRequest(
         app_user_id=raw_request.state.app_user_id, auth_id=raw_request.state.auth_id
     )
+
+
+ROUTE_NAME = "get_palette_list_as_moderator"
 
 
 class SuccessResponse(BaseSuccessResponse):
@@ -44,8 +41,8 @@ def get_list_as_moderator(
 
         match parsed_request:
             case InvalidRequest(error=error):
-                log_error(RuntimeError(error), "get_palette_list_as_moderator")
-                return BaseErrorResponse(success=False, message=error)
+                log_error(RuntimeError(error), ROUTE_NAME)
+                return BaseErrorResponse(message=error)
             case AuthedRequest(success=True, app_user_id=_app_user_id):
                 palettes = get_palettes(
                     moderation_status=status,
@@ -60,5 +57,5 @@ def get_list_as_moderator(
                 )
 
     except Exception as error:
-        log_error(error, "get_palette_list_as_moderator")
-        return BaseErrorResponse(success=False, message=ERROR_MSG.SOMETHING_WENT_WRONG)
+        log_error(error, ROUTE_NAME)
+        return BaseErrorResponse(message=ERROR_MSG.SOMETHING_WENT_WRONG)

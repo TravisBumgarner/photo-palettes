@@ -11,6 +11,8 @@ from utils.auth import user_is_authed
 
 from . import favorites_router
 
+ROUTE_NAME = "add_to_favorites"
+
 
 class Body(BaseModel):
     palette_id: uuid.UUID
@@ -32,11 +34,11 @@ async def add_to_favorites(raw_request: RequestWithAuthState, body: Body):
 
         match parsed_request:
             case InvalidRequest(error=error):
-                log_error(RuntimeError(error), "add_to_favorites_invalid")
-                return BaseErrorResponse(success=False, message=error)
+                log_error(RuntimeError(error), ROUTE_NAME)
+                return BaseErrorResponse(message=error)
             case AuthedRequest(app_user_id=app_user_id):
                 add_palette_to_favorites(app_user_id, body.palette_id)
                 return BaseSuccessResponse()
     except Exception as e:
-        log_error(e, "add_to_favorites")
-        return BaseErrorResponse(success=False, message=ERROR_MSG.SOMETHING_WENT_WRONG)
+        log_error(e, ROUTE_NAME)
+        return BaseErrorResponse(message=ERROR_MSG.SOMETHING_WENT_WRONG)

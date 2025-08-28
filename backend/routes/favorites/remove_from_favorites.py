@@ -11,6 +11,8 @@ from utils.auth import user_is_authed
 
 from . import favorites_router
 
+ROUTE_NAME = "remove_from_favorites"
+
 
 class Body(BaseModel):
     palette_id: uuid.UUID
@@ -38,12 +40,12 @@ async def remove_to_favorites(raw_request: RequestWithAuthState, body: Body):
 
         match parsed_request:
             case InvalidRequest(error=error):
-                log_error(RuntimeError(error), "remove_from_favorites_invalid")
+                log_error(RuntimeError(error), ROUTE_NAME)
                 return Response(success=False, message=error)
             case AuthedRequest(app_user_id=app_user_id):
                 result = remove_palette_from_favorites(app_user_id, body.palette_id)
                 return Response(success=result)
 
     except Exception as e:
-        log_error(e, "remove_from_favorites")
+        log_error(e, ROUTE_NAME)
         return Response(success=False, message=ERROR_MSG.SOMETHING_WENT_WRONG)

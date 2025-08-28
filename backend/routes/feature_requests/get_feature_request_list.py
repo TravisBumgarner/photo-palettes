@@ -9,6 +9,8 @@ from services.logger import log_error
 
 from . import feature_requests_router
 
+ROUTE_NAME = "get_feature_request_list"
+
 
 def parse_request():
     # Shows no parsing required.
@@ -29,5 +31,5 @@ async def get_list():
             featureRequests=map_feature_request_array_to_response(feature_requests)
         )
     except Exception as error:
-        log_error(error, "get_feature_request_list")
-        return BaseErrorResponse(success=False, message=ERROR_MSG.SOMETHING_WENT_WRONG)
+        log_error(error, ROUTE_NAME)
+        return BaseErrorResponse(message=ERROR_MSG.SOMETHING_WENT_WRONG)

@@ -14,6 +14,8 @@ from utils.auth import user_is_authed
 from ..palettes.palette_response_models import PaletteResponse, map_palette_array_to_response
 from . import favorites_router
 
+ROUTE_NAME = "get_palette_favorites_list"
+
 
 class BaseSuccessResponse(BaseModel):
     palettes: list[PaletteResponse]
@@ -23,7 +25,6 @@ class BaseSuccessResponse(BaseModel):
 
 def parse_request(raw_request: RequestWithAuthState) -> AuthedRequest | InvalidRequest:
     if not user_is_authed(raw_request):
-        log_error(PermissionError("User is not authenticated"), "get_palette_favorites_list")
         return InvalidRequest(error=ERROR_MSG.USER_NOT_AUTHENTICATED)
 
     return AuthedRequest(
@@ -42,7 +43,8 @@ async def get_favorite_palettes(
         parsed_request = parse_request(raw_request)
         match parsed_request:
             case InvalidRequest(error=error):
-                return BaseErrorResponse(success=False, message=error)
+                log_error(RuntimeError(error), ROUTE_NAME)
+                return BaseErrorResponse(message=error)
             case AuthedRequest(app_user_id=app_user_id):
                 palettes = get_app_user_favorites(
                     size=size,
@@ -57,5 +59,5 @@ async def get_favorite_palettes(
                     total=total_count,
                 )
     except Exception as error:
-        log_error(error, "get_palette_list")
-        return BaseErrorResponse(success=False, message=ERROR_MSG.SOMETHING_WENT_WRONG)
+        log_error(error, ROUTE_NAME)
+        return BaseErrorResponse(message=ERROR_MSG.SOMETHING_WENT_WRONG)

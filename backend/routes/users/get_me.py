@@ -12,15 +12,14 @@ from . import users_router
 
 def parse_request(raw_request: RequestWithAuthState) -> AuthedRequest | InvalidRequest:
     if not user_is_authed(raw_request):
-        log_error(
-            PermissionError("User is not authed"),
-            "get_me",
-        )
         return InvalidRequest(error=ERROR_MSG.CANNOT_PERFORM_ACTION)
 
     return AuthedRequest(
         app_user_id=raw_request.state.app_user_id, auth_id=raw_request.state.auth_id
     )
+
+
+ROUTE_NAME = "get_me"
 
 
 class SuccessResponse(BaseSuccessResponse):
@@ -37,14 +36,14 @@ async def me(raw_request: RequestWithAuthState):
 
         match parsed_request:
             case InvalidRequest(error=error):
-                log_error(RuntimeError(error), "get_me_invalid")
+                log_error(RuntimeError(error), ROUTE_NAME)
                 return BaseErrorResponse(message=error)
             case AuthedRequest(app_user_id=_app_user_id, auth_id=auth_id):
                 app_user = get_app_user_by_auth_id(auth_id)
                 if app_user is None:
                     log_error(
-                        PermissionError("User not found"),
-                        "get_me_not_found",
+                        RuntimeError(ERROR_MSG.USER_DOES_NOT_EXIST),
+                        ROUTE_NAME,
                     )
                     return BaseErrorResponse(message=ERROR_MSG.USER_DOES_NOT_EXIST)
 
@@ -55,5 +54,5 @@ async def me(raw_request: RequestWithAuthState):
             permissionLevel=app_user.permission_level,
         )
     except Exception as error:
-        log_error(error, "get_me")
+        log_error(error, ROUTE_NAME)
         return BaseErrorResponse(message=ERROR_MSG.SOMETHING_WENT_WRONG)

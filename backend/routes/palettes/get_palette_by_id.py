@@ -15,6 +15,9 @@ def parse_request():
     pass
 
 
+ROUTE_NAME = "get_palette_by_id"
+
+
 class SuccessResponse(BaseSuccessResponse):
     palette: PaletteResponse
 
@@ -24,9 +27,10 @@ async def get_by_id(raw_request: RequestWithAuthState, id: str):
     try:
         palette = get_palette_by_id(UUID(id), raw_request.state.app_user_id)
         if not palette:
+            log_error(RuntimeError(ERROR_MSG.RESOURCE_NOT_FOUND), ROUTE_NAME)
             return BaseErrorResponse(message=ERROR_MSG.RESOURCE_NOT_FOUND)
 
         return SuccessResponse(palette=map_palette_to_response(palette))
     except Exception as e:
-        log_error(e, "get_palette_by_id")
-        return BaseErrorResponse(success=False, message=ERROR_MSG.SOMETHING_WENT_WRONG)
+        log_error(e, ROUTE_NAME)
+        return BaseErrorResponse(message=ERROR_MSG.SOMETHING_WENT_WRONG)

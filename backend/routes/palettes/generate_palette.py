@@ -26,17 +26,13 @@ from .palette_response_models import GeneratePaletteResponse
 
 config = get_config()
 
+ROUTE_NAME = "generate_palette"
+
 
 def parse_request(
     raw_request: RequestWithAuthState, photo: UploadFile
 ) -> tuple[AuthedRequest, UploadFile] | InvalidRequest:
     if not user_is_authed(raw_request):
-        log_error(
-            PermissionError(
-                f"User {raw_request.state.app_user_id} is not authenticated but attempted to generate a palette"
-            ),
-            "generate_not_moderator",
-        )
         return InvalidRequest(error=ERROR_MSG.CANNOT_PERFORM_ACTION)
 
     if not photo:
@@ -60,7 +56,7 @@ async def generate(raw_request: RequestWithAuthState, photo: UploadFile):
 
         match parsed_content:
             case InvalidRequest(error=error):
-                log_error(RuntimeError(error), "generate_palette_invalid")
+                log_error(RuntimeError(error), ROUTE_NAME)
                 return BaseErrorResponse(error=error)
 
             case AuthedRequest(app_user_id=app_user_id, auth_id=_auth_id):
@@ -100,5 +96,5 @@ async def generate(raw_request: RequestWithAuthState, photo: UploadFile):
                     palette=map_generate_palette_array_to_response(colors), paletteId=palette.id
                 )
     except Exception as error:
-        log_error(error, "generate_palette")
-        return BaseErrorResponse(success=False, message=ERROR_MSG.SOMETHING_WENT_WRONG)
+        log_error(error, ROUTE_NAME)
+        return BaseErrorResponse(message=ERROR_MSG.SOMETHING_WENT_WRONG)

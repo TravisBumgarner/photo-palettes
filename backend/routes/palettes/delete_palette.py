@@ -11,17 +11,13 @@ from utils.photos import delete_photo
 
 from . import palettes_router
 
+ROUTE_NAME = "delete_palette"
+
 
 def parse_request(
     raw_request: RequestWithAuthState, palette: Palette | None
 ) -> tuple[AuthedRequest, Palette] | tuple[InvalidRequest, None]:
     if not user_is_moderator(raw_request):
-        log_error(
-            PermissionError(
-                f"User {raw_request.state.app_user_id} is not a moderator but attempted to delete a palette"
-            ),
-            "delete_not_moderator",
-        )
         return (InvalidRequest(error=ERROR_MSG.CANNOT_PERFORM_ACTION), None)
 
     if not palette:
@@ -44,7 +40,9 @@ async def delete_palette(
 
         match parsed_request:
             case InvalidRequest(error=error):
-                log_error(RuntimeError(error), "delete_palette_invalid")
+                log_error(
+                    RuntimeError(error), ROUTE_NAME, app_user_id=raw_request.state.app_user_id
+                )
                 return BaseErrorResponse(message=error)
 
             case AuthedRequest(app_user_id=_app_user_id):
@@ -53,5 +51,5 @@ async def delete_palette(
                 delete_palette_by_id(palette.id)
                 return BaseSuccessResponse()
     except Exception as e:
-        log_error(e, "delete_palette")
+        log_error(e, ROUTE_NAME)
         return BaseErrorResponse(message=ERROR_MSG.SOMETHING_WENT_WRONG)
