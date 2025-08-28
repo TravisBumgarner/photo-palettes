@@ -1,3 +1,5 @@
+from typing import Annotated
+
 from fastapi import Query
 
 from consts import ERROR_MSG
@@ -26,24 +28,27 @@ ROUTE_NAME = "get_palette_list_as_moderator"
 
 class SuccessResponse(BaseSuccessResponse):
     palettes: list[PaletteResponse]
-    total_count: int
+    total: int
 
 
 @palettes_router.get("/moderator")
 def get_list_as_moderator(
     raw_request: RequestWithAuthState,
     status: ModerationStatus,
-    size: int = Query(25, ge=1, le=100),
-    offset: int = Query(0, ge=0),
+    size: Annotated[int, Query(ge=1, le=100)] = 25,
+    offset: Annotated[int, Query(ge=0)] = 0,
 ):
     try:
+        print("a")
         parsed_request = parse_request(raw_request)
 
         match parsed_request:
             case InvalidRequest(error=error):
+                print("c")
                 log_error(RuntimeError(error), ROUTE_NAME)
                 return BaseErrorResponse(message=error)
-            case AuthedRequest(success=True, app_user_id=_app_user_id):
+            case AuthedRequest(app_user_id=_app_user_id):
+                print("d")
                 palettes = get_palettes(
                     moderation_status=status,
                     size=size,
@@ -57,5 +62,6 @@ def get_list_as_moderator(
                 )
 
     except Exception as error:
+        print("error", error)
         log_error(error, ROUTE_NAME)
         return BaseErrorResponse(message=ERROR_MSG.SOMETHING_WENT_WRONG)

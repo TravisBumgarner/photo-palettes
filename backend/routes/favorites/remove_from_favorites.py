@@ -23,7 +23,6 @@ class Response(BaseModel):
     message: str | None = None
 
 
-# Discriminated union for request validation
 def parse_request(raw_request: RequestWithAuthState) -> AuthedRequest | InvalidRequest:
     if not user_is_authed(raw_request):
         return InvalidRequest(error=ERROR_MSG.USER_NOT_AUTHENTICATED)
