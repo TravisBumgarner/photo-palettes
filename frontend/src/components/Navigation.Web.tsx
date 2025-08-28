@@ -1,5 +1,3 @@
-import { Capacitor } from '@capacitor/core'
-
 import { GiHamburgerMenu } from 'react-icons/gi'
 
 import {
@@ -72,40 +70,37 @@ const Navigation = () => {
         borderBottomColor: 'divider',
       }}
     >
-      {Capacitor.isNativePlatform() && <Box></Box>}
-      {!Capacitor.isNativePlatform() && (
-        <Box
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: 'row',
+          gap: '14px',
+        }}
+      >
+        <Link
+          hideUnderline
           sx={{
-            display: 'flex',
-            flexDirection: 'row',
-            gap: '14px',
+            fontWeight: 900,
+            color: 'text.primary',
+            fontSize: FONT_SIZES.LARGE.PX,
           }}
+          href={ROUTES.home.href}
         >
-          <Link
-            hideUnderline
-            sx={{
-              fontWeight: 900,
-              color: 'text.primary',
-              fontSize: FONT_SIZES.LARGE.PX,
-            }}
-            href={ROUTES.home.href}
-          >
-            <Typography variant="h1">
-              {ROUTES.home.label}
-              <sup
-                style={{
-                  fontSize: '10px',
-                  position: 'relative',
-                  top: '-5px',
-                  left: '5px',
-                }}
-              >
-                Alpha
-              </sup>
-            </Typography>
-          </Link>
-        </Box>
-      )}
+          <Typography variant="h1">
+            {ROUTES.home.label}
+            <sup
+              style={{
+                fontSize: '10px',
+                position: 'relative',
+                top: '-5px',
+                left: '5px',
+              }}
+            >
+              Alpha
+            </sup>
+          </Typography>
+        </Link>
+      </Box>
 
       <Box
         sx={{

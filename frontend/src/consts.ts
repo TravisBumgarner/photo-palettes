@@ -20,7 +20,7 @@ export const ROUTES = {
   },
   browse: {
     key: 'browse',
-    href: '/browse',
+    href: '/',
     label: 'Browse',
   },
   moderation: {

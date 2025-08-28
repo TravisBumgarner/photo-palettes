@@ -1,6 +1,5 @@
 import { BrowserRouter } from 'react-router-dom'
 import Footer from './components/Footer'
-import Navigation from './components/Navigation'
 import Router from './components/Router'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 
@@ -14,6 +13,8 @@ import RenderModal from './sharedComponents/Modal'
 import { Capacitor } from '@capacitor/core'
 import { useMemo } from 'react'
 import { SplashScreen } from '@capacitor/splash-screen'
+import NativeNavigation from './components/Navigation.Native'
+import WebNavigation from './components/Navigation.Web'
 
 const queryClient = new QueryClient()
 
@@ -50,7 +51,11 @@ function App() {
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>
         <AlertsManager />
-        <Navigation />
+        {Capacitor.isNativePlatform() ? (
+          <NativeNavigation />
+        ) : (
+          <WebNavigation />
+        )}
         <Router />
         <Footer />
         <RenderModal />
