@@ -72,5 +72,5 @@ def get_image_colors(image: Image.Image) -> TGeneratedPalette:
 
     return [
         {"color": color.upper(), "percent_location": loc}
-        for color, loc in zip(hex_colors, locations, strict=False)
+        for color, loc in zip(hex_colors, locations, strict=True)
     ]
