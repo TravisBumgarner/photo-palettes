@@ -18,7 +18,7 @@ const Message = ({
         border: `1px solid`,
         borderColor: 'divider',
         borderRadius: BORDER_RADIUS.ZERO.PX,
-        padding: SPACING.LARGE.PX,
+        padding: SPACING.SMALL.PX,
         margin: `${SPACING.MEDIUM.PX} 0`,
         display: 'flex',
         flexDirection: 'column',

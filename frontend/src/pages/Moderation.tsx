@@ -1,5 +1,3 @@
-'use client'
-
 import { Box, Tab, Tabs } from '@mui/material'
 import { useQuery } from '@tanstack/react-query'
 import { useCallback, useEffect, useMemo, useState } from 'react'

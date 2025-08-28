@@ -1,5 +1,3 @@
-'use client'
-
 import { useMediaQuery } from '@mui/material'
 import CssBaseline from '@mui/material/CssBaseline'
 import {

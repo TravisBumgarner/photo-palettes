@@ -1,5 +1,3 @@
-'use client'
-
 import { Button, TextField, Typography } from '@mui/material'
 import { type ChangeEvent, useCallback, useState } from 'react'
 import { z } from 'zod'

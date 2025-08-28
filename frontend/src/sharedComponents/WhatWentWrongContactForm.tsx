@@ -1,5 +1,3 @@
-'use client'
-
 import { Box, Button, TextField, Typography } from '@mui/material'
 import React, { useCallback, useEffect, useState } from 'react'
 import useGlobalStore from '../store'

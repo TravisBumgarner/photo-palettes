@@ -1,5 +1,3 @@
-'use client'
-
 import { Typography } from '@mui/material'
 import PageTitle from '../styles/shared/PageTitle'
 import PageWrapper from '../styles/shared/PageWrapper'

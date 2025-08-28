@@ -17,3 +17,9 @@ Might have to down and up first.
 # Deploy to App Store
 
 1. `npx cap open ios`
+
+# Plan of attack for Capacitor
+
+Shim it in where possible.
+
+```

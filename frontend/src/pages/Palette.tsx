@@ -1,5 +1,3 @@
-'use client'
-
 import { Box, Link } from '@mui/material'
 import { SPACING } from '../styles/styleConsts'
 import { MODERATION_STATUS } from '../types'

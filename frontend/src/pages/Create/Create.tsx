@@ -1,5 +1,3 @@
-'use client'
-
 import { Box, Button, TextField } from '@mui/material'
 import { useMutation } from '@tanstack/react-query'
 import { useCallback, useState } from 'react'

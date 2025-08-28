@@ -6,11 +6,13 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 
 import useLoadUserIntoState from './hooks/useLoadUserIntoState'
 import useGlobalStore from './store'
-import { Box } from '@mui/material'
+import { Box, type SxProps } from '@mui/material'
 import Loading from './sharedComponents/Loading'
 import AppThemeProvider from './styles/Theme'
 import AlertsManager from './components/AlertsManager'
 import RenderModal from './sharedComponents/Modal'
+import { Capacitor } from '@capacitor/core'
+import { useMemo } from 'react'
 
 const queryClient = new QueryClient()
 
@@ -49,10 +51,40 @@ function App() {
   )
 }
 
+const PlatformSpecificStyling = ({
+  children,
+}: {
+  children: React.ReactNode
+}) => {
+  const styles = useMemo((): SxProps => {
+    if (Capacitor.getPlatform() === 'ios') {
+      return {
+        padding:
+          'env(safe-area-inset-top) 10px env(safe-area-inset-bottom) 10px',
+      }
+    }
+
+    if (Capacitor.getPlatform() === 'android') {
+      return {
+        // It appears android needs to be handled differently than iOS but I don't care for Android for now.
+        padding: '10px',
+      }
+    }
+
+    return {
+      padding: '10px',
+    }
+  }, [])
+
+  return <Box sx={styles}>{children}</Box>
+}
+
 const WrappedApp = () => {
   return (
     <AppThemeProvider>
-      <App />
+      <PlatformSpecificStyling>
+        <App />
+      </PlatformSpecificStyling>
     </AppThemeProvider>
   )
 }

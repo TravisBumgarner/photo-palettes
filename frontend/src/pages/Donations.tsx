@@ -1,5 +1,3 @@
-'use client'
-
 import {
   Table as MuiTable,
   Paper,
