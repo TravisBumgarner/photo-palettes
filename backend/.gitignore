@@ -12,3 +12,5 @@ uploads/
 
 .dmypy.json
 .mypy_cache/
+
+.env.prod
