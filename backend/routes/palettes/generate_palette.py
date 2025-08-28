@@ -50,7 +50,10 @@ class SuccessResponse(BaseSuccessResponse):
 
 
 @palettes_router.post("/generate")
-async def generate(raw_request: RequestWithAuthState, photo: UploadFile):
+async def generate(
+    raw_request: RequestWithAuthState,
+    photo: UploadFile,  # Filesize is enforced in middleware
+):
     try:
         [parsed_content, parsed_photo] = parse_request(raw_request, photo)
 
