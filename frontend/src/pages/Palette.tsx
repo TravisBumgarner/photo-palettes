@@ -12,6 +12,7 @@ import { getPaletteById } from '../api/palettes/getPaletteById'
 import { useParams } from 'react-router-dom'
 import Loading from '../sharedComponents/Loading'
 import Favorite from '../sharedComponents/Favorite'
+import BlurImage from '../sharedComponents/BlurImage'
 
 const Palette = () => {
   const params = useParams()
@@ -92,31 +93,14 @@ const Palette = () => {
             width: '100%',
             height: '65dvh',
             margin: `${SPACING.MEDIUM.PX} 0`,
+            padding: `${SPACING.SMALL.PX}`,
           }}
         >
-          {/* <Image
-            placeholder="blur"
-            style={{
-              objectFit: "contain",
-              width: "100%",
-              height: "100%",
-              padding: SPACING.SMALL.PX,
-            }}
-            blurDataURL={blurDataURL}
-            width={palette.aspectRatio * 1000}
-            height={1000}
-            src={palette.photoUrl}
-            alt="Palette"
-          /> */}
-          <img
+          <BlurImage
+            blurHash={data.palette.blurhash}
             src={data.palette.photoUrl}
             alt="Palette"
-            style={{
-              objectFit: 'contain',
-              width: '100%',
-              height: '100%',
-              padding: SPACING.SMALL.PX,
-            }}
+            aspectRatio={data.palette.aspectRatio}
           />
         </Box>
         <Box
