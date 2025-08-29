@@ -123,7 +123,7 @@ const Navigation = () => {
           }}
           href={ROUTES.create.href}
         >
-          {ROUTES.create.label + '!'}
+          {ROUTES.create.label}
         </Link>
         <Tooltip title="Menu">
           <IconButton
