@@ -7,7 +7,7 @@ const ThumbnailGridDisplay = ({ children }: { children: React.ReactNode }) => {
     <Box
       sx={{
         display: 'grid',
-        gridTemplateColumns: 'repeat(3, 1fr)',
+        gridTemplateColumns: 'repeat(2, 1fr)',
         gap: SPACING.MEDIUM.PX,
         '@media (max-width: 768px)': {
           gridTemplateColumns: 'repeat(2, 1fr)',

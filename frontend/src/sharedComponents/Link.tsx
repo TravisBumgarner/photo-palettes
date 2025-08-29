@@ -2,6 +2,7 @@ import { Box } from '@mui/material'
 import { type SxProps, useTheme } from '@mui/material/styles'
 import { Link as RouterLink } from 'react-router-dom'
 import { PALETTE } from '../styles/styleConsts'
+import MuiLink from '@mui/material/Link'
 
 type Props = {
   href: string
@@ -21,35 +22,35 @@ const Link = ({
   const isDark = useTheme().palette.mode === 'dark'
   const isExternal = target === '_blank' || /^https?:\/\//.test(href)
 
+  // base styles for both link types
   const baseStyle = {
     color: isDark ? PALETTE.grayscale[200] : PALETTE.grayscale[800],
-    textDecoration: hideUnderline ? 'none' : 'underline',
-  } as const
+    textDecoration: 'none',
+    cursor: 'pointer',
+    transition: 'text-decoration 0.2s',
+  }
+
+  // hover style for underline control
+  const hoverStyle = hideUnderline
+    ? { textDecoration: 'none' }
+    : { textDecoration: 'underline' }
 
   if (isExternal) {
     return (
-      <a
+      <MuiLink
         href={href}
         target={target}
+        sx={{ ...baseStyle, ...sx, '&:hover': hoverStyle }}
         rel={target === '_blank' ? 'noopener noreferrer' : undefined}
-        style={baseStyle}
       >
-        <Box
-          component="span"
-          sx={{ ...sx, '&:hover': { textDecoration: 'underline' } }}
-        >
-          {children}
-        </Box>
-      </a>
+        {children}
+      </MuiLink>
     )
   }
 
   return (
-    <RouterLink to={href} style={baseStyle}>
-      <Box
-        component="span"
-        sx={{ ...sx, '&:hover': { textDecoration: 'underline' } }}
-      >
+    <RouterLink to={href} style={baseStyle as React.CSSProperties}>
+      <Box component="span" sx={{ ...sx, '&:hover': hoverStyle }}>
         {children}
       </Box>
     </RouterLink>

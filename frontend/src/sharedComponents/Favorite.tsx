@@ -1,8 +1,10 @@
-import { IconButton, Tooltip } from '@mui/material'
+import { IconButton, Tooltip, Typography } from '@mui/material'
 import { FaHeart, FaRegHeart } from 'react-icons/fa'
 import { useMutation } from '@tanstack/react-query'
 import addToFavorites from '../api/favorites/addToFavorites'
 import removeFromFavorites from '../api/favorites/removeFromFavorites'
+import { useTheme } from '@mui/material/styles'
+import { PALETTE } from '../styles/styleConsts'
 
 interface FavoriteProps {
   paletteId: string
@@ -19,6 +21,9 @@ const Favorite = ({
 }: FavoriteProps) => {
   // const [localFavorited, setLocalFavorited] = useState(hasUserFavorited)
   // const [localFavorites, setLocalFavorites] = useState(favorites)
+  const isDark = useTheme().palette.mode === 'dark'
+
+  const color = isDark ? PALETTE.grayscale[200] : PALETTE.grayscale[700]
 
   const addMutation = useMutation({
     mutationFn: () => addToFavorites({ paletteId }),
@@ -52,7 +57,13 @@ const Favorite = ({
 
   return (
     <div>
-      <span>{favorites}</span>
+      <Typography
+        variant="body1"
+        component="span"
+        sx={{ textDecoration: 'none' }}
+      >
+        {favorites}
+      </Typography>
       {hasUserFavorited ? (
         <Tooltip title="Remove from favorites">
           <IconButton
@@ -65,7 +76,7 @@ const Favorite = ({
             }}
             disabled={removeMutation.isPending}
           >
-            <FaHeart color="red" />
+            <FaHeart color={color} />
           </IconButton>
         </Tooltip>
       ) : (
@@ -80,7 +91,7 @@ const Favorite = ({
             }}
             disabled={addMutation.isPending}
           >
-            <FaRegHeart color="grey" />
+            <FaRegHeart color={color} />
           </IconButton>
         </Tooltip>
       )}

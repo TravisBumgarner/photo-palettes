@@ -30,9 +30,7 @@ const Section = ({
             key={link}
             sx={{ margin: 0, padding: 0, fontSize: FONT_SIZES.MEDIUM.PX }}
           >
-            <Link hideUnderline href={ROUTES[link].href}>
-              {ROUTES[link].label}
-            </Link>
+            <Link href={ROUTES[link].href}>{ROUTES[link].label}</Link>
           </ListItem>
         ))}
       </List>
