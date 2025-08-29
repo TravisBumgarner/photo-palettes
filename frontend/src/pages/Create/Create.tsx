@@ -34,9 +34,7 @@ const Create = () => {
   const setActiveModal = useGlobalStore((state) => state.setActiveModal)
   const [name, setName] = useState('')
   const [palette, setPalette] = useState<TGeneratedPalette | null>(null)
-  const [paletteSortOrder, setPaletteSortOrder] = useState<number[]>(
-    Array.from({ length: 6 }, (_, i) => i)
-  )
+  const [paletteSortOrder, setPaletteSortOrder] = useState<number[]>([])
 
   const updateSwatch = useCallback((index: number, color: string) => {
     setPalette((prev) => {
@@ -70,6 +68,9 @@ const Create = () => {
       const response = await generatePaletteMutation.mutateAsync(resizedPhoto)
       if (response.success) {
         setPalette(response.palette)
+        setPaletteSortOrder(
+          Array.from({ length: response.palette.length }, (_, i) => i)
+        )
         setPaletteId(response.paletteId)
         setUploadStatus('UPLOADED')
       } else {

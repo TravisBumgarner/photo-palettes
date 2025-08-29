@@ -1,11 +1,12 @@
 // import { useCallback } from 'react'
+import { useCallback, useState } from 'react'
 import { type TSwatch } from '../../../types'
 import { getContrastColor } from '../../../utils'
 import { Reorder } from 'framer-motion'
 
 const ReadonlySwatch = ({
   index,
-  // setActiveIndex,
+  setActiveIndex,
   isActive,
   isOtherActive,
   swatch,
@@ -16,12 +17,20 @@ const ReadonlySwatch = ({
   isActive: boolean
   isOtherActive: boolean
 }) => {
-  // const handleOnClick = useCallback(() => {
-  //   setActiveIndex(isActive ? null : index)
-  // }, [index, setActiveIndex, isActive])
+  const [dragging, setDragging] = useState(false)
+
+  const handleOnClick = useCallback(() => {
+    if (dragging) return // prevent click when dragging
+    setActiveIndex(isActive ? null : index)
+  }, [index, setActiveIndex, isActive, dragging])
 
   return (
     <Reorder.Item
+      onDragStart={() => setDragging(true)}
+      onDragEnd={() => {
+        // give React a tick before clearing
+        setTimeout(() => setDragging(false), 0)
+      }}
       as="div"
       key={index}
       value={index}
@@ -46,7 +55,7 @@ const ReadonlySwatch = ({
         zIndex: isActive ? 2 : 1,
         boxSizing: 'border-box',
       }}
-      // onClick={handleOnClick}
+      onClick={handleOnClick}
     >
       {swatch.color}
     </Reorder.Item>

@@ -12,7 +12,7 @@ const CanvasAndPalette = ({
   palette,
   updateSwatch,
   paletteSortOrder,
-  setPaletteSortOrder
+  setPaletteSortOrder,
 }: {
   photo: Blob | null
   palette: TGeneratedPalette | null
@@ -20,7 +20,6 @@ const CanvasAndPalette = ({
   paletteSortOrder: number[]
   setPaletteSortOrder: (order: number[]) => void
 }) => {
-
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const canvasContainerRef = useRef<HTMLDivElement>(null)
   const [activeIndex, setActiveIndex] = useState<number | null>(null)
@@ -106,7 +105,7 @@ const CanvasAndPalette = ({
             ))}
         </div>
       </Box>
-      <Tooltip title="Drag to reorder. Click to edit." placement="bottom">
+      <Tooltip title="Drag to reorder." placement="bottom">
         <Reorder.Group
           as="div"
           axis="x"
