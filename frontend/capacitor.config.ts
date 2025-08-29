@@ -2,7 +2,6 @@ import type { CapacitorConfig } from '@capacitor/cli'
 
 const isDevelopment = process.env.NODE_ENV === 'development' // eslint-disable-line
 
-// console.log('ruda', isDevelopment)
 const config: CapacitorConfig = {
   appId: 'com.photopalettes',
   appName: 'Photo Palettes',

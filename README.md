@@ -23,22 +23,22 @@ Run tests - docker-compose exec -T backend pytest
 **Testing index.js (Server for frontend)**
 
 1. `docker compose up backend db`
-2. `npm run build:development`
-3. `npm run start` (Server changes just require a restart)
+1. `npm run build:development`
+1. `npm run start` (Server changes just require a restart)
 
 **Mobile Development**
 
-Use simulator since it can more easily connect to Docker backend within my computer.
+1. Bring up all services `make up`
+1. `cd frontend`
+1. (First time) `npm run ios:list-emulators` - Grab an ID and populate `ios:dev-simulator`
+1. Start local development `npm run ios:dev-simulator`
+1. To debug, start safari, select simulator and there should be an app to select.
 
-Open Mac `Console` app and filter by `Process` -> `Photo Palettes` (in top left corner to get logs)
+- Note - Cannot run on a physical device because I need to replace localhost:8000 with the computer's IP for the backend. Not worrying for now because I can just build the app and use the production backend.
 
-```
-  server: {
-    // url: 'https://photopalettes.com',
-    cleartext: true,
-  },
-```
-I commented out the above setting and then deployed to my phone and now it can 
+Debug Notes
+
+- If stuck on splash screen could be because `make up` hasn't been run.
 
 **Adding new packages**
 
