@@ -28,7 +28,6 @@ const PaletteThumbnail = ({
           borderColor: 'divider',
           borderRadius: BORDER_RADIUS.ZERO.PX,
           padding: SPACING.SMALL.PX,
-          height: '100%',
         }}
         key={palette.id}
       >
@@ -46,26 +45,41 @@ const PaletteThumbnail = ({
             objectPosition: "center",
           }}
         /> */}
-
-        <img
-          src={palette.photoUrl}
-          alt={palette.name}
-          style={{
+        <Box
+          sx={{
             width: '100%',
-            height: 200,
-            objectFit: 'cover',
-            objectPosition: 'center',
+            aspectRatio: '1/1',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: '10px',
           }}
-        />
-
+        >
+          <img
+            src={palette.photoUrl}
+            alt={palette.name}
+            style={{
+              maxWidth: '100%',
+              maxHeight: '100%',
+              aspectRatio: palette.aspectRatio,
+              border: `5px solid white`,
+            }}
+          />
+        </Box>
         {palette.colors.length > 0 && (
-          <Box sx={{ display: 'flex' }}>
+          <Box
+            sx={{
+              display: 'flex',
+              gap: SPACING.TINY.PX,
+              marginBottom: SPACING.SMALL.PX,
+            }}
+          >
             {palette.colors.map((color) => (
               <Box
                 key={color.id}
                 sx={{
                   flexGrow: 1,
-                  height: 30,
+                  height: 15,
                   backgroundColor: color.hex,
                 }}
               />
@@ -81,7 +95,7 @@ const PaletteThumbnail = ({
           <Box>
             <Typography variant="body1">{palette.name}</Typography>
             <Typography variant="body2">
-              By {getUserColorFromUUID(palette.appUserId)}
+              {getUserColorFromUUID(palette.appUserId)}
             </Typography>
           </Box>
           <Favorite

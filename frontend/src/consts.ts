@@ -90,4 +90,4 @@ export const ROUTES = {
   },
 }
 
-export const PAGINATION_SIZE = 9
+export const PAGINATION_SIZE = 10
