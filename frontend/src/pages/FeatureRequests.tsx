@@ -1,5 +1,3 @@
-'use client'
-
 import { Box, Button, TextField, Typography } from '@mui/material'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { Reorder } from 'framer-motion'

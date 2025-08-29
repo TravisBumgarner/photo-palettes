@@ -23,12 +23,22 @@ Run tests - docker-compose exec -T backend pytest
 **Testing index.js (Server for frontend)**
 
 1. `docker compose up backend db`
-2. `npm run build:development`
-3. `npm run start` (Server changes just require a restart)
+1. `npm run build:development`
+1. `npm run start` (Server changes just require a restart)
 
 **Mobile Development**
 
-Use simulator since it can more easily connect to Docker backend within my computer.
+1. Bring up all services `make up`
+1. `cd frontend`
+1. (First time) `npm run ios:list-emulators` - Grab an ID and populate `ios:dev-simulator`
+1. Start local development `npm run ios:dev-simulator`
+1. To debug, start safari, select simulator and there should be an app to select.
+
+- Note - Cannot run on a physical device because I need to replace localhost:8000 with the computer's IP for the backend. Not worrying for now because I can just build the app and use the production backend.
+
+Debug Notes
+
+- If stuck on splash screen could be because `make up` hasn't been run.
 
 **Adding new packages**
 
@@ -52,9 +62,22 @@ Unsure if this is the best route but I believe it works if Docker gets mad about
 
 # Production Deploy
 
+## Heroku
+
 1. Bring up services to run tests before deploying - `make up`
 1. Deploy make deploy-all
 
-## Useful Heroku Commands
+Useful commands:
 
 - Shell into app `heroku ps:exec --app photo-palettes-backend`
+- Logs - `heroku logs --tail --app photo-palettes-backend`
+
+## App Store
+
+# Deploy to App Store
+
+1. `npx cap sync ios`
+1. `npx cap open ios`
+1. XCode -> Product -> Archive
+1. Check test flight for build: https://appstoreconnect.apple.com/teams/2399b798-4024-4423-8dab-254bb827c7aa/apps/6751658619/testflight/ios
+1. Under Internal Testing -> Test Group can add folks via email.

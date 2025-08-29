@@ -1,5 +1,3 @@
-'use client'
-
 import { GiHamburgerMenu } from 'react-icons/gi'
 
 import {
@@ -103,6 +101,7 @@ const Navigation = () => {
           </Typography>
         </Link>
       </Box>
+
       <Box
         sx={{
           display: 'flex',

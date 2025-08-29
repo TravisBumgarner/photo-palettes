@@ -1,11 +1,10 @@
-'use client'
-
 import { Box, List, ListItem, Typography } from '@mui/material'
 import { ROUTES } from '../consts'
 import useGlobalStore from '../store'
 import { FONT_SIZES, SPACING } from '../styles/styleConsts'
 import { PERMISSION_LEVEL, type EPermissionLevel } from '../types'
 import Link from '../sharedComponents/Link'
+import { Capacitor } from '@capacitor/core'
 
 const Section = ({
   links,
@@ -88,6 +87,8 @@ const sections = (
 
 const Footer = () => {
   const appUserDetails = useGlobalStore((state) => state.appUserDetails)
+
+  if (Capacitor.isNativePlatform()) return null
 
   return (
     <Box

@@ -5,15 +5,19 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "dev:ios": "npx cap run ios",
     "mv-html-to-ejs": "mv dist/index.html dist/index.ejs",
     "build": "tsc -b && vite build --mode production && npm run mv-html-to-ejs",
     "build:development": "tsc -b && vite build --mode development && npm run mv-html-to-ejs",
+    "ios:build": "tsc -b && vite build --mode production && npx cap copy && npx cap sync && npx cap open ios",
+    "ios:list-emulators": "xcrun simctl list devices",
+    "ios:sync": "npx cap sync ios",
+    "ios:dev-simulator": "NODE_ENV=development npx cap run ios --target=\"017C8C99-B3FF-4C23-90A7-426181D19CF1\"",
     "lint": "eslint .",
     "preview": "vite preview",
     "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,css,scss,md}\"",
     "typecheck": "tsc --noEmit --project tsconfig.app.json",
-    "start": "node index.js"
+    "start": "node index.js",
+    "generate-mobile-assets": "npx capacitor-assets generate"
   },
   "prettier": {
     "trailingComma": "es5",
@@ -26,6 +30,7 @@
     "@capacitor/android": "^7.4.3",
     "@capacitor/core": "^7.4.3",
     "@capacitor/ios": "^7.4.3",
+    "@capacitor/splash-screen": "^7.0.2",
     "@emotion/cache": "^11.14.0",
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.1",
@@ -50,6 +55,7 @@
     "zustand": "^5.0.8"
   },
   "devDependencies": {
+    "@capacitor/assets": "^3.0.5",
     "@capacitor/cli": "^7.4.3",
     "@eslint/js": "^9.33.0",
     "@swc/core": "^1.13.4",

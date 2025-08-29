@@ -1,5 +1,3 @@
-'use client'
-
 import { Box } from '@mui/material'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import useGlobalStore from '../store'
