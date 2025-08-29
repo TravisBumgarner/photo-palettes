@@ -5,6 +5,7 @@ import { type TGeneratedPalette } from '../../../types'
 import DraggableSwatch from './DraggableSwatch'
 import ReadonlySwatch from './ReadonlySwatch'
 import { sharedCSS } from './shared'
+import { Reorder } from 'framer-motion'
 
 const CanvasAndPalette = ({
   photo,
@@ -100,10 +101,12 @@ const CanvasAndPalette = ({
             ))}
         </div>
       </Box>
-      <Box
-        sx={{
-          display: 'flex',
-        }}
+      <Reorder.Group
+        as="div"
+        axis="x"
+        values={palette || []}
+        onReorder={() => {}}
+        style={{ display: 'flex', flexDirection: 'row' }}
       >
         {palette &&
           palette.map((_, index) => (
@@ -116,7 +119,7 @@ const CanvasAndPalette = ({
               setActiveIndex={setActiveIndex}
             />
           ))}
-      </Box>
+      </Reorder.Group>
     </>
   )
 }

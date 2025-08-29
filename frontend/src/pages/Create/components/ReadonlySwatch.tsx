@@ -1,7 +1,7 @@
 import { useCallback } from 'react'
 import { type TSwatch } from '../../../types'
 import { getContrastColor } from '../../../utils'
-import { motion } from 'framer-motion'
+import { motion, Reorder } from 'framer-motion'
 
 const ReadonlySwatch = ({
   index,
@@ -21,7 +21,10 @@ const ReadonlySwatch = ({
   }, [index, setActiveIndex, isActive])
 
   return (
-    <motion.div
+    <Reorder.Item
+      as="div"
+      key={index}
+      value={index}
       initial={{ flexGrow: 1, flexBasis: '16.66%', scale: 1 }}
       animate={{
         flexGrow: isActive ? 1 : isOtherActive ? 0 : 1,
@@ -43,10 +46,10 @@ const ReadonlySwatch = ({
         zIndex: isActive ? 2 : 1,
         boxSizing: 'border-box',
       }}
-      onClick={handleOnClick}
+      // onClick={handleOnClick}
     >
       {swatch.color}
-    </motion.div>
+    </Reorder.Item>
   )
 }
 
