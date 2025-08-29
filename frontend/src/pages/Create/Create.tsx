@@ -34,6 +34,7 @@ const Create = () => {
   const setActiveModal = useGlobalStore((state) => state.setActiveModal)
   const [name, setName] = useState('')
   const [palette, setPalette] = useState<TGeneratedPalette | null>(null)
+  const [paletteSortOrder, setPaletteSortOrder] = useState<number[]>([])
 
   const updateSwatch = useCallback((index: number, color: string) => {
     setPalette((prev) => {
@@ -67,6 +68,9 @@ const Create = () => {
       const response = await generatePaletteMutation.mutateAsync(resizedPhoto)
       if (response.success) {
         setPalette(response.palette)
+        setPaletteSortOrder(
+          Array.from({ length: response.palette.length }, (_, i) => i)
+        )
         setPaletteId(response.paletteId)
         setUploadStatus('UPLOADED')
       } else {
@@ -105,8 +109,9 @@ const Create = () => {
     if (!paletteId || !palette) return
     setUploadStatus('SUBMITTING')
 
+    const sortedPalette = paletteSortOrder.map((index) => palette[index])
     const response = await createPaletteMutation.mutateAsync({
-      palette,
+      palette: sortedPalette,
       paletteId,
       name,
     })
@@ -131,6 +136,7 @@ const Create = () => {
     name,
     palette,
     navigate,
+    paletteSortOrder,
   ])
 
   const handleTryAgain = useCallback(() => {
@@ -178,6 +184,8 @@ const Create = () => {
             photo={photo}
             palette={palette}
             updateSwatch={updateSwatch}
+            paletteSortOrder={paletteSortOrder}
+            setPaletteSortOrder={setPaletteSortOrder}
           />
           <TextField
             variant="outlined"

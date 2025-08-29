@@ -17,11 +17,6 @@ import BlurImage from '../sharedComponents/BlurImage'
 const Palette = () => {
   const params = useParams()
 
-  //   const blurDataURL = useMemo(
-  //     () => blurHashToDataURL(palette.blurhash),
-  //     [palette.blurhash]
-  //   );
-
   const { data, isLoading, error, refetch } = useQuery({
     queryKey: ['palette', Array.isArray(params.id) ? params.id[0] : params.id],
     queryFn: () =>
