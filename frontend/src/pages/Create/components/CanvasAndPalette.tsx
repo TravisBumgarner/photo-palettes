@@ -11,14 +11,16 @@ const CanvasAndPalette = ({
   photo,
   palette,
   updateSwatch,
+  paletteSortOrder,
+  setPaletteSortOrder
 }: {
   photo: Blob | null
   palette: TGeneratedPalette | null
   updateSwatch: (index: number, color: string) => void
+  paletteSortOrder: number[]
+  setPaletteSortOrder: (order: number[]) => void
 }) => {
-  const [paletteSortOrder, setPaletteSortOrder] = useState<number[]>(
-    Array.from({ length: palette?.length || 0 }, (_, i) => i)
-  )
+
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const canvasContainerRef = useRef<HTMLDivElement>(null)
   const [activeIndex, setActiveIndex] = useState<number | null>(null)
