@@ -5,6 +5,7 @@ import { type TPalette } from '../types'
 import { getUserColorFromUUID } from '../utils'
 import Link from './Link'
 import Favorite from './Favorite'
+import BlurImage from './BlurImage'
 // import { blurHashToDataURL } from "../utils/blurhashToDataURL";
 // import { useMemo } from "react";
 
@@ -15,11 +16,6 @@ const PaletteThumbnail = ({
   palette: TPalette
   refetch: () => void
 }) => {
-  // const blurDataURL = useMemo(
-  //   () => blurHashToDataURL(palette.blurhash),
-  //   [palette.blurhash]
-  // );
-
   return (
     <Link href={`/palette/${palette.id}`} hideUnderline>
       <Box
@@ -31,20 +27,6 @@ const PaletteThumbnail = ({
         }}
         key={palette.id}
       >
-        {/* <Image
-          placeholder="blur"
-          width={1200}
-          height={1200}
-          blurDataURL={blurDataURL}
-          src={palette.photoUrl}
-          alt={palette.name}
-          style={{
-            width: "100%",
-            height: 200,
-            objectFit: "cover",
-            objectPosition: "center",
-          }}
-        /> */}
         <Box
           sx={{
             width: '100%',
@@ -55,15 +37,11 @@ const PaletteThumbnail = ({
             padding: '10px',
           }}
         >
-          <img
+          <BlurImage
+            blurHash={palette.blurhash}
             src={palette.photoUrl}
             alt={palette.name}
-            style={{
-              maxWidth: '100%',
-              maxHeight: '100%',
-              aspectRatio: palette.aspectRatio,
-              border: `5px solid white`,
-            }}
+            aspectRatio={palette.aspectRatio}
           />
         </Box>
         {palette.colors.length > 0 && (

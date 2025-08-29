@@ -1,19 +1,24 @@
-import { Box } from '@mui/material'
+import { Box, Tooltip } from '@mui/material'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { SPACING } from '../../../styles/styleConsts'
 import { type TGeneratedPalette } from '../../../types'
 import DraggableSwatch from './DraggableSwatch'
 import ReadonlySwatch from './ReadonlySwatch'
 import { sharedCSS } from './shared'
+import { Reorder } from 'framer-motion'
 
 const CanvasAndPalette = ({
   photo,
   palette,
   updateSwatch,
+  paletteSortOrder,
+  setPaletteSortOrder,
 }: {
   photo: Blob | null
   palette: TGeneratedPalette | null
   updateSwatch: (index: number, color: string) => void
+  paletteSortOrder: number[]
+  setPaletteSortOrder: (order: number[]) => void
 }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const canvasContainerRef = useRef<HTMLDivElement>(null)
@@ -100,23 +105,27 @@ const CanvasAndPalette = ({
             ))}
         </div>
       </Box>
-      <Box
-        sx={{
-          display: 'flex',
-        }}
-      >
-        {palette &&
-          palette.map((_, index) => (
-            <ReadonlySwatch
-              key={index}
-              index={index}
-              swatch={palette[index]}
-              isActive={activeIndex === index}
-              isOtherActive={activeIndex !== null && activeIndex !== index}
-              setActiveIndex={setActiveIndex}
-            />
-          ))}
-      </Box>
+      <Tooltip title="Drag to reorder." placement="bottom">
+        <Reorder.Group
+          as="div"
+          axis="x"
+          values={paletteSortOrder}
+          onReorder={setPaletteSortOrder}
+          style={{ display: 'flex', flexDirection: 'row' }}
+        >
+          {palette &&
+            paletteSortOrder.map((index) => (
+              <ReadonlySwatch
+                key={index}
+                index={index}
+                swatch={palette[index]}
+                isActive={activeIndex === index}
+                isOtherActive={activeIndex !== null && activeIndex !== index}
+                setActiveIndex={setActiveIndex}
+              />
+            ))}
+        </Reorder.Group>
+      </Tooltip>
     </>
   )
 }
