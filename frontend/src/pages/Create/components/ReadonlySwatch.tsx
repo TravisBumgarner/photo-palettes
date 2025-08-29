@@ -1,11 +1,11 @@
-import { useCallback } from 'react'
+// import { useCallback } from 'react'
 import { type TSwatch } from '../../../types'
 import { getContrastColor } from '../../../utils'
-import { motion, Reorder } from 'framer-motion'
+import { Reorder } from 'framer-motion'
 
 const ReadonlySwatch = ({
   index,
-  setActiveIndex,
+  // setActiveIndex,
   isActive,
   isOtherActive,
   swatch,
@@ -16,9 +16,9 @@ const ReadonlySwatch = ({
   isActive: boolean
   isOtherActive: boolean
 }) => {
-  const handleOnClick = useCallback(() => {
-    setActiveIndex(isActive ? null : index)
-  }, [index, setActiveIndex, isActive])
+  // const handleOnClick = useCallback(() => {
+  //   setActiveIndex(isActive ? null : index)
+  // }, [index, setActiveIndex, isActive])
 
   return (
     <Reorder.Item
