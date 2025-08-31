@@ -42,8 +42,8 @@ cd ../frontend && npm install
 
 echo "######################### Manual Setup #########################"
 
-echo "1. Set up your environment variables in frontend"
-echo "2. Set up your environment variables in backend"
-echo "3. Run 'docker compose up --build' to start the services."
+echo "1. Configure backend/.env and backend/.env.prod with values from Heroku"
+echo "2. Configure backend/tests/.env with values from ProtonPass"
+echo "3. Run 'make up' to start the services."
 echo "4. Run database migrations cd backend && make development-migrate"
-echo "5. Grab passwords from Proton pass and populate tests/.env.test then login with both accounts to populate DB and set permission_level in DB to 2 for moderator."
+echo "5. Login with both test users so their credentials get populated, set the moderator flag in the database."

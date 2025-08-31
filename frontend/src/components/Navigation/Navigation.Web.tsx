@@ -9,11 +9,12 @@ import {
   Typography,
 } from '@mui/material'
 import { useCallback, useMemo, useState } from 'react'
-import { ROUTES } from '../consts'
-import useGlobalStore from '../store'
-import { BORDER_RADIUS, FONT_SIZES, SPACING } from '../styles/styleConsts'
-import { PERMISSION_LEVEL } from '../types'
-import Link from '../sharedComponents/Link'
+import { ROUTES } from '../../consts'
+import useGlobalStore from '../../store'
+import { BORDER_RADIUS, FONT_SIZES, SPACING } from '../../styles/styleConsts'
+import { PERMISSION_LEVEL } from '../../types'
+import Link from '../../sharedComponents/Link'
+import { WrapperSX } from './Navigation.styles'
 
 const DropdownLinks = ({ onClose }: { onClose: () => void }) => {
   const appUserDetails = useGlobalStore((state) => state.appUserDetails)
@@ -57,19 +58,8 @@ const Navigation = () => {
   }, [])
 
   return (
-    <Box
-      sx={{
-        display: 'flex',
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        marginTop: SPACING.MEDIUM.PX,
-        paddingBottom: SPACING.MEDIUM.PX,
-        marginBottom: SPACING.MEDIUM.PX,
-        alignItems: 'center',
-        borderBottom: '2px solid',
-        borderBottomColor: 'divider',
-      }}
-    >
+    <Box sx={WrapperSX}>
+
       <Box
         sx={{
           display: 'flex',

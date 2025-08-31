@@ -29,12 +29,16 @@ const baseThemeOptions: ThemeOptions = {
     MuiButton: {
       styleOverrides: {
         root: {
+          textTransform: 'none',
           borderRadius: BORDER_RADIUS.ZERO.PX,
           boxShadow: 'none',
           cursor: 'pointer',
           fontWeight: 600,
           '&:hover': {
             boxShadow: 'none',
+          },
+          '&:disabled': {
+            cursor: 'not-allowed',
           },
         },
       },
@@ -73,15 +77,23 @@ const baseThemeOptions: ThemeOptions = {
 const lightThemeOptions: ThemeOptions = {
   palette: {
     mode: 'light',
+    info: {
+      main: PALETTE.grayscale[700],
+      contrastText: PALETTE.grayscale[200],
+    },
+    error: {
+      main: PALETTE.grayscale[700],
+      contrastText: PALETTE.grayscale[200],
+    },
     background: {
-      default: PALETTE.grayscale[100],
+      default: PALETTE.grayscale[50],
       paper: PALETTE.grayscale[50],
     },
     text: {
       primary: PALETTE.grayscale[900],
       secondary: PALETTE.grayscale[800],
     },
-    divider: PALETTE.grayscale[200],
+    divider: PALETTE.grayscale[300],
   },
   typography: {
     h1: {
@@ -101,6 +113,41 @@ const lightThemeOptions: ThemeOptions = {
       fontSize: FONT_SIZES.SMALL.PX,
     },
   },
+  components: {
+    MuiButton: {
+      styleOverrides: {
+        containedPrimary: {
+          color: PALETTE.grayscale[100],
+          backgroundColor: PALETTE.grayscale[700],
+          '&:hover': {
+            backgroundColor: PALETTE.grayscale[600],
+          },
+          '&:disabled': {
+            backgroundColor: PALETTE.grayscale[400],
+          },
+        },
+        outlinedPrimary: {
+          color: PALETTE.grayscale[800],
+          borderColor: PALETTE.grayscale[600],
+          '&:hover': {
+            backgroundColor: PALETTE.grayscale[300],
+          },
+          '&:disabled': {
+            textColor: PALETTE.grayscale[400],
+          },
+        },
+        textPrimary: {
+          color: 'pink', // For now I don't think I'm using this anywhere.
+          '&:hover': {
+            backgroundColor: 'lightpink',
+          },
+          '&:disabled': {
+            textColor: 'lightpink',
+          },
+        },
+      },
+    },
+  },
 }
 
 const darkThemeOptions: ThemeOptions = {
@@ -109,6 +156,14 @@ const darkThemeOptions: ThemeOptions = {
     background: {
       default: PALETTE.grayscale[900],
       paper: PALETTE.grayscale[800],
+    },
+    info: {
+      main: PALETTE.grayscale[200],
+      contrastText: PALETTE.grayscale[800],
+    },
+    error: {
+      main: PALETTE.grayscale[200],
+      contrastText: PALETTE.grayscale[800],
     },
     text: {
       primary: PALETTE.grayscale[100],
@@ -131,6 +186,41 @@ const darkThemeOptions: ThemeOptions = {
     },
     body2: {
       color: PALETTE.grayscale[100],
+    },
+  },
+  components: {
+    MuiButton: {
+      styleOverrides: {
+        containedPrimary: {
+          color: PALETTE.grayscale[800],
+          backgroundColor: PALETTE.grayscale[200],
+          '&:hover': {
+            backgroundColor: PALETTE.grayscale[300],
+          },
+          '&:disabled': {
+            backgroundColor: PALETTE.grayscale[700],
+          },
+        },
+        outlinedPrimary: {
+          color: PALETTE.grayscale[100],
+          borderColor: PALETTE.grayscale[200],
+          '&:hover': {
+            backgroundColor: PALETTE.grayscale[700],
+          },
+          '&:disabled': {
+            textColor: PALETTE.grayscale[600],
+          },
+        },
+        textPrimary: {
+          color: 'pink', // For now I don't think I'm using this anywhere.
+          '&:hover': {
+            backgroundColor: 'lightpink',
+          },
+          '&:disabled': {
+            textColor: 'lightpink',
+          },
+        },
+      },
     },
   },
 }

@@ -1,11 +1,12 @@
 import { GiHamburgerMenu } from 'react-icons/gi'
 import { Box, IconButton, Drawer, MenuItem, Tooltip } from '@mui/material'
 import { useCallback, useMemo, useState } from 'react'
-import { ROUTES } from '../consts'
-import useGlobalStore from '../store'
-import { BORDER_RADIUS, SPACING } from '../styles/styleConsts'
-import { PERMISSION_LEVEL } from '../types'
-import Link from '../sharedComponents/Link'
+import { ROUTES } from '../../consts'
+import useGlobalStore from '../../store'
+import { BORDER_RADIUS, SPACING } from '../../styles/styleConsts'
+import { PERMISSION_LEVEL } from '../../types'
+import Link from '../../sharedComponents/Link'
+import { WrapperSX } from './Navigation.styles'
 
 const DropdownLinks = ({ onClose }: { onClose: () => void }) => {
   const appUserDetails = useGlobalStore((state) => state.appUserDetails)
@@ -74,18 +75,8 @@ const Navigation = () => {
   }, [])
 
   return (
-    <Box
-      sx={{
-        display: 'flex',
-        flexDirection: 'row',
-        justifyContent: 'flex-end',
-        paddingBottom: SPACING.MEDIUM.PX,
-        paddingTop: SPACING.MEDIUM.PX,
-        alignItems: 'center',
-        borderBottom: '2px solid',
-        borderBottomColor: 'divider',
-      }}
-    >
+    <Box sx={WrapperSX}>
+      <Box />
       <Box
         sx={{
           display: 'flex',
