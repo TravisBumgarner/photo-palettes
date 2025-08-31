@@ -18,7 +18,7 @@ const Loading = () => {
           }}
           transition={{
             rotate: {
-              duration: 0.5,
+              duration: 2,
               ease: 'linear',
               repeat: Infinity,
             },
@@ -28,8 +28,6 @@ const Loading = () => {
             height: 75,
             border: `10px solid`,
             borderColor: 'divider',
-            borderTopColor: 'transparent',
-            borderRadius: '50%',
           }}
         />
       </AnimatePresence>
