@@ -7,7 +7,13 @@ import {
 } from '@mui/material/styles'
 import _ from 'lodash'
 import { useMemo } from 'react'
-import { FONT_SIZES, PALETTE, BORDER_RADIUS } from './styleConsts'
+import {
+  FONT_SIZES,
+  PALETTE,
+  BORDER_RADIUS,
+  LIGHT_BUTTON_STYLES,
+  DARK_BUTTON_STYLES,
+} from './styleConsts'
 
 // Base theme options shared between light and dark
 const baseThemeOptions: ThemeOptions = {
@@ -33,13 +39,18 @@ const baseThemeOptions: ThemeOptions = {
           borderRadius: BORDER_RADIUS.ZERO.PX,
           boxShadow: 'none',
           cursor: 'pointer',
-          fontWeight: 600,
           '&:hover': {
             boxShadow: 'none',
           },
           '&:disabled': {
             cursor: 'not-allowed',
           },
+        },
+        contained: {
+          fontWeight: 900,
+        },
+        outlined: {
+          fontWeight: 600,
         },
       },
     },
@@ -114,29 +125,53 @@ const lightThemeOptions: ThemeOptions = {
     },
   },
   components: {
+    MuiOutlinedInput: {
+      styleOverrides: {
+        root: {
+          color: PALETTE.grayscale[700],
+          // ...existing styles...
+          '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+            borderColor: PALETTE.grayscale[700],
+          },
+        },
+        notchedOutline: {
+          borderColor: PALETTE.grayscale[400],
+        },
+      },
+    },
+    MuiInputLabel: {
+      styleOverrides: {
+        root: {
+          // ...existing styles...
+          '&.Mui-focused': {
+            color: PALETTE.grayscale[700],
+          },
+        },
+      },
+    },
     MuiButton: {
       styleOverrides: {
-        containedPrimary: {
-          color: PALETTE.grayscale[100],
-          backgroundColor: PALETTE.grayscale[700],
+        contained: {
+          color: LIGHT_BUTTON_STYLES.color,
+          backgroundColor: LIGHT_BUTTON_STYLES.background,
           '&:hover': {
-            backgroundColor: PALETTE.grayscale[600],
+            backgroundColor: LIGHT_BUTTON_STYLES.hoverBackground,
           },
           '&:disabled': {
             backgroundColor: PALETTE.grayscale[400],
           },
         },
-        outlinedPrimary: {
-          color: PALETTE.grayscale[800],
-          borderColor: PALETTE.grayscale[600],
+        outlined: {
+          color: PALETTE.grayscale[700],
+          borderColor: PALETTE.grayscale[700],
           '&:hover': {
-            backgroundColor: PALETTE.grayscale[300],
+            backgroundColor: PALETTE.grayscale[100],
           },
           '&:disabled': {
             textColor: PALETTE.grayscale[400],
           },
         },
-        textPrimary: {
+        text: {
           color: 'pink', // For now I don't think I'm using this anywhere.
           '&:hover': {
             backgroundColor: 'lightpink',
@@ -167,7 +202,7 @@ const darkThemeOptions: ThemeOptions = {
     },
     text: {
       primary: PALETTE.grayscale[100],
-      secondary: PALETTE.grayscale[50],
+      secondary: PALETTE.grayscale[200],
     },
     divider: PALETTE.grayscale[700],
   },
@@ -189,19 +224,43 @@ const darkThemeOptions: ThemeOptions = {
     },
   },
   components: {
+    MuiOutlinedInput: {
+      styleOverrides: {
+        root: {
+          color: PALETTE.grayscale[300],
+          // ...existing styles...
+          '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+            borderColor: PALETTE.grayscale[300],
+          },
+        },
+        notchedOutline: {
+          borderColor: PALETTE.grayscale[600],
+        },
+      },
+    },
+    MuiInputLabel: {
+      styleOverrides: {
+        root: {
+          // ...existing styles...
+          '&.Mui-focused': {
+            color: PALETTE.grayscale[300],
+          },
+        },
+      },
+    },
     MuiButton: {
       styleOverrides: {
-        containedPrimary: {
-          color: PALETTE.grayscale[800],
-          backgroundColor: PALETTE.grayscale[200],
+        contained: {
+          color: DARK_BUTTON_STYLES.color,
+          backgroundColor: DARK_BUTTON_STYLES.background,
           '&:hover': {
-            backgroundColor: PALETTE.grayscale[300],
+            backgroundColor: DARK_BUTTON_STYLES.hoverBackground,
           },
           '&:disabled': {
             backgroundColor: PALETTE.grayscale[700],
           },
         },
-        outlinedPrimary: {
+        outlined: {
           color: PALETTE.grayscale[100],
           borderColor: PALETTE.grayscale[200],
           '&:hover': {
@@ -211,7 +270,7 @@ const darkThemeOptions: ThemeOptions = {
             textColor: PALETTE.grayscale[600],
           },
         },
-        textPrimary: {
+        text: {
           color: 'pink', // For now I don't think I'm using this anywhere.
           '&:hover': {
             backgroundColor: 'lightpink',

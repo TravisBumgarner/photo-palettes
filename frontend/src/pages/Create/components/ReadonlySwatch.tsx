@@ -3,6 +3,7 @@ import { useCallback, useState } from 'react'
 import { type TSwatch } from '../../../types'
 import { getContrastColor } from '../../../utils'
 import { Reorder } from 'framer-motion'
+import { FONT_SIZES } from '../../../styles/styleConsts'
 
 const ReadonlySwatch = ({
   index,
@@ -49,8 +50,8 @@ const ReadonlySwatch = ({
         alignItems: 'center',
         overflow: 'hidden',
         cursor: 'pointer',
-        fontSize: '12px',
-        fontWeight: isActive ? 900 : 100,
+        fontWeight: isActive ? 900 : 500,
+        fontSize: isActive ? FONT_SIZES.MEDIUM.PX : FONT_SIZES.SMALL.PX,
         color: getContrastColor(swatch.color),
         zIndex: isActive ? 2 : 1,
         boxSizing: 'border-box',

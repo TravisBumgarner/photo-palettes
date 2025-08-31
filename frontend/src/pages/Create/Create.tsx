@@ -204,14 +204,14 @@ const Create = () => {
             }}
           >
             <Button variant="outlined" onClick={handleClearPalette}>
-              Clear Palette
+              Clear
             </Button>
             <Button
               disabled={!name || uploadStatus === 'SUBMITTING'}
               variant="contained"
               onClick={handleSavePalette}
             >
-              Save Palette
+              Save
             </Button>
           </Box>
         </Box>

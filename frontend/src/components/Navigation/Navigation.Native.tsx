@@ -6,7 +6,7 @@ import useGlobalStore from '../../store'
 import { BORDER_RADIUS, SPACING } from '../../styles/styleConsts'
 import { PERMISSION_LEVEL } from '../../types'
 import Link from '../../sharedComponents/Link'
-import { WrapperSX } from './Navigation.styles'
+import { createLinkSX, WrapperSX } from './Navigation.styles'
 
 const DropdownLinks = ({ onClose }: { onClose: () => void }) => {
   const appUserDetails = useGlobalStore((state) => state.appUserDetails)
@@ -85,19 +85,7 @@ const Navigation = () => {
           alignItems: 'center',
         }}
       >
-        <Link
-          hideUnderline
-          sx={{
-            fontWeight: 900,
-            backgroundColor: 'text.primary',
-            color: 'background.paper',
-            padding: '10px',
-            border: '1px solid',
-            borderColor: 'divider',
-            borderRadius: BORDER_RADIUS.ZERO.PX,
-          }}
-          href={ROUTES.create.href}
-        >
+        <Link hideUnderline sx={createLinkSX} href={ROUTES.create.href}>
           {ROUTES.create.label}
         </Link>
         <Tooltip title="Menu">

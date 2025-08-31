@@ -75,14 +75,15 @@ const ModerationPanel = ({
       sx={{
         display: 'flex',
         gap: SPACING.SMALL.PX,
-        border: '4px solid',
-        borderColor: 'red',
+        border: '2px solid',
+        borderColor: 'divider',
         borderRadius: BORDER_RADIUS.ZERO.PX,
         padding: SPACING.SMALL.PX,
         margin: `${SPACING.LARGE.PX} 0`,
       }}
     >
       <Button
+        variant="outlined"
         disabled={
           isFetching ||
           moderationStatus === MODERATION_STATUS.AWAITING_SUBMISSION ||
@@ -93,6 +94,7 @@ const ModerationPanel = ({
         Approve
       </Button>
       <Button
+        variant="outlined"
         disabled={
           isFetching ||
           moderationStatus === MODERATION_STATUS.AWAITING_SUBMISSION ||
@@ -102,7 +104,7 @@ const ModerationPanel = ({
       >
         Reject
       </Button>
-      <Button disabled={isFetching} onClick={handleDelete}>
+      <Button variant="outlined" disabled={isFetching} onClick={handleDelete}>
         Delete
       </Button>
     </Box>

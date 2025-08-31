@@ -9,11 +9,13 @@ const Message = ({
   color,
   callback,
   callbackText,
+  includeVerticalMargin,
 }: {
   message: string
   color: 'info' | 'error'
   callback?: () => void
   callbackText?: string
+  includeVerticalMargin?: boolean
 }) => {
   const theme = useTheme()
 
@@ -24,7 +26,7 @@ const Message = ({
         borderColor: 'divider',
         borderRadius: BORDER_RADIUS.ZERO.PX,
         padding: SPACING.MEDIUM.PX,
-        // margin: `${SPACING.MEDIUM.PX} 0`,
+        margin: includeVerticalMargin ? `${SPACING.MEDIUM.PX} 0` : 0,
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
