@@ -172,7 +172,6 @@ const DraggableSwatch = ({
             width: '100%',
             aspectRatio: '1/1',
             cursor: 'none',
-            borderRadius: '50%',
             border: `2px solid rgba(255, 255, 255, 0.7)`,
             overflow: 'hidden',
             boxShadow: '0 0 10px rgba(0,0,0,0.9)',
