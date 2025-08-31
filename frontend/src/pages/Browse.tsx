@@ -12,10 +12,15 @@ import { PAGINATION_SIZE } from '../consts'
 import { type ESortBy, SORT_BY } from '../types'
 import SortsAndFilters from '../sharedComponents/SortsAndFilters'
 
-const Browse = () => {
-  const [page, setPage] = useState(1)
-  const [sortBy, setSortBy] = useState<ESortBy>(SORT_BY.NEWEST)
-
+const Palettes = ({
+  page,
+  sortBy,
+  handlePageChange,
+}: {
+  page: number
+  sortBy: ESortBy
+  handlePageChange: (newPage: number) => void
+}) => {
   const { data, isLoading, error, refetch } = useQuery({
     queryKey: ['palettes', page, sortBy],
     queryFn: () =>
@@ -26,17 +31,12 @@ const Browse = () => {
       }),
     retry: false,
   })
-
   useEffect(() => {
     if (error) logger.error(error)
   }, [error])
 
-  const handlePageChange = useCallback((newPage: number) => {
-    setPage(newPage)
-  }, [])
-
   const loading = isLoading || !data
-  const hasErrored = error || (data && !data.success)
+  const hasErrored = !!error || (data && !data.success) || false
   const noPalettes = !data || (data.success && data.palettes.length === 0)
 
   if (hasErrored) {
@@ -65,8 +65,7 @@ const Browse = () => {
   }
 
   return (
-    <PageWrapper width="full" minHeight>
-      <SortsAndFilters sortBy={sortBy} setSortBy={setSortBy} />
+    <>
       <ThumbnailGridDisplay>
         {data.palettes.map((palette) => (
           <PaletteThumbnail
@@ -77,9 +76,29 @@ const Browse = () => {
         ))}
       </ThumbnailGridDisplay>
       <Pagination
-        total={data.total}
+        total={data?.success ? data.total : 0}
         currentPage={page}
         onPageChange={handlePageChange}
+      />
+    </>
+  )
+}
+
+const Browse = () => {
+  const [page, setPage] = useState(1)
+  const [sortBy, setSortBy] = useState<ESortBy>(SORT_BY.NEWEST)
+
+  const handlePageChange = useCallback((newPage: number) => {
+    setPage(newPage)
+  }, [])
+
+  return (
+    <PageWrapper width="full" minHeight>
+      <SortsAndFilters sortBy={sortBy} setSortBy={setSortBy} />
+      <Palettes
+        handlePageChange={handlePageChange}
+        page={page}
+        sortBy={sortBy}
       />
     </PageWrapper>
   )

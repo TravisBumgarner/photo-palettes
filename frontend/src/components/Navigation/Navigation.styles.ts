@@ -1,18 +1,17 @@
 import type { SxProps } from '@mui/material'
 
-import { SPACING, BORDER_RADIUS } from '../../styles/styleConsts'
+import { SPACING, BORDER_RADIUS, PALETTE } from '../../styles/styleConsts'
 
-export const WrapperSX: SxProps = {
+export const WrapperSX = (theme: 'dark' | 'light'): SxProps => ({
   display: 'flex',
   flexDirection: 'row',
   justifyContent: 'space-between',
-  paddingBottom: SPACING.MEDIUM.PX,
-  paddingTop: SPACING.MEDIUM.PX,
   alignItems: 'center',
-  borderBottom: '2px solid',
-  borderBottomColor: 'divider',
+  backgroundColor:
+    theme === 'dark' ? PALETTE.grayscale[800] : PALETTE.grayscale[100],
   marginBottom: SPACING.MEDIUM.PX,
-}
+  padding: SPACING.MEDIUM.PX,
+})
 
 export const createLinkSX: SxProps = {
   fontWeight: 900,

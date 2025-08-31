@@ -7,6 +7,7 @@ import {
   MenuItem,
   Tooltip,
   Typography,
+  useTheme,
 } from '@mui/material'
 import { useCallback, useMemo, useState } from 'react'
 import { ROUTES } from '../../consts'
@@ -57,8 +58,10 @@ const Navigation = () => {
     setAnchorEl(null)
   }, [])
 
+  const theme = useTheme()
+
   return (
-    <Box sx={WrapperSX}>
+    <Box sx={WrapperSX(theme.palette.mode)}>
       <Box
         sx={{
           display: 'flex',

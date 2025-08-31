@@ -23,10 +23,6 @@ up:
 down:
 	@docker compose down
 
-build-docker:
-	@echo "Building Docker images..."
-	@docker compose build
-
 deploy-all:
 	@echo "Deploying all services..."
 	@./scripts/deploy-frontend.sh

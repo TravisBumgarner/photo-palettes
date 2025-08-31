@@ -12,16 +12,17 @@ const SortsAndFilters = ({
   return (
     <Box
       sx={{
-        border: '1px solid',
         borderColor: 'divider',
         borderRadius: BORDER_RADIUS.ZERO.PX,
-        padding: SPACING.SMALL.PX,
         marginBottom: SPACING.MEDIUM.PX,
       }}
     >
       <FormControl sx={{ width: '200px' }}>
-        <InputLabel id="sort-by-label">Sort By</InputLabel>
+        <InputLabel size="small" id="sort-by-label">
+          Sort By
+        </InputLabel>
         <Select
+          size="small"
           labelId="sort-by-label"
           value={sortBy}
           label="Sort By"

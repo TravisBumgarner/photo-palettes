@@ -104,7 +104,7 @@ const lightThemeOptions: ThemeOptions = {
       primary: PALETTE.grayscale[900],
       secondary: PALETTE.grayscale[800],
     },
-    divider: PALETTE.grayscale[300],
+    divider: PALETTE.grayscale[100],
   },
   typography: {
     h1: {
@@ -125,6 +125,19 @@ const lightThemeOptions: ThemeOptions = {
     },
   },
   components: {
+    MuiLink: {
+      styleOverrides: {
+        root: {
+          color: 'red',
+          '&:hover': {
+            color: 'red',
+          },
+          '&:visited': {
+            color: 'red',
+          },
+        },
+      },
+    },
     MuiOutlinedInput: {
       styleOverrides: {
         root: {
@@ -224,6 +237,19 @@ const darkThemeOptions: ThemeOptions = {
     },
   },
   components: {
+    MuiLink: {
+      styleOverrides: {
+        root: {
+          color: PALETTE.grayscale[100],
+          '&:hover': {
+            color: PALETTE.grayscale[100],
+          },
+          '&:visited': {
+            color: PALETTE.grayscale[100],
+          },
+        },
+      },
+    },
     MuiOutlinedInput: {
       styleOverrides: {
         root: {

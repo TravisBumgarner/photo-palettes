@@ -91,7 +91,6 @@ const Footer = () => {
   return (
     <Box
       sx={{
-        borderTop: '2px solid',
         borderColor: 'divider',
         padding: SPACING.MEDIUM.PX,
         marginTop: SPACING.MEDIUM.PX,

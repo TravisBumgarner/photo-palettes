@@ -1,5 +1,12 @@
 import { GiHamburgerMenu } from 'react-icons/gi'
-import { Box, IconButton, Drawer, MenuItem, Tooltip } from '@mui/material'
+import {
+  Box,
+  IconButton,
+  Drawer,
+  MenuItem,
+  Tooltip,
+  useTheme,
+} from '@mui/material'
 import { useCallback, useMemo, useState } from 'react'
 import { ROUTES } from '../../consts'
 import useGlobalStore from '../../store'
@@ -74,8 +81,10 @@ const Navigation = () => {
     setDrawerOpen(false)
   }, [])
 
+  const theme = useTheme()
+
   return (
-    <Box sx={WrapperSX}>
+    <Box sx={WrapperSX(theme.palette.mode)}>
       <Box />
       <Box
         sx={{
