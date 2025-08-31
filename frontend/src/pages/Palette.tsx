@@ -1,4 +1,4 @@
-import { Box, Link } from '@mui/material'
+import { Box } from '@mui/material'
 import { SPACING } from '../styles/styleConsts'
 import { MODERATION_STATUS } from '../types'
 import { getContrastColor } from '../utils'
@@ -13,6 +13,7 @@ import { useParams } from 'react-router-dom'
 import Loading from '../sharedComponents/Loading'
 import Favorite from '../sharedComponents/Favorite'
 import BlurImage from '../sharedComponents/BlurImage'
+import Link from '../sharedComponents/Link'
 
 const Palette = () => {
   const params = useParams()
@@ -41,10 +42,18 @@ const Palette = () => {
     <PageWrapper width="full">
       {data.palette.moderationStatus ===
         MODERATION_STATUS.AWAITING_MODERATION && (
-        <Message message="This palette is pending approval." color="info" />
+        <Message
+          includeVerticalMargin
+          message="This palette is pending approval."
+          color="info"
+        />
       )}
       {data.palette.moderationStatus === MODERATION_STATUS.REJECTED && (
-        <Message message="This palette was rejected." color="error" />
+        <Message
+          includeVerticalMargin
+          message="This palette was rejected."
+          color="error"
+        />
       )}
       <Box>
         <Box
@@ -133,24 +142,22 @@ const Palette = () => {
           ))}
         </Box>
       </Box>
-      {data.palette.moderationStatus === MODERATION_STATUS.APPROVED && (
-        <Box
-          sx={{
-            display: 'flex',
-            justifyContent: 'flex-end',
-            marginTop: SPACING.MEDIUM.PX,
-          }}
-        >
-          <Share
-            url={`palette/${data.palette.id}`}
-            text={`${data.palette.name} by #${data.palette.appUserId.slice(
-              0,
-              6
-            )}`}
-            media={data.palette.ogPhotoUrl}
-          />
-        </Box>
-      )}
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'flex-end',
+          marginTop: SPACING.MEDIUM.PX,
+        }}
+      >
+        <Share
+          url={`palette/${data.palette.id}`}
+          text={`${data.palette.name} by #${data.palette.appUserId.slice(
+            0,
+            6
+          )}`}
+          media={data.palette.ogPhotoUrl}
+        />
+      </Box>
       <ModerationPanel
         refetch={refetch}
         moderationStatus={data.palette.moderationStatus}

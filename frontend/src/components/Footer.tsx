@@ -1,7 +1,7 @@
-import { Box, List, ListItem, Typography } from '@mui/material'
+import { Box, List, ListItem, Typography, useTheme } from '@mui/material'
 import { ROUTES } from '../consts'
 import useGlobalStore from '../store'
-import { FONT_SIZES, SPACING } from '../styles/styleConsts'
+import { FONT_SIZES, SPACING, subtleBackground } from '../styles/styleConsts'
 import { PERMISSION_LEVEL, type EPermissionLevel } from '../types'
 import Link from '../sharedComponents/Link'
 import { Capacitor } from '@capacitor/core'
@@ -85,13 +85,12 @@ const sections = (
 
 const Footer = () => {
   const appUserDetails = useGlobalStore((state) => state.appUserDetails)
-
+  const theme = useTheme()
   if (Capacitor.isNativePlatform()) return null
 
   return (
     <Box
       sx={{
-        borderTop: '2px solid',
         borderColor: 'divider',
         padding: SPACING.MEDIUM.PX,
         marginTop: SPACING.MEDIUM.PX,
@@ -99,6 +98,7 @@ const Footer = () => {
         flexDirection: 'row',
         flexWrap: 'wrap',
         justifyContent: 'space-between',
+        backgroundColor: subtleBackground(theme.palette.mode),
       }}
     >
       {sections(appUserDetails?.permissionLevel).map((section) => (

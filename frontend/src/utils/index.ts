@@ -1,6 +1,7 @@
 import { getMe } from '../api/getMe'
 import { getUser } from '../services/supabase'
 import useGlobalStore from '../store'
+import { PALETTE } from '../styles/styleConsts'
 
 /**
  * Takes in a hex color background and returns white or black based on what the contrast should be.
@@ -29,7 +30,7 @@ export const getContrastColor = (hexColor: string, invert = false): string => {
   shouldReturnDark = invert ? !shouldReturnDark : shouldReturnDark
   // Return black or white based on luminance
 
-  return shouldReturnDark ? '#000000' : '#ffffff'
+  return shouldReturnDark ? PALETTE.grayscale[900] : PALETTE.grayscale[100]
 }
 
 export const rgbToHex = (rgb: string) => {

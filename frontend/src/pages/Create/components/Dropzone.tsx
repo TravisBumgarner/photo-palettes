@@ -4,6 +4,7 @@ import { Box } from '@mui/material'
 import useGlobalStore from '../../../store'
 import { sharedCSS } from './shared'
 import { logger } from '../../../services/logging'
+import { Capacitor } from '@capacitor/core'
 
 const Dropzone = ({ onDrop }: { onDrop: (acceptedFiles: File[]) => void }) => {
   const addAlert = useGlobalStore((state) => state.addAlert)
@@ -43,7 +44,11 @@ const Dropzone = ({ onDrop }: { onDrop: (acceptedFiles: File[]) => void }) => {
       {isDragActive ? (
         <p>Drop photo here ...</p>
       ) : (
-        <p>Drag and drop photo or click to select photo</p>
+        <p>
+          {Capacitor.isNativePlatform()
+            ? 'Tap to select photo'
+            : 'Drag and drop photo or click to select photo'}
+        </p>
       )}
     </Box>
   )

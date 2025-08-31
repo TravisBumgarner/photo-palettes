@@ -1,11 +1,19 @@
 import { GiHamburgerMenu } from 'react-icons/gi'
-import { Box, IconButton, Drawer, MenuItem, Tooltip } from '@mui/material'
+import {
+  Box,
+  IconButton,
+  Drawer,
+  MenuItem,
+  Tooltip,
+  useTheme,
+} from '@mui/material'
 import { useCallback, useMemo, useState } from 'react'
-import { ROUTES } from '../consts'
-import useGlobalStore from '../store'
-import { BORDER_RADIUS, SPACING } from '../styles/styleConsts'
-import { PERMISSION_LEVEL } from '../types'
-import Link from '../sharedComponents/Link'
+import { ROUTES } from '../../consts'
+import useGlobalStore from '../../store'
+import { BORDER_RADIUS, SPACING } from '../../styles/styleConsts'
+import { PERMISSION_LEVEL } from '../../types'
+import Link from '../../sharedComponents/Link'
+import { createLinkSX, WrapperSX } from './Navigation.styles'
 
 const DropdownLinks = ({ onClose }: { onClose: () => void }) => {
   const appUserDetails = useGlobalStore((state) => state.appUserDetails)
@@ -73,19 +81,11 @@ const Navigation = () => {
     setDrawerOpen(false)
   }, [])
 
+  const theme = useTheme()
+
   return (
-    <Box
-      sx={{
-        display: 'flex',
-        flexDirection: 'row',
-        justifyContent: 'flex-end',
-        paddingBottom: SPACING.MEDIUM.PX,
-        paddingTop: SPACING.MEDIUM.PX,
-        alignItems: 'center',
-        borderBottom: '2px solid',
-        borderBottomColor: 'divider',
-      }}
-    >
+    <Box sx={WrapperSX(theme.palette.mode)}>
+      <Box />
       <Box
         sx={{
           display: 'flex',
@@ -96,15 +96,7 @@ const Navigation = () => {
       >
         <Link
           hideUnderline
-          sx={{
-            fontWeight: 900,
-            backgroundColor: 'text.primary',
-            color: 'background.paper',
-            padding: '10px',
-            border: '1px solid',
-            borderColor: 'divider',
-            borderRadius: BORDER_RADIUS.ZERO.PX,
-          }}
+          sx={createLinkSX(theme.palette.mode)}
           href={ROUTES.create.href}
         >
           {ROUTES.create.label}

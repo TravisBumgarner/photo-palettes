@@ -7,7 +7,13 @@ import {
 } from '@mui/material/styles'
 import _ from 'lodash'
 import { useMemo } from 'react'
-import { FONT_SIZES, PALETTE, BORDER_RADIUS } from './styleConsts'
+import {
+  FONT_SIZES,
+  PALETTE,
+  BORDER_RADIUS,
+  LIGHT_BUTTON_STYLES,
+  DARK_BUTTON_STYLES,
+} from './styleConsts'
 
 // Base theme options shared between light and dark
 const baseThemeOptions: ThemeOptions = {
@@ -29,13 +35,22 @@ const baseThemeOptions: ThemeOptions = {
     MuiButton: {
       styleOverrides: {
         root: {
+          textTransform: 'none',
           borderRadius: BORDER_RADIUS.ZERO.PX,
           boxShadow: 'none',
           cursor: 'pointer',
-          fontWeight: 600,
           '&:hover': {
             boxShadow: 'none',
           },
+          '&:disabled': {
+            cursor: 'not-allowed',
+          },
+        },
+        contained: {
+          fontWeight: 900,
+        },
+        outlined: {
+          fontWeight: 600,
         },
       },
     },
@@ -73,15 +88,23 @@ const baseThemeOptions: ThemeOptions = {
 const lightThemeOptions: ThemeOptions = {
   palette: {
     mode: 'light',
+    info: {
+      main: PALETTE.grayscale[700],
+      contrastText: PALETTE.grayscale[200],
+    },
+    error: {
+      main: PALETTE.grayscale[700],
+      contrastText: PALETTE.grayscale[200],
+    },
     background: {
-      default: PALETTE.grayscale[100],
+      default: PALETTE.grayscale[50],
       paper: PALETTE.grayscale[50],
     },
     text: {
       primary: PALETTE.grayscale[900],
       secondary: PALETTE.grayscale[800],
     },
-    divider: PALETTE.grayscale[200],
+    divider: PALETTE.grayscale[100],
   },
   typography: {
     h1: {
@@ -101,6 +124,95 @@ const lightThemeOptions: ThemeOptions = {
       fontSize: FONT_SIZES.SMALL.PX,
     },
   },
+  components: {
+    MuiTabs: {
+      styleOverrides: {
+        indicator: {
+          backgroundColor: PALETTE.grayscale[700], // underline color
+        },
+      },
+    },
+    MuiTab: {
+      styleOverrides: {
+        root: {
+          color: PALETTE.grayscale[700], // text color
+          '&.Mui-selected': {
+            color: PALETTE.grayscale[700], // selected tab text color
+          },
+        },
+      },
+    },
+    MuiLink: {
+      styleOverrides: {
+        root: {
+          color: PALETTE.grayscale[800],
+          '&:hover': {
+            color: PALETTE.grayscale[800],
+          },
+          '&:visited': {
+            color: PALETTE.grayscale[800],
+          },
+        },
+      },
+    },
+    MuiOutlinedInput: {
+      styleOverrides: {
+        root: {
+          color: PALETTE.grayscale[700],
+          // ...existing styles...
+          '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+            borderColor: PALETTE.grayscale[700],
+          },
+        },
+        notchedOutline: {
+          borderColor: PALETTE.grayscale[400],
+        },
+      },
+    },
+    MuiInputLabel: {
+      styleOverrides: {
+        root: {
+          // ...existing styles...
+          '&.Mui-focused': {
+            color: PALETTE.grayscale[700],
+          },
+        },
+      },
+    },
+    MuiButton: {
+      styleOverrides: {
+        contained: {
+          color: LIGHT_BUTTON_STYLES.color,
+          backgroundColor: LIGHT_BUTTON_STYLES.background,
+          '&:hover': {
+            backgroundColor: LIGHT_BUTTON_STYLES.hoverBackground,
+          },
+          '&:disabled': {
+            backgroundColor: PALETTE.grayscale[400],
+          },
+        },
+        outlined: {
+          color: PALETTE.grayscale[700],
+          borderColor: PALETTE.grayscale[700],
+          '&:hover': {
+            backgroundColor: PALETTE.grayscale[100],
+          },
+          '&:disabled': {
+            textColor: PALETTE.grayscale[400],
+          },
+        },
+        text: {
+          color: 'pink', // For now I don't think I'm using this anywhere.
+          '&:hover': {
+            backgroundColor: 'lightpink',
+          },
+          '&:disabled': {
+            textColor: 'lightpink',
+          },
+        },
+      },
+    },
+  },
 }
 
 const darkThemeOptions: ThemeOptions = {
@@ -110,9 +222,17 @@ const darkThemeOptions: ThemeOptions = {
       default: PALETTE.grayscale[900],
       paper: PALETTE.grayscale[800],
     },
+    info: {
+      main: PALETTE.grayscale[200],
+      contrastText: PALETTE.grayscale[800],
+    },
+    error: {
+      main: PALETTE.grayscale[200],
+      contrastText: PALETTE.grayscale[800],
+    },
     text: {
       primary: PALETTE.grayscale[100],
-      secondary: PALETTE.grayscale[50],
+      secondary: PALETTE.grayscale[200],
     },
     divider: PALETTE.grayscale[700],
   },
@@ -131,6 +251,93 @@ const darkThemeOptions: ThemeOptions = {
     },
     body2: {
       color: PALETTE.grayscale[100],
+    },
+  },
+  components: {
+    MuiTabs: {
+      styleOverrides: {
+        indicator: {
+          backgroundColor: PALETTE.grayscale[200], // underline color
+        },
+      },
+    },
+    MuiTab: {
+      styleOverrides: {
+        root: {
+          color: PALETTE.grayscale[200], // text color
+          '&.Mui-selected': {
+            color: PALETTE.grayscale[200], // selected tab text color
+          },
+        },
+      },
+    },
+    MuiLink: {
+      styleOverrides: {
+        root: {
+          color: PALETTE.grayscale[100],
+          '&:hover': {
+            color: PALETTE.grayscale[100],
+          },
+          '&:visited': {
+            color: PALETTE.grayscale[100],
+          },
+        },
+      },
+    },
+    MuiOutlinedInput: {
+      styleOverrides: {
+        root: {
+          color: PALETTE.grayscale[300],
+          '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+            borderColor: PALETTE.grayscale[300],
+          },
+        },
+        notchedOutline: {
+          borderColor: PALETTE.grayscale[600],
+        },
+      },
+    },
+    MuiInputLabel: {
+      styleOverrides: {
+        root: {
+          '&.Mui-focused': {
+            color: PALETTE.grayscale[300],
+          },
+        },
+      },
+    },
+    MuiButton: {
+      styleOverrides: {
+        contained: {
+          color: DARK_BUTTON_STYLES.color,
+          backgroundColor: DARK_BUTTON_STYLES.background,
+          '&:hover': {
+            backgroundColor: DARK_BUTTON_STYLES.hoverBackground,
+          },
+          '&:disabled': {
+            backgroundColor: PALETTE.grayscale[700],
+          },
+        },
+        outlined: {
+          color: PALETTE.grayscale[100],
+          borderColor: PALETTE.grayscale[200],
+          '&:hover': {
+            backgroundColor: PALETTE.grayscale[700],
+          },
+          '&:disabled': {
+            textColor: PALETTE.grayscale[600],
+          },
+        },
+        text: {
+          color: 'pink', // For now I don't think I'm using this anywhere.
+          '&:hover': {
+            backgroundColor: 'lightpink',
+          },
+          '&:disabled': {
+            textColor: 'lightpink',
+          },
+        },
+      },
     },
   },
 }

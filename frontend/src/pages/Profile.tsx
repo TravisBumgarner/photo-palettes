@@ -119,6 +119,7 @@ const Profile = () => {
       />
       {isProfileUser && (
         <Tabs
+          variant="scrollable"
           value={filterTabIndex}
           onChange={handleTabChange}
           sx={{ marginBottom: SPACING.MEDIUM.PX }}

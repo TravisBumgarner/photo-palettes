@@ -1,39 +1,26 @@
+export const subtleBackground = (theme: 'dark' | 'light') => {
+  // This function could evolve over time. Adds a light overlay to the background.
+  // I think, I only want one of these functions but could want more in the future.
+  return theme === 'dark'
+    ? `color-mix(in hsl, ${PALETTE.grayscale[800]}, ${PALETTE.grayscale[900]} 80%)`
+    : `color-mix(in hsl, ${PALETTE.grayscale[100]}, ${PALETTE.grayscale[50]} 50%)`
+}
+
 export const PALETTE = {
   grayscale: {
-    50: '#F9FAFB',
-    100: '#F3F4F6',
-    200: '#E5E7EB',
-    300: '#D1D5DB',
-    400: '#9CA3AF',
-    500: '#6B7280',
-    600: '#4B5563',
-    700: '#374151',
-    800: '#1F2937',
-    900: '#111827',
-  },
-  primary: {
-    50: '#e7ffff',
-    100: '#c2ffff',
-    200: '#99ffff',
-    300: '#66ffff',
-    400: '#33ffff',
-    500: '#00ffff',
-    600: '#00e1e1',
-    700: '#00c2c2',
-    800: '#00a3a3',
-    900: '#008484',
-  },
-  secondary: {
-    50: '#fff2fd',
-    100: '#ffd1fc',
-    200: '#ffb3fa',
-    300: '#ff94f8',
-    400: '#ff76f6',
-    500: '#ff58f4',
-    600: '#e638d9',
-    700: '#cc19b3',
-    800: '#b3008c',
-    900: '#990066',
+    0: 'hsl(0 0 100%)',
+    50: 'hsl(0 0 95%)',
+    100: 'hsl(0 0 90%)',
+    200: 'hsl(0 0 80%)',
+    300: 'hsl(0 0 70%)',
+    400: 'hsl(0 0 60%)',
+    500: 'hsl(0 0 50%)',
+    600: 'hsl(0 0 40%)',
+    700: 'hsl(0 0 30%)',
+    800: 'hsl(0 0 20%)',
+    850: 'hsl(0 0 15%)',
+    900: 'hsl(0 0 10%)',
+    1000: 'hsl(0 0 0%)',
   },
 }
 
@@ -89,3 +76,16 @@ export const SPACING = {
     INT: 48,
   },
 } as const
+
+// // Button Styles. Used in <Button /> and Share.tsx
+export const LIGHT_BUTTON_STYLES = {
+  color: PALETTE.grayscale[50],
+  background: PALETTE.grayscale[800],
+  hoverBackground: PALETTE.grayscale[800],
+}
+
+export const DARK_BUTTON_STYLES = {
+  color: PALETTE.grayscale[900],
+  background: PALETTE.grayscale[100],
+  hoverBackground: PALETTE.grayscale[300],
+}

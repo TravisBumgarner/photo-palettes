@@ -7,13 +7,16 @@ import {
   MenuItem,
   Tooltip,
   Typography,
+  useTheme,
+  Link as MuiLink,
 } from '@mui/material'
 import { useCallback, useMemo, useState } from 'react'
-import { ROUTES } from '../consts'
-import useGlobalStore from '../store'
-import { BORDER_RADIUS, FONT_SIZES, SPACING } from '../styles/styleConsts'
-import { PERMISSION_LEVEL } from '../types'
-import Link from '../sharedComponents/Link'
+import { ROUTES } from '../../consts'
+import useGlobalStore from '../../store'
+import { BORDER_RADIUS, FONT_SIZES, SPACING } from '../../styles/styleConsts'
+import { PERMISSION_LEVEL } from '../../types'
+import { createLinkSX, WrapperSX } from './Navigation.styles'
+import Link from '../../sharedComponents/Link'
 
 const DropdownLinks = ({ onClose }: { onClose: () => void }) => {
   const appUserDetails = useGlobalStore((state) => state.appUserDetails)
@@ -56,20 +59,10 @@ const Navigation = () => {
     setAnchorEl(null)
   }, [])
 
+  const theme = useTheme()
+
   return (
-    <Box
-      sx={{
-        display: 'flex',
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        marginTop: SPACING.MEDIUM.PX,
-        paddingBottom: SPACING.MEDIUM.PX,
-        marginBottom: SPACING.MEDIUM.PX,
-        alignItems: 'center',
-        borderBottom: '2px solid',
-        borderBottomColor: 'divider',
-      }}
-    >
+    <Box sx={WrapperSX(theme.palette.mode)}>
       <Box
         sx={{
           display: 'flex',
@@ -77,16 +70,8 @@ const Navigation = () => {
           gap: '14px',
         }}
       >
-        <Link
-          hideUnderline
-          sx={{
-            fontWeight: 900,
-            color: 'text.primary',
-            fontSize: FONT_SIZES.LARGE.PX,
-          }}
-          href={ROUTES.home.href}
-        >
-          <Typography variant="h1">
+        <Typography variant="h1" sx={{ fontSize: FONT_SIZES.LARGE.PX }}>
+          <Link hideUnderline href={ROUTES.home.href}>
             {ROUTES.home.label}
             <sup
               style={{
@@ -98,8 +83,8 @@ const Navigation = () => {
             >
               Alpha
             </sup>
-          </Typography>
-        </Link>
+          </Link>
+        </Typography>
       </Box>
 
       <Box
@@ -110,21 +95,12 @@ const Navigation = () => {
           alignItems: 'center',
         }}
       >
-        <Link
-          hideUnderline
-          sx={{
-            fontWeight: 900,
-            backgroundColor: 'text.primary',
-            color: 'background.paper',
-            padding: '10px',
-            border: '1px solid',
-            borderColor: 'divider',
-            borderRadius: BORDER_RADIUS.ZERO.PX,
-          }}
+        <MuiLink
+          sx={createLinkSX(theme.palette.mode)}
           href={ROUTES.create.href}
         >
           {ROUTES.create.label}
-        </Link>
+        </MuiLink>
         <Tooltip title="Menu">
           <IconButton
             aria-label="menu"

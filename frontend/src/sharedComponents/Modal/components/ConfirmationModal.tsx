@@ -63,7 +63,7 @@ const ConfirmationModal = ({
             color={isConfirmDestructive ? 'error' : 'primary'}
             onClick={handleConfirm}
           >
-            Ok
+            Ok!
           </Button>
         </Box>
       </Box>

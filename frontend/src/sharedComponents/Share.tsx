@@ -9,7 +9,11 @@ import {
   TwitterIcon,
   TwitterShareButton,
 } from 'react-share'
-import { SPACING } from '../styles/styleConsts'
+import {
+  DARK_BUTTON_STYLES,
+  LIGHT_BUTTON_STYLES,
+  SPACING,
+} from '../styles/styleConsts'
 import { useCallback } from 'react'
 import useGlobalStore from '../store'
 import config from '../config'
@@ -30,17 +34,7 @@ const CopyLink = ({ url }: { url: string }) => {
         variant="contained"
         onClick={copyToClipboard}
         sx={{
-          '&:hover': {
-            boxShadow: 'none',
-          },
-          color: 'primary.main',
-          boxShadow: 'none',
-          padding: `0 ${SPACING.TINY.PX}`,
           height: ICON_SIZE,
-          border: 'none',
-          cursor: 'pointer',
-          fontWeight: 600,
-          backgroundColor: 'divider',
         }}
       >
         Copy Link
@@ -65,8 +59,24 @@ const Share = ({
       sx={{
         display: 'flex',
         gap: SPACING.SMALL.PX,
-        '& svg > rect': { fill: (theme) => theme.palette.divider },
-        '& svg > path': { fill: (theme) => theme.palette.primary.main },
+        '& svg > rect': {
+          fill: (theme) =>
+            theme.palette.mode === 'dark'
+              ? DARK_BUTTON_STYLES.background
+              : LIGHT_BUTTON_STYLES.background,
+        },
+        'svg:hover > rect': {
+          fill: (theme) =>
+            theme.palette.mode === 'dark'
+              ? DARK_BUTTON_STYLES.hoverBackground
+              : LIGHT_BUTTON_STYLES.hoverBackground,
+        },
+        '& svg > path': {
+          fill: (theme) =>
+            theme.palette.mode === 'dark'
+              ? DARK_BUTTON_STYLES.color
+              : LIGHT_BUTTON_STYLES.color,
+        },
       }}
     >
       <Tooltip title="Copy Link" arrow>
