@@ -109,7 +109,11 @@ const Moderation = () => {
   return (
     <PageWrapper width="full" minHeight>
       <PageTitle text="Moderation" marginBottom />
-      <Tabs value={filterTabIndex} onChange={handleTabChange}>
+      <Tabs
+        variant="scrollable"
+        value={filterTabIndex}
+        onChange={handleTabChange}
+      >
         {STATUS_TABS.map((key) => (
           <Tab
             disabled={isLoading}

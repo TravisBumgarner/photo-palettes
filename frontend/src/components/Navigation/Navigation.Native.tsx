@@ -94,7 +94,11 @@ const Navigation = () => {
           alignItems: 'center',
         }}
       >
-        <Link hideUnderline sx={createLinkSX} href={ROUTES.create.href}>
+        <Link
+          hideUnderline
+          sx={createLinkSX(theme.palette.mode)}
+          href={ROUTES.create.href}
+        >
           {ROUTES.create.label}
         </Link>
         <Tooltip title="Menu">

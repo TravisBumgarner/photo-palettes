@@ -1,25 +1,37 @@
 import type { SxProps } from '@mui/material'
 
-import { SPACING, BORDER_RADIUS, PALETTE } from '../../styles/styleConsts'
+import {
+  SPACING,
+  BORDER_RADIUS,
+  subtleBackground,
+  LIGHT_BUTTON_STYLES,
+  DARK_BUTTON_STYLES,
+} from '../../styles/styleConsts'
 
 export const WrapperSX = (theme: 'dark' | 'light'): SxProps => ({
   display: 'flex',
   flexDirection: 'row',
   justifyContent: 'space-between',
   alignItems: 'center',
-  backgroundColor:
-    theme === 'dark' ? PALETTE.grayscale[800] : PALETTE.grayscale[100],
+  backgroundColor: subtleBackground(theme),
   marginBottom: SPACING.MEDIUM.PX,
   padding: SPACING.MEDIUM.PX,
 })
 
-export const createLinkSX: SxProps = {
+export const createLinkSX = (theme: 'dark' | 'light'): SxProps => ({
   fontWeight: 900,
-  backgroundColor: 'text.primary',
-  color: 'background.paper',
+  textDecoration: 'none',
+  backgroundColor:
+    theme === 'dark'
+      ? DARK_BUTTON_STYLES.background
+      : LIGHT_BUTTON_STYLES.background,
+  color: `${theme === 'dark' ? DARK_BUTTON_STYLES.color : LIGHT_BUTTON_STYLES.color} !important`, // Boo me.
   padding: SPACING.SMALL.PX,
   borderRadius: BORDER_RADIUS.ZERO.PX,
   '&:hover': {
-    backgroundColor: 'text.secondary',
+    backgroundColor:
+      theme === 'dark'
+        ? DARK_BUTTON_STYLES.hoverBackground
+        : LIGHT_BUTTON_STYLES.hoverBackground,
   },
-}
+})

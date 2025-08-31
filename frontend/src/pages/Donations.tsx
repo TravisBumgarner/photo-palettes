@@ -7,10 +7,11 @@ import {
   TableHead,
   TableRow,
   Typography,
+  useTheme,
 } from '@mui/material'
 import PageTitle from '../styles/shared/PageTitle'
 import PageWrapper from '../styles/shared/PageWrapper'
-import { BORDER_RADIUS } from '../styles/styleConsts'
+import { BORDER_RADIUS, subtleBackground } from '../styles/styleConsts'
 import Link from '../sharedComponents/Link'
 
 interface TableProps {
@@ -21,16 +22,31 @@ interface TableProps {
 }
 
 const Table: React.FC<TableProps> = ({ items }) => {
+  const theme = useTheme()
+
   return (
     <TableContainer
       component={Paper}
-      sx={{ borderRadius: BORDER_RADIUS.ZERO.PX }}
+      sx={{
+        borderRadius: BORDER_RADIUS.ZERO.PX,
+      }}
     >
-      <MuiTable>
-        <TableHead>
+      <MuiTable
+        sx={{
+          backgroundColor: subtleBackground(theme.palette.mode),
+        }}
+      >
+        <TableHead
+          sx={{
+            borderBottom: '1px solid',
+            borderColor: 'divider',
+          }}
+        >
           <TableRow>
-            <TableCell>Item</TableCell>
-            <TableCell align="right">Monthly Cost</TableCell>
+            <TableCell sx={{ fontWeight: 900 }}>Item</TableCell>
+            <TableCell sx={{ fontWeight: 900 }} align="right">
+              Monthly Cost
+            </TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -40,9 +56,14 @@ const Table: React.FC<TableProps> = ({ items }) => {
               <TableCell align="right">${row.cost.toFixed(2)}</TableCell>
             </TableRow>
           ))}
-          <TableRow>
-            <TableCell sx={{ fontWeight: 'bold' }}>Total</TableCell>
-            <TableCell sx={{ fontWeight: 'bold' }} align="right">
+          <TableRow
+            sx={{
+              borderTop: '1px solid',
+              borderColor: 'divider',
+            }}
+          >
+            <TableCell sx={{ fontWeight: 900 }}>Total</TableCell>
+            <TableCell sx={{ fontWeight: 900 }} align="right">
               ${(items.reduce((acc, row) => acc + row.cost, 0) + 1).toFixed(2)}
             </TableCell>
           </TableRow>

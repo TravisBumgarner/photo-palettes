@@ -1,13 +1,11 @@
-import { Box, Typography } from '@mui/material'
+import { Box, Typography, useTheme } from '@mui/material'
 // import Image from "next/image";
-import { BORDER_RADIUS, SPACING } from '../styles/styleConsts'
+import { BORDER_RADIUS, SPACING, subtleBackground } from '../styles/styleConsts'
 import { type TPalette } from '../types'
 import { getUserColorFromUUID } from '../utils'
 import Link from './Link'
 import Favorite from './Favorite'
 import BlurImage from './BlurImage'
-// import { blurHashToDataURL } from "../utils/blurhashToDataURL";
-// import { useMemo } from "react";
 
 const PaletteThumbnail = ({
   palette,
@@ -16,14 +14,15 @@ const PaletteThumbnail = ({
   palette: TPalette
   refetch: () => void
 }) => {
+  const theme = useTheme()
+
   return (
     <Link href={`/palette/${palette.id}`} hideUnderline>
       <Box
         sx={{
-          border: '1px solid',
-          borderColor: 'divider',
           borderRadius: BORDER_RADIUS.ZERO.PX,
           padding: SPACING.SMALL.PX,
+          backgroundColor: subtleBackground(theme.palette.mode),
         }}
         key={palette.id}
       >

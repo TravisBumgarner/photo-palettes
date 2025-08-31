@@ -25,7 +25,7 @@ const Link = ({
 
   // base styles for both link types
   const baseStyle = {
-    color: isDark ? PALETTE.grayscale[200] : PALETTE.grayscale[800],
+    color: isDark ? PALETTE.grayscale[100] : PALETTE.grayscale[900],
     textDecoration: 'none',
     cursor: 'pointer',
     transition: 'text-decoration 0.2s',
@@ -33,15 +33,21 @@ const Link = ({
 
   // hover style for underline control
   const hoverStyle = hideUnderline
-    ? { textDecoration: 'none' }
-    : { textDecoration: 'underline' }
+    ? {
+        textDecoration: 'none',
+        color: isDark ? PALETTE.grayscale[0] : PALETTE.grayscale[1000],
+      }
+    : {
+        textDecoration: 'underline',
+        color: isDark ? PALETTE.grayscale[0] : PALETTE.grayscale[1000],
+      }
 
   if (isExternal) {
     return (
       <MuiLink
         href={href}
         target={target}
-        sx={_.merge({}, baseStyle, sx, { '&:hover': hoverStyle })}
+        sx={_.merge(baseStyle, { '&:hover': hoverStyle }, sx)}
         rel={target === '_blank' ? 'noopener noreferrer' : undefined}
       >
         {children}
@@ -51,7 +57,7 @@ const Link = ({
 
   return (
     <RouterLink to={href} style={baseStyle as React.CSSProperties}>
-      <Box component="span" sx={_.merge(sx, { '&:hover': hoverStyle })}>
+      <Box component="span" sx={_.merge({ '&:hover': hoverStyle }, sx)}>
         {children}
       </Box>
     </RouterLink>

@@ -1,5 +1,14 @@
+export const subtleBackground = (theme: 'dark' | 'light') => {
+  // This function could evolve over time. Adds a light overlay to the background.
+  // I think, I only want one of these functions but could want more in the future.
+  return theme === 'dark'
+    ? `color-mix(in hsl, ${PALETTE.grayscale[800]}, ${PALETTE.grayscale[900]} 80%)`
+    : `color-mix(in hsl, ${PALETTE.grayscale[100]}, ${PALETTE.grayscale[50]} 50%)`
+}
+
 export const PALETTE = {
   grayscale: {
+    0: 'hsl(0 0 100%)',
     50: 'hsl(0 0 95%)',
     100: 'hsl(0 0 90%)',
     200: 'hsl(0 0 80%)',
@@ -9,7 +18,9 @@ export const PALETTE = {
     600: 'hsl(0 0 40%)',
     700: 'hsl(0 0 30%)',
     800: 'hsl(0 0 20%)',
+    850: 'hsl(0 0 15%)',
     900: 'hsl(0 0 10%)',
+    1000: 'hsl(0 0 0%)',
   },
   // primary: {
   //   50: '#e7ffff',
@@ -92,9 +103,9 @@ export const SPACING = {
 
 // // Button Styles. Used in <Button /> and Share.tsx
 export const LIGHT_BUTTON_STYLES = {
-  color: PALETTE.grayscale[900],
-  background: PALETTE.grayscale[50],
-  hoverBackground: PALETTE.grayscale[100],
+  color: PALETTE.grayscale[100],
+  background: PALETTE.grayscale[800],
+  hoverBackground: PALETTE.grayscale[800],
 }
 
 export const DARK_BUTTON_STYLES = {

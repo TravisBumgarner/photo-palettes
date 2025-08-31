@@ -1,4 +1,4 @@
-import { Box, Link } from '@mui/material'
+import { Box } from '@mui/material'
 import { SPACING } from '../styles/styleConsts'
 import { MODERATION_STATUS } from '../types'
 import { getContrastColor } from '../utils'
@@ -13,6 +13,7 @@ import { useParams } from 'react-router-dom'
 import Loading from '../sharedComponents/Loading'
 import Favorite from '../sharedComponents/Favorite'
 import BlurImage from '../sharedComponents/BlurImage'
+import Link from '../sharedComponents/Link'
 
 const Palette = () => {
   const params = useParams()

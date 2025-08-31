@@ -125,15 +125,32 @@ const lightThemeOptions: ThemeOptions = {
     },
   },
   components: {
+    MuiTabs: {
+      styleOverrides: {
+        indicator: {
+          backgroundColor: PALETTE.grayscale[700], // underline color
+        },
+      },
+    },
+    MuiTab: {
+      styleOverrides: {
+        root: {
+          color: PALETTE.grayscale[700], // text color
+          '&.Mui-selected': {
+            color: PALETTE.grayscale[700], // selected tab text color
+          },
+        },
+      },
+    },
     MuiLink: {
       styleOverrides: {
         root: {
-          color: 'red',
+          color: PALETTE.grayscale[800],
           '&:hover': {
-            color: 'red',
+            color: PALETTE.grayscale[800],
           },
           '&:visited': {
-            color: 'red',
+            color: PALETTE.grayscale[800],
           },
         },
       },
@@ -237,6 +254,23 @@ const darkThemeOptions: ThemeOptions = {
     },
   },
   components: {
+    MuiTabs: {
+      styleOverrides: {
+        indicator: {
+          backgroundColor: PALETTE.grayscale[200], // underline color
+        },
+      },
+    },
+    MuiTab: {
+      styleOverrides: {
+        root: {
+          color: PALETTE.grayscale[200], // text color
+          '&.Mui-selected': {
+            color: PALETTE.grayscale[200], // selected tab text color
+          },
+        },
+      },
+    },
     MuiLink: {
       styleOverrides: {
         root: {
@@ -254,7 +288,6 @@ const darkThemeOptions: ThemeOptions = {
       styleOverrides: {
         root: {
           color: PALETTE.grayscale[300],
-          // ...existing styles...
           '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
             borderColor: PALETTE.grayscale[300],
           },
@@ -267,7 +300,6 @@ const darkThemeOptions: ThemeOptions = {
     MuiInputLabel: {
       styleOverrides: {
         root: {
-          // ...existing styles...
           '&.Mui-focused': {
             color: PALETTE.grayscale[300],
           },
