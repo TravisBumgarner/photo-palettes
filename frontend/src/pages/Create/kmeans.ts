@@ -4,7 +4,7 @@ import { v4 as uuidv4 } from 'uuid'
 import { logger } from '../../services/logging'
 import { PALETTE_SIZE } from '../../consts'
 
-async function blobToClampedArray(blob: Blob): Promise<Uint8ClampedArray> {
+async function blobToImageData(blob: Blob): Promise<ImageData> {
   return new Promise((resolve, reject) => {
     const img = new Image()
     img.onload = () => {
@@ -14,63 +14,76 @@ async function blobToClampedArray(blob: Blob): Promise<Uint8ClampedArray> {
       const ctx = canvas.getContext('2d')
       if (!ctx) return reject('No 2d context')
       ctx.drawImage(img, 0, 0)
-      const imageData = ctx.getImageData(0, 0, img.width, img.height)
-      resolve(imageData.data) // RGBA values
+      resolve(ctx.getImageData(0, 0, img.width, img.height))
     }
     img.onerror = reject
     img.src = URL.createObjectURL(blob)
   })
 }
 
-function clampedArrayToPixels(
-  data: Uint8ClampedArray,
-  useAlpha = false
-): number[][] {
-  const stride = useAlpha ? 4 : 3 // how many channels per pixel
-  const pixels: number[][] = []
+type Pixel = {
+  rgb: [number, number, number]
+  pos: [number, number] // normalized 0–1
+}
 
-  for (let i = 0; i < data.length; i += stride) {
-    if (useAlpha) {
-      pixels.push([data[i], data[i + 1], data[i + 2], data[i + 3]])
-    } else {
-      pixels.push([data[i], data[i + 1], data[i + 2]])
+function imageDataToPixels(imageData: ImageData): Pixel[] {
+  const { data, width, height } = imageData
+  const pixels: Pixel[] = []
+
+  for (let y = 0; y < height; y++) {
+    for (let x = 0; x < width; x++) {
+      const i = (y * width + x) * 4
+      pixels.push({
+        rgb: [data[i], data[i + 1], data[i + 2]],
+        pos: [(x / width) * 100, (y / height) * 100],
+      })
     }
   }
 
   return pixels
 }
 
-// function samplePixels(data: number[][], sampleSize = 250_000) {
-//   if (data.length <= sampleSize) return data
-//   const sampled: number[][] = []
-//   for (let i = 0; i < sampleSize; i++) {
-//     sampled.push(data[Math.floor(Math.random() * data.length)])
-//   }
-//   return sampled
-// }
+const rgbToHex = (rgb: number[]) =>
+  `#${rgb.map((c) => Math.round(c).toString(16).padStart(2, '0')).join('')}`
 
-const rgbToHex = (rgb: number[]) => {
-  return `#${rgb.map((c) => c.toString(16).padStart(2, '0')).join('')}`
-}
+const sqDist = (a: number[], b: number[]) =>
+  (a[0] - b[0]) ** 2 + (a[1] - b[1]) ** 2 + (a[2] - b[2]) ** 2
 
 const kmeans = async (blob: Blob): Promise<TGeneratePaletteResponse> => {
   try {
-    const clampedArray = await blobToClampedArray(blob)
-    const pixels = clampedArrayToPixels(clampedArray)
+    const imageData = await blobToImageData(blob)
+    const pixels = imageDataToPixels(imageData)
 
-    //   const sampled = samplePixels(data, sampleSize)
-    const hexValues = skmeans(pixels, PALETTE_SIZE)
-    const palette = hexValues.centroids.map((color): TGeneratedSwatch => {
-      return {
-        color: rgbToHex(color),
-        percentLocation: [0, 0], // TTodo - Placeholder for percentLocation
+    const rgbData = pixels.map((p) => p.rgb)
+
+    const result = skmeans(rgbData, PALETTE_SIZE)
+
+    const palette: TGeneratedSwatch[] = result.centroids.map(
+      (centroid, clusterIdx) => {
+        let bestPixel: Pixel | null = null
+        let bestDist = Infinity
+
+        pixels.forEach((p, i) => {
+          if (result.idxs[i] === clusterIdx) {
+            const d = sqDist(p.rgb, centroid)
+            if (d < bestDist) {
+              bestDist = d
+              bestPixel = p
+            }
+          }
+        })
+
+        return {
+          color: rgbToHex(centroid),
+          percentLocation: bestPixel ? (bestPixel as Pixel).pos : [0, 0], // Something is cursed about ['pos'] vs .pos. I give up.
+        }
       }
-    })
+    )
 
     return {
       success: true,
       palette,
-      paletteId: uuidv4(), // Todo - replace me.
+      paletteId: uuidv4(),
     }
   } catch (error) {
     logger.error('Error generating palette:', error)
