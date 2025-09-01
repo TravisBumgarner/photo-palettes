@@ -35,6 +35,19 @@ const downloadPalette = async ({
   // Draw photo
   ctx.drawImage(img, 0, 0, width, height)
 
+  // Add attribution line between photo and palette
+  const attributionFontSize = Math.max(Math.round(barHeight * 0.22), 12)
+  const attributionPadding = 10
+  ctx.font = `${attributionFontSize}px sans-serif`
+  ctx.fillStyle = '#FFF'
+  ctx.textAlign = 'left'
+  ctx.textBaseline = 'top'
+  ctx.fillText(
+    'Created with photopalettes.com',
+    attributionPadding,
+    height + attributionPadding
+  )
+
   // Draw color boxes
   for (let i = 0; i < 6; i++) {
     const x1 = Math.round((i * width) / 6)
@@ -42,7 +55,12 @@ const downloadPalette = async ({
     const boxWidth = x2 - x1
 
     ctx.fillStyle = colors[i]
-    ctx.fillRect(x1, height, boxWidth, barHeight)
+    ctx.fillRect(
+      x1,
+      height + attributionFontSize + attributionPadding * 2,
+      boxWidth,
+      barHeight - attributionFontSize - attributionPadding * 2
+    )
 
     // Font size: maximize to fit box
     let fontSize = barHeight * 0.5
@@ -59,7 +77,14 @@ const downloadPalette = async ({
     ctx.fillStyle = getContrastColor(colors[i])
     ctx.textAlign = 'center'
     ctx.textBaseline = 'middle'
-    ctx.fillText(text, x1 + boxWidth / 2, height + barHeight / 2)
+    ctx.fillText(
+      text,
+      x1 + boxWidth / 2,
+      height +
+        attributionFontSize +
+        attributionPadding * 2 +
+        (barHeight - attributionFontSize - attributionPadding * 2) / 2
+    )
   }
 
   canvas.toBlob((blob) => {
