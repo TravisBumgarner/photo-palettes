@@ -42,3 +42,6 @@ nuke-docker:
 	@docker compose rm -f
 	@docker system prune -a --volumes -f
 
+line-count:
+	@echo "Counting lines..."
+	@bash ./scripts/line-count.sh

@@ -3,23 +3,18 @@ import IconButton from '@mui/material/IconButton'
 import MUIModal from '@mui/material/Modal'
 import { useCallback, type FC } from 'react'
 import { IoMdClose } from 'react-icons/io'
-import useGlobalStore from '../../../store'
 import { BORDER_RADIUS, SPACING } from '../../../styles/styleConsts'
+import { activeModalSignal } from '../../../signals'
 interface ActiveModal {
   children: React.ReactNode | React.ReactNode[]
   hideCloseButton?: boolean
 }
 
 const Modal: FC<ActiveModal> = ({ children, hideCloseButton = false }) => {
-  const { activeModal, setActiveModal } = useGlobalStore()
-
-  const handleClose = useCallback(
-    (_event: unknown, reason?: string) => {
-      if (reason === 'backdropClick') return
-      setActiveModal(null)
-    },
-    [setActiveModal]
-  )
+  const handleClose = useCallback((_event: unknown, reason?: string) => {
+    if (reason === 'backdropClick') return
+    activeModalSignal.value = null
+  }, [])
 
   return (
     <MUIModal
@@ -30,7 +25,7 @@ const Modal: FC<ActiveModal> = ({ children, hideCloseButton = false }) => {
         justifyContent: 'center',
         backgroundColor: 'background.paper',
       }}
-      open={activeModal !== null}
+      open={activeModalSignal.value !== null}
       onClose={handleClose}
       disableRestoreFocus={true}
       disableEscapeKeyDown={true}

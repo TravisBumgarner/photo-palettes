@@ -7,6 +7,7 @@ import { getUserColorFromUUID } from '../utils'
 import Link from './Link'
 import Favorite from './Favorite'
 import BlurImage from './BlurImage'
+import ColorBar from './ColorBar'
 
 const PaletteThumbnail = ({
   palette,
@@ -44,26 +45,7 @@ const PaletteThumbnail = ({
             aspectRatio={palette.aspectRatio}
           />
         </Box>
-        {palette.colors.length > 0 && (
-          <Box
-            sx={{
-              display: 'flex',
-              gap: SPACING.TINY.PX,
-              marginBottom: SPACING.SMALL.PX,
-            }}
-          >
-            {palette.colors.map((color) => (
-              <Box
-                key={color.id}
-                sx={{
-                  flexGrow: 1,
-                  height: 15,
-                  backgroundColor: color.hex,
-                }}
-              />
-            ))}
-          </Box>
-        )}
+        <ColorBar colors={palette.colors.map((i) => i.hex)} height={15} />
         <Box
           sx={{
             display: 'flex',

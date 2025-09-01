@@ -20,6 +20,10 @@ Run tests - docker-compose exec -T backend pytest
 
 ## Frontend
 
+**Installing dependencies**
+
+If docker is running and a new dependency is installed, the app will crash. Run `docker compose exec frontend npm i` after installing a dependency to have it synced to Docker. Will need a better approach in the future but this is a nice bandaid.
+
 **Testing index.js (Server for frontend)**
 
 1. `docker compose up backend db`

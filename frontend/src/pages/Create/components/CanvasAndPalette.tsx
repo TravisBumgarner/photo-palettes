@@ -59,7 +59,7 @@ const CanvasAndPalette = ({
   }, [photo, setPhotoOnCanvas])
 
   return (
-    <>
+    <Box sx={{ marginBottom: SPACING.MEDIUM.PX }}>
       <Box
         sx={{
           ...sharedCSS,
@@ -113,7 +113,11 @@ const CanvasAndPalette = ({
           axis="x"
           values={paletteSortOrder}
           onReorder={setPaletteSortOrder}
-          style={{ display: 'flex', flexDirection: 'row' }}
+          style={{
+            display: 'flex',
+            flexDirection: 'row',
+            marginTop: SPACING.MEDIUM.PX,
+          }}
         >
           {palette &&
             paletteSortOrder.map((index) => (
@@ -128,7 +132,7 @@ const CanvasAndPalette = ({
             ))}
         </Reorder.Group>
       </Tooltip>
-    </>
+    </Box>
   )
 }
 

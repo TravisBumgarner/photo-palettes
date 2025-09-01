@@ -61,7 +61,7 @@ export default function LoginPage() {
         else setError('Failed to load user details')
       } else {
         setError(response.error)
-        navigate('/error500')
+        navigate(ROUTES.error500.href)
       }
     },
     [navigate, email, password]
