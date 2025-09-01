@@ -1,4 +1,6 @@
-import { Typography, type SxProps } from '@mui/material'
+import Typography from '@mui/material/Typography'
+import type { SxProps } from '@mui/material/styles'
+
 import { SPACING } from '../styleConsts'
 
 const PageTitle = ({

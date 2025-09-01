@@ -1,4 +1,5 @@
-import { Tab, Tabs } from '@mui/material'
+import Tab from '@mui/material/Tab'
+import Tabs from '@mui/material/Tabs'
 import { useQuery } from '@tanstack/react-query'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import getPaletteList from '../api/palettes/getPaletteList'

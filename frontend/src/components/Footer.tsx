@@ -1,4 +1,9 @@
-import { Box, List, ListItem, Typography, useTheme } from '@mui/material'
+import Box from '@mui/material/Box'
+import List from '@mui/material/List'
+import ListItem from '@mui/material/ListItem'
+import Typography from '@mui/material/Typography'
+import { useTheme } from '@mui/material/styles'
+
 import { ROUTES } from '../consts'
 import useGlobalStore from '../store'
 import { FONT_SIZES, SPACING, subtleBackground } from '../styles/styleConsts'

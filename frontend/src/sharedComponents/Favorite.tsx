@@ -1,4 +1,7 @@
-import { IconButton, Tooltip, Typography } from '@mui/material'
+import IconButton from '@mui/material/IconButton'
+import Tooltip from '@mui/material/Tooltip'
+import Typography from '@mui/material/Typography'
+
 import { FaHeart, FaRegHeart } from 'react-icons/fa'
 import { useMutation } from '@tanstack/react-query'
 import addToFavorites from '../api/favorites/addToFavorites'

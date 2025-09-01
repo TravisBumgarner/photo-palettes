@@ -1,4 +1,5 @@
-import { Box, IconButton } from '@mui/material'
+import Box from '@mui/material/Box'
+import IconButton from '@mui/material/IconButton'
 import MUIModal from '@mui/material/Modal'
 import { useCallback, type FC } from 'react'
 import { IoMdClose } from 'react-icons/io'

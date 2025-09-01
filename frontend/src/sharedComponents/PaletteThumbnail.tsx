@@ -1,5 +1,6 @@
-import { Box, Typography, useTheme } from '@mui/material'
-// import Image from "next/image";
+import Box from '@mui/material/Box'
+import Typography from '@mui/material/Typography'
+import { useTheme } from '@mui/material/styles'
 import { BORDER_RADIUS, SPACING, subtleBackground } from '../styles/styleConsts'
 import { type TPalette } from '../types'
 import { getUserColorFromUUID } from '../utils'

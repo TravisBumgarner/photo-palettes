@@ -1,4 +1,4 @@
-import { Typography } from '@mui/material'
+import Typography from '@mui/material/Typography'
 import PageWrapper from '../styles/shared/PageWrapper'
 
 import WhatWentWrongContactForm from '../sharedComponents/WhatWentWrongContactForm'

@@ -1,4 +1,6 @@
-import { Box, Tab, Tabs } from '@mui/material'
+import Box from '@mui/material/Box'
+import Tab from '@mui/material/Tab'
+import Tabs from '@mui/material/Tabs'
 import { useQuery } from '@tanstack/react-query'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { getListAsModerator } from '../api/palettes/getPaletteListAsModerator'

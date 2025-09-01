@@ -1,4 +1,7 @@
-import { Box, Button, TextField, Typography } from '@mui/material'
+import Box from '@mui/material/Box'
+import Button from '@mui/material/Button'
+import TextField from '@mui/material/TextField'
+import Typography from '@mui/material/Typography'
 import React, { useCallback, useEffect, useState } from 'react'
 import { ROUTES } from '../consts'
 import PageTitle from '../styles/shared/PageTitle'

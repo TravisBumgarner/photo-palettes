@@ -1,15 +1,14 @@
 import { GiHamburgerMenu } from 'react-icons/gi'
 
-import {
-  Box,
-  IconButton,
-  Menu,
-  MenuItem,
-  Tooltip,
-  Typography,
-  useTheme,
-  Link as MuiLink,
-} from '@mui/material'
+import Box from '@mui/material/Box'
+import IconButton from '@mui/material/IconButton'
+import Menu from '@mui/material/Menu'
+import MenuItem from '@mui/material/MenuItem'
+import Tooltip from '@mui/material/Tooltip'
+import Typography from '@mui/material/Typography'
+import { useTheme } from '@mui/material/styles'
+import MuiLink from '@mui/material/Link'
+
 import { useCallback, useMemo, useState } from 'react'
 import { ROUTES } from '../../consts'
 import useGlobalStore from '../../store'

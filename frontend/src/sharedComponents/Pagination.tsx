@@ -1,6 +1,6 @@
 import React, { useCallback, useMemo } from 'react'
 import { PAGINATION_SIZE } from '../consts'
-import { Button } from '@mui/material'
+import Button from '@mui/material/Button'
 
 interface PaginationProps {
   total: number

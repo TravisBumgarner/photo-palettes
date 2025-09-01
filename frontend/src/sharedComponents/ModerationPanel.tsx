@@ -1,6 +1,8 @@
 import { moderatePalette } from '../api/moderatePalette'
 
 import { useCallback, useState } from 'react'
+import Box from '@mui/material/Box'
+import Button from '@mui/material/Button'
 
 import {
   MODERATION_STATUS,
@@ -8,7 +10,6 @@ import {
   type EModerationStatus,
 } from '../types'
 
-import { Box, Button } from '@mui/material'
 import { deletePalette } from '../api/palettes/deletePalette'
 import useGlobalStore from '../store'
 import { BORDER_RADIUS, SPACING } from '../styles/styleConsts'

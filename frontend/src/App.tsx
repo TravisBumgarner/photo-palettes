@@ -5,7 +5,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 
 import useLoadUserIntoState from './hooks/useLoadUserIntoState'
 import useGlobalStore from './store'
-import { Box } from '@mui/material'
+import Box from '@mui/material/Box'
 import Loading from './sharedComponents/Loading'
 import AppThemeProvider from './styles/Theme'
 import AlertsManager from './components/AlertsManager'

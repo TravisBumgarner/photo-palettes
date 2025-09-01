@@ -1,9 +1,9 @@
-import { Box } from '@mui/material'
+import Box from '@mui/material/Box'
 import { type SxProps, useTheme } from '@mui/material/styles'
 import { Link as RouterLink } from 'react-router-dom'
 import { PALETTE } from '../styles/styleConsts'
 import MuiLink from '@mui/material/Link'
-import _ from 'lodash'
+import merge from 'lodash/merge'
 
 type Props = {
   href: string
@@ -47,7 +47,7 @@ const Link = ({
       <MuiLink
         href={href}
         target={target}
-        sx={_.merge(baseStyle, { '&:hover': hoverStyle }, sx)}
+        sx={merge(baseStyle, { '&:hover': hoverStyle }, sx)}
         rel={target === '_blank' ? 'noopener noreferrer' : undefined}
       >
         {children}
@@ -57,7 +57,7 @@ const Link = ({
 
   return (
     <RouterLink to={href} style={baseStyle as React.CSSProperties}>
-      <Box component="span" sx={_.merge({ '&:hover': hoverStyle }, sx)}>
+      <Box component="span" sx={merge({ '&:hover': hoverStyle }, sx)}>
         {children}
       </Box>
     </RouterLink>

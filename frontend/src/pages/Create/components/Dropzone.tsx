@@ -1,6 +1,6 @@
 import { useDropzone } from 'react-dropzone'
 
-import { Box } from '@mui/material'
+import Box from '@mui/material/Box'
 import useGlobalStore from '../../../store'
 import { sharedCSS } from './shared'
 import { logger } from '../../../services/logging'

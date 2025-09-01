@@ -1,4 +1,9 @@
-import { Box, FormControl, InputLabel, MenuItem, Select } from '@mui/material'
+import Box from '@mui/material/Box'
+import FormControl from '@mui/material/FormControl'
+import InputLabel from '@mui/material/InputLabel'
+import MenuItem from '@mui/material/MenuItem'
+import Select from '@mui/material/Select'
+
 import { SORT_BY, SORT_BY_LABEL, type ESortBy } from '../types'
 import { BORDER_RADIUS, SPACING } from '../styles/styleConsts'
 
