@@ -15,6 +15,7 @@ import { sharedCSS } from './components/shared'
 import PageWrapper from '../../styles/shared/PageWrapper'
 import { resizeImage } from '../../utils/resizeImage'
 import { useNavigate } from 'react-router-dom'
+import { PALETTE_SIZE } from '../../consts'
 
 type UploadStatus =
   | 'INITIAL'
@@ -68,9 +69,7 @@ const Create = () => {
       const response = await generatePaletteMutation.mutateAsync(resizedPhoto)
       if (response.success) {
         setPalette(response.palette)
-        setPaletteSortOrder(
-          Array.from({ length: response.palette.length }, (_, i) => i)
-        )
+        setPaletteSortOrder(Array.from({ length: PALETTE_SIZE }, (_, i) => i))
         setPaletteId(response.paletteId)
         setUploadStatus('UPLOADED')
       } else {

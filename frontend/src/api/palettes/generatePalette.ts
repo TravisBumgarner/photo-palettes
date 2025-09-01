@@ -1,23 +1,6 @@
-import { z } from 'zod'
 import config from '../../config'
 import { getToken } from '../../services/supabase'
-
-const zodResponse = z.discriminatedUnion('success', [
-  z.object({
-    success: z.literal(true),
-    paletteId: z.string(),
-    palette: z.array(
-      z.object({
-        color: z.string(),
-        percentLocation: z.tuple([z.number(), z.number()]),
-      })
-    ),
-  }),
-  z.object({
-    success: z.literal(false),
-    message: z.string(),
-  }),
-])
+import { zodGeneratePaletteResponse } from '../../types'
 
 export const generatePalette = async (photo: Blob) => {
   const tokenResponse = await getToken()
@@ -39,5 +22,5 @@ export const generatePalette = async (photo: Blob) => {
     },
   })
   const json = await response.json()
-  return zodResponse.parse(json)
+  return zodGeneratePaletteResponse.parse(json)
 }

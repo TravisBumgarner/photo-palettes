@@ -106,3 +106,5 @@ export const ROUTES = {
 }
 
 export const PAGINATION_SIZE = 10
+
+export const PALETTE_SIZE = 6

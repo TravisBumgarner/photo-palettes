@@ -1,6 +1,6 @@
 // import { useCallback } from 'react'
 import { useCallback, useState } from 'react'
-import { type TSwatch } from '../../../types'
+import { type TGeneratedSwatch } from '../../../types'
 import { getContrastColor } from '../../../utils'
 import { Reorder } from 'framer-motion'
 import { FONT_SIZES } from '../../../styles/styleConsts'
@@ -13,7 +13,7 @@ const ReadonlySwatch = ({
   swatch,
 }: {
   index: number
-  swatch: TSwatch
+  swatch: TGeneratedSwatch
   setActiveIndex: (index: number | null) => void
   isActive: boolean
   isOtherActive: boolean
