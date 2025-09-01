@@ -62,6 +62,7 @@ const Create = () => {
         setPalette(response.palette)
         setPaletteSortOrder(Array.from({ length: PALETTE_SIZE }, (_, i) => i))
         setPaletteId(response.paletteId)
+
         setUploadStatus('UPLOADED')
       } else {
         setUploadStatus('ERROR')
@@ -93,12 +94,15 @@ const Create = () => {
     activeModalSignal.value = {
       id: MODAL_ID.ANON_PALETTE_CREATION_MODAL,
       colors: sortedPalette.map((swatch) => swatch.color),
+      photoUrl: URL.createObjectURL(photo!),
+      paletteId,
     }
   }, [
     paletteId,
     //  name,
     palette,
     paletteSortOrder,
+    photo,
   ])
 
   const handleTryAgain = useCallback(() => {
