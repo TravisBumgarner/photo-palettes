@@ -43,6 +43,11 @@ export const ROUTES = {
     href: '/create',
     label: 'Create',
   },
+  createlite: {
+    key: 'createlite',
+    href: '/createlite',
+    label: 'Create Lite',
+  },
   feedback: {
     key: 'feedback',
     href: '/feedback',

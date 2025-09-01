@@ -97,9 +97,9 @@ const Navigation = () => {
       >
         <MuiLink
           sx={createLinkSX(theme.palette.mode)}
-          href={ROUTES.create.href}
+          href={ROUTES.createlite.href}
         >
-          {ROUTES.create.label}
+          {ROUTES.createlite.label}
         </MuiLink>
         <Tooltip title="Menu">
           <IconButton
