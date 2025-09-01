@@ -1,11 +1,11 @@
 import { Box, Button, Typography } from '@mui/material'
 import { useCallback } from 'react'
-import useGlobalStore from '../../../store'
-import { type ModalID } from '../Modal.types'
+import { MODAL_ID } from '../Modal.types'
 import DefaultModal from './DefaultModal'
+import { activeModalSignal } from '../../../signals'
 
 export interface ConfirmationModalProps {
-  id: ModalID
+  id: typeof MODAL_ID.CONFIRMATION_MODAL
   title: string
   body: string
   confirmationCallback?: () => void
@@ -24,17 +24,15 @@ const ConfirmationModal = ({
   isConfirmDestructive,
   showCancel,
 }: ConfirmationModalProps) => {
-  const { setActiveModal } = useGlobalStore()
-
   const handleCancel = useCallback(() => {
     cancelCallback?.()
-    setActiveModal(null)
-  }, [cancelCallback, setActiveModal])
+    activeModalSignal.value = null
+  }, [cancelCallback])
 
   const handleConfirm = useCallback(() => {
     confirmationCallback?.()
-    setActiveModal(null)
-  }, [confirmationCallback, setActiveModal])
+    activeModalSignal.value = null
+  }, [confirmationCallback])
 
   return (
     <DefaultModal hideCloseButton>

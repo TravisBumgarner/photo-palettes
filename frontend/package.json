@@ -38,6 +38,7 @@
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.1",
     "@mui/material": "^7.3.1",
+    "@preact/signals-react": "^3.3.0",
     "@sentry/node": "^10.5.0",
     "@sentry/react": "^10.5.0",
     "@supabase/supabase-js": "^2.55.0",

@@ -1,4 +1,8 @@
-import { Box, Button, TextField } from '@mui/material'
+import {
+  Box,
+  Button,
+  // TextField
+} from '@mui/material'
 import { useCallback, useState } from 'react'
 import { SPACING } from '../../styles/styleConsts'
 import { type TGeneratedPalette } from '../../types'
@@ -9,9 +13,11 @@ import Dropzone from './components/Dropzone'
 import { sharedCSS } from './components/shared'
 import PageWrapper from '../../styles/shared/PageWrapper'
 import { resizeImage } from '../../utils/resizeImage'
-import PageTitle from '../../styles/shared/PageTitle'
 import kmeans from './kmeans'
 import { PALETTE_SIZE } from '../../consts'
+import { activeModalSignal } from '../../signals'
+import { MODAL_ID } from '../../sharedComponents/Modal/Modal.types'
+import { useSignals } from '@preact/signals-react/runtime'
 
 type UploadStatus =
   | 'INITIAL'
@@ -21,13 +27,15 @@ type UploadStatus =
   | 'SUBMITTING'
   | 'SUBMITTED'
 
-const MAX_NAME_LENGTH = 50
+// const MAX_NAME_LENGTH = 50
 
 const Create = () => {
+  useSignals()
+
   const [uploadStatus, setUploadStatus] = useState<UploadStatus>('INITIAL')
   const [photo, setPhoto] = useState<Blob | null>(null)
   const [paletteId, setPaletteId] = useState<string | null>(null)
-  const [name, setName] = useState('')
+  // const [name, setName] = useState('')
   const [palette, setPalette] = useState<TGeneratedPalette | null>(null)
   const [paletteSortOrder, setPaletteSortOrder] = useState<number[]>([])
 
@@ -64,47 +72,36 @@ const Create = () => {
     [setPalette, setPaletteId]
   )
 
-  const handleNameChange = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      setName(e.target.value.slice(0, MAX_NAME_LENGTH))
-    },
-    []
-  )
+  // const handleNameChange = useCallback(
+  //   (e: React.ChangeEvent<HTMLInputElement>) => {
+  //     setName(e.target.value.slice(0, MAX_NAME_LENGTH))
+  //   },
+  //   []
+  // )
 
   const handleClearPalette = useCallback(() => {
     setPalette(null)
     setUploadStatus('INITIAL')
     setPhoto(null)
-    setName('')
+    // setName('')
   }, [setPalette])
-
-  const whatToDoWithPalette = ({
-    palette,
-    paletteId,
-    name,
-  }: {
-    palette: TGeneratedPalette | null
-    paletteId: string | null
-    name: string
-  }) => {
-    if (!palette || !paletteId || !name) return
-
-    alert('Nice palette')
-
-    return {}
-  }
 
   const handleSavePalette = useCallback(async () => {
     if (!paletteId || !palette) return
     setUploadStatus('SUBMITTING')
 
     const sortedPalette = paletteSortOrder.map((index) => palette[index])
-    await whatToDoWithPalette({
-      palette: sortedPalette,
-      paletteId,
-      name,
-    })
-  }, [paletteId, name, palette, paletteSortOrder])
+
+    activeModalSignal.value = {
+      id: MODAL_ID.ANON_PALETTE_CREATION_MODAL,
+      colors: sortedPalette.map((swatch) => swatch.color),
+    }
+  }, [
+    paletteId,
+    //  name,
+    palette,
+    paletteSortOrder,
+  ])
 
   const handleTryAgain = useCallback(() => {
     setUploadStatus('INITIAL')
@@ -112,12 +109,11 @@ const Create = () => {
     setPhoto(null)
   }, [setPalette, setPhoto])
 
-  const nameLabel =
-    name.length > 0 ? `Name: ${name.length} / ${MAX_NAME_LENGTH}` : 'Name'
+  // const nameLabel =
+  //   name.length > 0 ? `Name: ${name.length} / ${MAX_NAME_LENGTH}` : 'Name'
 
   return (
     <PageWrapper width="full">
-      <PageTitle marginBottom text="Create Lite" />
       {uploadStatus === 'INITIAL' && <Dropzone onDrop={onDrop} />}
       {(uploadStatus === 'UPLOADING' || uploadStatus === 'SUBMITTED') && (
         <Box
@@ -154,14 +150,14 @@ const Create = () => {
             paletteSortOrder={paletteSortOrder}
             setPaletteSortOrder={setPaletteSortOrder}
           />
-          <TextField
+          {/* <TextField
             variant="outlined"
             fullWidth
             label={nameLabel}
             placeholder="Name your palette"
             value={name}
             onChange={handleNameChange}
-          />
+          /> */}
           <Box
             sx={{
               display: 'flex',
@@ -174,7 +170,10 @@ const Create = () => {
               Clear
             </Button>
             <Button
-              disabled={!name || uploadStatus === 'SUBMITTING'}
+              disabled={
+                // !name ||
+                uploadStatus === 'SUBMITTING'
+              }
               variant="contained"
               onClick={handleSavePalette}
             >

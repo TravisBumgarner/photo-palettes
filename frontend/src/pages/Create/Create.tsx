@@ -4,7 +4,6 @@ import { useCallback, useState } from 'react'
 import { createPalette } from '../../api/palettes/createPalette'
 import { generatePalette } from '../../api/palettes/generatePalette'
 import { logger } from '../../services/logging'
-import useGlobalStore from '../../store'
 import { SPACING } from '../../styles/styleConsts'
 import { type TGeneratedPalette } from '../../types'
 import Loading from '../../sharedComponents/Loading'
@@ -16,6 +15,8 @@ import PageWrapper from '../../styles/shared/PageWrapper'
 import { resizeImage } from '../../utils/resizeImage'
 import { useNavigate } from 'react-router-dom'
 import { PALETTE_SIZE } from '../../consts'
+import { activeModalSignal } from '../../signals'
+import { MODAL_ID } from '../../sharedComponents/Modal/Modal.types'
 
 type UploadStatus =
   | 'INITIAL'
@@ -32,7 +33,6 @@ const Create = () => {
   const [photo, setPhoto] = useState<Blob | null>(null)
   const navigate = useNavigate()
   const [paletteId, setPaletteId] = useState<string | null>(null)
-  const setActiveModal = useGlobalStore((state) => state.setActiveModal)
   const [name, setName] = useState('')
   const [palette, setPalette] = useState<TGeneratedPalette | null>(null)
   const [paletteSortOrder, setPaletteSortOrder] = useState<number[]>([])
@@ -116,14 +116,14 @@ const Create = () => {
     })
 
     if (response.success) {
-      setActiveModal({
-        id: 'ConfirmationModal',
+      activeModalSignal.value = {
+        id: MODAL_ID.CONFIRMATION_MODAL,
         confirmationCallback: () => {
           navigate(`/palette/${paletteId}`)
         },
         title: 'Thanks for your submission!',
         body: 'Once it is approved, it will be added to the site.',
-      })
+      }
       setUploadStatus('SUBMITTED')
     } else {
       setUploadStatus('ERROR')
@@ -131,7 +131,6 @@ const Create = () => {
   }, [
     paletteId,
     createPaletteMutation,
-    setActiveModal,
     name,
     palette,
     navigate,

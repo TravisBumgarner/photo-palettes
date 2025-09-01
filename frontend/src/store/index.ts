@@ -1,7 +1,6 @@
 import { type User } from '@supabase/supabase-js'
 import { create } from 'zustand'
 import { devtools } from 'zustand/middleware'
-import { type ActiveModal } from '../sharedComponents/Modal/Modal.types'
 import { type AppUserDetails, type State } from './types'
 
 const useGlobalStore = create<State>()(
@@ -30,8 +29,6 @@ const useGlobalStore = create<State>()(
             { message: text, color, id: Math.random() },
           ],
         })),
-      activeModal: null,
-      setActiveModal: (activeModal: ActiveModal | null) => set({ activeModal }),
     }),
     {
       name: 'store',

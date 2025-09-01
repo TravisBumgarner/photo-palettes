@@ -12,6 +12,8 @@ import { Box, Button } from '@mui/material'
 import { deletePalette } from '../api/palettes/deletePalette'
 import useGlobalStore from '../store'
 import { BORDER_RADIUS, SPACING } from '../styles/styleConsts'
+import { activeModalSignal } from '../signals'
+import { MODAL_ID } from './Modal/Modal.types'
 
 const ModerationPanel = ({
   refetch,
@@ -24,7 +26,6 @@ const ModerationPanel = ({
 }) => {
   const [isFetching, setIsFetching] = useState(false)
   const appUserDetails = useGlobalStore((state) => state.appUserDetails)
-  const setActiveModal = useGlobalStore((state) => state.setActiveModal)
 
   const handleApprove = useCallback(async () => {
     setIsFetching(true)
@@ -54,14 +55,14 @@ const ModerationPanel = ({
   }, [paletteId, setIsFetching])
 
   const handleDelete = useCallback(async () => {
-    setActiveModal({
-      id: 'ConfirmationModal',
+    activeModalSignal.value = {
+      id: MODAL_ID.CONFIRMATION_MODAL,
       title: 'Delete Palette',
       body: 'Are you sure you want to delete this palette?',
       confirmationCallback: handleDeleteCallback,
       showCancel: true,
-    })
-  }, [handleDeleteCallback, setActiveModal])
+    }
+  }, [handleDeleteCallback])
 
   if (
     !appUserDetails ||
