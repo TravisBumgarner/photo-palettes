@@ -1,5 +1,6 @@
-import { Box, type SxProps } from '@mui/material'
 import { SPACING } from '../styleConsts'
+import Box from '@mui/material/Box'
+import type { SxProps } from '@mui/material/styles'
 import React, { useMemo } from 'react'
 
 /**

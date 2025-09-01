@@ -1,4 +1,4 @@
-import { Box } from '@mui/material'
+import Box from '@mui/material/Box'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import useGlobalStore from '../store'
 import { type TAlert } from '../store/types'

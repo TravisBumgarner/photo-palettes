@@ -1,4 +1,7 @@
-import { Box, Button, Typography } from '@mui/material'
+import Box from '@mui/material/Box'
+import Button from '@mui/material/Button'
+import Typography from '@mui/material/Typography'
+
 import { BORDER_RADIUS, FONT_SIZES, SPACING } from '../../styles/styleConsts'
 import { IoInformationCircleOutline } from 'react-icons/io5'
 import { useTheme } from '@mui/material/styles'

@@ -1,7 +1,8 @@
 import { useMemo } from 'react'
-import type { SxProps } from '@mui/material'
+import type { SxProps } from '@mui/material/styles'
+
 import { Capacitor } from '@capacitor/core'
-import { Box } from '@mui/system'
+import Box from '@mui/system/Box'
 
 const PlatformSpecificStyling = ({
   children,

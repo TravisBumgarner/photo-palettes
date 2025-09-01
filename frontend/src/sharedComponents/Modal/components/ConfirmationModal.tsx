@@ -1,4 +1,6 @@
-import { Box, Button, Typography } from '@mui/material'
+import Box from '@mui/material/Box'
+import Button from '@mui/material/Button'
+import Typography from '@mui/material/Typography'
 import { useCallback } from 'react'
 import { MODAL_ID } from '../Modal.types'
 import DefaultModal from './DefaultModal'

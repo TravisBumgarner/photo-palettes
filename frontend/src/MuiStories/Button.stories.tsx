@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react-vite'
-import { Box, Button } from '@mui/material'
+import Box from '@mui/material/Box'
+import Button from '@mui/material/Button'
 
 const meta = {
   title: 'Example/Button',

@@ -1,5 +1,5 @@
 import { SPACING } from '../styles/styleConsts'
-import { Box } from '@mui/material'
+import Box from '@mui/material/Box'
 
 const ColorBar = ({ colors, height }: { colors: string[]; height: number }) => {
   return (

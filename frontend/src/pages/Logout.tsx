@@ -1,4 +1,4 @@
-import { Typography } from '@mui/material'
+import Typography from '@mui/material/Typography'
 import { useEffect } from 'react'
 import { logout } from '../services/supabase'
 import useGlobalStore from '../store'

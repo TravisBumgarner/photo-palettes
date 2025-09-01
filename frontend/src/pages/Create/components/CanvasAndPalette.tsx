@@ -1,4 +1,6 @@
-import { Box, Tooltip } from '@mui/material'
+import Box from '@mui/material/Box'
+import Tooltip from '@mui/material/Tooltip'
+
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { SPACING } from '../../../styles/styleConsts'
 import { type TGeneratedPalette } from '../../../types'

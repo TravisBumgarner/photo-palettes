@@ -1,11 +1,11 @@
-import { useMediaQuery } from '@mui/material'
+import useMediaQuery from '@mui/material/useMediaQuery'
 import CssBaseline from '@mui/material/CssBaseline'
 import {
   createTheme,
   type ThemeOptions,
   ThemeProvider,
 } from '@mui/material/styles'
-import _ from 'lodash'
+import merge from 'lodash/merge'
 import { useMemo } from 'react'
 import {
   FONT_SIZES,
@@ -342,8 +342,8 @@ const darkThemeOptions: ThemeOptions = {
   },
 }
 
-const darkTheme = createTheme(_.merge(baseThemeOptions, darkThemeOptions))
-const lightTheme = createTheme(_.merge(baseThemeOptions, lightThemeOptions))
+const darkTheme = createTheme(merge(baseThemeOptions, darkThemeOptions))
+const lightTheme = createTheme(merge(baseThemeOptions, lightThemeOptions))
 
 const AppThemeProvider = ({ children }: { children: React.ReactNode }) => {
   const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)')

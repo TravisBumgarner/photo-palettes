@@ -1,4 +1,7 @@
-import { Button, TextField, Typography } from '@mui/material'
+import Button from '@mui/material/Button'
+import TextField from '@mui/material/TextField'
+import Typography from '@mui/material/Typography'
+
 import { type ChangeEvent, useCallback, useState } from 'react'
 import { z } from 'zod'
 import { MINIMUM_PASSWORD_LENGTH, ROUTES } from '../consts'

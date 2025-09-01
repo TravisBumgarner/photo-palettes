@@ -8,6 +8,7 @@
   "ruff.organizeImports": true,
   "ruff.fixAll": true,
   "mypy.dmypyExecutable": "./backend/.venv-backend/bin/dmypy",
+  "typescript.preferences.autoImportSpecifierExcludeRegexes": ["^@mui/[^/]+$"],
   "[python]": {
     "editor.defaultFormatter": "charliermarsh.ruff",
     "editor.formatOnSave": true,
