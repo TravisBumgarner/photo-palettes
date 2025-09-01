@@ -1,23 +1,28 @@
+import { lazy } from 'react'
 import { Routes, Route, Navigate, Outlet } from 'react-router-dom'
 import Browse from '../pages/Browse'
-import TermsOfService from '../pages/TermsOfService'
-import PrivacyPolicy from '../pages/PrivacyPolicy'
-import Changelog from '../pages/Changelog'
-import Feedback from '../pages/Feedback'
-import Create from '../pages/Create/Create'
-import Login from '../pages/Login'
-import Error500 from '../pages/Error500'
-import Error404 from '../pages/Error404'
-import FeatureRequests from '../pages/FeatureRequests'
-import Signup from '../pages/Signup'
-import Profile from '../pages/Profile'
-import Logout from '../pages/Logout'
-import Moderation from '../pages/Moderation'
-import Donations from '../pages/Donations'
-import Palette from '../pages/Palette'
+const TermsOfService = lazy(async () => await import('../pages/TermsOfService'))
+const PrivacyPolicy = lazy(async () => await import('../pages/PrivacyPolicy'))
+const Changelog = lazy(async () => await import('../pages/Changelog'))
+const Feedback = lazy(async () => await import('../pages/Feedback'))
+const Create = lazy(async () => await import('../pages/Create/Create'))
+// const CreateLite = lazy(async () => await import('../pages/Create/CreateLite'))
+const Login = lazy(async () => await import('../pages/Login'))
+const Error500 = lazy(async () => await import('../pages/Error500'))
+const Error404 = lazy(async () => await import('../pages/Error404'))
+const FeatureRequests = lazy(
+  async () => await import('../pages/FeatureRequests')
+)
+const Signup = lazy(async () => await import('../pages/Signup'))
+const Profile = lazy(async () => await import('../pages/Profile'))
+const Logout = lazy(async () => await import('../pages/Logout'))
+const Moderation = lazy(async () => await import('../pages/Moderation'))
+const Donations = lazy(async () => await import('../pages/Donations'))
+const Palette = lazy(async () => await import('../pages/Palette'))
+const Favorites = lazy(async () => await import('../pages/Favorites'))
+
 import useGlobalStore from '../store'
 import { PERMISSION_LEVEL } from '../types'
-import Favorites from '../pages/Favorites'
 
 const PrivateRoute = () => {
   const appUserDetails = useGlobalStore((state) => state.appUserDetails)
