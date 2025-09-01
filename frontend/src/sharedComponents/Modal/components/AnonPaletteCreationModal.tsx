@@ -6,31 +6,41 @@ import { type MODAL_ID } from '../Modal.types'
 import DefaultModal from './DefaultModal'
 import { activeModalSignal } from '../../../signals'
 import ColorBar from '../../ColorBar'
+import downloadPalette from '../../../utils/downloadPalette'
 
 export interface AnonPaletteCreationModalProps {
   id: typeof MODAL_ID.ANON_PALETTE_CREATION_MODAL
   colors: string[]
+  photoUrl: string
+  paletteId: string
 }
 
 const AnonPaletteCreationModal = ({
   colors,
+  photoUrl,
+  paletteId,
 }: AnonPaletteCreationModalProps) => {
-  const handleCancel = useCallback(() => {
-    activeModalSignal.value = null
-  }, [])
+  const handleDownload = useCallback(async () => {
+    await downloadPalette({ paletteId, photoUrl, colors })
+    // activeModalSignal.value = null
+  }, [photoUrl, colors, paletteId])
 
-  const handleConfirm = useCallback(() => {
+  const handleConfirm = useCallback(async () => {
     activeModalSignal.value = null
   }, [])
 
   return (
     <DefaultModal hideCloseButton>
       <Box sx={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-        <Typography variant="h6">Save Your palette</Typography>
+        {/* <Typography variant="h6">Save Your palette</Typography> */}
+        <img
+          style={{ width: '100%', height: 'auto' }}
+          src={photoUrl}
+          alt="Uploaded photo"
+        />
         <ColorBar colors={colors} height={30} />
         <Typography variant="body1">
-          To save your palette, you'll need an account. Prefer not to sign up?
-          No worries—you can still download it.
+          To save your palette, you'll need an account.
         </Typography>
         <Box
           sx={{
@@ -40,7 +50,7 @@ const AnonPaletteCreationModal = ({
             justifyContent: 'flex-end',
           }}
         >
-          <Button variant="outlined" onClick={handleCancel}>
+          <Button variant="outlined" onClick={handleDownload}>
             Download
           </Button>
           <Button variant="contained" onClick={handleConfirm}>

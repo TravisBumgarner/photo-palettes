@@ -3,22 +3,21 @@ import Button from '@mui/material/Button'
 import TextField from '@mui/material/TextField'
 import { useMutation } from '@tanstack/react-query'
 import { useCallback, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { createPalette } from '../../api/palettes/createPalette'
 import { generatePalette } from '../../api/palettes/generatePalette'
 import { logger } from '../../services/logging'
-import { SPACING } from '../../styles/styleConsts'
-import { type TGeneratedPalette } from '../../types'
 import Loading from '../../sharedComponents/Loading'
 import Message from '../../sharedComponents/Message'
+import { MODAL_ID } from '../../sharedComponents/Modal/Modal.types'
+import { activeModalSignal } from '../../signals'
+import PageWrapper from '../../styles/shared/PageWrapper'
+import { SPACING } from '../../styles/styleConsts'
+import { type TGeneratedPalette } from '../../types'
+import { resizeImage } from '../../utils/resizeImage'
 import CanvasAndPalette from './components/CanvasAndPalette'
 import Dropzone from './components/Dropzone'
 import { sharedCSS } from './components/shared'
-import PageWrapper from '../../styles/shared/PageWrapper'
-import { resizeImage } from '../../utils/resizeImage'
-import { useNavigate } from 'react-router-dom'
-import { PALETTE_SIZE } from '../../consts'
-import { activeModalSignal } from '../../signals'
-import { MODAL_ID } from '../../sharedComponents/Modal/Modal.types'
 
 type UploadStatus =
   | 'INITIAL'
@@ -35,6 +34,7 @@ const Create = () => {
   const [photo, setPhoto] = useState<Blob | null>(null)
   const navigate = useNavigate()
   const [paletteId, setPaletteId] = useState<string | null>(null)
+
   const [name, setName] = useState('')
   const [palette, setPalette] = useState<TGeneratedPalette | null>(null)
   const [paletteSortOrder, setPaletteSortOrder] = useState<number[]>([])
@@ -71,7 +71,9 @@ const Create = () => {
       const response = await generatePaletteMutation.mutateAsync(resizedPhoto)
       if (response.success) {
         setPalette(response.palette)
-        setPaletteSortOrder(Array.from({ length: PALETTE_SIZE }, (_, i) => i))
+        setPaletteSortOrder(
+          Array.from({ length: response.palette.length }, (_, i) => i)
+        )
         setPaletteId(response.paletteId)
         setUploadStatus('UPLOADED')
       } else {
