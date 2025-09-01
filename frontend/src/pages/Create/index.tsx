@@ -1,3 +1,4 @@
 import Create from './Create'
+import CreateLite from './CreateLite'
 
-export default Create
+export { Create, CreateLite }

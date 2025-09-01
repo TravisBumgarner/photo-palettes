@@ -43,7 +43,7 @@ export const ROUTES = {
     href: '/create',
     label: 'Create',
   },
-  createlite: {
+  createLite: {
     key: 'createlite',
     href: '/createlite',
     label: 'Create Lite',
@@ -92,6 +92,16 @@ export const ROUTES = {
     key: 'changelog',
     href: '/changelog',
     label: 'Changelog',
+  },
+  error404: {
+    key: 'error404',
+    href: '/error404',
+    label: '404 Not Found',
+  },
+  error500: {
+    key: 'error500',
+    href: '/error500',
+    label: '500 Internal Server Error',
   },
 }
 
