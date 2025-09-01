@@ -40,7 +40,7 @@ const AnonPaletteCreationModal = ({
         />
         <ColorBar colors={colors} height={30} />
         <Typography variant="body1">
-          To save your palette, you'll need an account.
+          To save and share your palette, you will need to sign up.
         </Typography>
         <Box
           sx={{
@@ -54,7 +54,7 @@ const AnonPaletteCreationModal = ({
             Download
           </Button>
           <Button variant="contained" onClick={handleConfirm}>
-            Sign Up & Save
+            Sign up
           </Button>
         </Box>
       </Box>
