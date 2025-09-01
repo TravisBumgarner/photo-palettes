@@ -88,6 +88,18 @@ export const ROUTES = {
     href: '/changelog',
     label: 'Changelog',
   },
+  error404: {
+    key: 'error404',
+    href: '/error404',
+    label: '404 Not Found',
+  },
+  error500: {
+    key: 'error500',
+    href: '/error500',
+    label: '500 Internal Server Error',
+  },
 }
 
 export const PAGINATION_SIZE = 10
+
+export const PALETTE_SIZE = 6

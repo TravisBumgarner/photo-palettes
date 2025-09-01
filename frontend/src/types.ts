@@ -1,12 +1,5 @@
 import { z } from 'zod'
 
-export type TSwatch = {
-  color: string
-  percentLocation: [number, number]
-}
-
-export type TGeneratedPalette = TSwatch[]
-
 export const PERMISSION_LEVEL = {
   VISITOR: -1,
   MEMBER: 0,
@@ -90,6 +83,15 @@ export const zodPalette = z.object({
   ),
 })
 
+export const zodGeneratedPalette = z.object({
+  color: z.string(),
+  percentLocation: z.tuple([z.number(), z.number()]),
+})
+
+export type TGeneratedSwatch = z.infer<typeof zodGeneratedPalette>
+
+export type TGeneratedPalette = TGeneratedSwatch[]
+
 export type TPalette = z.infer<typeof zodPalette>
 
 export const SORT_BY = {
@@ -105,3 +107,19 @@ export const SORT_BY_LABEL = {
 }
 
 export type ESortBy = (typeof SORT_BY)[keyof typeof SORT_BY]
+
+export const zodGeneratePaletteResponse = z.discriminatedUnion('success', [
+  z.object({
+    success: z.literal(true),
+    paletteId: z.string(),
+    palette: z.array(zodGeneratedPalette),
+  }),
+  z.object({
+    success: z.literal(false),
+    message: z.string(),
+  }),
+])
+
+export type TGeneratePaletteResponse = z.infer<
+  typeof zodGeneratePaletteResponse
+>

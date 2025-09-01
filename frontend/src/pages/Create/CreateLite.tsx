@@ -1,9 +1,9 @@
-import { Box, Button, TextField } from '@mui/material'
-import { useMutation } from '@tanstack/react-query'
+import {
+  Box,
+  Button,
+  // TextField
+} from '@mui/material'
 import { useCallback, useState } from 'react'
-import { createPalette } from '../../api/palettes/createPalette'
-import { generatePalette } from '../../api/palettes/generatePalette'
-import { logger } from '../../services/logging'
 import { SPACING } from '../../styles/styleConsts'
 import { type TGeneratedPalette } from '../../types'
 import Loading from '../../sharedComponents/Loading'
@@ -13,10 +13,11 @@ import Dropzone from './components/Dropzone'
 import { sharedCSS } from './components/shared'
 import PageWrapper from '../../styles/shared/PageWrapper'
 import { resizeImage } from '../../utils/resizeImage'
-import { useNavigate } from 'react-router-dom'
+import kmeans from './kmeans'
 import { PALETTE_SIZE } from '../../consts'
 import { activeModalSignal } from '../../signals'
 import { MODAL_ID } from '../../sharedComponents/Modal/Modal.types'
+import { useSignals } from '@preact/signals-react/runtime'
 
 type UploadStatus =
   | 'INITIAL'
@@ -26,14 +27,15 @@ type UploadStatus =
   | 'SUBMITTING'
   | 'SUBMITTED'
 
-const MAX_NAME_LENGTH = 50
+// const MAX_NAME_LENGTH = 50
 
 const Create = () => {
+  useSignals()
+
   const [uploadStatus, setUploadStatus] = useState<UploadStatus>('INITIAL')
   const [photo, setPhoto] = useState<Blob | null>(null)
-  const navigate = useNavigate()
   const [paletteId, setPaletteId] = useState<string | null>(null)
-  const [name, setName] = useState('')
+  // const [name, setName] = useState('')
   const [palette, setPalette] = useState<TGeneratedPalette | null>(null)
   const [paletteSortOrder, setPaletteSortOrder] = useState<number[]>([])
 
@@ -45,16 +47,6 @@ const Create = () => {
       return updated
     })
   }, [])
-  const generatePaletteMutation = useMutation({
-    mutationFn: generatePalette,
-    onSuccess: () => {
-      setUploadStatus('UPLOADED')
-    },
-    onError: () => {
-      logger.error('Error generating palette')
-      setUploadStatus('ERROR')
-    },
-  })
 
   const onDrop = useCallback(
     async (acceptedFiles: File[]) => {
@@ -66,7 +58,8 @@ const Create = () => {
       const photo = acceptedFiles[0]
       const resizedPhoto = await resizeImage(photo)
       setPhoto(resizedPhoto)
-      const response = await generatePaletteMutation.mutateAsync(resizedPhoto)
+
+      const response = await kmeans(resizedPhoto)
       if (response.success) {
         setPalette(response.palette)
         setPaletteSortOrder(Array.from({ length: PALETTE_SIZE }, (_, i) => i))
@@ -76,64 +69,37 @@ const Create = () => {
         setUploadStatus('ERROR')
       }
     },
-    [generatePaletteMutation, setPalette, setPaletteId]
+    [setPalette, setPaletteId]
   )
 
-  const handleNameChange = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      setName(e.target.value.slice(0, MAX_NAME_LENGTH))
-    },
-    []
-  )
+  // const handleNameChange = useCallback(
+  //   (e: React.ChangeEvent<HTMLInputElement>) => {
+  //     setName(e.target.value.slice(0, MAX_NAME_LENGTH))
+  //   },
+  //   []
+  // )
 
   const handleClearPalette = useCallback(() => {
     setPalette(null)
     setUploadStatus('INITIAL')
     setPhoto(null)
-    setName('')
+    // setName('')
   }, [setPalette])
-
-  const createPaletteMutation = useMutation({
-    mutationFn: createPalette,
-    onSuccess: () => {
-      setUploadStatus('UPLOADED')
-    },
-    onError: () => {
-      logger.error('Error saving palette')
-      setUploadStatus('ERROR')
-    },
-  })
 
   const handleSavePalette = useCallback(async () => {
     if (!paletteId || !palette) return
     setUploadStatus('SUBMITTING')
 
     const sortedPalette = paletteSortOrder.map((index) => palette[index])
-    const response = await createPaletteMutation.mutateAsync({
-      palette: sortedPalette,
-      paletteId,
-      name,
-    })
 
-    if (response.success) {
-      activeModalSignal.value = {
-        id: MODAL_ID.CONFIRMATION_MODAL,
-        confirmationCallback: () => {
-          navigate(`/palette/${paletteId}`)
-        },
-        title: 'Thanks for your submission!',
-        body: 'Once it is approved, it will be added to the site.',
-      }
-      setUploadStatus('SUBMITTED')
-    } else {
-      setUploadStatus('ERROR')
+    activeModalSignal.value = {
+      id: MODAL_ID.ANON_PALETTE_CREATION_MODAL,
+      colors: sortedPalette.map((swatch) => swatch.color),
     }
   }, [
     paletteId,
-    createPaletteMutation,
-    name,
+    //  name,
     palette,
-    navigate,
     paletteSortOrder,
   ])
 
@@ -143,12 +109,11 @@ const Create = () => {
     setPhoto(null)
   }, [setPalette, setPhoto])
 
-  const nameLabel =
-    name.length > 0 ? `Name: ${name.length} / ${MAX_NAME_LENGTH}` : 'Name'
+  // const nameLabel =
+  //   name.length > 0 ? `Name: ${name.length} / ${MAX_NAME_LENGTH}` : 'Name'
 
   return (
     <PageWrapper width="full">
-      {/* <PageTitle marginBottom text="Create" /> */}
       {uploadStatus === 'INITIAL' && <Dropzone onDrop={onDrop} />}
       {(uploadStatus === 'UPLOADING' || uploadStatus === 'SUBMITTED') && (
         <Box
@@ -185,14 +150,14 @@ const Create = () => {
             paletteSortOrder={paletteSortOrder}
             setPaletteSortOrder={setPaletteSortOrder}
           />
-          <TextField
+          {/* <TextField
             variant="outlined"
             fullWidth
             label={nameLabel}
             placeholder="Name your palette"
             value={name}
             onChange={handleNameChange}
-          />
+          /> */}
           <Box
             sx={{
               display: 'flex',
@@ -205,7 +170,10 @@ const Create = () => {
               Clear
             </Button>
             <Button
-              disabled={!name || uploadStatus === 'SUBMITTING'}
+              disabled={
+                // !name ||
+                uploadStatus === 'SUBMITTING'
+              }
               variant="contained"
               onClick={handleSavePalette}
             >

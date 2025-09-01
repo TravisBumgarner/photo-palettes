@@ -15,7 +15,7 @@ import Message from '../sharedComponents/Message'
 import PaletteThumbnail from '../sharedComponents/PaletteThumbnail'
 import { useNavigate, useParams } from 'react-router-dom'
 import Pagination from '../sharedComponents/Pagination'
-import { PAGINATION_SIZE } from '../consts'
+import { PAGINATION_SIZE, ROUTES } from '../consts'
 
 const STATUS_TABS = [
   MODERATION_STATUS.APPROVED,
@@ -58,7 +58,7 @@ const Profile = () => {
 
   useEffect(() => {
     if (!authorUserId) {
-      navigate('/error404')
+      navigate(ROUTES.error404.href)
     }
   }, [authorUserId, navigate])
 

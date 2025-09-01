@@ -1,6 +1,5 @@
 import { type User } from '@supabase/supabase-js'
 import type { EPermissionLevel } from '../types'
-import { type ActiveModal } from '../sharedComponents/Modal/Modal.types'
 
 export interface AppUserDetails {
   permissionLevel: EPermissionLevel
@@ -25,6 +24,4 @@ export interface State {
   alerts: TAlert[]
   getAndRemoveNextAlert: () => TAlert | null
   addAlert: (text: string, color: 'info' | 'error' | 'success') => void
-  activeModal: null | ActiveModal
-  setActiveModal: (activeModal: ActiveModal | null) => void
 }

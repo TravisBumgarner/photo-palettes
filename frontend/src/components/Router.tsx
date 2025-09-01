@@ -4,7 +4,7 @@ import TermsOfService from '../pages/TermsOfService'
 import PrivacyPolicy from '../pages/PrivacyPolicy'
 import Changelog from '../pages/Changelog'
 import Feedback from '../pages/Feedback'
-import Create from '../pages/Create/Create'
+import { Create, CreateLite } from '../pages/Create'
 import Login from '../pages/Login'
 import Error500 from '../pages/Error500'
 import Error404 from '../pages/Error404'
@@ -18,6 +18,7 @@ import Palette from '../pages/Palette'
 import useGlobalStore from '../store'
 import { PERMISSION_LEVEL } from '../types'
 import Favorites from '../pages/Favorites'
+import { ROUTES } from '../consts'
 
 const PrivateRoute = () => {
   const appUserDetails = useGlobalStore((state) => state.appUserDetails)
@@ -42,37 +43,46 @@ const ModerationRoute = () => {
 const Router = () => (
   <Routes>
     <Route path="/" element={<Browse />} />
-    <Route path="/tos" element={<TermsOfService />} />
-    <Route path="/privacy" element={<PrivacyPolicy />} />
-    <Route path="/changelog" element={<Changelog />} />
-    <Route path="/feedback" element={<Feedback />} />
+    <Route path={ROUTES.tos.href} element={<TermsOfService />} />
+    <Route path={ROUTES.privacy.href} element={<PrivacyPolicy />} />
+    <Route path={ROUTES.changelog.href} element={<Changelog />} />
+    <Route path={ROUTES.feedback.href} element={<Feedback />} />
 
-    <Route path="/feature_requests" element={<FeatureRequests />} />
-    <Route path="/profile/:id" element={<Profile />} />
-    <Route path="/donations" element={<Donations />} />
-    <Route path="/palette/:id" element={<Palette />} />
+    <Route path={ROUTES.featureRequests.href} element={<FeatureRequests />} />
+    <Route path={`${ROUTES.profile.href}/:id`} element={<Profile />} />
+    <Route path={ROUTES.donate.href} element={<Donations />} />
+    <Route path={'palette/:id'} element={<Palette />} />
 
     {/* Moderation only Routes */}
     <Route element={<ModerationRoute />}>
-      <Route path="/moderation" element={<Moderation />} />
+      h
+      <Route path={ROUTES.moderation.href} element={<Moderation />} />
     </Route>
+
+    {/* Conditional /create route */}
+    <Route
+      path={ROUTES.create.href}
+      element={(() => {
+        const appUserDetails = useGlobalStore.getState().appUserDetails
+        return appUserDetails ? <Create /> : <CreateLite />
+      })()}
+    />
 
     {/* Public only Routes */}
     <Route element={<PublicRoute />}>
-      <Route path="/login" element={<Login />} />
-      <Route path="/signup" element={<Signup />} />
+      <Route path={ROUTES.login.href} element={<Login />} />
+      <Route path={ROUTES.signup.href} element={<Signup />} />
     </Route>
 
     {/* Protected routes */}
     <Route element={<PrivateRoute />}>
-      <Route path="/create" element={<Create />} />
-      <Route path="/logout" element={<Logout />} />
-      <Route path="/profile" element={<Profile />} />
-      <Route path="/favorites" element={<Favorites />} />
+      <Route path={ROUTES.logout.href} element={<Logout />} />
+      <Route path={ROUTES.profile.href} element={<Profile />} />
+      <Route path={ROUTES.favorites.href} element={<Favorites />} />
     </Route>
 
-    <Route path="/error500" element={<Error500 />} />
-    <Route path="/error404" element={<Error404 />} />
+    <Route path={ROUTES.error500.href} element={<Error500 />} />
+    <Route path={ROUTES.error404.href} element={<Error404 />} />
     <Route path="*" element={<Error404 />} />
   </Routes>
 )

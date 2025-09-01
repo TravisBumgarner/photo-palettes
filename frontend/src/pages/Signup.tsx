@@ -10,6 +10,8 @@ import PageWrapper from '../styles/shared/PageWrapper'
 import Link from '../sharedComponents/Link'
 import { Navigate, useNavigate } from 'react-router-dom'
 import { loadUserIntoState } from '../utils'
+import { activeModalSignal } from '../signals'
+import { MODAL_ID } from '../sharedComponents/Modal/Modal.types'
 
 const SignupSchema = z.object({
   email: z.string().email(),
@@ -24,7 +26,6 @@ export default function SignupPage() {
   const [repeatPassword, setRepeatPassword] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)
 
-  const setActiveModal = useGlobalStore((state) => state.setActiveModal)
   const appUserDetails = useGlobalStore((state) => state.appUserDetails)
   const navigate = useNavigate()
 
@@ -71,14 +72,14 @@ export default function SignupPage() {
         const response = await signup({ email, password })
         if (response.success) {
           await loadUserIntoState()
-          setActiveModal({
-            id: 'ConfirmationModal',
+          activeModalSignal.value = {
+            id: MODAL_ID.CONFIRMATION_MODAL,
             title: 'Signup Successful',
             body: 'Check your email for a confirmation.',
             confirmationCallback: async () => {
               navigate('/')
             },
-          })
+          }
         } else {
           setError(response.error)
         }
@@ -90,7 +91,7 @@ export default function SignupPage() {
         setIsSubmitting(false)
       }
     },
-    [email, password, repeatPassword, setActiveModal, navigate]
+    [email, password, repeatPassword, navigate]
   )
 
   const handleEmailChange = useCallback(
