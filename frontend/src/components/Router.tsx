@@ -55,19 +55,27 @@ const Router = () => (
 
     {/* Moderation only Routes */}
     <Route element={<ModerationRoute />}>
+      h
       <Route path={ROUTES.moderation.href} element={<Moderation />} />
     </Route>
 
+    {/* Conditional /create route */}
+    <Route
+      path={ROUTES.create.href}
+      element={(() => {
+        const appUserDetails = useGlobalStore.getState().appUserDetails
+        return appUserDetails ? <Create /> : <CreateLite />
+      })()}
+    />
+
     {/* Public only Routes */}
     <Route element={<PublicRoute />}>
-      <Route path={ROUTES.createLite.href} element={<CreateLite />} />
       <Route path={ROUTES.login.href} element={<Login />} />
       <Route path={ROUTES.signup.href} element={<Signup />} />
     </Route>
 
     {/* Protected routes */}
     <Route element={<PrivateRoute />}>
-      <Route path={ROUTES.create.href} element={<Create />} />
       <Route path={ROUTES.logout.href} element={<Logout />} />
       <Route path={ROUTES.profile.href} element={<Profile />} />
       <Route path={ROUTES.favorites.href} element={<Favorites />} />
