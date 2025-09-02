@@ -18,7 +18,7 @@ const CanvasAndPalette = ({
 }: {
   photo: Blob | null
   palette: TGeneratedPalette | null
-  updateSwatch: (index: number, color: string) => void
+  updateSwatch: (index: number, color: string, percentLocation: [number, number]) => void
   paletteSortOrder: number[]
   setPaletteSortOrder: (order: number[]) => void
 }) => {

@@ -28,7 +28,11 @@ const DraggableSwatch = ({
   canvasContainerRef: React.RefObject<HTMLDivElement | null>
   canvasRef: React.RefObject<HTMLCanvasElement | null>
   readyToDrawSwatches: boolean
-  updateSwatch: (index: number, color: string) => void
+  updateSwatch: (
+    index: number,
+    color: string,
+    percentLocation: [number, number]
+  ) => void
 }) => {
   const [neighbors, setNeighbors] = useState<string[]>([])
   const [position, setPosition] = useState<{ left: number; top: number }>({
@@ -83,13 +87,14 @@ const DraggableSwatch = ({
     const container = canvasContainerRef.current
     if (!container) return
     const rect = container.getBoundingClientRect()
-    const newColors = sampleColorsAtPosition(
-      (rect.width * position.left) / 100,
-      (rect.height * position.top) / 100
-    )
+
+    const percentX = (rect.width * position.left) / 100
+    const percentY = (rect.height * position.top) / 100
+
+    const newColors = sampleColorsAtPosition(percentX, percentY)
     setNeighbors(newColors)
     // This next line adds an infinite rerender. If I'm going to add it back in I need a better solution.
-    updateSwatch(index, newColors[CENTER_PIXEL_INDEX])
+    updateSwatch(index, newColors[CENTER_PIXEL_INDEX], [percentX, percentY])
   }, [
     sampleColorsAtPosition,
     canvasContainerRef,
@@ -107,8 +112,9 @@ const DraggableSwatch = ({
       setActiveIndex(index)
     }
 
+    const rect = canvasContainerRef.current.getBoundingClientRect()
+
     if (active) {
-      const rect = canvasContainerRef.current.getBoundingClientRect()
       const left = Math.max(
         0,
         Math.min(100, ((clientX - rect.left) / rect.width) * 100)
@@ -122,7 +128,10 @@ const DraggableSwatch = ({
     }
 
     if (last) {
-      updateSwatch(index, neighbors[CENTER_PIXEL_INDEX])
+      updateSwatch(index, neighbors[CENTER_PIXEL_INDEX], [
+        (rect.width * position.left) / 100,
+        (rect.height * position.top) / 100,
+      ])
       setActiveIndex(null)
     }
   })

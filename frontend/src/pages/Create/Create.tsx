@@ -38,14 +38,18 @@ const Create = () => {
   const [palette, setPalette] = useState<TGeneratedPalette | null>(null)
   const [paletteSortOrder, setPaletteSortOrder] = useState<number[]>([])
 
-  const updateSwatch = useCallback((index: number, color: string) => {
-    setPalette((prev) => {
-      if (!prev) return prev
-      const updated = [...prev]
-      updated[index].color = color
-      return updated
-    })
-  }, [])
+  const updateSwatch = useCallback(
+    (index: number, color: string, percentLocation: [number, number]) => {
+      setPalette((prev) => {
+        if (!prev) return prev
+        const updated = [...prev]
+        updated[index].color = color
+        updated[index].percentLocation = percentLocation
+        return updated
+      })
+    },
+    []
+  )
   const generatePaletteMutation = useMutation({
     mutationFn: generatePalette,
     onSuccess: () => {
@@ -65,7 +69,10 @@ const Create = () => {
       }
       setUploadStatus('UPLOADING')
       const photo = acceptedFiles[0]
-      const resizedPhoto = await resizeImage(photo)
+      const resizedPhoto = await resizeImage(photo, {
+        maxWidth: 1600,
+        maxHeight: 1600,
+      })
       setPhoto(resizedPhoto)
       const response = await generatePaletteMutation.mutateAsync(resizedPhoto)
       if (response.success) {

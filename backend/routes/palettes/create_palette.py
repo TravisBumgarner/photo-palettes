@@ -6,9 +6,8 @@ from fastapi import Form, UploadFile
 from PIL import Image
 from pydantic import BaseModel, validator
 
-from algorithms.kmeans import get_image_colors
 from algorithms.og import generate_og_image
-from algorithms.utils import convert_to_rgb, scale_image
+from algorithms.utils import scale_image
 from consts import ErrorMsg
 from database.models import Palette, PaletteColor
 from database.queries.palettes import create_palette
@@ -102,8 +101,6 @@ async def create(
 
                 pil_image = Image.open(parsed_image.file)
                 thumbnail = scale_image(pil_image, 200)
-                thumbnail = convert_to_rgb(thumbnail)
-                colors = get_image_colors(thumbnail)
 
                 buffer = BytesIO()
                 pil_image.save(buffer, format="JPEG")

@@ -55,7 +55,7 @@ const Create = () => {
       }
       setUploadStatus('UPLOADING')
       const photo = acceptedFiles[0]
-      const resizedPhoto = await resizeImage(photo)
+      const resizedPhoto = await resizeImage(photo, { maxWidth: 1600, maxHeight: 1600 })
       setPhoto(resizedPhoto)
 
       const response = await kmeans(resizedPhoto)

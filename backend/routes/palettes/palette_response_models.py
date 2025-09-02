@@ -74,7 +74,7 @@ def map_generate_palette_to_response(
 ) -> GeneratePaletteResponse:
     return GeneratePaletteResponse(
         color=color,
-        percentLocation=(round(percent_location[0]), round(percent_location[1])),
+        percentLocation=(round(percent_location[0], 2), round(percent_location[1], 2)),
     )
 
 
