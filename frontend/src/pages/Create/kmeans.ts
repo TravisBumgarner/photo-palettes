@@ -1,6 +1,6 @@
 import skmeans from 'skmeans'
 import type { TGeneratedSwatch, TGeneratePaletteResponse } from '../../types'
-import { v4 as uuidv4 } from 'uuid'
+
 import { logger } from '../../services/logging'
 import { PALETTE_SIZE } from '../../consts'
 
@@ -83,7 +83,6 @@ const kmeans = async (blob: Blob): Promise<TGeneratePaletteResponse> => {
     return {
       success: true,
       palette,
-      paletteId: uuidv4(),
     }
   } catch (error) {
     logger.error('Error generating palette:', error)

@@ -2,7 +2,7 @@ import uuid
 from datetime import datetime
 from enum import Enum, IntEnum
 
-from sqlalchemy import UUID, DateTime, Float, ForeignKey, Integer, String, exists, select
+from sqlalchemy import ARRAY, UUID, DateTime, Float, ForeignKey, Integer, String, exists, select
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from .engine import Base
@@ -47,6 +47,9 @@ class PaletteColor(Base):
     r: Mapped[int] = mapped_column(Integer)
     g: Mapped[int] = mapped_column(Integer)
     b: Mapped[int] = mapped_column(Integer)
+    percent_location: Mapped[list[float]] = mapped_column(
+        ARRAY(Float, dimensions=1), default=[0.0, 0.0]
+    )
     # Can use cube to do color similarity search
     rgb_cube: Mapped[str] = mapped_column(Cube)
 
@@ -54,7 +57,6 @@ class PaletteColor(Base):
 
 
 class ModerationStatus(IntEnum):
-    AWAITING_SUBMISSION = -1
     AWAITING_MODERATION = 0
     APPROVED = 1
     REJECTED = 2
@@ -82,7 +84,7 @@ class Palette(Base):
     )
     user: Mapped["AppUser"] = relationship("AppUser", back_populates="palettes")
     moderation_status: Mapped[ModerationStatus] = mapped_column(
-        Integer, default=ModerationStatus.AWAITING_SUBMISSION
+        Integer, default=ModerationStatus.AWAITING_MODERATION
     )
     blurhash: Mapped[str] = mapped_column(String)
     aspect_ratio: Mapped[float] = mapped_column(Float)

@@ -17,23 +17,30 @@ const DraggableSwatch = ({
   setActiveIndex,
   canvasContainerRef,
   canvasRef,
-  startingPosition,
+  startingPercentLocation,
   updateSwatch,
   readyToDrawSwatches,
 }: {
-  startingPosition: [number, number]
+  startingPercentLocation: [number, number]
   index: number
   isActive: boolean
   setActiveIndex: (index: number | null) => void
   canvasContainerRef: React.RefObject<HTMLDivElement | null>
   canvasRef: React.RefObject<HTMLCanvasElement | null>
   readyToDrawSwatches: boolean
-  updateSwatch: (index: number, color: string) => void
+  updateSwatch: (
+    index: number,
+    color: string,
+    percentLocation: [number, number]
+  ) => void
 }) => {
   const [neighbors, setNeighbors] = useState<string[]>([])
-  const [position, setPosition] = useState<{ left: number; top: number }>({
-    left: startingPosition[0],
-    top: startingPosition[1],
+  const [percentLocation, setPercentLocation] = useState<{
+    left: number
+    top: number
+  }>({
+    left: startingPercentLocation[0],
+    top: startingPercentLocation[1],
   })
 
   const sampleColorAtPosition = useCallback(
@@ -83,19 +90,23 @@ const DraggableSwatch = ({
     const container = canvasContainerRef.current
     if (!container) return
     const rect = container.getBoundingClientRect()
+
     const newColors = sampleColorsAtPosition(
-      (rect.width * position.left) / 100,
-      (rect.height * position.top) / 100
+      (rect.width * percentLocation.left) / 100,
+      (rect.height * percentLocation.top) / 100
     )
+
     setNeighbors(newColors)
-    // This next line adds an infinite rerender. If I'm going to add it back in I need a better solution.
-    updateSwatch(index, newColors[CENTER_PIXEL_INDEX])
+    updateSwatch(index, newColors[CENTER_PIXEL_INDEX], [
+      percentLocation.left,
+      percentLocation.top,
+    ])
   }, [
     sampleColorsAtPosition,
     canvasContainerRef,
     index,
-    position.left,
-    position.top,
+    percentLocation.left,
+    percentLocation.top,
     readyToDrawSwatches,
     updateSwatch,
   ])
@@ -118,11 +129,14 @@ const DraggableSwatch = ({
         Math.min(100, ((clientY - rect.top) / rect.height) * 100)
       )
 
-      setPosition({ left, top })
+      setPercentLocation({ left, top })
     }
 
     if (last) {
-      updateSwatch(index, neighbors[CENTER_PIXEL_INDEX])
+      updateSwatch(index, neighbors[CENTER_PIXEL_INDEX], [
+        percentLocation.left,
+        percentLocation.top,
+      ])
       setActiveIndex(null)
     }
   })
@@ -148,8 +162,8 @@ const DraggableSwatch = ({
         onMouseLeave={handleMouseLeave}
         style={{
           position: 'absolute',
-          left: `${position.left}%`,
-          top: `${position.top}%`,
+          left: `${percentLocation.left}%`,
+          top: `${percentLocation.top}%`,
           x: '-50%',
           y: '-50%',
           width: SIDE_LENGTH,

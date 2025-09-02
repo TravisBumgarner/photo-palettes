@@ -6,7 +6,7 @@ Create Date: 2025-04-25 20:25:06.382322
 
 """
 
-from typing import Sequence, Union
+from collections.abc import Sequence
 
 import sqlalchemy as sa
 from sqlalchemy.types import UserDefinedType
@@ -21,9 +21,9 @@ class Cube(UserDefinedType):
 
 # revision identifiers, used by Alembic.
 revision: str = "18e4248220b4"
-down_revision: Union[str, None] = "73a7c71ec391"
-branch_labels: Union[str, Sequence[str], None] = None
-depends_on: Union[str, Sequence[str], None] = None
+down_revision: str | None = "73a7c71ec391"
+branch_labels: str | Sequence[str] | None = None
+depends_on: str | Sequence[str] | None = None
 
 
 def upgrade() -> None:

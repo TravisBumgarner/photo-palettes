@@ -1,7 +1,7 @@
-const MAX_WIDTH = 1600
-const MAX_HEIGHT = 1600
-
-export const resizeImage = (file: File): Promise<Blob> => {
+export const resizeImage = (
+  file: File,
+  { maxWidth, maxHeight }: { maxWidth: number; maxHeight: number }
+): Promise<Blob> => {
   return new Promise((resolve, reject) => {
     const img = new Image()
     img.onload = () => {
@@ -10,14 +10,14 @@ export const resizeImage = (file: File): Promise<Blob> => {
 
       // Maintain aspect ratio
       if (width > height) {
-        if (width > MAX_WIDTH) {
-          height *= MAX_WIDTH / width
-          width = MAX_WIDTH
+        if (width > maxWidth) {
+          height *= maxWidth / width
+          width = maxWidth
         }
       } else {
-        if (height > MAX_HEIGHT) {
-          width *= MAX_HEIGHT / height
-          height = MAX_HEIGHT
+        if (height > maxHeight) {
+          width *= maxHeight / height
+          height = maxHeight
         }
       }
 

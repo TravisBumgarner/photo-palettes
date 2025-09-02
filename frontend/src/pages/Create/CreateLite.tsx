@@ -1,5 +1,6 @@
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
+import { v4 as uuidv4 } from 'uuid'
 
 import { useCallback, useState } from 'react'
 import { SPACING } from '../../styles/styleConsts'
@@ -54,14 +55,14 @@ const Create = () => {
       }
       setUploadStatus('UPLOADING')
       const photo = acceptedFiles[0]
-      const resizedPhoto = await resizeImage(photo)
+      const resizedPhoto = await resizeImage(photo, { maxWidth: 1600, maxHeight: 1600 })
       setPhoto(resizedPhoto)
 
       const response = await kmeans(resizedPhoto)
       if (response.success) {
         setPalette(response.palette)
         setPaletteSortOrder(Array.from({ length: PALETTE_SIZE }, (_, i) => i))
-        setPaletteId(response.paletteId)
+        setPaletteId(uuidv4())
 
         setUploadStatus('UPLOADED')
       } else {
