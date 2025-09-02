@@ -11,6 +11,7 @@ from utils.photos import get_photo_path
 class PaletteColorResponse(BaseModel):
     id: UUID
     hex: str
+    percentLocation: list[float]  # noqa #815
     r: int
     g: int
     b: int
@@ -41,6 +42,7 @@ def map_palette_to_response(palette: Palette) -> PaletteResponse:
         ogPhotoUrl=get_photo_path(palette.og_photo_details),
         colors=[
             PaletteColorResponse(
+                percentLocation=color.percent_location,
                 id=color.id,
                 hex=color.hex,
                 r=color.r,

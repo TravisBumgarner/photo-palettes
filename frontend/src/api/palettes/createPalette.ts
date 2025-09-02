@@ -15,13 +15,13 @@ const zodResponse = z.discriminatedUnion('success', [
 ])
 
 export const createPalette = async ({
-  palette,
-  paletteId,
+  generatedPalette,
   name,
+  image,
 }: {
-  palette: TGeneratedPalette
-  paletteId: string
+  generatedPalette: TGeneratedPalette
   name: string
+  image: Blob
 }) => {
   const tokenResponse = await getToken()
 
@@ -32,21 +32,25 @@ export const createPalette = async ({
     } as const
   }
 
-  // Extract hex colors from palette
-  const hexColors = palette.map((swatch) => swatch.color.toUpperCase())
-
-  // Create the request body
-  const requestBody = {
-    name,
-    hex_colors: hexColors,
-    palette_id: paletteId,
-  }
+  const formData = new FormData()
+  formData.append('name', name)
+  formData.append(
+    'palette',
+    JSON.stringify(
+      generatedPalette.map((swatch) => {
+        return {
+          color: swatch.color,
+          percent_location: swatch.percentLocation,
+        }
+      })
+    )
+  )
+  formData.append('image', image)
 
   const response = await fetch(`${config.apiUrl}/palettes/create`, {
     method: 'POST',
-    body: JSON.stringify(requestBody),
+    body: formData,
     headers: {
-      'Content-Type': 'application/json',
       Authorization: `Bearer ${tokenResponse.token}`,
     },
   })

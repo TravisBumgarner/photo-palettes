@@ -33,7 +33,6 @@ const Create = () => {
   const [uploadStatus, setUploadStatus] = useState<UploadStatus>('INITIAL')
   const [photo, setPhoto] = useState<Blob | null>(null)
   const navigate = useNavigate()
-  const [paletteId, setPaletteId] = useState<string | null>(null)
 
   const [name, setName] = useState('')
   const [palette, setPalette] = useState<TGeneratedPalette | null>(null)
@@ -74,13 +73,12 @@ const Create = () => {
         setPaletteSortOrder(
           Array.from({ length: response.palette.length }, (_, i) => i)
         )
-        setPaletteId(response.paletteId)
         setUploadStatus('UPLOADED')
       } else {
         setUploadStatus('ERROR')
       }
     },
-    [generatePaletteMutation, setPalette, setPaletteId]
+    [generatePaletteMutation, setPalette]
   )
 
   const handleNameChange = useCallback(
@@ -109,21 +107,21 @@ const Create = () => {
   })
 
   const handleSavePalette = useCallback(async () => {
-    if (!paletteId || !palette) return
+    if (!palette || !photo) return
     setUploadStatus('SUBMITTING')
 
     const sortedPalette = paletteSortOrder.map((index) => palette[index])
     const response = await createPaletteMutation.mutateAsync({
-      palette: sortedPalette,
-      paletteId,
+      generatedPalette: sortedPalette,
       name,
+      image: photo,
     })
 
     if (response.success) {
       activeModalSignal.value = {
         id: MODAL_ID.CONFIRMATION_MODAL,
         confirmationCallback: () => {
-          navigate(`/palette/${paletteId}`)
+          navigate(`/palette/${response.paletteId}`)
         },
         title: 'Thanks for your submission!',
         body: 'Once it is approved, it will be added to the site.',
@@ -132,14 +130,7 @@ const Create = () => {
     } else {
       setUploadStatus('ERROR')
     }
-  }, [
-    paletteId,
-    createPaletteMutation,
-    name,
-    palette,
-    navigate,
-    paletteSortOrder,
-  ])
+  }, [createPaletteMutation, name, palette, navigate, paletteSortOrder, photo])
 
   const handleTryAgain = useCallback(() => {
     setUploadStatus('INITIAL')

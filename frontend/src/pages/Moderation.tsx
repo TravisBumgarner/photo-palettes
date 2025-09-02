@@ -23,7 +23,6 @@ import Pagination from '../sharedComponents/Pagination'
 import { Navigate } from 'react-router-dom'
 
 const STATUS_TABS = [
-  MODERATION_STATUS.AWAITING_SUBMISSION,
   MODERATION_STATUS.AWAITING_MODERATION,
   MODERATION_STATUS.APPROVED,
   MODERATION_STATUS.REJECTED,

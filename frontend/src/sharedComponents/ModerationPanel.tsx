@@ -86,22 +86,14 @@ const ModerationPanel = ({
     >
       <Button
         variant="outlined"
-        disabled={
-          isFetching ||
-          moderationStatus === MODERATION_STATUS.AWAITING_SUBMISSION ||
-          moderationStatus === MODERATION_STATUS.APPROVED
-        }
+        disabled={isFetching || moderationStatus === MODERATION_STATUS.APPROVED}
         onClick={handleApprove}
       >
         Approve
       </Button>
       <Button
         variant="outlined"
-        disabled={
-          isFetching ||
-          moderationStatus === MODERATION_STATUS.AWAITING_SUBMISSION ||
-          moderationStatus === MODERATION_STATUS.REJECTED
-        }
+        disabled={isFetching || moderationStatus === MODERATION_STATUS.REJECTED}
         onClick={handleReject}
       >
         Reject

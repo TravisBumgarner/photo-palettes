@@ -1,5 +1,6 @@
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
+import { v4 as uuidv4 } from 'uuid'
 
 import { useCallback, useState } from 'react'
 import { SPACING } from '../../styles/styleConsts'
@@ -61,7 +62,7 @@ const Create = () => {
       if (response.success) {
         setPalette(response.palette)
         setPaletteSortOrder(Array.from({ length: PALETTE_SIZE }, (_, i) => i))
-        setPaletteId(response.paletteId)
+        setPaletteId(uuidv4())
 
         setUploadStatus('UPLOADED')
       } else {
