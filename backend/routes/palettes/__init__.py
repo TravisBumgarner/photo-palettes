@@ -1,5 +1,5 @@
+# Required to register routes with FastAPI
 
-# Required to attach routes to router.
 from . import (
     create_palette,
     delete_palette,
@@ -9,5 +9,3 @@ from . import (
     get_palette_list_as_moderator,
     moderate_palette,
 )
-
-
