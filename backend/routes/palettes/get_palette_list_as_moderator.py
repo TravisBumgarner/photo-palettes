@@ -19,9 +19,7 @@ def parse_request(raw_request: RequestWithAuthState) -> AuthedRequest | InvalidR
     if not moderator_auth:
         return InvalidRequest(error=ErrorMsg.CANNOT_PERFORM_ACTION)
 
-    return AuthedRequest(
-        app_user_id=moderator_auth["app_user_id"], auth_id=moderator_auth["auth_id"]
-    )
+    return AuthedRequest(app_user_id=moderator_auth.app_user_id, auth_id=moderator_auth.auth_id)
 
 
 ROUTE_NAME = "get_palette_list_as_moderator"
