@@ -88,10 +88,11 @@ const DraggableSwatch = ({
     if (!container) return
     const rect = container.getBoundingClientRect()
 
-    const percentX = (rect.width * position.left) / 100
-    const percentY = (rect.height * position.top) / 100
+    const newColors = sampleColorsAtPosition(
+      (rect.width * position.left) / 100,
+      (rect.height * position.top) / 100
+    )
 
-    const newColors = sampleColorsAtPosition(percentX, percentY)
     setNeighbors(newColors)
     updateSwatch(index, newColors[CENTER_PIXEL_INDEX], [
       position.left,
