@@ -7,7 +7,7 @@ from database.queries.feature_requests import cast_vote, has_user_voted
 from middleware.auth import RequestWithAuthState
 from routes.shared import AuthedRequest, BaseErrorResponse, BaseSuccessResponse, InvalidRequest
 from services.logger import log_error
-from utils.auth import user_is_authed
+from utils.auth import get_user_auth
 
 from . import feature_requests_router
 
@@ -19,12 +19,11 @@ class Body(BaseModel):
 
 
 def parse_request(raw_request: RequestWithAuthState):
-    if not user_is_authed(raw_request):
+    user_auth = get_user_auth(raw_request)
+    if not user_auth:
         return InvalidRequest(error=ERROR_MSG.CANNOT_PERFORM_ACTION)
 
-    return AuthedRequest(
-        app_user_id=raw_request.state.app_user_id, auth_id=raw_request.state.auth_id
-    )
+    return AuthedRequest(app_user_id=user_auth["app_user_id"], auth_id=user_auth["auth_id"])
 
 
 @feature_requests_router.post("/upvote")

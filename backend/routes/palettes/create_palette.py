@@ -9,7 +9,7 @@ from middleware.auth import RequestWithAuthState
 from routes.shared import AuthedRequest, BaseErrorResponse, BaseSuccessResponse, InvalidRequest
 from services.logger import log_error
 from services.pushover import send_pushover_notification
-from utils.auth import user_is_authed, user_owns_resource
+from utils.auth import get_user_auth, user_owns_resource
 from utils.colors import hex_to_rgb
 
 from . import palettes_router
@@ -26,8 +26,10 @@ class Body(BaseModel):
 def parse_request(
     raw_request: RequestWithAuthState, palette: Palette | None
 ) -> tuple[AuthedRequest, Palette] | InvalidRequest:
-    if not user_is_authed(raw_request):
-        return InvalidRequest(error=ERROR_MSG.USER_NOT_AUTHENTICATED)
+    user_auth = get_user_auth(raw_request)
+
+    if not user_auth:
+        return InvalidRequest(error=ERROR_MSG.CANNOT_PERFORM_ACTION)
 
     if not palette:
         return InvalidRequest(error=ERROR_MSG.RESOURCE_NOT_FOUND)
@@ -36,7 +38,7 @@ def parse_request(
         return InvalidRequest(error=ERROR_MSG.USER_DOES_NOT_OWN_RESOURCE)
 
     return (
-        AuthedRequest(app_user_id=raw_request.state.app_user_id, auth_id=raw_request.state.auth_id),
+        AuthedRequest(app_user_id=user_auth["app_user_id"], auth_id=user_auth["auth_id"]),
         palette,
     )
 

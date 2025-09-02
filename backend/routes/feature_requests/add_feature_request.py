@@ -7,7 +7,7 @@ from database.queries.feature_requests import add_feature_request
 from middleware.auth import RequestWithAuthState
 from routes.shared import AuthedRequest, BaseErrorResponse, BaseSuccessResponse, InvalidRequest
 from services.logger import log_error
-from utils.auth import user_is_moderator
+from utils.auth import get_moderator_auth
 
 from . import feature_requests_router
 
@@ -25,11 +25,12 @@ ROUTE_NAME = "add_feature_request"
 
 
 def parse_request(raw_request: RequestWithAuthState) -> AuthedRequest | InvalidRequest:
-    if not user_is_moderator(raw_request):
+    moderator_auth = get_moderator_auth(raw_request)
+    if not moderator_auth:
         return InvalidRequest(error=ERROR_MSG.CANNOT_PERFORM_ACTION)
 
     return AuthedRequest(
-        app_user_id=raw_request.state.app_user_id, auth_id=raw_request.state.auth_id
+        app_user_id=moderator_auth["app_user_id"], auth_id=moderator_auth["auth_id"]
     )
 
 
