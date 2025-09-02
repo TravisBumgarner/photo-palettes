@@ -93,8 +93,10 @@ const DraggableSwatch = ({
 
     const newColors = sampleColorsAtPosition(percentX, percentY)
     setNeighbors(newColors)
-    // This next line adds an infinite rerender. If I'm going to add it back in I need a better solution.
-    updateSwatch(index, newColors[CENTER_PIXEL_INDEX], [percentX, percentY])
+    updateSwatch(index, newColors[CENTER_PIXEL_INDEX], [
+      position.left,
+      position.top,
+    ])
   }, [
     sampleColorsAtPosition,
     canvasContainerRef,
@@ -112,9 +114,8 @@ const DraggableSwatch = ({
       setActiveIndex(index)
     }
 
-    const rect = canvasContainerRef.current.getBoundingClientRect()
-
     if (active) {
+      const rect = canvasContainerRef.current.getBoundingClientRect()
       const left = Math.max(
         0,
         Math.min(100, ((clientX - rect.left) / rect.width) * 100)
@@ -129,8 +130,8 @@ const DraggableSwatch = ({
 
     if (last) {
       updateSwatch(index, neighbors[CENTER_PIXEL_INDEX], [
-        (rect.width * position.left) / 100,
-        (rect.height * position.top) / 100,
+        position.left,
+        position.top,
       ])
       setActiveIndex(null)
     }

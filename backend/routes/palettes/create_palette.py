@@ -77,10 +77,6 @@ class SuccessResponse(BaseSuccessResponse):
     paletteId: uuid.UUID  # noqa #815
 
 
-class PaletteModel(BaseModel):
-    palette: list[PaletteItem]
-
-
 @palettes_router.post("/create")
 async def create(
     raw_request: RequestWithAuthState,
@@ -125,7 +121,7 @@ async def create(
                             b=b,
                             rgb_cube=f"({r},{g},{b})",
                             palette_id=palette_id,
-                            percent_location=swatch.percent_location,
+                            percent_location=[round(x, 2) for x in swatch.percent_location],
                         )
                     )
 
