@@ -19,16 +19,16 @@ class PaletteColorResponse(BaseModel):
 class PaletteResponse(BaseModel):
     id: UUID
     name: str
-    createdAt: datetime 
-    photoUrl: str
+    createdAt: datetime  # noqa #815
+    photoUrl: str  # noqa #815
     colors: list[PaletteColorResponse]
-    moderationStatus: int
-    appUserId: UUID
-    ogPhotoUrl: str
+    moderationStatus: int  # noqa #815
+    appUserId: UUID  # noqa #815
+    ogPhotoUrl: str  # noqa #815
     blurhash: str
-    aspectRatio: float
-    favoritesCount: int
-    hasUserFavorited: bool
+    aspectRatio: float  # noqa #815
+    favoritesCount: int  # noqa #815
+    hasUserFavorited: bool  # noqa #815
 
 
 def map_palette_to_response(palette: Palette) -> PaletteResponse:
@@ -63,7 +63,7 @@ def map_palette_array_to_response(palettes: list[Palette]) -> list[PaletteRespon
 
 class GeneratePaletteResponse(BaseModel):
     color: str
-    percentLocation: tuple[float, float]
+    percentLocation: tuple[float, float]  # noqa #815
 
 
 def map_generate_palette_to_response(

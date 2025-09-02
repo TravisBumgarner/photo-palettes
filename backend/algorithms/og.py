@@ -1,4 +1,3 @@
-import uuid
 from io import BytesIO
 from pathlib import Path
 
@@ -12,11 +11,13 @@ BLOCK_HEIGHT = 105  # 630 / 6
 FONT_PATH = Path(__file__).parent.parent / "fonts" / "AntonSC-Regular.ttf"
 FONT = ImageFont.truetype(str(FONT_PATH), 48)
 
+MIDDLE_GRAY = 160
+
 
 def get_text_color(hex_color):
     r, g, b = tuple(int(hex_color[i : i + 2], 16) for i in (1, 3, 5))
     luminance = 0.299 * r + 0.587 * g + 0.114 * b
-    return "black" if luminance > 160 else "white"
+    return "black" if luminance > MIDDLE_GRAY else "white"
 
 
 # Process all images in input_dir

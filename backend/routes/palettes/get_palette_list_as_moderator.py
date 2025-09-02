@@ -2,7 +2,7 @@ from typing import Annotated
 
 from fastapi import Query
 
-from consts import ERROR_MSG
+from consts import ErrorMsg
 from database.models import ModerationStatus
 from database.queries.palettes import get_palettes, get_palettes_count
 from middleware.auth import RequestWithAuthState
@@ -10,14 +10,14 @@ from routes.shared import AuthedRequest, BaseErrorResponse, BaseSuccessResponse,
 from services.logger import log_error
 from utils.auth import get_moderator_auth
 
-from . import palettes_router
 from .palette_response_models import PaletteResponse, map_palette_array_to_response
+from .palettes_router import palettes_router
 
 
 def parse_request(raw_request: RequestWithAuthState) -> AuthedRequest | InvalidRequest:
     moderator_auth = get_moderator_auth(raw_request)
     if not moderator_auth:
-        return InvalidRequest(error=ERROR_MSG.CANNOT_PERFORM_ACTION)
+        return InvalidRequest(error=ErrorMsg.CANNOT_PERFORM_ACTION)
 
     return AuthedRequest(
         app_user_id=moderator_auth["app_user_id"], auth_id=moderator_auth["auth_id"]
@@ -40,16 +40,13 @@ def get_list_as_moderator(
     offset: Annotated[int, Query(ge=0)] = 0,
 ):
     try:
-        print("a")
         parsed_request = parse_request(raw_request)
 
         match parsed_request:
             case InvalidRequest(error=error):
-                print("c")
                 log_error(RuntimeError(error), ROUTE_NAME)
                 return BaseErrorResponse(message=error)
             case AuthedRequest(app_user_id=_app_user_id):
-                print("d")
                 palettes = get_palettes(
                     moderation_status=status,
                     size=size,
@@ -63,6 +60,5 @@ def get_list_as_moderator(
                 )
 
     except Exception as error:
-        print("error", error)
         log_error(error, ROUTE_NAME)
-        return BaseErrorResponse(message=ERROR_MSG.SOMETHING_WENT_WRONG)
+        return BaseErrorResponse(message=ErrorMsg.SOMETHING_WENT_WRONG)

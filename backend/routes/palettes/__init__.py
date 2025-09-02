@@ -1,6 +1,3 @@
-from fastapi import APIRouter
-
-palettes_router = APIRouter()
 
 # Required to attach routes to router.
 from . import (
@@ -12,3 +9,5 @@ from . import (
     get_palette_list_as_moderator,
     moderate_palette,
 )
+
+

@@ -1,6 +1,6 @@
 import uuid
 
-from consts import ERROR_MSG
+from consts import ErrorMsg
 from database.models import Palette
 from database.queries.palettes import delete_palette_by_id, get_palette_by_id
 from middleware.auth import RequestWithAuthState
@@ -9,7 +9,7 @@ from services.logger import log_error
 from utils.auth import get_moderator_auth
 from utils.photos import delete_photo
 
-from . import palettes_router
+from .palettes_router import palettes_router
 
 ROUTE_NAME = "delete_palette"
 
@@ -20,13 +20,13 @@ def parse_request(
     moderator_auth = get_moderator_auth(raw_request)
 
     if not moderator_auth:
-        return (InvalidRequest(error=ERROR_MSG.CANNOT_PERFORM_ACTION), None)
+        return (InvalidRequest(error=ErrorMsg.CANNOT_PERFORM_ACTION), None)
 
     if not palette:
-        return (InvalidRequest(error=ERROR_MSG.RESOURCE_NOT_FOUND), None)
+        return (InvalidRequest(error=ErrorMsg.RESOURCE_NOT_FOUND), None)
 
     return (
-        AuthedRequest(app_user_id=moderator_auth["app_user_id"], auth_id=moderator_auth["auth_id"]),
+        AuthedRequest(app_user_id=moderator_auth.app_user_id, auth_id=moderator_auth.auth_id),
         palette,
     )
 
@@ -54,4 +54,4 @@ async def delete_palette(
                 return BaseSuccessResponse()
     except Exception as e:
         log_error(e, ROUTE_NAME)
-        return BaseErrorResponse(message=ERROR_MSG.SOMETHING_WENT_WRONG)
+        return BaseErrorResponse(message=ErrorMsg.SOMETHING_WENT_WRONG)

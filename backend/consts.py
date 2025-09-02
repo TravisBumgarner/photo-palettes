@@ -1,7 +1,7 @@
 from enum import Enum
 
 
-class ERROR_MSG(str, Enum):
+class ErrorMsg(str, Enum):
     USER_NOT_AUTHENTICATED = "User must be authenticated"
     USER_DOES_NOT_EXIST = "User does not exist"
     CANNOT_PERFORM_ACTION = "User cannot perform action"  # Leak no secrets.

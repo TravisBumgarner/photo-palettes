@@ -2,7 +2,7 @@ import uuid
 
 from pydantic import BaseModel
 
-from consts import ERROR_MSG
+from consts import ErrorMsg
 from database.models import ModerationStatus, Palette, PaletteColor
 from database.queries.palettes import get_palette_by_id, update_palette
 from middleware.auth import RequestWithAuthState
@@ -12,7 +12,7 @@ from services.pushover import send_pushover_notification
 from utils.auth import get_user_auth, user_owns_resource
 from utils.colors import hex_to_rgb
 
-from . import palettes_router
+from .palettes_router import palettes_router
 
 ROUTE_NAME = "create_palette"
 
@@ -29,16 +29,16 @@ def parse_request(
     user_auth = get_user_auth(raw_request)
 
     if not user_auth:
-        return InvalidRequest(error=ERROR_MSG.CANNOT_PERFORM_ACTION)
+        return InvalidRequest(error=ErrorMsg.CANNOT_PERFORM_ACTION)
 
     if not palette:
-        return InvalidRequest(error=ERROR_MSG.RESOURCE_NOT_FOUND)
+        return InvalidRequest(error=ErrorMsg.RESOURCE_NOT_FOUND)
 
     if not user_owns_resource(raw_request, palette):
-        return InvalidRequest(error=ERROR_MSG.USER_DOES_NOT_OWN_RESOURCE)
+        return InvalidRequest(error=ErrorMsg.USER_DOES_NOT_OWN_RESOURCE)
 
     return (
-        AuthedRequest(app_user_id=user_auth["app_user_id"], auth_id=user_auth["auth_id"]),
+        AuthedRequest(auth_id=user_auth.auth_id, app_user_id=user_auth.app_user_id),
         palette,
     )
 
@@ -89,4 +89,4 @@ async def create(
 
     except Exception as e:
         log_error(e, ROUTE_NAME)
-        return BaseErrorResponse(message=ERROR_MSG.SOMETHING_WENT_WRONG)
+        return BaseErrorResponse(message=ErrorMsg.SOMETHING_WENT_WRONG)

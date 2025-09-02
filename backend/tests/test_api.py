@@ -4,7 +4,7 @@ import uuid
 import pytest
 import requests
 
-from consts import ERROR_MSG
+from consts import ErrorMsg
 from database.models import ModerationStatus
 from database.queries.palettes import create_palette, delete_palette_by_id
 
@@ -176,7 +176,7 @@ def test_moderate_palette_unauthorized():
     )
     # Status code 400 means the user is not a moderator. The test will fail for other reasons because palette doesn't exist.
     assert not response.json()["success"]
-    assert response.json()["message"] == ERROR_MSG.CANNOT_PERFORM_ACTION
+    assert response.json()["message"] == ErrorMsg.CANNOT_PERFORM_ACTION
 
 
 def test_feature_requests():
@@ -204,7 +204,7 @@ def test_feature_requests_unauthorized():
         json={"title": "Test Feature Request", "description": "Test Description"},
     )
     assert not response.json()["success"]
-    assert response.json()["message"] == ERROR_MSG.CANNOT_PERFORM_ACTION
+    assert response.json()["message"] == ErrorMsg.CANNOT_PERFORM_ACTION
 
 
 def test_delete_palette_as_not_resource_owner():

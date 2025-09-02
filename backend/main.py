@@ -7,11 +7,16 @@ from fastapi.staticfiles import StaticFiles
 from supabase import Client, create_client
 
 from config import get_config
-from database import engine, models
+from database import models
+from database.engine import db_engine
 from middleware.auth import create_auth_middleware
 from middleware.cors import setup_cors
 from middleware.filesize import LimitUploadSizeMiddleware
-from routes import favorites, feature_requests, ok, palettes, users
+from routes.favorites.favorites_router import favorites_router
+from routes.feature_requests.feature_requests_router import feature_requests_router
+from routes.ok import router as ok_router
+from routes.palettes.palettes_router import palettes_router
+from routes.users.users_router import users_router
 
 config = get_config()
 
@@ -43,13 +48,13 @@ app.mount("/uploads", StaticFiles(directory=uploads_dir), name="uploads")
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     # Run startup logic here
-    models.Base.metadata.create_all(bind=engine)
+    models.Base.metadata.create_all(bind=db_engine)
     yield
     # Run shutdown logic here if needed
 
 
-app.include_router(ok.router)
-app.include_router(users.users_router, prefix="/users")
-app.include_router(palettes.palettes_router, prefix="/palettes")
-app.include_router(feature_requests.feature_requests_router, prefix="/feature_requests")
-app.include_router(favorites.favorites_router, prefix="/favorites")
+app.include_router(ok_router)
+app.include_router(users_router, prefix="/users")
+app.include_router(palettes_router, prefix="/palettes")
+app.include_router(feature_requests_router, prefix="/feature_requests")
+app.include_router(favorites_router, prefix="/favorites")

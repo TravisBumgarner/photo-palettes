@@ -2,15 +2,15 @@ import uuid
 
 from fastapi import Query
 
-from consts import ERROR_MSG
+from consts import ErrorMsg
 from database.models import ModerationStatus, SortBy
 from database.queries.palettes import get_palettes, get_palettes_count
 from middleware.auth import RequestWithAuthState
 from routes.shared import BaseErrorResponse, BaseSuccessResponse
 from services.logger import log_error
 
-from . import palettes_router
 from .palette_response_models import PaletteResponse, map_palette_array_to_response
+from .palettes_router import palettes_router
 
 ROUTE_NAME = "get_palette_list"
 
@@ -76,4 +76,4 @@ async def get_palette_list(
 
     except Exception as error:
         log_error(error, ROUTE_NAME)
-        return BaseErrorResponse(message=ERROR_MSG.SOMETHING_WENT_WRONG)
+        return BaseErrorResponse(message=ErrorMsg.SOMETHING_WENT_WRONG)
