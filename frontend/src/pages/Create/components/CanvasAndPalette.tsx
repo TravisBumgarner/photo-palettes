@@ -18,7 +18,11 @@ const CanvasAndPalette = ({
 }: {
   photo: Blob | null
   palette: TGeneratedPalette | null
-  updateSwatch: (index: number, color: string, percentLocation: [number, number]) => void
+  updateSwatch: (
+    index: number,
+    color: string,
+    percentLocation: [number, number]
+  ) => void
   paletteSortOrder: number[]
   setPaletteSortOrder: (order: number[]) => void
 }) => {
@@ -97,7 +101,7 @@ const CanvasAndPalette = ({
                 isActive={activeIndex === index}
                 key={index}
                 index={index}
-                startingPosition={swatch.percentLocation}
+                startingPercentLocation={swatch.percentLocation}
                 setActiveIndex={setActiveIndex}
                 canvasContainerRef={canvasContainerRef}
                 canvasRef={canvasRef}
