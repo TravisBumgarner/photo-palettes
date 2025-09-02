@@ -40,7 +40,6 @@ def parse_request(
 
 class SuccessResponse(BaseSuccessResponse):
     palette: list[GeneratePaletteResponse]
-    # paletteId: uuid.UUID  #815
 
 
 @palettes_router.post("/generate")
