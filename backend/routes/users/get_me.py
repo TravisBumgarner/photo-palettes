@@ -1,22 +1,21 @@
 import uuid
 
-from consts import ERROR_MSG
+from consts import ErrorMsg
 from database.queries.users import get_app_user_by_auth_id
 from middleware.auth import RequestWithAuthState
 from routes.shared import AuthedRequest, BaseErrorResponse, BaseSuccessResponse, InvalidRequest
 from services.logger import log_error
-from utils.auth import user_is_authed
+from utils.auth import get_user_auth
 
-from . import users_router
+from .users_router import users_router
 
 
 def parse_request(raw_request: RequestWithAuthState) -> AuthedRequest | InvalidRequest:
-    if not user_is_authed(raw_request):
-        return InvalidRequest(error=ERROR_MSG.CANNOT_PERFORM_ACTION)
+    user_auth = get_user_auth(raw_request)
+    if not user_auth:
+        return InvalidRequest(error=ErrorMsg.CANNOT_PERFORM_ACTION)
 
-    return AuthedRequest(
-        app_user_id=raw_request.state.app_user_id, auth_id=raw_request.state.auth_id
-    )
+    return AuthedRequest(auth_id=user_auth.auth_id, app_user_id=user_auth.app_user_id)
 
 
 ROUTE_NAME = "get_me"
@@ -42,10 +41,10 @@ async def me(raw_request: RequestWithAuthState):
                 app_user = get_app_user_by_auth_id(auth_id)
                 if app_user is None:
                     log_error(
-                        RuntimeError(ERROR_MSG.USER_DOES_NOT_EXIST),
+                        RuntimeError(ErrorMsg.USER_DOES_NOT_EXIST),
                         ROUTE_NAME,
                     )
-                    return BaseErrorResponse(message=ERROR_MSG.USER_DOES_NOT_EXIST)
+                    return BaseErrorResponse(message=ErrorMsg.USER_DOES_NOT_EXIST)
 
         return SuccessResponse(
             id=app_user.id,
@@ -55,4 +54,4 @@ async def me(raw_request: RequestWithAuthState):
         )
     except Exception as error:
         log_error(error, ROUTE_NAME)
-        return BaseErrorResponse(message=ERROR_MSG.SOMETHING_WENT_WRONG)
+        return BaseErrorResponse(message=ErrorMsg.SOMETHING_WENT_WRONG)

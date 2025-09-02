@@ -2,14 +2,14 @@ import uuid
 
 from pydantic import BaseModel
 
-from consts import ERROR_MSG
+from consts import ErrorMsg
 from database.queries.favorites import add_palette_to_favorites
 from middleware.auth import RequestWithAuthState
 from routes.shared import AuthedRequest, BaseErrorResponse, BaseSuccessResponse, InvalidRequest
 from services.logger import log_error
-from utils.auth import user_is_authed
+from utils.auth import get_user_auth
 
-from . import favorites_router
+from .favorites_router import favorites_router
 
 ROUTE_NAME = "add_to_favorites"
 
@@ -19,12 +19,11 @@ class Body(BaseModel):
 
 
 def parse_request(raw_request: RequestWithAuthState) -> AuthedRequest | InvalidRequest:
-    if not user_is_authed(raw_request):
-        return InvalidRequest(error=ERROR_MSG.USER_NOT_AUTHENTICATED)
+    user_auth = get_user_auth(raw_request)
+    if not user_auth:
+        return InvalidRequest(error=ErrorMsg.USER_NOT_AUTHENTICATED)
 
-    return AuthedRequest(
-        app_user_id=raw_request.state.app_user_id, auth_id=raw_request.state.auth_id
-    )
+    return AuthedRequest(auth_id=user_auth.auth_id, app_user_id=user_auth.app_user_id)
 
 
 @favorites_router.post("/add")
@@ -41,4 +40,4 @@ async def add_to_favorites(raw_request: RequestWithAuthState, body: Body):
                 return BaseSuccessResponse()
     except Exception as e:
         log_error(e, ROUTE_NAME)
-        return BaseErrorResponse(message=ERROR_MSG.SOMETHING_WENT_WRONG)
+        return BaseErrorResponse(message=ErrorMsg.SOMETHING_WENT_WRONG)

@@ -1,8 +1,5 @@
-from fastapi import APIRouter
+# Required to register routes with FastAPI
 
-palettes_router = APIRouter()
-
-# Required to attach routes to router.
 from . import (
     create_palette,
     delete_palette,

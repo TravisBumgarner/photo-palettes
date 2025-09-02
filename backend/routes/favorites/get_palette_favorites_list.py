@@ -3,16 +3,16 @@ from typing import Annotated
 from fastapi import Query
 from pydantic import BaseModel
 
-from consts import ERROR_MSG
+from consts import ErrorMsg
 from database.models import SortBy
 from database.queries.favorites import get_app_user_favorites, get_favorites_count
 from middleware.auth import RequestWithAuthState
 from routes.shared import AuthedRequest, BaseErrorResponse, InvalidRequest
 from services.logger import log_error
-from utils.auth import user_is_authed
+from utils.auth import get_user_auth
 
 from ..palettes.palette_response_models import PaletteResponse, map_palette_array_to_response
-from . import favorites_router
+from .favorites_router import favorites_router
 
 ROUTE_NAME = "get_palette_favorites_list"
 
@@ -24,12 +24,11 @@ class BaseSuccessResponse(BaseModel):
 
 
 def parse_request(raw_request: RequestWithAuthState) -> AuthedRequest | InvalidRequest:
-    if not user_is_authed(raw_request):
-        return InvalidRequest(error=ERROR_MSG.USER_NOT_AUTHENTICATED)
+    user_auth = get_user_auth(raw_request)
+    if not user_auth:
+        return InvalidRequest(error=ErrorMsg.USER_NOT_AUTHENTICATED)
 
-    return AuthedRequest(
-        app_user_id=raw_request.state.app_user_id, auth_id=raw_request.state.auth_id
-    )
+    return AuthedRequest(auth_id=user_auth.auth_id, app_user_id=user_auth.app_user_id)
 
 
 @favorites_router.get("")
@@ -60,4 +59,4 @@ async def get_favorite_palettes(
                 )
     except Exception as error:
         log_error(error, ROUTE_NAME)
-        return BaseErrorResponse(message=ERROR_MSG.SOMETHING_WENT_WRONG)
+        return BaseErrorResponse(message=ErrorMsg.SOMETHING_WENT_WRONG)

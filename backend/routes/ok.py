@@ -1,9 +1,9 @@
 from fastapi import APIRouter
 
+from routes.shared import BaseErrorResponse
 from services.logger import log_error
 
 router = APIRouter()
-from routes.shared import BaseErrorResponse
 
 ROUTE_NAME = "ok"
 

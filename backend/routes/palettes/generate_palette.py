@@ -8,7 +8,7 @@ from algorithms.kmeans import get_image_colors
 from algorithms.og import generate_og_image
 from algorithms.utils import convert_to_rgb, scale_image
 from config import get_config
-from consts import ERROR_MSG
+from consts import ErrorMsg
 from database.models import Palette
 from database.queries.palettes import create_palette
 from middleware.auth import RequestWithAuthState
@@ -17,12 +17,12 @@ from routes.palettes.palette_response_models import (
 )
 from routes.shared import AuthedRequest, BaseErrorResponse, BaseSuccessResponse, InvalidRequest
 from services.logger import log_error
-from utils.auth import user_is_authed
+from utils.auth import get_user_auth
 from utils.blurhash import encode_blurhash
 from utils.photos import save_photo
 
-from . import palettes_router
 from .palette_response_models import GeneratePaletteResponse
+from .palettes_router import palettes_router
 
 config = get_config()
 
@@ -32,14 +32,15 @@ ROUTE_NAME = "generate_palette"
 def parse_request(
     raw_request: RequestWithAuthState, photo: UploadFile
 ) -> tuple[AuthedRequest, UploadFile] | InvalidRequest:
-    if not user_is_authed(raw_request):
-        return InvalidRequest(error=ERROR_MSG.CANNOT_PERFORM_ACTION)
+    user_auth = get_user_auth(raw_request)
+    if not user_auth:
+        return InvalidRequest(error=ErrorMsg.CANNOT_PERFORM_ACTION)
 
     if not photo:
-        return InvalidRequest(error=ERROR_MSG.RESOURCE_NOT_FOUND)
+        return InvalidRequest(error=ErrorMsg.RESOURCE_NOT_FOUND)
 
     return (
-        AuthedRequest(app_user_id=raw_request.state.app_user_id, auth_id=raw_request.state.auth_id),
+        AuthedRequest(auth_id=user_auth.auth_id, app_user_id=user_auth.app_user_id),
         photo,
     )
 
@@ -100,4 +101,4 @@ async def generate(
                 )
     except Exception as error:
         log_error(error, ROUTE_NAME)
-        return BaseErrorResponse(message=ERROR_MSG.SOMETHING_WENT_WRONG)
+        return BaseErrorResponse(message=ErrorMsg.SOMETHING_WENT_WRONG)

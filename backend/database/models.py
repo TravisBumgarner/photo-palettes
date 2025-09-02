@@ -1,7 +1,6 @@
 import uuid
 from datetime import datetime
 from enum import Enum, IntEnum
-from typing import List
 
 from sqlalchemy import UUID, DateTime, Float, ForeignKey, Integer, String, exists, select
 from sqlalchemy.orm import Mapped, mapped_column, relationship
@@ -32,7 +31,7 @@ class AppUser(Base):
     email: Mapped[str] = mapped_column(String, unique=True)
     display_name: Mapped[str] = mapped_column(String)
     created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.now)
-    palettes: Mapped[List["Palette"]] = relationship("Palette", back_populates="user")
+    palettes: Mapped[list["Palette"]] = relationship("Palette", back_populates="user")
     permission_level: Mapped[PermissionLevel] = mapped_column(
         Integer, default=PermissionLevel.MEMBER
     )
@@ -78,7 +77,7 @@ class Palette(Base):
     name: Mapped[str] = mapped_column(String(50))
     photo_details: Mapped[str] = mapped_column(String)
     og_photo_details: Mapped[str] = mapped_column(String)
-    colors: Mapped[List["PaletteColor"]] = relationship(
+    colors: Mapped[list["PaletteColor"]] = relationship(
         "PaletteColor", back_populates="palette", cascade="all, delete-orphan"
     )
     user: Mapped["AppUser"] = relationship("AppUser", back_populates="palettes")
@@ -87,7 +86,7 @@ class Palette(Base):
     )
     blurhash: Mapped[str] = mapped_column(String)
     aspect_ratio: Mapped[float] = mapped_column(Float)
-    favorites: Mapped[List["PaletteFavorite"]] = relationship(
+    favorites: Mapped[list["PaletteFavorite"]] = relationship(
         "PaletteFavorite", back_populates="palette", cascade="all, delete-orphan"
     )
 
@@ -145,6 +144,6 @@ class FeatureRequest(Base):
     status: Mapped[FeatureRequestStatus] = mapped_column(
         Integer, default=FeatureRequestStatus.PENDING
     )
-    votes: Mapped[List["FeatureRequestVote"]] = relationship(
+    votes: Mapped[list["FeatureRequestVote"]] = relationship(
         "FeatureRequestVote", back_populates="request"
     )

@@ -1,5 +1,4 @@
 import uuid
-from typing import List, Optional
 
 from sqlalchemy import func
 from sqlalchemy.orm import Session, joinedload
@@ -11,7 +10,7 @@ from database.queries.shared import ORDER_BY
 
 def get_palettes_count(
     moderation_status: ModerationStatus,
-    author_user_id: Optional[uuid.UUID] = None,
+    author_user_id: uuid.UUID | None = None,
 ) -> int:
     with Session(db_engine) as session:
         query = session.query(Palette).filter(Palette.moderation_status == moderation_status)
@@ -26,10 +25,10 @@ def get_palettes(
     moderation_status: ModerationStatus = ModerationStatus.APPROVED,
     size: int | None = None,
     offset: int | None = None,
-    author_user_id: Optional[uuid.UUID] = None,
+    author_user_id: uuid.UUID | None = None,
     sort_by: SortBy = SortBy.NEWEST,
-    app_user_id: Optional[uuid.UUID] = None,
-) -> List[Palette]:
+    app_user_id: uuid.UUID | None = None,
+) -> list[Palette]:
     with Session(db_engine) as session:
         query = (
             session.query(
@@ -61,8 +60,8 @@ def get_palettes(
 
 
 def get_palette_by_id(
-    palette_id: uuid.UUID, app_user_id: Optional[uuid.UUID] = None
-) -> Optional[Palette]:
+    palette_id: uuid.UUID, app_user_id: uuid.UUID | None = None
+) -> Palette | None:
     with Session(db_engine) as session:
         result = (
             session.query(Palette, func.count(PaletteFavorite.palette_id).label("favorites_count"))
