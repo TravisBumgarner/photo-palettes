@@ -64,3 +64,13 @@ export const loadUserIntoState = async () => {
   store.setLoadingUser(false)
   return success
 }
+
+export async function photoUrlToBlob(photoUrl: string): Promise<Blob> {
+  const response = await fetch(photoUrl, { mode: 'cors' })
+  if (!response.ok) {
+    throw new Error(
+      `Failed to fetch image: ${response.status} ${response.statusText}`
+    )
+  }
+  return await response.blob()
+}

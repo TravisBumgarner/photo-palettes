@@ -7,18 +7,22 @@ import DefaultModal from './DefaultModal'
 import { activeModalSignal } from '../../../signals'
 import ColorBar from '../../ColorBar'
 import downloadPalette from '../../../utils/downloadPalette'
+import { queries } from '../../../database'
+import { photoUrlToBlob } from '../../../utils'
 
 export interface AnonPaletteCreationModalProps {
   id: typeof MODAL_ID.ANON_PALETTE_CREATION_MODAL
   colors: string[]
   photoUrl: string
   paletteId: string
+  name: string
 }
 
 const AnonPaletteCreationModal = ({
   colors,
   photoUrl,
   paletteId,
+  name,
 }: AnonPaletteCreationModalProps) => {
   const handleDownload = useCallback(async () => {
     await downloadPalette({ paletteId, photoUrl, colors })
@@ -26,13 +30,18 @@ const AnonPaletteCreationModal = ({
   }, [photoUrl, colors, paletteId])
 
   const handleConfirm = useCallback(async () => {
+    queries.createTemporaryPalette({
+      colors,
+      name,
+      image: await photoUrlToBlob(photoUrl),
+      tempId: paletteId,
+    })
     activeModalSignal.value = null
-  }, [])
+  }, [colors, name, photoUrl, paletteId])
 
   return (
     <DefaultModal hideCloseButton>
       <Box sx={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-        {/* <Typography variant="h6">Save Your palette</Typography> */}
         <img
           style={{ width: '100%', height: 'auto' }}
           src={photoUrl}

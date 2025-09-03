@@ -17,6 +17,7 @@ import { PALETTE_SIZE } from '../../consts'
 import { activeModalSignal } from '../../signals'
 import { MODAL_ID } from '../../sharedComponents/Modal/Modal.types'
 import { useSignals } from '@preact/signals-react/runtime'
+import TextField from '@mui/material/TextField'
 
 type UploadStatus =
   | 'INITIAL'
@@ -26,7 +27,7 @@ type UploadStatus =
   | 'SUBMITTING'
   | 'SUBMITTED'
 
-// const MAX_NAME_LENGTH = 50
+const MAX_NAME_LENGTH = 50
 
 const Create = () => {
   useSignals()
@@ -34,7 +35,7 @@ const Create = () => {
   const [uploadStatus, setUploadStatus] = useState<UploadStatus>('INITIAL')
   const [photo, setPhoto] = useState<Blob | null>(null)
   const [paletteId, setPaletteId] = useState<string | null>(null)
-  // const [name, setName] = useState('')
+  const [name, setName] = useState('')
   const [palette, setPalette] = useState<TGeneratedPalette | null>(null)
   const [paletteSortOrder, setPaletteSortOrder] = useState<number[]>([])
 
@@ -55,7 +56,10 @@ const Create = () => {
       }
       setUploadStatus('UPLOADING')
       const photo = acceptedFiles[0]
-      const resizedPhoto = await resizeImage(photo, { maxWidth: 1600, maxHeight: 1600 })
+      const resizedPhoto = await resizeImage(photo, {
+        maxWidth: 1600,
+        maxHeight: 1600,
+      })
       setPhoto(resizedPhoto)
 
       const response = await kmeans(resizedPhoto)
@@ -72,18 +76,18 @@ const Create = () => {
     [setPalette, setPaletteId]
   )
 
-  // const handleNameChange = useCallback(
-  //   (e: React.ChangeEvent<HTMLInputElement>) => {
-  //     setName(e.target.value.slice(0, MAX_NAME_LENGTH))
-  //   },
-  //   []
-  // )
+  const handleNameChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      setName(e.target.value.slice(0, MAX_NAME_LENGTH))
+    },
+    []
+  )
 
   const handleClearPalette = useCallback(() => {
     setPalette(null)
     setUploadStatus('INITIAL')
     setPhoto(null)
-    // setName('')
+    setName('')
   }, [setPalette])
 
   const handleSavePalette = useCallback(async () => {
@@ -97,23 +101,19 @@ const Create = () => {
       colors: sortedPalette.map((swatch) => swatch.color),
       photoUrl: URL.createObjectURL(photo!),
       paletteId,
+      name,
     }
-  }, [
-    paletteId,
-    //  name,
-    palette,
-    paletteSortOrder,
-    photo,
-  ])
+  }, [paletteId, name, palette, paletteSortOrder, photo])
 
   const handleTryAgain = useCallback(() => {
     setUploadStatus('INITIAL')
     setPalette(null)
     setPhoto(null)
+    setName('')
   }, [setPalette, setPhoto])
 
-  // const nameLabel =
-  //   name.length > 0 ? `Name: ${name.length} / ${MAX_NAME_LENGTH}` : 'Name'
+  const nameLabel =
+    name.length > 0 ? `Name: ${name.length} / ${MAX_NAME_LENGTH}` : 'Name'
 
   return (
     <PageWrapper width="full">
@@ -153,14 +153,14 @@ const Create = () => {
             paletteSortOrder={paletteSortOrder}
             setPaletteSortOrder={setPaletteSortOrder}
           />
-          {/* <TextField
+          <TextField
             variant="outlined"
             fullWidth
             label={nameLabel}
             placeholder="Name your palette"
             value={name}
             onChange={handleNameChange}
-          /> */}
+          />
           <Box
             sx={{
               display: 'flex',
@@ -173,10 +173,7 @@ const Create = () => {
               Clear
             </Button>
             <Button
-              disabled={
-                // !name ||
-                uploadStatus === 'SUBMITTING'
-              }
+              disabled={!name || uploadStatus === 'SUBMITTING'}
               variant="contained"
               onClick={handleSavePalette}
             >
