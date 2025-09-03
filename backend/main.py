@@ -2,6 +2,8 @@ import os
 from contextlib import asynccontextmanager
 
 import sentry_sdk
+
+# Update the import to match the actual function name in palettes.py
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 from supabase import Client, create_client
@@ -12,6 +14,7 @@ from database.engine import db_engine
 from middleware.auth import create_auth_middleware
 from middleware.cors import setup_cors
 from middleware.filesize import LimitUploadSizeMiddleware
+from routes.admin.admin_router import admin_router
 from routes.favorites.favorites_router import favorites_router
 from routes.feature_requests.feature_requests_router import feature_requests_router
 from routes.ok import router as ok_router
@@ -58,3 +61,4 @@ app.include_router(users_router, prefix="/users")
 app.include_router(palettes_router, prefix="/palettes")
 app.include_router(feature_requests_router, prefix="/feature_requests")
 app.include_router(favorites_router, prefix="/favorites")
+app.include_router(admin_router, prefix="/admin")

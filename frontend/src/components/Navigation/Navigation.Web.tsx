@@ -16,24 +16,26 @@ import { BORDER_RADIUS, FONT_SIZES, SPACING } from '../../styles/styleConsts'
 import { PERMISSION_LEVEL } from '../../types'
 import { createLinkSX, WrapperSX } from './Navigation.styles'
 import Link from '../../sharedComponents/Link'
+import {
+  ADMIN_ROUTES,
+  ANON_ROUTES,
+  MODERATOR_ROUTES,
+  USER_ROUTES,
+} from './Navigation.shared'
 
 const DropdownLinks = ({ onClose }: { onClose: () => void }) => {
   const appUserDetails = useGlobalStore((state) => state.appUserDetails)
 
-  const routeKeys = useMemo((): (keyof typeof ROUTES)[] => {
-    if (!appUserDetails) return ['login', 'signup', 'featureRequests']
+  const routeKeys = useMemo(() => {
+    if (!appUserDetails) return ANON_ROUTES
+
+    if (appUserDetails.permissionLevel == PERMISSION_LEVEL.ADMIN)
+      return ADMIN_ROUTES
 
     if (appUserDetails.permissionLevel >= PERMISSION_LEVEL.MODERATOR)
-      return [
-        'favorites',
-        'profile',
-        'moderation',
-        'feedback',
-        'featureRequests',
-        'logout',
-      ]
+      return MODERATOR_ROUTES
 
-    return ['favorites', 'profile', 'feedback', 'featureRequests', 'logout']
+    return USER_ROUTES
   }, [appUserDetails])
   return (
     <>

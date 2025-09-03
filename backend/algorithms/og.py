@@ -12,7 +12,7 @@ FONT_SIZE = 30
 FONT = ImageFont.truetype(str(FONT_PATH), FONT_SIZE)
 
 TEXT_HORIZONTAL_ORIGIN = 100
-ESTIMATED_TEXT_WIDTH = FONT.getbbox("#AAAAAA")[2] - FONT.getbbox("#AAAAAA")[0]
+ESTIMATED_TEXT_WIDTH = int(FONT.getbbox("#AAAAAA")[2] - FONT.getbbox("#AAAAAA")[0])
 
 TEXT_PADDING = TEXT_HORIZONTAL_ORIGIN - ESTIMATED_TEXT_WIDTH // 2
 MARGIN_WIDTH = 10
@@ -30,7 +30,7 @@ def get_text_color(hex_color):
     return "black" if luminance > MIDDLE_GRAY else "white"
 
 
-def draw_background(og_image: Image, colors: list[str]):
+def draw_background(og_image: Image.Image, colors: list[str]):
     draw = ImageDraw.Draw(og_image)
 
     block_height = TARGET_HEIGHT // len(colors)
@@ -42,7 +42,7 @@ def draw_background(og_image: Image, colors: list[str]):
     return og_image
 
 
-def draw_text(og_image: Image, colors: list[str]):
+def draw_text(og_image: Image.Image, colors: list[str]):
     draw = ImageDraw.Draw(og_image)
     block_height = TARGET_HEIGHT // len(colors)
 
@@ -60,7 +60,7 @@ def draw_text(og_image: Image, colors: list[str]):
     return og_image
 
 
-def draw_left_margin(og_image: Image):
+def draw_left_margin(og_image: Image.Image):
     draw = ImageDraw.Draw(og_image)
     draw.rectangle(
         [
@@ -74,7 +74,7 @@ def draw_left_margin(og_image: Image):
     return og_image
 
 
-def draw_image(og_image: Image, image_to_draw: Image):
+def draw_image(og_image: Image.Image, image_to_draw: Image.Image):
     width, height = image_to_draw.size
     aspect_ratio = width / height
 
@@ -87,7 +87,7 @@ def draw_image(og_image: Image, image_to_draw: Image):
     return (og_image, resize_width)
 
 
-def draw_right_margin(og_image: Image, image_resize_width: int):
+def draw_right_margin(og_image: Image.Image, image_resize_width: int):
     draw = ImageDraw.Draw(og_image)
     draw.rectangle(
         [

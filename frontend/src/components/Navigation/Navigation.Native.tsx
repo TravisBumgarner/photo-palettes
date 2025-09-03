@@ -14,24 +14,26 @@ import { BORDER_RADIUS, SPACING } from '../../styles/styleConsts'
 import { PERMISSION_LEVEL } from '../../types'
 import Link from '../../sharedComponents/Link'
 import { createLinkSX, WrapperSX } from './Navigation.styles'
+import {
+  ADMIN_ROUTES,
+  ANON_ROUTES,
+  MODERATOR_ROUTES,
+  USER_ROUTES,
+} from './Navigation.shared'
 
 const DropdownLinks = ({ onClose }: { onClose: () => void }) => {
   const appUserDetails = useGlobalStore((state) => state.appUserDetails)
 
-  const userSpecificRouteKeys = useMemo((): (keyof typeof ROUTES)[] => {
-    if (!appUserDetails) return ['browse', 'login', 'signup']
+  const userSpecificRouteKeys = useMemo(() => {
+    if (!appUserDetails) return ANON_ROUTES
+
+    if (appUserDetails.permissionLevel == PERMISSION_LEVEL.ADMIN)
+      return ADMIN_ROUTES
 
     if (appUserDetails.permissionLevel >= PERMISSION_LEVEL.MODERATOR)
-      return [
-        'browse',
-        'favorites',
-        'profile',
-        'moderation',
-        'feedback',
-        'logout',
-      ]
+      return MODERATOR_ROUTES
 
-    return ['browse', 'favorites', 'profile', 'feedback', 'logout']
+    return USER_ROUTES
   }, [appUserDetails])
 
   const boringRoutes: (keyof typeof ROUTES)[] = [

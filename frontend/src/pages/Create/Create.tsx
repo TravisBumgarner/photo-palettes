@@ -181,6 +181,7 @@ const Create = () => {
     setUploadStatus('INITIAL')
     setPalette(null)
     setPhoto(null)
+    setName('')
   }, [setPalette, setPhoto])
 
   const nameLabel =
