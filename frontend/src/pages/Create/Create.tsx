@@ -43,7 +43,7 @@ const Create = () => {
   useEffect(() => {
     // When the user is signed out, they can create palettes via CreateLite.tsx
     // If they opt to sign up or login, they'll be redirected here after. We'll
-    // load their data into MemoryRouter.
+    // load their data into state.
     const checkAndLoadTemporaryPalette = async () => {
       const temporaryPalettes = await queries.getTemporaryPalettes()
       if (temporaryPalettes.length > 0) {
