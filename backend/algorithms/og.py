@@ -6,7 +6,7 @@ from PIL import Image, ImageDraw, ImageFont
 # Config
 TARGET_WIDTH = 1200
 TARGET_HEIGHT = 630
-FONT_PATH = Path(__file__).parent.parent / "fonts" / "Satoshi-Variable.ttf"
+FONT_PATH = Path(__file__).parent.parent / "fonts" / "0xProto-Bold.ttf"
 
 FONT_SIZE = 30
 FONT = ImageFont.truetype(str(FONT_PATH), FONT_SIZE)
