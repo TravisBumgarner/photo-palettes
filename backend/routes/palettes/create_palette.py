@@ -15,7 +15,6 @@ from middleware.auth import RequestWithAuthState
 from routes.shared import (
     BaseErrorResponse,
     BaseSuccessResponse,
-    InvalidRequest,
 )
 from services.logger import log_error
 from services.pushover import send_pushover_notification
@@ -130,7 +129,7 @@ async def create(
     try:
         parsed_palette = [PaletteItem(**item) for item in json_palette]
     except Exception as e:
-        return InvalidRequest(error=str(e))
+        return BaseErrorResponse(message=str(e))
 
     try:
         return handle_request(image, name, parsed_palette, request)

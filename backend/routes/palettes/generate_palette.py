@@ -13,7 +13,6 @@ from routes.palettes.palette_response_models import (
 from routes.shared import (
     BaseErrorResponse,
     BaseSuccessResponse,
-    InvalidRequest,
 )
 from services.logger import log_error
 
@@ -48,7 +47,7 @@ async def generate(
         return BaseErrorResponse(message=ErrorMsg.CANNOT_PERFORM_ACTION)
 
     if not thumbnail:
-        return InvalidRequest(error=ErrorMsg.RESOURCE_NOT_FOUND)
+        return BaseErrorResponse(error=ErrorMsg.RESOURCE_NOT_FOUND)
 
     try:
         return handle_request(thumbnail)
