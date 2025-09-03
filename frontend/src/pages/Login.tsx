@@ -13,7 +13,7 @@ import PageWrapper from '../styles/shared/PageWrapper'
 
 import Link from '../sharedComponents/Link'
 import { Navigate, useNavigate } from 'react-router-dom'
-import { loadUserIntoState } from '../utils'
+import { loadUserIntoState } from '../utils/loadUserIntoState'
 
 const LoginSchema = z.object({
   email: z.email(),

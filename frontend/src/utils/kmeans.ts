@@ -6,7 +6,7 @@ import { logger } from '../services/logging'
 
 type Pixel = {
   rgb: [number, number, number]
-  pos: [number, number] // normalized 0–100
+  percentLocation: [number, number]
 }
 
 async function blobToImageData(blob: Blob): Promise<ImageData> {
@@ -31,7 +31,7 @@ function imageDataToPixels(imageData: ImageData): Pixel[] {
       const i = (y * width + x) * 4
       pixels.push({
         rgb: [data[i], data[i + 1], data[i + 2]],
-        pos: [(x / width) * 100, (y / height) * 100],
+        percentLocation: [(x / width) * 100, (y / height) * 100],
       })
     }
   }
@@ -71,7 +71,7 @@ async function kmeans(blob: Blob): Promise<TGeneratePaletteResponse> {
 
         return {
           color: rgbToHex(centroid),
-          percentLocation: bestPixel ? bestPixel.pos : [0, 0],
+          percentLocation: bestPixel ? bestPixel.percentLocation : [0, 0],
         }
       }
     )

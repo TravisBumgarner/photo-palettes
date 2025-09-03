@@ -8,7 +8,7 @@ import { activeModalSignal } from '../../../signals'
 import ColorBar from '../../ColorBar'
 import downloadPalette from '../../../utils/downloadPalette'
 import { queries } from '../../../database'
-import { photoUrlToBlob } from '../../../utils'
+import { photoUrlToBlob } from '../../../utils/image'
 import { useNavigate } from 'react-router-dom'
 import { ROUTES } from '../../../consts'
 

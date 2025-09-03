@@ -1,4 +1,4 @@
-import { getContrastColor } from './index'
+import { getContrastColor } from './getContrastColor'
 
 const downloadPalette = async ({
   paletteId,
