@@ -9,6 +9,8 @@ import ColorBar from '../../ColorBar'
 import downloadPalette from '../../../utils/downloadPalette'
 import { queries } from '../../../database'
 import { photoUrlToBlob } from '../../../utils'
+import { useNavigate } from 'react-router-dom'
+import { ROUTES } from '../../../consts'
 
 export interface AnonPaletteCreationModalProps {
   id: typeof MODAL_ID.ANON_PALETTE_CREATION_MODAL
@@ -26,8 +28,10 @@ const AnonPaletteCreationModal = ({
 }: AnonPaletteCreationModalProps) => {
   const handleDownload = useCallback(async () => {
     await downloadPalette({ paletteId, photoUrl, colors })
-    // activeModalSignal.value = null
+    activeModalSignal.value = null
   }, [photoUrl, colors, paletteId])
+
+  const navigate = useNavigate()
 
   const handleConfirm = useCallback(async () => {
     queries.createTemporaryPalette({
@@ -37,7 +41,8 @@ const AnonPaletteCreationModal = ({
       tempId: paletteId,
     })
     activeModalSignal.value = null
-  }, [colors, name, photoUrl, paletteId])
+    navigate(ROUTES.signup.href)
+  }, [colors, name, photoUrl, paletteId, navigate])
 
   return (
     <DefaultModal hideCloseButton>
