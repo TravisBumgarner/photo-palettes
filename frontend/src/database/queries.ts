@@ -12,12 +12,6 @@ export const getTemporaryPalettes = async (): Promise<TemporaryPalette[]> => {
   return await database.temporaryPalettes.toArray()
 }
 
-export const getTemporaryPalette = async (
-  tempId: string
-): Promise<TemporaryPalette | undefined> => {
-  return await database.temporaryPalettes.where('tempId').equals(tempId).first()
-}
-
 export const deleteTemporaryPalette = async (
   tempId: string
 ): Promise<number> => {
