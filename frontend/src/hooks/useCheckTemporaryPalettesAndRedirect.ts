@@ -6,6 +6,9 @@ import { useNavigate } from 'react-router-dom'
 
 // A user can create palettes while logged out and save them to IndexedDB while
 // they sign up or login. Once they return to the app, check if they have temporary palettes.
+// This functionality also executes when they use Login.tsx since Signup.tsx requires them to
+// email confirm before they can sign in. The email link will auth them for the first time so this 
+// catch that. 
 const useCheckTemporaryPalettesAndRedirect = () => {
   const appUserDetails = useGlobalStore((state) => state.appUserDetails)
   const [hasTemporaryPalettes, setHasTemporaryPalettes] = useState(false)
