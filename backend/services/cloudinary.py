@@ -31,7 +31,12 @@ cloudinary.config(
 
 
 def save_image_to_cloudinary(image_bytes: bytes, public_id: str) -> str:
-    upload_result = cloudinary.uploader.upload(image_bytes, public_id=public_id)
+    upload_result = cloudinary.uploader.upload(
+        image_bytes,
+        public_id=public_id,
+        overwrite=True,
+        invalidate=True,
+    )
     return upload_result["public_id"]
 
 

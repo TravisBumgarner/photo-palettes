@@ -15,6 +15,7 @@ export interface ConfirmationModalProps {
   isConfirmDestructive?: boolean
   isCancelDestructive?: boolean
   showCancel?: boolean
+  overrideConfirmation?: boolean
 }
 
 const ConfirmationModal = ({
@@ -22,8 +23,7 @@ const ConfirmationModal = ({
   body,
   confirmationCallback,
   cancelCallback,
-  isCancelDestructive,
-  isConfirmDestructive,
+  overrideConfirmation,
   showCancel,
 }: ConfirmationModalProps) => {
   const handleCancel = useCallback(() => {
@@ -33,8 +33,10 @@ const ConfirmationModal = ({
 
   const handleConfirm = useCallback(() => {
     confirmationCallback?.()
-    activeModalSignal.value = null
-  }, [confirmationCallback])
+    if (!overrideConfirmation) {
+      activeModalSignal.value = null
+    }
+  }, [confirmationCallback, overrideConfirmation])
 
   return (
     <DefaultModal hideCloseButton>
@@ -50,19 +52,11 @@ const ConfirmationModal = ({
           }}
         >
           {showCancel && (
-            <Button
-              variant="outlined"
-              color={isCancelDestructive ? 'error' : 'primary'}
-              onClick={handleCancel}
-            >
+            <Button variant="outlined" color="primary" onClick={handleCancel}>
               Cancel
             </Button>
           )}
-          <Button
-            variant="contained"
-            color={isConfirmDestructive ? 'error' : 'primary'}
-            onClick={handleConfirm}
-          >
+          <Button variant="contained" color="primary" onClick={handleConfirm}>
             Ok!
           </Button>
         </Box>

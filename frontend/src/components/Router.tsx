@@ -20,7 +20,7 @@ const Moderation = lazy(async () => await import('../pages/Moderation'))
 const Donations = lazy(async () => await import('../pages/Donations'))
 const Palette = lazy(async () => await import('../pages/Palette'))
 const Favorites = lazy(async () => await import('../pages/Favorites'))
-
+const Admin = lazy(async () => await import('../pages/Admin'))
 import useGlobalStore from '../store'
 import { PERMISSION_LEVEL } from '../types'
 import { ROUTES } from '../consts'
@@ -45,6 +45,16 @@ const ModerationRoute = () => {
   )
 }
 
+const AdminRoute = () => {
+  const appUserDetails = useGlobalStore((state) => state.appUserDetails)
+  return (appUserDetails?.permissionLevel || PERMISSION_LEVEL.VISITOR) >=
+    PERMISSION_LEVEL.ADMIN ? (
+    <Outlet />
+  ) : (
+    <Navigate to="/" />
+  )
+}
+
 const Router = () => (
   <Routes>
     <Route path="/" element={<Browse />} />
@@ -60,8 +70,12 @@ const Router = () => (
 
     {/* Moderation only Routes */}
     <Route element={<ModerationRoute />}>
-      h
       <Route path={ROUTES.moderation.href} element={<Moderation />} />
+    </Route>
+
+    {/* Moderation only Routes */}
+    <Route element={<AdminRoute />}>
+      <Route path={ROUTES.admin.href} element={<Admin />} />
     </Route>
 
     {/* Conditional /create route */}

@@ -33,6 +33,7 @@ class Config(BaseSettings):
     pushover: PushoverSettings = Field(default_factory=lambda: PushoverSettings())
     cloudinary_url: str = Field(default="")
     model_config = SettingsConfigDict(env_file=".env", extra="ignore")
+    debug_cloudinary_locally: bool = Field(default=False)
 
     # SqlAlchemy expects postgresql://, but postgres:// is what we get from Heroku.
     @field_validator("database_url")

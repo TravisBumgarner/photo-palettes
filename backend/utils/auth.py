@@ -11,6 +11,19 @@ class UserAuth(BaseModel):
     auth_id: UUID
 
 
+def get_admin_auth(request: RequestWithAuthState) -> UserAuth | None:
+    if not request.state.app_user_id or not request.state.auth_id:
+        return None
+
+    if (
+        not request.state.permission_level
+        or not request.state.permission_level == PermissionLevel.ADMIN
+    ):
+        return None
+
+    return UserAuth(auth_id=request.state.auth_id, app_user_id=request.state.app_user_id)
+
+
 def get_moderator_auth(request: RequestWithAuthState) -> UserAuth | None:
     if not request.state.app_user_id or not request.state.auth_id:
         return None

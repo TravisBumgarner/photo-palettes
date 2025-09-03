@@ -28,6 +28,11 @@ export const ROUTES = {
     href: '/moderation',
     label: 'Moderation',
   },
+  admin: {
+    key: 'admin',
+    href: '/admin',
+    label: 'Admin',
+  },
   profile: {
     key: 'profile',
     href: '/profile',
