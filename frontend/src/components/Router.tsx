@@ -20,11 +20,10 @@ const Moderation = lazy(async () => await import('../pages/Moderation'))
 const Donations = lazy(async () => await import('../pages/Donations'))
 const Palette = lazy(async () => await import('../pages/Palette'))
 const Favorites = lazy(async () => await import('../pages/Favorites'))
-
+const Admin = lazy(async () => await import('../pages/Admin'))
 import useGlobalStore from '../store'
 import { PERMISSION_LEVEL } from '../types'
 import { ROUTES } from '../consts'
-import Admin from '../pages/Admin'
 
 const PrivateRoute = () => {
   const appUserDetails = useGlobalStore((state) => state.appUserDetails)
