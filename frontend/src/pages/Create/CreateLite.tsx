@@ -12,12 +12,12 @@ import Dropzone from './components/Dropzone'
 import { sharedCSS } from './components/shared'
 import PageWrapper from '../../styles/shared/PageWrapper'
 import { resizeImage } from '../../utils/resizeImage'
-import kmeans from './kmeans'
 import { PALETTE_SIZE } from '../../consts'
 import { activeModalSignal } from '../../signals'
 import { MODAL_ID } from '../../sharedComponents/Modal/Modal.types'
 import { useSignals } from '@preact/signals-react/runtime'
 import TextField from '@mui/material/TextField'
+import { useGeneratePaletteWorker } from '../../hooks/useGeneratePaletteWorker'
 
 type UploadStatus =
   | 'INITIAL'
@@ -38,6 +38,8 @@ const Create = () => {
   const [name, setName] = useState('')
   const [palette, setPalette] = useState<TGeneratedPalette | null>(null)
   const [paletteSortOrder, setPaletteSortOrder] = useState<number[]>([])
+
+  const { generatePalette } = useGeneratePaletteWorker()
 
   const updateSwatch = useCallback((index: number, color: string) => {
     setPalette((prev) => {
@@ -62,7 +64,9 @@ const Create = () => {
       })
       setPhoto(resizedPhoto)
 
-      const response = await kmeans(resizedPhoto)
+      const photoUrl = URL.createObjectURL(resizedPhoto)
+      const response = await generatePalette(photoUrl)
+
       if (response.success) {
         setPalette(response.palette)
         setPaletteSortOrder(Array.from({ length: PALETTE_SIZE }, (_, i) => i))
@@ -73,7 +77,7 @@ const Create = () => {
         setUploadStatus('ERROR')
       }
     },
-    [setPalette, setPaletteId]
+    [setPalette, setPaletteId, generatePalette]
   )
 
   const handleNameChange = useCallback(

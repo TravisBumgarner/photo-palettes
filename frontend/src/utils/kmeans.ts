@@ -1,29 +1,25 @@
+// kmeans.worker.ts
 import skmeans from 'skmeans'
-import type { TGeneratedSwatch, TGeneratePaletteResponse } from '../../types'
-
-import { logger } from '../../services/logging'
-import { PALETTE_SIZE } from '../../consts'
-
-async function blobToImageData(blob: Blob): Promise<ImageData> {
-  return new Promise((resolve, reject) => {
-    const img = new Image()
-    img.onload = () => {
-      const canvas = document.createElement('canvas')
-      canvas.width = img.width
-      canvas.height = img.height
-      const ctx = canvas.getContext('2d')
-      if (!ctx) return reject('No 2d context')
-      ctx.drawImage(img, 0, 0)
-      resolve(ctx.getImageData(0, 0, img.width, img.height))
-    }
-    img.onerror = reject
-    img.src = URL.createObjectURL(blob)
-  })
-}
+import type { TGeneratedSwatch, TGeneratePaletteResponse } from '../types'
+import { PALETTE_SIZE } from '../consts'
+import { logger } from '../services/logging'
 
 type Pixel = {
   rgb: [number, number, number]
-  pos: [number, number] // normalized 0–1
+  pos: [number, number] // normalized 0–100
+}
+
+async function blobToImageData(blob: Blob): Promise<ImageData> {
+  // Decode the blob into an ImageBitmap
+  const bitmap = await createImageBitmap(blob)
+
+  // Use OffscreenCanvas to draw it
+  const canvas = new OffscreenCanvas(bitmap.width, bitmap.height)
+  const ctx = canvas.getContext('2d')
+  if (!ctx) throw new Error('No 2D context')
+
+  ctx.drawImage(bitmap, 0, 0)
+  return ctx.getImageData(0, 0, bitmap.width, bitmap.height)
 }
 
 function imageDataToPixels(imageData: ImageData): Pixel[] {
@@ -49,13 +45,12 @@ const rgbToHex = (rgb: number[]) =>
 const sqDist = (a: number[], b: number[]) =>
   (a[0] - b[0]) ** 2 + (a[1] - b[1]) ** 2 + (a[2] - b[2]) ** 2
 
-const kmeans = async (blob: Blob): Promise<TGeneratePaletteResponse> => {
+async function kmeans(blob: Blob): Promise<TGeneratePaletteResponse> {
   try {
     const imageData = await blobToImageData(blob)
     const pixels = imageDataToPixels(imageData)
 
     const rgbData = pixels.map((p) => p.rgb)
-
     const result = skmeans(rgbData, PALETTE_SIZE)
 
     const palette: TGeneratedSwatch[] = result.centroids.map(
@@ -63,7 +58,8 @@ const kmeans = async (blob: Blob): Promise<TGeneratePaletteResponse> => {
         let bestPixel: Pixel | null = null
         let bestDist = Infinity
 
-        pixels.forEach((p, i) => {
+        for (let i = 0; i < pixels.length; i++) {
+          const p = pixels[i]
           if (result.idxs[i] === clusterIdx) {
             const d = sqDist(p.rgb, centroid)
             if (d < bestDist) {
@@ -71,25 +67,19 @@ const kmeans = async (blob: Blob): Promise<TGeneratePaletteResponse> => {
               bestPixel = p
             }
           }
-        })
+        }
 
         return {
           color: rgbToHex(centroid),
-          percentLocation: bestPixel ? (bestPixel as Pixel).pos : [0, 0], // Something is cursed about ['pos'] vs .pos. I give up.
+          percentLocation: bestPixel ? bestPixel.pos : [0, 0],
         }
       }
     )
 
-    return {
-      success: true,
-      palette,
-    }
+    return { success: true, palette }
   } catch (error) {
-    logger.error('Error generating palette:', error)
-    return {
-      success: false,
-      message: 'Failed to generate palette',
-    }
+    logger.error(error)
+    return { success: false, message: 'Failed to generate palette' }
   }
 }
 

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { queries } from '../database'
 import type { TemporaryPalette } from '../database/types'
 
@@ -7,6 +7,11 @@ const TemporaryPalettes = () => {
 
   useEffect(() => {
     queries.getTemporaryPalettes().then((r) => setPalettes(r))
+  }, [])
+
+  const handleDelete = useCallback(async (palette: TemporaryPalette) => {
+    await queries.deleteTemporaryPalette(palette.tempId)
+    setPalettes((prev) => prev.filter((p) => p.tempId !== palette.tempId))
   }, [])
 
   if (palettes.length === 0) {
@@ -24,6 +29,7 @@ const TemporaryPalettes = () => {
           <div key={palette.tempId}>
             <div>{palette.name}</div>
             <img style={{ width: '100px' }} src={imageUrl} alt={palette.name} />
+            <button onClick={() => handleDelete(palette)}>Delete</button>
           </div>
         )
       })}
