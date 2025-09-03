@@ -19,7 +19,7 @@ def get_development_uploads_dir():
 
 
 def save_photo(photo: bytes, basename: str, extension: str) -> str:
-    if config.is_production:
+    if config.is_production or config.debug_cloudinary_locally:
         result = save_image_to_cloudinary(photo, basename)
         return f"{PRODUCTION_UPLOADS_PREFIX}{result}"
     else:

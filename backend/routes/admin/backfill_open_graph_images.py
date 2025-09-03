@@ -11,7 +11,7 @@ from middleware.auth import RequestWithAuthState
 from routes.shared import AuthedRequest, BaseErrorResponse, BaseSuccessResponse, InvalidRequest
 from services.logger import log_error
 from utils.auth import get_admin_auth
-from utils.photos import save_photo
+from utils.photos import get_photo_path, save_photo
 
 from .admin_router import admin_router
 
@@ -33,11 +33,7 @@ def handle_request():
         )  # Should return a list of Palette objects
         for palette in palettes:
             image_path = palette.photo_details
-            abs_image_path = (
-                image_path
-                if image_path.startswith("https://")
-                else f"http://localhost:8000{image_path}"
-            )
+            abs_image_path = get_photo_path(image_path)
             response = requests.get(abs_image_path)
             response.raise_for_status()
             image = Image.open(BytesIO(response.content))
@@ -45,7 +41,7 @@ def handle_request():
             save_photo(og_image.getvalue(), f"{palette.id!s}_og", "webp")
             palette.og_photo_details = f"{palette.id!s}_og.webp"
             update_palette(palette.id, og_photo_details=palette.og_photo_details)
-        return True
+    return True
 
 
 @admin_router.get(ROUTE_NAME)
