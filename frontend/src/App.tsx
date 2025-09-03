@@ -15,6 +15,7 @@ import { SplashScreen } from '@capacitor/splash-screen'
 import NativeNavigation from './components/Navigation/Navigation.Native'
 import WebNavigation from './components/Navigation/Navigation.Web'
 import PlatformSpecificStyling from './styles/PlatformSpecificStyling'
+import TemporaryPalettes from './components/TemporaryPalettes'
 
 const queryClient = new QueryClient()
 
@@ -51,6 +52,7 @@ function App() {
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>
         <AlertsManager />
+        <TemporaryPalettes />
         {Capacitor.isNativePlatform() ? (
           <NativeNavigation />
         ) : (
