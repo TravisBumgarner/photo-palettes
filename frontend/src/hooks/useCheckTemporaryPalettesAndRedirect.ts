@@ -1,0 +1,33 @@
+import { useEffect, useState } from 'react'
+import { queries } from '../database'
+import useGlobalStore from '../store'
+import { ROUTES } from '../consts'
+import { useNavigate } from 'react-router-dom'
+
+// A user can create palettes while logged out and save them to IndexedDB while
+// they sign up or login. Once they return to the app, check if they have temporary palettes.
+const useCheckTemporaryPalettesAndRedirect = () => {
+  const appUserDetails = useGlobalStore((state) => state.appUserDetails)
+  const [hasTemporaryPalettes, setHasTemporaryPalettes] = useState(false)
+  const [hasRedirected, setHasRedirected] = useState(false)
+
+  const navigate = useNavigate()
+  useEffect(() => {
+    queries
+      .getTemporaryPalettes()
+      .then((palettes) => setHasTemporaryPalettes(palettes.length > 0))
+  }, [])
+
+  useEffect(() => {
+    if (appUserDetails && hasTemporaryPalettes && !hasRedirected) {
+      // There's a race condition that causes the navigation to not work when signing in.
+      // The timeout gives a tick to the event loop, allowing the sign-in process to complete.
+      setTimeout(() => {
+        navigate(ROUTES.create.href, { replace: true })
+      }, 0)
+      setHasRedirected(true)
+    }
+  }, [appUserDetails, hasTemporaryPalettes, navigate, hasRedirected])
+}
+
+export default useCheckTemporaryPalettesAndRedirect

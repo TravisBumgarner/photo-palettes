@@ -15,12 +15,13 @@ import { SplashScreen } from '@capacitor/splash-screen'
 import NativeNavigation from './components/Navigation/Navigation.Native'
 import WebNavigation from './components/Navigation/Navigation.Web'
 import PlatformSpecificStyling from './styles/PlatformSpecificStyling'
-import TemporaryPalettes from './components/TemporaryPalettes'
+import useCheckTemporaryPalettesAndRedirect from './hooks/useCheckTemporaryPalettesAndRedirect'
 
 const queryClient = new QueryClient()
 
 function App() {
   useLoadUserIntoState()
+  useCheckTemporaryPalettesAndRedirect()
   const loadingUser = useGlobalStore((state) => state.loadingUser)
 
   if (loadingUser) {
@@ -50,29 +51,24 @@ function App() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <BrowserRouter>
-        <AlertsManager />
-        <TemporaryPalettes />
-        {Capacitor.isNativePlatform() ? (
-          <NativeNavigation />
-        ) : (
-          <WebNavigation />
-        )}
-        <Router />
-        <Footer />
-        <RenderModal />
-      </BrowserRouter>
+      <AlertsManager />
+      {Capacitor.isNativePlatform() ? <NativeNavigation /> : <WebNavigation />}
+      <Router />
+      <Footer />
+      <RenderModal />
     </QueryClientProvider>
   )
 }
 
 const WrappedApp = () => {
   return (
-    <AppThemeProvider>
-      <PlatformSpecificStyling>
-        <App />
-      </PlatformSpecificStyling>
-    </AppThemeProvider>
+    <BrowserRouter>
+      <AppThemeProvider>
+        <PlatformSpecificStyling>
+          <App />
+        </PlatformSpecificStyling>
+      </AppThemeProvider>
+    </BrowserRouter>
   )
 }
 
