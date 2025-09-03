@@ -8,24 +8,31 @@ import { backfillOpenGraphImages } from '../api/admin/backfillOpenGraphImages'
 import Box from '@mui/material/Box'
 import { SPACING } from '../styles/styleConsts'
 import Typography from '@mui/material/Typography'
+import useGlobalStore from '../store'
 
 const Admin = () => {
+  const addAlert = useGlobalStore((state) => state.addAlert)
+
   const handleBackfill = useCallback(() => {
     activeModalSignal.value = {
       id: MODAL_ID.CONFIRMATION_MODAL,
       title: 'Backfill Open Graph Tags',
       body: 'Are you sure you want to backfill Open Graph tags for all images?',
+      overrideConfirmation: true,
       confirmationCallback: async () => {
         const response = await backfillOpenGraphImages()
         if (response.success) {
+          addAlert('Backfill Successful', 'info')
           activeModalSignal.value = null
+        } else {
+          addAlert('Backfill failed', 'error')
         }
       },
       cancelCallback: () => {
         activeModalSignal.value = null
       },
     }
-  }, [])
+  }, [addAlert])
 
   return (
     <PageWrapper width="full" minHeight>
