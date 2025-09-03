@@ -15,11 +15,6 @@ from .palettes_router import palettes_router
 ROUTE_NAME = "get_palette_list"
 
 
-def parse_request():
-    # Shows no parsing required.
-    pass
-
-
 class SuccessResponse(BaseSuccessResponse):
     palettes: list[PaletteResponse]
     total: int
@@ -38,7 +33,7 @@ def calculate_can_see_all_moderation_statuses(
 
 @palettes_router.get("")
 async def get_palette_list(
-    raw_request: RequestWithAuthState,
+    request: RequestWithAuthState,
     size: int = Query(25, ge=1, le=100),
     offset: int = Query(0, ge=0),
     moderation_status: ModerationStatus = ModerationStatus.APPROVED,
@@ -46,14 +41,14 @@ async def get_palette_list(
     sort_by: SortBy = SortBy.NEWEST,
 ):
     try:
-        parse_request()
-
         can_see_all_moderation_statuses = calculate_can_see_all_moderation_statuses(
-            request=raw_request, author_user_id=author_user_id
+            request=request, author_user_id=author_user_id
         )
 
         moderation_status = (
-            moderation_status if can_see_all_moderation_statuses else ModerationStatus.APPROVED
+            moderation_status
+            if can_see_all_moderation_statuses
+            else ModerationStatus.APPROVED
         )
 
         palettes = get_palettes(
@@ -62,7 +57,7 @@ async def get_palette_list(
             moderation_status=moderation_status,
             author_user_id=author_user_id,
             sort_by=sort_by,
-            app_user_id=raw_request.state.app_user_id,
+            app_user_id=request.state.app_user_id,
         )
 
         total_count = get_palettes_count(

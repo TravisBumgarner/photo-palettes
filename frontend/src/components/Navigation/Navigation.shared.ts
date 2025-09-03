@@ -6,6 +6,8 @@ export const USER_ROUTES: (keyof typeof ROUTES)[] = [
   'feedback',
   'featureRequests',
   'logout',
+  'moderation',
+  'admin',
 ]
 
 export const MODERATOR_ROUTES: (keyof typeof ROUTES)[] = [

@@ -1,8 +1,8 @@
-import re
 import uuid
 
 from fastapi import Request
 from fastapi.responses import JSONResponse
+from pydantic import BaseModel
 from supabase import Client
 
 from config import get_config
@@ -12,26 +12,11 @@ from services.logger import log_error
 
 config = get_config()
 
-# Each tuple is (pattern, method)
-public_routes = [
-    (re.compile(r"^/$"), "GET"),
-    (re.compile(r"^/alpha/signup$"), "POST"),
-    (re.compile(r"^/feature_requests/$"), "GET"),
-    (re.compile(r"^/palettes/app_user_id/\w+$"), "GET"),
-    (re.compile(r"^/palettes$"), "GET"),
-    (re.compile(r"^/palettes/id/.*$"), "GET"),
-    (re.compile(r"^/uploads/.*\.(jpg|jpeg|png|webp)$"), "GET"),
-]
-
-if not config.is_production:
-    public_routes.append((re.compile(r"^/docs$"), "GET"))
-    public_routes.append((re.compile(r"^/openapi\.json$"), "GET"))
-
 
 class AuthState:
     auth_id: uuid.UUID | None
     app_user_id: uuid.UUID | None
-    permission_level: PermissionLevel | None
+    permission_level: PermissionLevel
 
 
 class RequestWithAuthState(Request):
@@ -51,62 +36,73 @@ def get_auth_user(supabase: Client, token: str):
     return auth.user
 
 
+class AppUserDetails(BaseModel):
+    app_user_id: uuid.UUID
+    permission_level: PermissionLevel
+
+
 def get_app_user_details(auth_user):
     app_user = get_or_create_app_user(
         auth_id=uuid.UUID(auth_user.id),
         email=auth_user.email,
     )
 
-    return {
-        "app_user_id": app_user.id,
-        "permission_level": app_user.permission_level,
-    }
+    return AppUserDetails(
+        app_user_id=app_user.id,
+        permission_level=app_user.permission_level,
+    )
 
 
 def create_auth_middleware(supabase: Client):
     async def add_authentication(request: RequestWithAuthState, call_next):
-        path = request.url.path
-        route_requires_auth = not any(
-            pattern.match(path) and method == request.method for pattern, method in public_routes
-        )
-
         if request.method == "OPTIONS":
+            return await call_next(request)
+        print(request.url.path)
+        if request.url.path.startswith("/docs"):
+            if config.is_production:
+                return JSONResponse(
+                    status_code=401,
+                    content={"error": "Unauthorized", "message": "No access"},
+                )
+            request.state.auth_id = None
+            request.state.app_user_id = None
+            request.state.permission_level = PermissionLevel.Anonymous
             return await call_next(request)
 
         auth_header = request.headers.get("authorization", "")
         token = auth_header.replace("Bearer ", "")
 
-        if not token and route_requires_auth:
-            log_error(Exception("No token provided"), "not_token")
-            return JSONResponse(
-                status_code=401,
-                content={"error": "Unauthorized", "message": "No token provided"},
-            )
-
-        try:
-            auth_user = get_auth_user(supabase, token)
-        except Exception as e:
-            log_error(e, "get_auth_user")
-            return JSONResponse(
-                status_code=401,
-                content={"error": "Unauthorized", "message": "Something went wrong"},
-            )
-
-        try:
-            if not auth_user:
-                request.state.auth_id = None
-                request.state.app_user_id = None
-                request.state.permission_level = None
-            else:
-                request.state.auth_id = uuid.UUID(auth_user.id)
-                user_details = get_app_user_details(auth_user)
-                request.state.app_user_id = user_details["app_user_id"]
-                request.state.permission_level = user_details["permission_level"]
-        except Exception as e:
-            log_error(e, "auth_middleware")
+        if not token:
             request.state.auth_id = None
             request.state.app_user_id = None
-            request.state.permission_level = None
+            request.state.permission_level = PermissionLevel.Anonymous
+            return await call_next(request)
+
+        auth_user = get_auth_user(supabase, token)
+        if not auth_user:
+            log_error(
+                RuntimeError("User supplied an invalid token. Attack?"),
+                "auth_middleware",
+            )
+            return JSONResponse(
+                status_code=401,
+                content={"error": "Unauthorized", "message": "Invalid token"},
+            )
+
+        user_details = get_app_user_details(auth_user)
+        if not user_details:
+            log_error(
+                RuntimeError("Failed to get app user."),
+                "auth_middleware",
+            )
+            return JSONResponse(
+                status_code=500,
+                content={"error": "Internal Server Error", "message": "User error"},
+            )
+
+        request.state.auth_id = uuid.UUID(auth_user.id)
+        request.state.app_user_id = user_details.app_user_id
+        request.state.permission_level = user_details.permission_level
 
         return await call_next(request)
 

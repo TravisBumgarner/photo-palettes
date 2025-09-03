@@ -1,17 +1,20 @@
+import uuid
 from typing import Annotated
 
 from fastapi import Query
 from pydantic import BaseModel
 
 from consts import ErrorMsg
-from database.models import SortBy
+from database.models import PermissionLevel, SortBy
 from database.queries.favorites import get_app_user_favorites, get_favorites_count
 from middleware.auth import RequestWithAuthState
-from routes.shared import AuthedRequest, BaseErrorResponse, InvalidRequest
+from routes.shared import BaseErrorResponse
 from services.logger import log_error
-from utils.auth import get_user_auth
 
-from ..palettes.palette_response_models import PaletteResponse, map_palette_array_to_response
+from ..palettes.palette_response_models import (
+    PaletteResponse,
+    map_palette_array_to_response,
+)
 from .favorites_router import favorites_router
 
 ROUTE_NAME = "get_palette_favorites_list"
@@ -23,40 +26,43 @@ class BaseSuccessResponse(BaseModel):
     total: int
 
 
-def parse_request(raw_request: RequestWithAuthState) -> AuthedRequest | InvalidRequest:
-    user_auth = get_user_auth(raw_request)
-    if not user_auth:
-        return InvalidRequest(error=ErrorMsg.USER_NOT_AUTHENTICATED)
+def handle_request(size: int, offset: int, sort_by: SortBy, app_user_id: uuid.UUID):
+    palettes = get_app_user_favorites(
+        size=size,
+        offset=offset,
+        sort_by=sort_by,
+        app_user_id=app_user_id,
+    )
 
-    return AuthedRequest(auth_id=user_auth.auth_id, app_user_id=user_auth.app_user_id)
+    total_count = get_favorites_count(app_user_id=app_user_id)
+    return BaseSuccessResponse(
+        palettes=map_palette_array_to_response(palettes),
+        total=total_count,
+    )
 
 
 @favorites_router.get("")
 async def get_favorite_palettes(
-    raw_request: RequestWithAuthState,
+    request: RequestWithAuthState,
     size: Annotated[int, Query(ge=1, le=100)] = 25,
     offset: Annotated[int, Query(ge=0)] = 0,
     sort_by: Annotated[SortBy, Query()] = SortBy.NEWEST,
 ):
-    try:
-        parsed_request = parse_request(raw_request)
-        match parsed_request:
-            case InvalidRequest(error=error):
-                log_error(RuntimeError(error), ROUTE_NAME)
-                return BaseErrorResponse(message=error)
-            case AuthedRequest(app_user_id=app_user_id):
-                palettes = get_app_user_favorites(
-                    size=size,
-                    offset=offset,
-                    sort_by=sort_by,
-                    app_user_id=app_user_id,
-                )
+    if (
+        request.state.permission_level < PermissionLevel.MEMBER
+        or request.state.app_user_id is None
+    ):
+        log_error(RuntimeError(ErrorMsg.CANNOT_PERFORM_ACTION), ROUTE_NAME)
+        return BaseErrorResponse(message=ErrorMsg.CANNOT_PERFORM_ACTION)
 
-                total_count = get_favorites_count(app_user_id=app_user_id)
-                return BaseSuccessResponse(
-                    palettes=map_palette_array_to_response(palettes),
-                    total=total_count,
-                )
+    try:
+        return handle_request(
+            size=size,
+            offset=offset,
+            sort_by=sort_by,
+            app_user_id=request.state.app_user_id,
+        )
+
     except Exception as error:
         log_error(error, ROUTE_NAME)
         return BaseErrorResponse(message=ErrorMsg.SOMETHING_WENT_WRONG)

@@ -22,7 +22,7 @@ const Palette = lazy(async () => await import('../pages/Palette'))
 const Favorites = lazy(async () => await import('../pages/Favorites'))
 const Admin = lazy(async () => await import('../pages/Admin'))
 import useGlobalStore from '../store'
-import { PERMISSION_LEVEL } from '../types'
+// import { PERMISSION_LEVEL } from '../types'
 import { ROUTES } from '../consts'
 
 const PrivateRoute = () => {
@@ -35,25 +35,25 @@ const PublicRoute = () => {
   return !appUserDetails ? <Outlet /> : <Navigate to="/" />
 }
 
-const ModerationRoute = () => {
-  const appUserDetails = useGlobalStore((state) => state.appUserDetails)
-  return (appUserDetails?.permissionLevel || PERMISSION_LEVEL.VISITOR) >=
-    PERMISSION_LEVEL.MODERATOR ? (
-    <Outlet />
-  ) : (
-    <Navigate to="/" />
-  )
-}
+// const ModerationRoute = () => {
+//   const appUserDetails = useGlobalStore((state) => state.appUserDetails)
+//   return (appUserDetails?.permissionLevel || PERMISSION_LEVEL.VISITOR) >=
+//     PERMISSION_LEVEL.MODERATOR ? (
+//     <Outlet />
+//   ) : (
+//     <Navigate to="/" />
+//   )
+// }
 
-const AdminRoute = () => {
-  const appUserDetails = useGlobalStore((state) => state.appUserDetails)
-  return (appUserDetails?.permissionLevel || PERMISSION_LEVEL.VISITOR) >=
-    PERMISSION_LEVEL.ADMIN ? (
-    <Outlet />
-  ) : (
-    <Navigate to="/" />
-  )
-}
+// const AdminRoute = () => {
+//   const appUserDetails = useGlobalStore((state) => state.appUserDetails)
+//   return (appUserDetails?.permissionLevel || PERMISSION_LEVEL.VISITOR) >=
+//     PERMISSION_LEVEL.ADMIN ? (
+//     <Outlet />
+//   ) : (
+//     <Navigate to="/" />
+//   )
+// }
 
 const Router = () => (
   <Routes>
@@ -69,14 +69,12 @@ const Router = () => (
     <Route path={'palette/:id'} element={<Palette />} />
 
     {/* Moderation only Routes */}
-    <Route element={<ModerationRoute />}>
-      <Route path={ROUTES.moderation.href} element={<Moderation />} />
-    </Route>
+
+    <Route path={ROUTES.moderation.href} element={<Moderation />} />
 
     {/* Moderation only Routes */}
-    <Route element={<AdminRoute />}>
-      <Route path={ROUTES.admin.href} element={<Admin />} />
-    </Route>
+
+    <Route path={ROUTES.admin.href} element={<Admin />} />
 
     {/* Conditional /create route */}
     <Route

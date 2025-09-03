@@ -3,11 +3,14 @@ import uuid
 from pydantic import BaseModel
 
 from consts import ErrorMsg
+from database.models import PermissionLevel
 from database.queries.feature_requests import cast_vote, has_user_voted
 from middleware.auth import RequestWithAuthState
-from routes.shared import AuthedRequest, BaseErrorResponse, BaseSuccessResponse, InvalidRequest
+from routes.shared import (
+    BaseErrorResponse,
+    BaseSuccessResponse,
+)
 from services.logger import log_error
-from utils.auth import get_user_auth
 
 from .feature_requests_router import feature_requests_router
 
@@ -18,30 +21,26 @@ class Body(BaseModel):
     feature_request_id: uuid.UUID
 
 
-def parse_request(raw_request: RequestWithAuthState):
-    user_auth = get_user_auth(raw_request)
-    if not user_auth:
-        return InvalidRequest(error=ErrorMsg.CANNOT_PERFORM_ACTION)
+def handle_request(feature_request_id: uuid.UUID, app_user_id: uuid.UUID):
+    if has_user_voted(feature_request_id, app_user_id):
+        log_error(RuntimeError(ErrorMsg.CANNOT_PERFORM_ACTION), ROUTE_NAME)
+        return BaseErrorResponse(message=ErrorMsg.CANNOT_PERFORM_ACTION)
 
-    return AuthedRequest(auth_id=user_auth.auth_id, app_user_id=user_auth.app_user_id)
+    cast_vote(feature_request_id, app_user_id)
+    return BaseSuccessResponse()
 
 
 @feature_requests_router.post("/upvote")
-async def post_feature_request(raw_request: RequestWithAuthState, body: Body):
+async def post_feature_request(request: RequestWithAuthState, body: Body):
+    if (
+        request.state.permission_level < PermissionLevel.MEMBER
+        or request.state.app_user_id is None
+    ):
+        log_error(RuntimeError(ErrorMsg.CANNOT_PERFORM_ACTION), ROUTE_NAME)
+        return BaseErrorResponse(message=ErrorMsg.CANNOT_PERFORM_ACTION)
+
     try:
-        parsed_request = parse_request(raw_request)
-
-        match parsed_request:
-            case InvalidRequest(error=error):
-                log_error(RuntimeError(error), ROUTE_NAME)
-                return BaseErrorResponse(message=error)
-            case AuthedRequest(app_user_id=app_user_id):
-                if has_user_voted(body.feature_request_id, app_user_id):
-                    log_error(RuntimeError(ErrorMsg.CANNOT_PERFORM_ACTION), ROUTE_NAME)
-                    return BaseErrorResponse(message=ErrorMsg.CANNOT_PERFORM_ACTION)
-
-                cast_vote(body.feature_request_id, app_user_id)
-                return BaseSuccessResponse()
+        return handle_request(body.feature_request_id, request.state.app_user_id)
     except Exception as e:
         log_error(e, ROUTE_NAME)
         return BaseErrorResponse(message="Failed to upvote feature request")
