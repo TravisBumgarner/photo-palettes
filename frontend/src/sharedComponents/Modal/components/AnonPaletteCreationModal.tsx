@@ -7,32 +7,52 @@ import DefaultModal from './DefaultModal'
 import { activeModalSignal } from '../../../signals'
 import ColorBar from '../../ColorBar'
 import downloadPalette from '../../../utils/downloadPalette'
+import { queries } from '../../../database'
+import { photoUrlToBlob } from '../../../utils/image'
+import { useNavigate } from 'react-router-dom'
+import { ROUTES } from '../../../consts'
 
 export interface AnonPaletteCreationModalProps {
   id: typeof MODAL_ID.ANON_PALETTE_CREATION_MODAL
-  colors: string[]
+  palette: { color: string; percentLocation: [number, number] }[]
   photoUrl: string
   paletteId: string
+  name: string
 }
 
 const AnonPaletteCreationModal = ({
-  colors,
+  palette,
   photoUrl,
   paletteId,
+  name,
 }: AnonPaletteCreationModalProps) => {
+  const colors = palette.map((swatch) => swatch.color)
+
   const handleDownload = useCallback(async () => {
-    await downloadPalette({ paletteId, photoUrl, colors })
-    // activeModalSignal.value = null
+    await downloadPalette({
+      paletteId,
+      photoUrl,
+      colors,
+    })
+    activeModalSignal.value = null
   }, [photoUrl, colors, paletteId])
 
+  const navigate = useNavigate()
+
   const handleConfirm = useCallback(async () => {
+    queries.createTemporaryPalette({
+      palette,
+      name,
+      image: await photoUrlToBlob(photoUrl),
+      tempId: paletteId,
+    })
     activeModalSignal.value = null
-  }, [])
+    navigate(ROUTES.signup.href)
+  }, [palette, name, photoUrl, paletteId, navigate])
 
   return (
     <DefaultModal hideCloseButton>
       <Box sx={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-        {/* <Typography variant="h6">Save Your palette</Typography> */}
         <img
           style={{ width: '100%', height: 'auto' }}
           src={photoUrl}

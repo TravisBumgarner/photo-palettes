@@ -41,3 +41,13 @@ export const resizeImage = (
     img.src = URL.createObjectURL(file)
   })
 }
+
+export async function photoUrlToBlob(photoUrl: string): Promise<Blob> {
+  const response = await fetch(photoUrl, { mode: 'cors' })
+  if (!response.ok) {
+    throw new Error(
+      `Failed to fetch image: ${response.status} ${response.statusText}`
+    )
+  }
+  return await response.blob()
+}

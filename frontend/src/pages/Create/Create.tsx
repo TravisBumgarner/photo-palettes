@@ -2,7 +2,7 @@ import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import TextField from '@mui/material/TextField'
 import { useMutation } from '@tanstack/react-query'
-import { useCallback, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { createPalette } from '../../api/palettes/createPalette'
 import { generatePalette } from '../../api/palettes/generatePalette'
@@ -14,10 +14,11 @@ import { activeModalSignal } from '../../signals'
 import PageWrapper from '../../styles/shared/PageWrapper'
 import { SPACING } from '../../styles/styleConsts'
 import { type TGeneratedPalette } from '../../types'
-import { resizeImage } from '../../utils/resizeImage'
+import { resizeImage } from '../../utils/image'
 import CanvasAndPalette from './components/CanvasAndPalette'
 import Dropzone from './components/Dropzone'
 import { sharedCSS } from './components/shared'
+import { queries } from '../../database'
 
 type UploadStatus =
   | 'INITIAL'
@@ -37,6 +38,31 @@ const Create = () => {
   const [name, setName] = useState('')
   const [palette, setPalette] = useState<TGeneratedPalette | null>(null)
   const [paletteSortOrder, setPaletteSortOrder] = useState<number[]>([])
+  const [tempId, setTempId] = useState<string | null>(null)
+
+  useEffect(() => {
+    // When the user is signed out, they can create palettes via CreateLite.tsx
+    // If they opt to sign up or login, they'll be redirected here after. We'll
+    // load their data into state.
+    const checkAndLoadTemporaryPalette = async () => {
+      const temporaryPalettes = await queries.getTemporaryPalettes()
+      if (temporaryPalettes.length > 0) {
+        const {
+          palette,
+          name,
+          image,
+          tempId: loadedTempId,
+        } = temporaryPalettes[0]
+        setPalette(palette)
+        setPhoto(await image)
+        setName(name)
+        setTempId(loadedTempId)
+        setUploadStatus('UPLOADED')
+        setPaletteSortOrder(Array.from({ length: palette.length }, (_, i) => i))
+      }
+    }
+    checkAndLoadTemporaryPalette()
+  }, [])
 
   const updateSwatch = useCallback(
     (index: number, color: string, percentLocation: [number, number]) => {
@@ -100,7 +126,10 @@ const Create = () => {
     setUploadStatus('INITIAL')
     setPhoto(null)
     setName('')
-  }, [setPalette])
+    if (tempId) {
+      queries.deleteTemporaryPalette(tempId)
+    }
+  }, [setPalette, tempId])
 
   const createPaletteMutation = useMutation({
     mutationFn: createPalette,
@@ -125,6 +154,7 @@ const Create = () => {
     })
 
     if (response.success) {
+      if (tempId) queries.deleteTemporaryPalette(tempId)
       activeModalSignal.value = {
         id: MODAL_ID.CONFIRMATION_MODAL,
         confirmationCallback: () => {
@@ -137,7 +167,15 @@ const Create = () => {
     } else {
       setUploadStatus('ERROR')
     }
-  }, [createPaletteMutation, name, palette, navigate, paletteSortOrder, photo])
+  }, [
+    createPaletteMutation,
+    name,
+    palette,
+    navigate,
+    paletteSortOrder,
+    photo,
+    tempId,
+  ])
 
   const handleTryAgain = useCallback(() => {
     setUploadStatus('INITIAL')

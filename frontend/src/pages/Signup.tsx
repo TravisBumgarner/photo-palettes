@@ -11,7 +11,7 @@ import PageTitle from '../styles/shared/PageTitle'
 import PageWrapper from '../styles/shared/PageWrapper'
 import Link from '../sharedComponents/Link'
 import { Navigate, useNavigate } from 'react-router-dom'
-import { loadUserIntoState } from '../utils'
+import { loadUserIntoState } from '../utils/loadUserIntoState'
 import { activeModalSignal } from '../signals'
 import { MODAL_ID } from '../sharedComponents/Modal/Modal.types'
 

@@ -1,11 +1,9 @@
-import { getMe } from '../api/getMe'
-import { getUser } from '../services/supabase'
-import useGlobalStore from '../store'
 import { PALETTE } from '../styles/styleConsts'
 
 /**
  * Takes in a hex color background and returns white or black based on what the contrast should be.
  */
+
 export const getContrastColor = (hexColor: string, invert = false): string => {
   if (hexColor.startsWith('rgb')) {
     hexColor = rgbToHex(hexColor)!
@@ -40,27 +38,4 @@ export const rgbToHex = (rgb: string) => {
   return `#${match
     .map((num) => parseInt(num).toString(16).padStart(2, '0')) // Convert to hex
     .join('')}` // Join and ensure uppercase
-}
-
-export const getUserColorFromUUID = (uuid: string) => {
-  return `#${uuid.slice(0, 6).toLocaleUpperCase()}`
-}
-
-export const loadUserIntoState = async () => {
-  const { user } = await getUser()
-  let success: boolean = false
-
-  const store = useGlobalStore.getState()
-
-  if (user) {
-    store.setAuthId(user.id)
-    const userDetails = await getMe()
-    if (userDetails.success) {
-      store.setAppUserDetails(userDetails)
-      success = true
-    }
-  }
-
-  store.setLoadingUser(false)
-  return success
 }

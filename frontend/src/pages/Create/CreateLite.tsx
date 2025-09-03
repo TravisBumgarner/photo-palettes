@@ -11,12 +11,13 @@ import CanvasAndPalette from './components/CanvasAndPalette'
 import Dropzone from './components/Dropzone'
 import { sharedCSS } from './components/shared'
 import PageWrapper from '../../styles/shared/PageWrapper'
-import { resizeImage } from '../../utils/resizeImage'
-import kmeans from './kmeans'
+import { resizeImage } from '../../utils/image.ts'
 import { PALETTE_SIZE } from '../../consts'
 import { activeModalSignal } from '../../signals'
 import { MODAL_ID } from '../../sharedComponents/Modal/Modal.types'
 import { useSignals } from '@preact/signals-react/runtime'
+import TextField from '@mui/material/TextField'
+import { useGeneratePaletteWorker } from '../../hooks/useGeneratePaletteWorker'
 
 type UploadStatus =
   | 'INITIAL'
@@ -26,7 +27,7 @@ type UploadStatus =
   | 'SUBMITTING'
   | 'SUBMITTED'
 
-// const MAX_NAME_LENGTH = 50
+const MAX_NAME_LENGTH = 50
 
 const Create = () => {
   useSignals()
@@ -34,9 +35,11 @@ const Create = () => {
   const [uploadStatus, setUploadStatus] = useState<UploadStatus>('INITIAL')
   const [photo, setPhoto] = useState<Blob | null>(null)
   const [paletteId, setPaletteId] = useState<string | null>(null)
-  // const [name, setName] = useState('')
+  const [name, setName] = useState('')
   const [palette, setPalette] = useState<TGeneratedPalette | null>(null)
   const [paletteSortOrder, setPaletteSortOrder] = useState<number[]>([])
+
+  const { generatePalette } = useGeneratePaletteWorker()
 
   const updateSwatch = useCallback((index: number, color: string) => {
     setPalette((prev) => {
@@ -55,10 +58,15 @@ const Create = () => {
       }
       setUploadStatus('UPLOADING')
       const photo = acceptedFiles[0]
-      const resizedPhoto = await resizeImage(photo, { maxWidth: 1600, maxHeight: 1600 })
+      const resizedPhoto = await resizeImage(photo, {
+        maxWidth: 1600,
+        maxHeight: 1600,
+      })
       setPhoto(resizedPhoto)
 
-      const response = await kmeans(resizedPhoto)
+      const photoUrl = URL.createObjectURL(resizedPhoto)
+      const response = await generatePalette(photoUrl)
+
       if (response.success) {
         setPalette(response.palette)
         setPaletteSortOrder(Array.from({ length: PALETTE_SIZE }, (_, i) => i))
@@ -69,21 +77,21 @@ const Create = () => {
         setUploadStatus('ERROR')
       }
     },
-    [setPalette, setPaletteId]
+    [setPalette, setPaletteId, generatePalette]
   )
 
-  // const handleNameChange = useCallback(
-  //   (e: React.ChangeEvent<HTMLInputElement>) => {
-  //     setName(e.target.value.slice(0, MAX_NAME_LENGTH))
-  //   },
-  //   []
-  // )
+  const handleNameChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      setName(e.target.value.slice(0, MAX_NAME_LENGTH))
+    },
+    []
+  )
 
   const handleClearPalette = useCallback(() => {
     setPalette(null)
     setUploadStatus('INITIAL')
     setPhoto(null)
-    // setName('')
+    setName('')
   }, [setPalette])
 
   const handleSavePalette = useCallback(async () => {
@@ -94,26 +102,22 @@ const Create = () => {
 
     activeModalSignal.value = {
       id: MODAL_ID.ANON_PALETTE_CREATION_MODAL,
-      colors: sortedPalette.map((swatch) => swatch.color),
+      palette: sortedPalette,
       photoUrl: URL.createObjectURL(photo!),
       paletteId,
+      name,
     }
-  }, [
-    paletteId,
-    //  name,
-    palette,
-    paletteSortOrder,
-    photo,
-  ])
+  }, [paletteId, name, palette, paletteSortOrder, photo])
 
   const handleTryAgain = useCallback(() => {
     setUploadStatus('INITIAL')
     setPalette(null)
     setPhoto(null)
+    setName('')
   }, [setPalette, setPhoto])
 
-  // const nameLabel =
-  //   name.length > 0 ? `Name: ${name.length} / ${MAX_NAME_LENGTH}` : 'Name'
+  const nameLabel =
+    name.length > 0 ? `Name: ${name.length} / ${MAX_NAME_LENGTH}` : 'Name'
 
   return (
     <PageWrapper width="full">
@@ -153,14 +157,14 @@ const Create = () => {
             paletteSortOrder={paletteSortOrder}
             setPaletteSortOrder={setPaletteSortOrder}
           />
-          {/* <TextField
+          <TextField
             variant="outlined"
             fullWidth
             label={nameLabel}
             placeholder="Name your palette"
             value={name}
             onChange={handleNameChange}
-          /> */}
+          />
           <Box
             sx={{
               display: 'flex',
@@ -173,10 +177,7 @@ const Create = () => {
               Clear
             </Button>
             <Button
-              disabled={
-                // !name ||
-                uploadStatus === 'SUBMITTING'
-              }
+              disabled={!name || uploadStatus === 'SUBMITTING'}
               variant="contained"
               onClick={handleSavePalette}
             >

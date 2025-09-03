@@ -1,7 +1,7 @@
 import Box from '@mui/material/Box'
 import { SPACING } from '../styles/styleConsts'
 import { MODERATION_STATUS } from '../types'
-import { getContrastColor } from '../utils'
+import { getContrastColor } from '../utils/getContrastColor'
 import Message from '../sharedComponents/Message'
 import ModerationPanel from '../sharedComponents/ModerationPanel'
 import PageTitle from '../styles/shared/PageTitle'

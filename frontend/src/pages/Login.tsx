@@ -13,7 +13,8 @@ import PageWrapper from '../styles/shared/PageWrapper'
 
 import Link from '../sharedComponents/Link'
 import { Navigate, useNavigate } from 'react-router-dom'
-import { loadUserIntoState } from '../utils'
+import { loadUserIntoState } from '../utils/loadUserIntoState'
+import { queries } from '../database'
 
 const LoginSchema = z.object({
   email: z.email(),
@@ -57,8 +58,10 @@ export default function LoginPage() {
 
       if (response.success) {
         const success = await loadUserIntoState()
-        if (success) navigate('/')
-        else setError('Failed to load user details')
+        if (success) {
+          const hasTemporaryPalettes = await queries.getTemporaryPalettes()
+          navigate(hasTemporaryPalettes ? '/create/' : '/')
+        } else setError('Failed to load user details')
       } else {
         setError(response.error)
         navigate(ROUTES.error500.href)
