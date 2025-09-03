@@ -102,7 +102,7 @@ const Create = () => {
 
     activeModalSignal.value = {
       id: MODAL_ID.ANON_PALETTE_CREATION_MODAL,
-      colors: sortedPalette.map((swatch) => swatch.color),
+      palette: sortedPalette,
       photoUrl: URL.createObjectURL(photo!),
       paletteId,
       name,

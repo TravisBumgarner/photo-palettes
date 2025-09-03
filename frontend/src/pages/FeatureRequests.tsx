@@ -49,6 +49,7 @@ const FeatureRequestCard = ({
     }
   }, [mutateAsync, featureRequest.id, readonly, addAlert])
 
+  
   if (isError) {
     return <Navigate to="/error500" />
   }

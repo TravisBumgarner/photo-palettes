@@ -14,9 +14,7 @@ const TemporaryPalettes = () => {
     setPalettes((prev) => prev.filter((p) => p.tempId !== palette.tempId))
   }, [])
 
-  if (palettes.length === 0) {
-    return <div>No temporary palettes found.</div>
-  }
+  if (palettes.length === 0) return null
 
   return (
     <div>

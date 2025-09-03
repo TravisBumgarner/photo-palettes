@@ -14,20 +14,26 @@ import { ROUTES } from '../../../consts'
 
 export interface AnonPaletteCreationModalProps {
   id: typeof MODAL_ID.ANON_PALETTE_CREATION_MODAL
-  colors: string[]
+  palette: { color: string; percentLocation: [number, number] }[]
   photoUrl: string
   paletteId: string
   name: string
 }
 
 const AnonPaletteCreationModal = ({
-  colors,
+  palette,
   photoUrl,
   paletteId,
   name,
 }: AnonPaletteCreationModalProps) => {
+  const colors = palette.map((swatch) => swatch.color)
+
   const handleDownload = useCallback(async () => {
-    await downloadPalette({ paletteId, photoUrl, colors })
+    await downloadPalette({
+      paletteId,
+      photoUrl,
+      colors,
+    })
     activeModalSignal.value = null
   }, [photoUrl, colors, paletteId])
 
@@ -35,14 +41,14 @@ const AnonPaletteCreationModal = ({
 
   const handleConfirm = useCallback(async () => {
     queries.createTemporaryPalette({
-      colors,
+      palette,
       name,
       image: await photoUrlToBlob(photoUrl),
       tempId: paletteId,
     })
     activeModalSignal.value = null
     navigate(ROUTES.signup.href)
-  }, [colors, name, photoUrl, paletteId, navigate])
+  }, [palette, name, photoUrl, paletteId, navigate])
 
   return (
     <DefaultModal hideCloseButton>
