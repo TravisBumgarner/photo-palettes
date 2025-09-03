@@ -7,6 +7,7 @@ import { MODAL_ID } from '../sharedComponents/Modal/Modal.types'
 import { backfillOpenGraphImages } from '../api/admin/backfillOpenGraphImages'
 import Box from '@mui/material/Box'
 import { SPACING } from '../styles/styleConsts'
+import Typography from '@mui/material/Typography'
 
 const Admin = () => {
   const handleBackfill = useCallback(() => {
@@ -29,9 +30,23 @@ const Admin = () => {
   return (
     <PageWrapper width="full" minHeight>
       <PageTitle text="Admin" marginBottom />
-      <Box sx={{ margin: `${SPACING.MEDIUM.PX} 0` }}>
+      <Box
+        sx={{
+          margin: `${SPACING.MEDIUM.PX} 0`,
+          display: 'flex',
+          gap: SPACING.MEDIUM.PX,
+          flexDirection: 'column',
+          maxWidth: '400px',
+        }}
+      >
+        <Typography variant="h3">Backfill Tags</Typography>
+        <Typography>
+          V1 OG image tags did not handle aspect ratios well. Photos of humans
+          and animals in portrait mode were getting cropped in the middle of the
+          face. This script backfills the tags for all images.
+        </Typography>
         <Button variant="contained" onClick={handleBackfill}>
-          Backfill OG Tags
+          Perform
         </Button>
       </Box>
     </PageWrapper>
