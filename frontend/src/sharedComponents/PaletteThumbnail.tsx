@@ -35,13 +35,13 @@ const PaletteThumbnail = ({
       >
         <Box
           sx={{
-            width: '100%',
             aspectRatio: '1/1',
+            width: '100%',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
             padding: '10px',
-            height: '400px',
+            height: '100%',
           }}
         >
           <BlurImage
