@@ -92,6 +92,5 @@ export const DARK_BUTTON_STYLES = {
 
 export const Z_INDICES = {
   MODAL: 998,
-  ALERT: 999,
-  APP_LOADING: 997
+  APP_LOADING: 997,
 }

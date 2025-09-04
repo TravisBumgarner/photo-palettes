@@ -5,7 +5,7 @@ import { type AppUserDetails, type State } from './types'
 
 const useGlobalStore = create<State>()(
   devtools(
-    (set, get) => ({
+    (set) => ({
       authId: undefined,
       loadingUser: true,
       appUserDetails: undefined,
@@ -13,22 +13,6 @@ const useGlobalStore = create<State>()(
         set({ appUserDetails }),
       setAuthId: (authId: User['id'] | null) => set({ authId }),
       setLoadingUser: (loadingUser: boolean) => set({ loadingUser }),
-      alerts: [],
-      getAndRemoveNextAlert: () => {
-        const alerts = get().alerts
-        if (alerts.length === 0) return null
-
-        const nextAlert = alerts[0]
-        set({ alerts: alerts.slice(1) })
-        return nextAlert
-      },
-      addAlert: (text, color) =>
-        set((state) => ({
-          alerts: [
-            ...state.alerts,
-            { message: text, color, id: Math.random() },
-          ],
-        })),
     }),
     {
       name: 'store',

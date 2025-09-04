@@ -8,11 +8,8 @@ import { backfillOpenGraphImages } from '../api/admin/backfillOpenGraphImages'
 import Box from '@mui/material/Box'
 import { SPACING } from '../styles/styleConsts'
 import Typography from '@mui/material/Typography'
-import useGlobalStore from '../store'
 
 const Admin = () => {
-  const addAlert = useGlobalStore((state) => state.addAlert)
-
   const handleBackfill = useCallback(() => {
     activeModalSignal.value = {
       id: MODAL_ID.CONFIRMATION_MODAL,
@@ -23,17 +20,17 @@ const Admin = () => {
       confirmationCallback: async () => {
         const response = await backfillOpenGraphImages()
         if (response.success) {
-          addAlert('Backfill Successful', 'info')
+          alert('Backfill Successful')
           activeModalSignal.value = null
         } else {
-          addAlert('Backfill failed', 'error')
+          alert('Backfill failed')
         }
       },
       cancelCallback: () => {
         activeModalSignal.value = null
       },
     }
-  }, [addAlert])
+  }, [])
 
   return (
     <PageWrapper width="full" minHeight>

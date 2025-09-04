@@ -2,15 +2,14 @@ import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import TextField from '@mui/material/TextField'
 import Typography from '@mui/material/Typography'
+import Message from './Message'
 
-import React, { useCallback, useEffect, useState } from 'react'
-import useGlobalStore from '../store'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 
 const WhatWentWrongContactForm = () => {
   const [success, setSuccess] = useState(false)
   const [failure, setFailure] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
-  const addAlert = useGlobalStore((store) => store.addAlert)
 
   const [formData, setFormData] = useState({
     name: '',
@@ -58,16 +57,23 @@ const WhatWentWrongContactForm = () => {
     [formData]
   )
 
+  const buttonMessage = useMemo(() => {
+    if (isSubmitting) return 'Sending...'
+    if (success) return 'Message Sent!'
+    if (failure) return 'Failed to send'
+    return 'Send'
+  }, [isSubmitting, success, failure])
+
   useEffect(() => {
-    if (success) {
-      addAlert('Thank you for your feedback!', 'success')
-      setSuccess(false)
-    }
-    if (failure) {
-      addAlert('Failed to send message.', 'error')
-      setFailure(false)
-    }
-  }, [success, failure, addAlert])
+    setTimeout(() => {
+      if (success) {
+        setSuccess(false)
+      }
+      if (failure) {
+        setFailure(false)
+      }
+    }, 5000)
+  }, [success, failure])
 
   return (
     <>
@@ -91,12 +97,27 @@ const WhatWentWrongContactForm = () => {
             multiline
           />
           <Button
+            variant="contained"
             type="submit"
             disabled={isSubmitting || formData.message.length === 0}
           >
-            {isSubmitting ? 'Sending...' : 'Send'}
+            {buttonMessage}
           </Button>
         </form>
+        {success && (
+          <Message
+            includeVerticalMargin
+            message="Thank you for your feedback!"
+            color="success"
+          />
+        )}
+        {failure && (
+          <Message
+            includeVerticalMargin
+            message="Failed to send feedback. Please try again later."
+            color="error"
+          />
+        )}
       </Box>
     </>
   )

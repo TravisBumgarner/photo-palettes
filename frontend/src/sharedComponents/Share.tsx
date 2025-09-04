@@ -18,18 +18,14 @@ import {
   SPACING,
 } from '../styles/styleConsts'
 import { useCallback } from 'react'
-import useGlobalStore from '../store'
 import config from '../config'
 
 const ICON_SIZE = 32
 
 const CopyLink = ({ url }: { url: string }) => {
-  const addAlert = useGlobalStore((store) => store.addAlert)
-
   const copyToClipboard = useCallback(() => {
     navigator.clipboard.writeText(url)
-    addAlert('Link copied to clipboard', 'success')
-  }, [url, addAlert])
+  }, [url])
 
   return (
     <Tooltip title="Copy Link" arrow>

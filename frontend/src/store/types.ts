@@ -8,12 +8,6 @@ export interface AppUserDetails {
   id: string
 }
 
-export interface TAlert {
-  message: string
-  color: 'info' | 'error' | 'success'
-  id: number
-}
-
 export interface State {
   authId: User['id'] | null
   setAuthId: (authId: User['id'] | null) => void
@@ -21,7 +15,4 @@ export interface State {
   setLoadingUser: (loadingUser: boolean) => void
   appUserDetails: AppUserDetails | null
   setAppUserDetails: (appUserDetails: AppUserDetails | null) => void
-  alerts: TAlert[]
-  getAndRemoveNextAlert: () => TAlert | null
-  addAlert: (text: string, color: 'info' | 'error' | 'success') => void
 }
