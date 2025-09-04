@@ -57,7 +57,7 @@ def create_auth_middleware(supabase: Client):
     async def add_authentication(request: RequestWithAuthState, call_next):
         if request.method == "OPTIONS":
             return await call_next(request)
-        print(request.url.path)
+
         if request.url.path.startswith("/docs"):
             if config.is_production:
                 return JSONResponse(
@@ -70,7 +70,9 @@ def create_auth_middleware(supabase: Client):
             return await call_next(request)
 
         auth_header = request.headers.get("authorization", "")
-        token = auth_header.replace("Bearer ", "")
+
+        # Cannot figure where undefined is coming from.
+        token = auth_header.replace("Bearer ", "").replace("undefined", "")
 
         if not token:
             request.state.auth_id = None
@@ -79,7 +81,7 @@ def create_auth_middleware(supabase: Client):
             return await call_next(request)
 
         auth_user = get_auth_user(supabase, token)
-        if not auth_user:
+        if token and not auth_user:
             log_error(
                 RuntimeError("User supplied an invalid token. Attack?"),
                 "auth_middleware",

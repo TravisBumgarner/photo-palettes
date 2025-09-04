@@ -27,37 +27,55 @@ const ModerationPanel = ({
 }) => {
   const [isFetching, setIsFetching] = useState(false)
   const appUserDetails = useGlobalStore((state) => state.appUserDetails)
-
+  const addAlert = useGlobalStore((store) => store.addAlert)
   const handleApprove = useCallback(async () => {
     setIsFetching(true)
     try {
-      await moderatePalette(paletteId, MODERATION_STATUS.APPROVED)
-      refetch?.()
+      const response = moderatePalette(paletteId, MODERATION_STATUS.APPROVED)
+      if ((await response).success) {
+        refetch?.()
+      } else {
+        addAlert('Failed to moderate palette', 'error')
+      }
     } finally {
       // This shouldn't matter since refetch will clear it out.
       setIsFetching(false)
     }
-  }, [paletteId, refetch])
+  }, [paletteId, refetch, addAlert])
 
   const handleReject = useCallback(async () => {
     setIsFetching(true)
     try {
-      await moderatePalette(paletteId, MODERATION_STATUS.REJECTED)
-      refetch?.()
+      const response = await moderatePalette(
+        paletteId,
+        MODERATION_STATUS.REJECTED
+      )
+      if (response.success) {
+        refetch?.()
+      } else {
+        addAlert('Failed to moderate palette', 'error')
+      }
     } finally {
       // This shouldn't matter since refetch will clear it out.
       setIsFetching(false)
     }
-  }, [paletteId, refetch])
+  }, [paletteId, refetch, addAlert])
 
   const handleDeleteCallback = useCallback(async () => {
     setIsFetching(true)
-    await deletePalette(paletteId)
-  }, [paletteId, setIsFetching])
+    const response = await deletePalette(paletteId)
+    if (response.success) {
+      addAlert('Palette deleted successfully', 'success')
+      activeModalSignal.value = null
+    } else {
+      addAlert('Failed to delete palette', 'error')
+    }
+  }, [paletteId, setIsFetching, addAlert])
 
   const handleDelete = useCallback(async () => {
     activeModalSignal.value = {
       id: MODAL_ID.CONFIRMATION_MODAL,
+      overrideConfirmation: true,
       title: 'Delete Palette',
       body: 'Are you sure you want to delete this palette?',
       confirmationCallback: handleDeleteCallback,

@@ -22,38 +22,38 @@ const Palette = lazy(async () => await import('../pages/Palette'))
 const Favorites = lazy(async () => await import('../pages/Favorites'))
 const Admin = lazy(async () => await import('../pages/Admin'))
 import useGlobalStore from '../store'
-// import { PERMISSION_LEVEL } from '../types'
+import { PERMISSION_LEVEL } from '../types'
 import { ROUTES } from '../consts'
 
-const PrivateRoute = () => {
-  const appUserDetails = useGlobalStore((state) => state.appUserDetails)
-  return appUserDetails ? <Outlet /> : <Navigate to="/login" />
-}
-
-const PublicRoute = () => {
+const AnonymousRoute = () => {
   const appUserDetails = useGlobalStore((state) => state.appUserDetails)
   return !appUserDetails ? <Outlet /> : <Navigate to="/" />
 }
 
-// const ModerationRoute = () => {
-//   const appUserDetails = useGlobalStore((state) => state.appUserDetails)
-//   return (appUserDetails?.permissionLevel || PERMISSION_LEVEL.VISITOR) >=
-//     PERMISSION_LEVEL.MODERATOR ? (
-//     <Outlet />
-//   ) : (
-//     <Navigate to="/" />
-//   )
-// }
+const MemberRoute = () => {
+  const appUserDetails = useGlobalStore((state) => state.appUserDetails)
+  return appUserDetails ? <Outlet /> : <Navigate to="/login" />
+}
 
-// const AdminRoute = () => {
-//   const appUserDetails = useGlobalStore((state) => state.appUserDetails)
-//   return (appUserDetails?.permissionLevel || PERMISSION_LEVEL.VISITOR) >=
-//     PERMISSION_LEVEL.ADMIN ? (
-//     <Outlet />
-//   ) : (
-//     <Navigate to="/" />
-//   )
-// }
+const ModerationRoute = () => {
+  const appUserDetails = useGlobalStore((state) => state.appUserDetails)
+  return (appUserDetails?.permissionLevel || PERMISSION_LEVEL.ANONYMOUS) >=
+    PERMISSION_LEVEL.MODERATOR ? (
+    <Outlet />
+  ) : (
+    <Navigate to="/" />
+  )
+}
+
+const AdminRoute = () => {
+  const appUserDetails = useGlobalStore((state) => state.appUserDetails)
+  return (appUserDetails?.permissionLevel || PERMISSION_LEVEL.ANONYMOUS) >=
+    PERMISSION_LEVEL.ADMIN ? (
+    <Outlet />
+  ) : (
+    <Navigate to="/" />
+  )
+}
 
 const Router = () => (
   <Routes>
@@ -69,13 +69,13 @@ const Router = () => (
     <Route path={'palette/:id'} element={<Palette />} />
 
     {/* Moderation only Routes */}
+    <Route element={<ModerationRoute />}>
+      <Route path={ROUTES.moderation.href} element={<Moderation />} />
+    </Route>
 
-    <Route path={ROUTES.moderation.href} element={<Moderation />} />
-
-    {/* Moderation only Routes */}
-
-    <Route path={ROUTES.admin.href} element={<Admin />} />
-
+    <Route element={<AdminRoute />}>
+      <Route path={ROUTES.admin.href} element={<Admin />} />
+    </Route>
     {/* Conditional /create route */}
     <Route
       path={ROUTES.create.href}
@@ -86,13 +86,13 @@ const Router = () => (
     />
 
     {/* Public only Routes */}
-    <Route element={<PublicRoute />}>
+    <Route element={<AnonymousRoute />}>
       <Route path={ROUTES.login.href} element={<Login />} />
       <Route path={ROUTES.signup.href} element={<Signup />} />
     </Route>
 
     {/* Protected routes */}
-    <Route element={<PrivateRoute />}>
+    <Route element={<MemberRoute />}>
       <Route path={ROUTES.logout.href} element={<Logout />} />
       <Route path={ROUTES.profile.href} element={<Profile />} />
       <Route path={ROUTES.favorites.href} element={<Favorites />} />

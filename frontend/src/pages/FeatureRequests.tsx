@@ -49,7 +49,6 @@ const FeatureRequestCard = ({
     }
   }, [mutateAsync, featureRequest.id, readonly, addAlert])
 
-  
   if (isError) {
     return <Navigate to="/error500" />
   }
@@ -117,17 +116,20 @@ const NewFeatureSubmission = ({ refetch }: { refetch: () => void }) => {
 
   const { mutateAsync, isPending } = useMutation({
     mutationFn: () => addFeatureRequest(title, description),
-    onSuccess: () => {
+  })
+
+  const handleSubmitFeatureRequest = useCallback(async () => {
+    const response = await mutateAsync()
+
+    if (response.success) {
       addAlert('Feature request submitted', 'success')
       setTitle('')
       setDescription('')
       refetch()
-    },
-  })
-
-  const handleSubmitFeatureRequest = useCallback(async () => {
-    await mutateAsync()
-  }, [mutateAsync])
+    } else {
+      addAlert('Error submitting feature request', 'error')
+    }
+  }, [mutateAsync, addAlert, refetch])
 
   const handleTitleChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -174,6 +176,7 @@ const NewFeatureSubmission = ({ refetch }: { refetch: () => void }) => {
           onChange={handleDescriptionChange}
         />
         <Button
+          variant="contained"
           disabled={title === '' || description === '' || isPending}
           onClick={handleSubmitFeatureRequest}
         >

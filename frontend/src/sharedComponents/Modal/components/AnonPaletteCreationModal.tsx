@@ -34,7 +34,6 @@ const AnonPaletteCreationModal = ({
       photoUrl,
       colors,
     })
-    activeModalSignal.value = null
   }, [photoUrl, colors, paletteId])
 
   const navigate = useNavigate()

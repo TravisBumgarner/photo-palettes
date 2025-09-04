@@ -118,6 +118,7 @@ const Contact = () => {
             multiline
           />
           <Button
+            variant="contained"
             type="submit"
             disabled={isSubmitting || formData.message.length === 0}
           >

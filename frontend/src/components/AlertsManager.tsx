@@ -2,7 +2,7 @@ import Box from '@mui/material/Box'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import useGlobalStore from '../store'
 import { type TAlert } from '../store/types'
-import { BORDER_RADIUS, FONT_SIZES, SPACING } from '../styles/styleConsts'
+import { BORDER_RADIUS, FONT_SIZES, SPACING, Z_INDICES } from '../styles/styleConsts'
 
 const Alert = ({
   id,
@@ -99,7 +99,7 @@ const AlertsManager = () => {
         top: 16,
         left: '50%',
         transform: 'translateX(-50%)',
-        zIndex: 1000,
+        zIndex: Z_INDICES.ALERT,
         '@keyframes slideDown': {
           from: {
             transform: 'translateY(-100%)',

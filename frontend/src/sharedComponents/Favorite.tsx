@@ -8,6 +8,8 @@ import addToFavorites from '../api/favorites/addToFavorites'
 import removeFromFavorites from '../api/favorites/removeFromFavorites'
 import { useTheme } from '@mui/material/styles'
 import { PALETTE } from '../styles/styleConsts'
+import useGlobalStore from '../store'
+import Box from '@mui/material/Box'
 
 interface FavoriteProps {
   paletteId: string
@@ -16,47 +18,46 @@ interface FavoriteProps {
   refetch: () => void
 }
 
+const ICON_SIZE = 24
+
 const Favorite = ({
   paletteId,
   favorites,
   hasUserFavorited,
   refetch,
 }: FavoriteProps) => {
-  // const [localFavorited, setLocalFavorited] = useState(hasUserFavorited)
-  // const [localFavorites, setLocalFavorites] = useState(favorites)
   const isDark = useTheme().palette.mode === 'dark'
-
+  const appUserDetails = useGlobalStore((state) => state.appUserDetails)
   const color = isDark ? PALETTE.grayscale[200] : PALETTE.grayscale[700]
 
   const addMutation = useMutation({
     mutationFn: () => addToFavorites({ paletteId }),
-    // onMutate: async () => {
-    //   setLocalFavorited(true)
-    //   setLocalFavorites((prev) => prev + 1)
-    // },
     onSettled: () => {
       refetch()
     },
-    // onError: () => {
-    //   setLocalFavorited(false)
-    //   setLocalFavorites((prev) => prev - 1)
-    // },
   })
 
   const removeMutation = useMutation({
     mutationFn: () => removeFromFavorites({ paletteId }),
-    // onMutate: async () => {
-    //   setLocalFavorited(false)
-    //   setLocalFavorites((prev) => prev - 1)
-    // },
     onSettled: () => {
       refetch()
     },
-    // onError: () => {
-    //   setLocalFavorited(true)
-    //   setLocalFavorites((prev) => prev + 1)
-    // },
   })
+
+  if (!appUserDetails) {
+    return (
+      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+        <Typography
+          variant="body1"
+          component="span"
+          sx={{ textDecoration: 'none' }}
+        >
+          {favorites}
+        </Typography>
+        <FaHeart size={ICON_SIZE} color={color} />
+      </Box>
+    )
+  }
 
   return (
     <div>
@@ -79,7 +80,7 @@ const Favorite = ({
             }}
             disabled={removeMutation.isPending}
           >
-            <FaHeart color={color} />
+            <FaHeart color={color} size={ICON_SIZE} />
           </IconButton>
         </Tooltip>
       ) : (
@@ -94,7 +95,7 @@ const Favorite = ({
             }}
             disabled={addMutation.isPending}
           >
-            <FaRegHeart color={color} />
+            <FaRegHeart color={color} size={ICON_SIZE} />
           </IconButton>
         </Tooltip>
       )}

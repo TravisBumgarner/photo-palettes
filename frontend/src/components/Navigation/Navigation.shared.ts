@@ -23,5 +23,6 @@ export const ADMIN_ROUTES: (keyof typeof ROUTES)[] = [
 export const ANON_ROUTES: (keyof typeof ROUTES)[] = [
   'login',
   'signup',
+  'feedback',
   'featureRequests',
 ]
