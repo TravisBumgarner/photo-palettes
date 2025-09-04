@@ -35,6 +35,10 @@ const Palettes = ({
     if (error) logger.error(error)
   }, [error])
 
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }, [page, sortBy])
+
   const loading = isLoading || !data
   const hasErrored = !!error || (data && !data.success) || false
   const noPalettes = !data || (data.success && data.palettes.length === 0)
@@ -92,9 +96,14 @@ const Browse = () => {
     setPage(newPage)
   }, [])
 
+  const handleSortChange = useCallback((newSortBy: ESortBy) => {
+    setSortBy(newSortBy)
+    setPage(1)
+  }, [])
+
   return (
     <PageWrapper width="full" minHeight>
-      <SortsAndFilters sortBy={sortBy} setSortBy={setSortBy} />
+      <SortsAndFilters sortBy={sortBy} handleSortChange={handleSortChange} />
       <Palettes
         handlePageChange={handlePageChange}
         page={page}

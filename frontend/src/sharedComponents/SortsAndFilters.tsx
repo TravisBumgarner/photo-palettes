@@ -9,10 +9,10 @@ import { BORDER_RADIUS, SPACING } from '../styles/styleConsts'
 
 const SortsAndFilters = ({
   sortBy,
-  setSortBy,
+  handleSortChange,
 }: {
   sortBy: ESortBy
-  setSortBy: (value: ESortBy) => void
+  handleSortChange: (value: ESortBy) => void
 }) => {
   return (
     <Box
@@ -31,7 +31,7 @@ const SortsAndFilters = ({
           labelId="sort-by-label"
           value={sortBy}
           label="Sort By"
-          onChange={(e) => setSortBy(e.target.value as ESortBy)}
+          onChange={(e) => handleSortChange(e.target.value as ESortBy)}
         >
           {Object.values(SORT_BY).map((value) => (
             <MenuItem key={value} value={value}>
