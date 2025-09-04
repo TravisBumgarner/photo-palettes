@@ -28,6 +28,15 @@ const Favorites = () => {
     retry: false,
   })
 
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }, [page, sortBy])
+
+  const handleSortChange = useCallback((newSortBy: ESortBy) => {
+    setSortBy(newSortBy)
+    setPage(1)
+  }, [])
+
   const handlePageChange = useCallback((newPage: number) => {
     setPage(newPage)
   }, [])
@@ -54,7 +63,7 @@ const Favorites = () => {
 
     return (
       <>
-        <SortsAndFilters sortBy={sortBy} setSortBy={setSortBy} />
+        <SortsAndFilters sortBy={sortBy} handleSortChange={handleSortChange} />
         <ThumbnailGridDisplay>
           {data.palettes.map((palette) => (
             <PaletteThumbnail
@@ -71,7 +80,16 @@ const Favorites = () => {
         />
       </>
     )
-  }, [data, error, isLoading, handlePageChange, page, sortBy, refetch])
+  }, [
+    data,
+    error,
+    isLoading,
+    handlePageChange,
+    page,
+    sortBy,
+    refetch,
+    handleSortChange,
+  ])
 
   return (
     <PageWrapper width="full" minHeight>

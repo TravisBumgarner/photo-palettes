@@ -56,8 +56,8 @@ const BlurImage = ({
         aspectRatio: aspectRatio,
         display: 'block',
         transition: 'all 0.3s ease',
-        maxWidth: '100%',
         maxHeight: '100%',
+        maxWidth: '100%',
         ...(blurDataURL
           ? {
               backgroundImage: `url(${blurDataURL})`,
