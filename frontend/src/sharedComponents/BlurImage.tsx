@@ -57,7 +57,8 @@ const BlurImage = ({
         display: 'block',
         transition: 'all 0.3s ease',
         maxWidth: '100%',
-        maxHeight: '100%',
+        maxHeight: '70vh',
+        height: '100%',
         ...(blurDataURL
           ? {
               backgroundImage: `url(${blurDataURL})`,

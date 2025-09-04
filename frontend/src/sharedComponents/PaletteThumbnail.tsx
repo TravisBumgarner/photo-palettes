@@ -41,6 +41,7 @@ const PaletteThumbnail = ({
             alignItems: 'center',
             justifyContent: 'center',
             padding: '10px',
+            height: '400px',
           }}
         >
           <BlurImage
