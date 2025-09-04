@@ -32,9 +32,11 @@ def handle_request():
             response.raise_for_status()
             image = Image.open(BytesIO(response.content))
             og_image = generate_og_image(image, [x.hex for x in palette.colors])
-            save_photo(og_image.getvalue(), f"{palette.id!s}_og", "webp")
-            palette.og_photo_details = f"{palette.id!s}_og.webp"
-            update_palette(palette.id, og_photo_details=palette.og_photo_details)
+
+            og_photo_details = save_photo(
+                og_image.getvalue(), f"{palette.id!s}_og", "webp"
+            )
+            update_palette(palette.id, og_photo_details=og_photo_details)
     return BaseSuccessResponse()
 
 

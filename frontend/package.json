@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "vite",
     "mv-html-to-ejs": "mv dist/index.html dist/index.ejs",
-    "build": "tsc -b && vite build --mode production && npm run mv-html-to-ejs && open ./stats.html",
+    "build": "tsc -b && vite build --mode production && npm run mv-html-to-ejs",
     "build:development": "tsc -b && vite build --mode development && npm run mv-html-to-ejs",
     "ios:build": "tsc -b && vite build --mode production && npx cap copy && npx cap sync && npx cap open ios",
     "ios:list-emulators": "xcrun simctl list devices",
