@@ -6,6 +6,8 @@ import { BORDER_RADIUS, FONT_SIZES, SPACING } from '../../styles/styleConsts'
 import { IoInformationCircleOutline } from 'react-icons/io5'
 import { useTheme } from '@mui/material/styles'
 import { IoMdWarning } from 'react-icons/io'
+import { useMemo } from 'react'
+import { GiPartyPopper } from 'react-icons/gi'
 
 const Message = ({
   message,
@@ -15,12 +17,37 @@ const Message = ({
   includeVerticalMargin,
 }: {
   message: string
-  color: 'info' | 'error'
+  color: 'info' | 'error' | 'success'
   callback?: () => void
   callbackText?: string
   includeVerticalMargin?: boolean
 }) => {
   const theme = useTheme()
+
+  const icon = useMemo(() => {
+    if (color === 'error') {
+      return (
+        <IoMdWarning
+          size={FONT_SIZES.LARGE.PX}
+          color={theme.palette.info.main}
+        />
+      )
+    }
+    if (color === 'success') {
+      return (
+        <GiPartyPopper
+          size={FONT_SIZES.LARGE.PX}
+          color={theme.palette.info.main}
+        />
+      )
+    }
+    return (
+      <IoInformationCircleOutline
+        size={FONT_SIZES.LARGE.PX}
+        color={theme.palette.info.main}
+      />
+    )
+  }, [color, theme])
 
   return (
     <Box
@@ -41,21 +68,11 @@ const Message = ({
       <Box
         sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
       >
-        {color === 'error' ? (
-          <IoMdWarning
-            size={FONT_SIZES.LARGE.PX}
-            color={theme.palette.error.main}
-          />
-        ) : (
-          <IoInformationCircleOutline
-            size={FONT_SIZES.LARGE.PX}
-            color={theme.palette.info.main}
-          />
-        )}
+        {icon}
         <Typography
           sx={{ marginLeft: SPACING.SMALL.PX }}
           variant="h5"
-          color={color}
+          color={'info.main'}
         >
           {message}
         </Typography>

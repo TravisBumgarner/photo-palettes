@@ -31,7 +31,6 @@ const ModerationPanel = ({
   const [isFetching, setIsFetching] = useState(false)
   const [shareToSocials, setShareToSocials] = useState(false)
   const appUserDetails = useGlobalStore((state) => state.appUserDetails)
-  const addAlert = useGlobalStore((store) => store.addAlert)
 
   const handleApprove = useCallback(async () => {
     setIsFetching(true)
@@ -44,13 +43,13 @@ const ModerationPanel = ({
       if (response.success) {
         refetch?.()
       } else {
-        addAlert('Failed to moderate palette', 'error')
+        alert('Failed to moderate palette')
       }
     } finally {
       // This shouldn't matter since refetch will clear it out.
       setIsFetching(false)
     }
-  }, [paletteId, refetch, addAlert, shareToSocials])
+  }, [paletteId, refetch, shareToSocials])
 
   const handleReject = useCallback(async () => {
     setIsFetching(true)
@@ -62,24 +61,24 @@ const ModerationPanel = ({
       if (response.success) {
         refetch?.()
       } else {
-        addAlert('Failed to moderate palette', 'error')
+        alert('Failed to moderate palette')
       }
     } finally {
       // This shouldn't matter since refetch will clear it out.
       setIsFetching(false)
     }
-  }, [paletteId, refetch, addAlert])
+  }, [paletteId, refetch])
 
   const handleDeleteCallback = useCallback(async () => {
     setIsFetching(true)
     const response = await deletePalette(paletteId)
     if (response.success) {
-      addAlert('Palette deleted successfully', 'success')
+      alert('Palette deleted successfully')
       activeModalSignal.value = null
     } else {
-      addAlert('Failed to delete palette', 'error')
+      alert('Failed to delete palette')
     }
-  }, [paletteId, setIsFetching, addAlert])
+  }, [paletteId, setIsFetching])
 
   const handleDelete = useCallback(async () => {
     activeModalSignal.value = {

@@ -8,7 +8,6 @@ import useGlobalStore from './store'
 import Box from '@mui/material/Box'
 import Loading from './sharedComponents/Loading'
 import AppThemeProvider from './styles/Theme'
-import AlertsManager from './components/AlertsManager'
 import RenderModal from './sharedComponents/Modal'
 import { Capacitor } from '@capacitor/core'
 import { SplashScreen } from '@capacitor/splash-screen'
@@ -52,7 +51,6 @@ function App() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <AlertsManager />
       {Capacitor.isNativePlatform() ? <NativeNavigation /> : <WebNavigation />}
       <Router />
       <Footer />

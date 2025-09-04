@@ -4,7 +4,7 @@ import TextField from '@mui/material/TextField'
 import Typography from '@mui/material/Typography'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { Reorder } from 'framer-motion'
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useState, useEffect } from 'react'
 import addFeatureRequest from '../api/featureRequests/addFeatureRequest'
 import getFeatureRequests from '../api/featureRequests/getFeatureRequests'
 import upvoteFeatureRequest from '../api/featureRequests/upvoteFeatureRequst'
@@ -17,6 +17,7 @@ import Message from '../sharedComponents/Message'
 import PageTitle from '../styles/shared/PageTitle'
 import PageWrapper from '../styles/shared/PageWrapper'
 import { Navigate } from 'react-router-dom'
+import { useMemo } from 'react'
 
 const FeatureRequestCard = ({
   featureRequest,
@@ -27,7 +28,6 @@ const FeatureRequestCard = ({
   readonly: boolean
   refetch: () => void
 }) => {
-  const addAlert = useGlobalStore((store) => store.addAlert)
   const appUserDetails = useGlobalStore((store) => store.appUserDetails)
   const { mutateAsync, isPending, isSuccess, isError } = useMutation({
     mutationFn: (featureRequestId: string) =>
@@ -41,13 +41,17 @@ const FeatureRequestCard = ({
   const handleClick = useCallback(async () => {
     if (readonly) return
 
-    const response = await mutateAsync(featureRequest.id)
-    if (response.success) {
-      addAlert('Feature request upvoted', 'success')
-    } else {
-      addAlert('Error upvoting feature request', 'error')
-    }
-  }, [mutateAsync, featureRequest.id, readonly, addAlert])
+    await mutateAsync(featureRequest.id)
+  }, [mutateAsync, featureRequest.id, readonly])
+
+  const buttonMsg = useMemo(() => {
+    if (readonly) return ''
+    if (isPending) return 'Upvoting...'
+    if (isSuccess) return 'Upvoted'
+    if (featureRequest.votes.includes(appUserDetails?.id || ''))
+      return 'Upvoted'
+    return 'Upvote'
+  }, [readonly, isPending, isSuccess, featureRequest.votes, appUserDetails])
 
   if (isError) {
     return <Navigate to="/error500" />
@@ -101,7 +105,7 @@ const FeatureRequestCard = ({
             variant="contained"
             color="primary"
           >
-            {isPending ? 'Upvoting...' : 'Upvote'}
+            {buttonMsg}
           </Button>
         )}
       </Box>
@@ -111,8 +115,10 @@ const FeatureRequestCard = ({
 
 const NewFeatureSubmission = ({ refetch }: { refetch: () => void }) => {
   const [title, setTitle] = useState('')
+  const [success, setSuccess] = useState(false)
+  const [failure, setFailure] = useState(false)
+
   const [description, setDescription] = useState('')
-  const addAlert = useGlobalStore((store) => store.addAlert)
 
   const { mutateAsync, isPending } = useMutation({
     mutationFn: () => addFeatureRequest(title, description),
@@ -122,14 +128,25 @@ const NewFeatureSubmission = ({ refetch }: { refetch: () => void }) => {
     const response = await mutateAsync()
 
     if (response.success) {
-      addAlert('Feature request submitted', 'success')
+      setSuccess(true)
       setTitle('')
       setDescription('')
       refetch()
     } else {
-      addAlert('Error submitting feature request', 'error')
+      setFailure(true)
     }
-  }, [mutateAsync, addAlert, refetch])
+  }, [mutateAsync, refetch])
+
+  useEffect(() => {
+    setTimeout(() => {
+      if (success) {
+        setSuccess(false)
+      }
+      if (failure) {
+        setFailure(false)
+      }
+    }, 5000)
+  }, [success, failure])
 
   const handleTitleChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -182,6 +199,20 @@ const NewFeatureSubmission = ({ refetch }: { refetch: () => void }) => {
         >
           {isPending ? 'Submitting...' : 'Submit'}
         </Button>
+        {success && (
+          <Message
+            includeVerticalMargin
+            message="Thank you for your submission!"
+            color="success"
+          />
+        )}
+        {failure && (
+          <Message
+            includeVerticalMargin
+            message="Failed to send submission. Please try again later."
+            color="error"
+          />
+        )}
       </Box>
     </Box>
   )

@@ -19,12 +19,17 @@ const PaletteThumbnail = ({
   const theme = useTheme()
 
   return (
-    <Link href={`/palette/${palette.id}`} hideUnderline>
+    <Link href={`/palette/${palette.id}`} hideBaseUnderline hideHoverUnderline>
       <Box
         sx={{
           borderRadius: BORDER_RADIUS.ZERO.PX,
           padding: SPACING.SMALL.PX,
           backgroundColor: subtleBackground(theme.palette.mode),
+          '&:hover': {
+            backgroundColor: subtleBackground(theme.palette.mode, 'slightly'),
+          },
+          display: 'flex',
+          flexDirection: 'column',
         }}
         key={palette.id}
       >

@@ -1,13 +1,14 @@
 import { useDropzone } from 'react-dropzone'
-
+import { useState } from 'react'
 import Box from '@mui/material/Box'
-import useGlobalStore from '../../../store'
 import { sharedCSS } from './shared'
 import { logger } from '../../../services/logging'
 import { Capacitor } from '@capacitor/core'
+import Message from '../../../sharedComponents/Message'
+import { SPACING } from '../../../styles/styleConsts'
 
 const Dropzone = ({ onDrop }: { onDrop: (acceptedFiles: File[]) => void }) => {
-  const addAlert = useGlobalStore((state) => state.addAlert)
+  const [errorMessage, setErrorMessage] = useState<string | null>(null)
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
@@ -23,33 +24,38 @@ const Dropzone = ({ onDrop }: { onDrop: (acceptedFiles: File[]) => void }) => {
         'User performed a weird action trying to drop a file: ' +
           JSON.stringify(fileRejections)
       )
-      addAlert(fileRejections[0].errors[0].message, 'error')
+      setErrorMessage(fileRejections[0].errors[0].message)
     },
   })
 
   return (
     <Box
-      sx={{
-        ...sharedCSS,
-        border: `2px dashed`,
-        borderColor: 'divider',
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        cursor: 'pointer',
-      }}
-      {...getRootProps()}
+      sx={{ display: 'flex', flexDirection: 'column', gap: SPACING.MEDIUM.PX }}
     >
-      <input {...getInputProps()} />
-      {isDragActive ? (
-        <p>Drop photo here ...</p>
-      ) : (
-        <p>
-          {Capacitor.isNativePlatform()
-            ? 'Tap to select photo'
-            : 'Drag and drop photo or click to select photo'}
-        </p>
-      )}
+      {errorMessage && <Message message={errorMessage} color="error" />}
+      <Box
+        sx={{
+          ...sharedCSS,
+          border: `2px dashed`,
+          borderColor: 'divider',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          cursor: 'pointer',
+        }}
+        {...getRootProps()}
+      >
+        <input {...getInputProps()} />
+        {isDragActive ? (
+          <p>Drop photo here ...</p>
+        ) : (
+          <p>
+            {Capacitor.isNativePlatform()
+              ? 'Tap to select photo'
+              : 'Drag and drop photo or click to select photo'}
+          </p>
+        )}
+      </Box>
     </Box>
   )
 }
