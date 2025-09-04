@@ -44,7 +44,12 @@ const DropdownLinks = ({ onClose }: { onClose: () => void }) => {
         key === 'divider' ? (
           <Divider key={key + index} />
         ) : (
-          <Link key={key} hideUnderline href={ROUTES[key].href}>
+          <Link
+            key={key}
+            hideBaseUnderline
+            hideHoverUnderline
+            href={ROUTES[key].href}
+          >
             <MenuItem onClick={onClose}>{ROUTES[key].label}</MenuItem>
           </Link>
         )
@@ -77,7 +82,7 @@ const Navigation = () => {
         }}
       >
         <Typography variant="h1" sx={{ fontSize: FONT_SIZES.LARGE.PX }}>
-          <Link hideUnderline href={ROUTES.home.href}>
+          <Link href={ROUTES.home.href} hideBaseUnderline>
             {ROUTES.home.label}
             <sup
               style={{

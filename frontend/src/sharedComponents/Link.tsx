@@ -8,7 +8,8 @@ import merge from 'lodash/merge'
 type Props = {
   href: string
   children: React.ReactNode
-  hideUnderline?: boolean
+  hideHoverUnderline?: boolean
+  hideBaseUnderline?: boolean
   target?: '_blank' | '_self'
   sx?: SxProps
 }
@@ -16,7 +17,8 @@ type Props = {
 const Link = ({
   href,
   children,
-  hideUnderline = false,
+  hideHoverUnderline = false,
+  hideBaseUnderline = false,
   target = '_self',
   sx,
 }: Props) => {
@@ -26,13 +28,13 @@ const Link = ({
   // base styles for both link types
   const baseStyle = {
     color: isDark ? PALETTE.grayscale[100] : PALETTE.grayscale[900],
-    textDecoration: 'none',
+    textDecoration: hideBaseUnderline ? 'none' : 'underline',
     cursor: 'pointer',
     transition: 'text-decoration 0.2s',
   }
 
   // hover style for underline control
-  const hoverStyle = hideUnderline
+  const hoverStyle = hideHoverUnderline
     ? {
         textDecoration: 'none',
         color: isDark ? PALETTE.grayscale[0] : PALETTE.grayscale[1000],

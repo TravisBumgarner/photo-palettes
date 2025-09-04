@@ -60,7 +60,7 @@ const DropdownLinks = ({ onClose }: { onClose: () => void }) => {
           key === 'divider' ? (
             <Divider key="divider" />
           ) : (
-            <Link key={key} hideUnderline href={ROUTES[key].href}>
+            <Link key={key} hideBaseUnderline href={ROUTES[key].href}>
               <MenuItem onClick={onClose}>{ROUTES[key].label}</MenuItem>
             </Link>
           )
@@ -68,7 +68,7 @@ const DropdownLinks = ({ onClose }: { onClose: () => void }) => {
       </Box>
       <Box>
         {boringRoutes.map((key) => (
-          <Link key={key} hideUnderline href={ROUTES[key].href}>
+          <Link key={key} hideBaseUnderline href={ROUTES[key].href}>
             <MenuItem onClick={onClose}>{ROUTES[key].label}</MenuItem>
           </Link>
         ))}
@@ -102,7 +102,8 @@ const Navigation = () => {
         }}
       >
         <Link
-          hideUnderline
+          hideBaseUnderline
+          hideHoverUnderline
           sx={createLinkSX(theme.palette.mode)}
           href={ROUTES.create.href}
         >

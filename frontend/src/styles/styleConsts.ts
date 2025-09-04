@@ -1,6 +1,16 @@
-export const subtleBackground = (theme: 'dark' | 'light') => {
+export const subtleBackground = (
+  theme: 'dark' | 'light',
+  subtleness: 'very' | 'slightly' = 'very'
+) => {
   // This function could evolve over time. Adds a light overlay to the background.
   // I think, I only want one of these functions but could want more in the future.
+
+  if (subtleness === 'slightly') {
+    return theme === 'dark'
+      ? `color-mix(in hsl, ${PALETTE.grayscale[500]}, ${PALETTE.grayscale[900]} 90%)`
+      : `color-mix(in hsl, ${PALETTE.grayscale[100]}, ${PALETTE.grayscale[50]} 80%)`
+  }
+
   return theme === 'dark'
     ? `color-mix(in hsl, ${PALETTE.grayscale[800]}, ${PALETTE.grayscale[900]} 80%)`
     : `color-mix(in hsl, ${PALETTE.grayscale[100]}, ${PALETTE.grayscale[50]} 50%)`
