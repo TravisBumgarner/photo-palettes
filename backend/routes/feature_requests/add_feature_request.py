@@ -1,11 +1,10 @@
 import uuid
 
-from pydantic import BaseModel
-
 from consts import ErrorMsg
 from database.models import PermissionLevel
 from database.queries.feature_requests import add_feature_request
 from middleware.auth import RequestWithAuthState
+from pydantic import BaseModel
 from routes.shared import (
     BaseErrorResponse,
     BaseSuccessResponse,
@@ -27,6 +26,11 @@ class Body(BaseModel):
 ROUTE_NAME = "add_feature_request"
 
 
+def handle_request(title: str, description: str) -> SuccessResponse:
+    feature_request_id = add_feature_request(title, description)
+    return SuccessResponse(featureRequestId=feature_request_id)
+
+
 @feature_requests_router.post("/")
 async def post_feature_request(request: RequestWithAuthState, body: Body):
     if (
@@ -41,8 +45,7 @@ async def post_feature_request(request: RequestWithAuthState, body: Body):
         return BaseErrorResponse(message=ErrorMsg.CANNOT_PERFORM_ACTION)
 
     try:
-        result = add_feature_request(body.title, body.description)
-        return SuccessResponse(featureRequestId=result)
+        return handle_request(body.title, body.description)
     except Exception as e:
         log_error(e, ROUTE_NAME)
         return BaseErrorResponse(message=ErrorMsg.SOMETHING_WENT_WRONG)

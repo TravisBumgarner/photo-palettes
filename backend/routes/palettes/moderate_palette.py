@@ -1,11 +1,10 @@
 import uuid
 
-from pydantic import BaseModel
-
 from consts import ErrorMsg
 from database.models import ModerationStatus, PermissionLevel
 from database.queries.palettes import update_palette_moderation_status
 from middleware.auth import RequestWithAuthState
+from pydantic import BaseModel
 from routes.shared import (
     BaseErrorResponse,
     BaseSuccessResponse,
@@ -23,6 +22,11 @@ class Body(BaseModel):
 ROUTE_NAME = "moderate_palette"
 
 
+def handle_request(palette_id: uuid.UUID, status: ModerationStatus):
+    update_palette_moderation_status(palette_id, status)
+    return BaseSuccessResponse()
+
+
 @palettes_router.post("/moderate")
 async def moderate(
     request: RequestWithAuthState,
@@ -37,8 +41,7 @@ async def moderate(
         return BaseErrorResponse(message=ErrorMsg.CANNOT_PERFORM_ACTION)
 
     try:
-        update_palette_moderation_status(body.palette_id, body.status)
-        return BaseSuccessResponse()
+        return handle_request(body.palette_id, body.status)
     except Exception as error:
         log_error(error, ROUTE_NAME)
         return BaseErrorResponse(message=ErrorMsg.SOMETHING_WENT_WRONG)
