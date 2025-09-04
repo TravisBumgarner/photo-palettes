@@ -5,7 +5,7 @@ from algorithms.og import generate_og_image
 from consts import ErrorMsg
 from database import models
 from database.models import PermissionLevel
-from database.queries.palettes import get_palettes, update_palette
+from database.queries.palettes import PaletteUpdate, get_palettes, update_palette
 from middleware.auth import RequestWithAuthState
 from PIL import Image
 from routes.shared import (
@@ -28,6 +28,8 @@ def handle_request():
         for palette in palettes:
             image_path = palette.photo_details
             abs_image_path = get_photo_path(image_path)
+            # I have no idea why the following line works. In posting to Bsky, it doesn't and causes the app
+            # to crash because it's making a request of itself while in the middle of a request.
             response = requests.get(abs_image_path)
             response.raise_for_status()
             image = Image.open(BytesIO(response.content))
@@ -36,7 +38,8 @@ def handle_request():
             og_photo_details = save_photo(
                 og_image.getvalue(), f"{palette.id!s}_og", "webp"
             )
-            update_palette(palette.id, og_photo_details=og_photo_details)
+            palette_update = PaletteUpdate(og_photo_details=og_photo_details)
+            update_palette(palette.id, palette_update)
     return BaseSuccessResponse()
 
 
