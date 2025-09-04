@@ -1,6 +1,8 @@
 import type { ROUTES } from '../../consts'
 
-export const USER_ROUTES: (keyof typeof ROUTES)[] = [
+type Items = (keyof typeof ROUTES | 'divider')[]
+
+export const USER_ROUTES: Items = [
   'favorites',
   'profile',
   'feedback',
@@ -8,18 +10,13 @@ export const USER_ROUTES: (keyof typeof ROUTES)[] = [
   'logout',
 ]
 
-export const MODERATOR_ROUTES: (keyof typeof ROUTES)[] = [
-  ...USER_ROUTES,
-  'moderation',
-]
+export const MODERATOR_ROUTES: Items = [...USER_ROUTES, 'divider', 'moderation']
 
-export const ADMIN_ROUTES: (keyof typeof ROUTES)[] = [
-  ...MODERATOR_ROUTES,
-  'admin',
-]
+export const ADMIN_ROUTES: Items = [...MODERATOR_ROUTES, 'divider', 'admin']
 
-export const ANON_ROUTES: (keyof typeof ROUTES)[] = [
+export const ANON_ROUTES: Items = [
   'login',
   'signup',
+  'feedback',
   'featureRequests',
 ]

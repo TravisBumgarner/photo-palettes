@@ -89,3 +89,9 @@ export const DARK_BUTTON_STYLES = {
   background: PALETTE.grayscale[100],
   hoverBackground: PALETTE.grayscale[300],
 }
+
+export const Z_INDICES = {
+  MODAL: 998,
+  ALERT: 999,
+  APP_LOADING: 997
+}

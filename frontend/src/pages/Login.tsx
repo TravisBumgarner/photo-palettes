@@ -59,7 +59,9 @@ export default function LoginPage() {
       if (response.success) {
         const success = await loadUserIntoState()
         if (success) {
-          const hasTemporaryPalettes = await queries.getTemporaryPalettes()
+          const hasTemporaryPalettes =
+            (await queries.getTemporaryPalettes()).length > 0
+
           navigate(hasTemporaryPalettes ? '/create/' : '/')
         } else setError('Failed to load user details')
       } else {

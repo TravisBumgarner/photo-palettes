@@ -25,19 +25,19 @@ import useGlobalStore from '../store'
 import { PERMISSION_LEVEL } from '../types'
 import { ROUTES } from '../consts'
 
-const PrivateRoute = () => {
-  const appUserDetails = useGlobalStore((state) => state.appUserDetails)
-  return appUserDetails ? <Outlet /> : <Navigate to="/login" />
-}
-
-const PublicRoute = () => {
+const AnonymousRoute = () => {
   const appUserDetails = useGlobalStore((state) => state.appUserDetails)
   return !appUserDetails ? <Outlet /> : <Navigate to="/" />
 }
 
+const MemberRoute = () => {
+  const appUserDetails = useGlobalStore((state) => state.appUserDetails)
+  return appUserDetails ? <Outlet /> : <Navigate to="/login" />
+}
+
 const ModerationRoute = () => {
   const appUserDetails = useGlobalStore((state) => state.appUserDetails)
-  return (appUserDetails?.permissionLevel || PERMISSION_LEVEL.VISITOR) >=
+  return (appUserDetails?.permissionLevel || PERMISSION_LEVEL.ANONYMOUS) >=
     PERMISSION_LEVEL.MODERATOR ? (
     <Outlet />
   ) : (
@@ -47,7 +47,7 @@ const ModerationRoute = () => {
 
 const AdminRoute = () => {
   const appUserDetails = useGlobalStore((state) => state.appUserDetails)
-  return (appUserDetails?.permissionLevel || PERMISSION_LEVEL.VISITOR) >=
+  return (appUserDetails?.permissionLevel || PERMISSION_LEVEL.ANONYMOUS) >=
     PERMISSION_LEVEL.ADMIN ? (
     <Outlet />
   ) : (
@@ -73,11 +73,9 @@ const Router = () => (
       <Route path={ROUTES.moderation.href} element={<Moderation />} />
     </Route>
 
-    {/* Moderation only Routes */}
     <Route element={<AdminRoute />}>
       <Route path={ROUTES.admin.href} element={<Admin />} />
     </Route>
-
     {/* Conditional /create route */}
     <Route
       path={ROUTES.create.href}
@@ -88,13 +86,13 @@ const Router = () => (
     />
 
     {/* Public only Routes */}
-    <Route element={<PublicRoute />}>
+    <Route element={<AnonymousRoute />}>
       <Route path={ROUTES.login.href} element={<Login />} />
       <Route path={ROUTES.signup.href} element={<Signup />} />
     </Route>
 
     {/* Protected routes */}
-    <Route element={<PrivateRoute />}>
+    <Route element={<MemberRoute />}>
       <Route path={ROUTES.logout.href} element={<Logout />} />
       <Route path={ROUTES.profile.href} element={<Profile />} />
       <Route path={ROUTES.favorites.href} element={<Favorites />} />

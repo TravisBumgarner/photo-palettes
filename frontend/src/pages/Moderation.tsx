@@ -8,19 +8,13 @@ import { logger } from '../services/logging'
 import PageTitle from '../styles/shared/PageTitle'
 import PageWrapper from '../styles/shared/PageWrapper'
 import ThumbnailGridDisplay from '../styles/shared/ThumbnailGallery'
-import {
-  MODERATION_STATUS,
-  MODERATION_STATUS_LABEL,
-  PERMISSION_LEVEL,
-} from '../types'
+import { MODERATION_STATUS, MODERATION_STATUS_LABEL } from '../types'
 import Loading from '../sharedComponents/Loading'
 import Message from '../sharedComponents/Message'
 import ModerationPanel from '../sharedComponents/ModerationPanel'
 import PaletteThumbnail from '../sharedComponents/PaletteThumbnail'
-import useGlobalStore from '../store'
 import { PAGINATION_SIZE } from '../consts'
 import Pagination from '../sharedComponents/Pagination'
-import { Navigate } from 'react-router-dom'
 
 const STATUS_TABS = [
   MODERATION_STATUS.AWAITING_MODERATION,
@@ -31,7 +25,6 @@ const STATUS_TABS = [
 const Moderation = () => {
   const [filterTabIndex, setFilterTabIndex] = useState(0)
   const [page, setPage] = useState(1)
-  const appUserDetails = useGlobalStore((state) => state.appUserDetails)
   const { data, isLoading, error, refetch } = useQuery({
     queryKey: ['moderation', filterTabIndex, page],
     queryFn: () =>
@@ -99,13 +92,6 @@ const Moderation = () => {
       </>
     )
   }, [data, error, isLoading, refetch, filterTabIndex, handlePageChange, page])
-
-  if (
-    !appUserDetails ||
-    appUserDetails?.permissionLevel < PERMISSION_LEVEL.MODERATOR
-  ) {
-    return <Navigate to="/" />
-  }
 
   return (
     <PageWrapper width="full" minHeight>

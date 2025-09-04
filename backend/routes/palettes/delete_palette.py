@@ -1,12 +1,14 @@
 import uuid
 
 from consts import ErrorMsg
-from database.models import Palette
+from database.models import PermissionLevel
 from database.queries.palettes import delete_palette_by_id, get_palette_by_id
 from middleware.auth import RequestWithAuthState
-from routes.shared import AuthedRequest, BaseErrorResponse, BaseSuccessResponse, InvalidRequest
+from routes.shared import (
+    BaseErrorResponse,
+    BaseSuccessResponse,
+)
 from services.logger import log_error
-from utils.auth import get_moderator_auth
 from utils.photos import delete_photo
 
 from .palettes_router import palettes_router
@@ -14,44 +16,37 @@ from .palettes_router import palettes_router
 ROUTE_NAME = "delete_palette"
 
 
-def parse_request(
-    raw_request: RequestWithAuthState, palette: Palette | None
-) -> tuple[AuthedRequest, Palette] | tuple[InvalidRequest, None]:
-    moderator_auth = get_moderator_auth(raw_request)
-
-    if not moderator_auth:
-        return (InvalidRequest(error=ErrorMsg.CANNOT_PERFORM_ACTION), None)
-
+def handle_request(id: str, app_user_id: uuid.UUID):
+    palette = get_palette_by_id(uuid.UUID(id), app_user_id)
     if not palette:
-        return (InvalidRequest(error=ErrorMsg.RESOURCE_NOT_FOUND), None)
+        return BaseErrorResponse(message=ErrorMsg.RESOURCE_NOT_FOUND)
 
-    return (
-        AuthedRequest(app_user_id=moderator_auth.app_user_id, auth_id=moderator_auth.auth_id),
-        palette,
-    )
+    delete_photo(palette.photo_details)
+    delete_photo(palette.og_photo_details)
+    delete_palette_by_id(palette.id)
+    return BaseSuccessResponse()
 
 
 @palettes_router.delete("/id/{id}")
 async def delete_palette(
-    raw_request: RequestWithAuthState,
+    request: RequestWithAuthState,
     id: str,
 ):
+    if (
+        request.state.permission_level < PermissionLevel.MODERATOR
+        or request.state.app_user_id is None
+    ):
+        log_error(
+            RuntimeError("User does not have permission to delete palettes"),
+            ROUTE_NAME,
+            app_user_id=request.state.app_user_id,
+        )
+        return BaseErrorResponse(
+            message=ErrorMsg.CANNOT_PERFORM_ACTION,
+        )
+
     try:
-        palette = get_palette_by_id(uuid.UUID(id), raw_request.state.app_user_id)
-        [parsed_request, palette] = parse_request(raw_request, palette)
-
-        match parsed_request:
-            case InvalidRequest(error=error):
-                log_error(
-                    RuntimeError(error), ROUTE_NAME, app_user_id=raw_request.state.app_user_id
-                )
-                return BaseErrorResponse(message=error)
-
-            case AuthedRequest(app_user_id=_app_user_id):
-                delete_photo(palette.photo_details)
-                delete_photo(palette.og_photo_details)
-                delete_palette_by_id(palette.id)
-                return BaseSuccessResponse()
+        return handle_request(id, request.state.app_user_id)
     except Exception as e:
         log_error(e, ROUTE_NAME)
         return BaseErrorResponse(message=ErrorMsg.SOMETHING_WENT_WRONG)

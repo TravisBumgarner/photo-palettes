@@ -19,6 +19,7 @@ const Admin = () => {
       title: 'Backfill Open Graph Tags',
       body: 'Are you sure you want to backfill Open Graph tags for all images?',
       overrideConfirmation: true,
+      showCancel: true,
       confirmationCallback: async () => {
         const response = await backfillOpenGraphImages()
         if (response.success) {

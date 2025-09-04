@@ -1,7 +1,7 @@
 import { z } from 'zod'
 
 export const PERMISSION_LEVEL = {
-  VISITOR: -1,
+  ANONYMOUS: -1,
   MEMBER: 0,
   MODERATOR: 2,
   ADMIN: 5,

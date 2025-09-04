@@ -16,6 +16,7 @@ import NativeNavigation from './components/Navigation/Navigation.Native'
 import WebNavigation from './components/Navigation/Navigation.Web'
 import PlatformSpecificStyling from './styles/PlatformSpecificStyling'
 import useCheckTemporaryPalettesAndRedirect from './hooks/useCheckTemporaryPalettesAndRedirect'
+import { Z_INDICES } from './styles/styleConsts'
 
 const queryClient = new QueryClient()
 
@@ -38,7 +39,7 @@ function App() {
           top: 0,
           bottom: 0,
           position: 'fixed',
-          zIndex: 1000,
+          zIndex: Z_INDICES.APP_LOADING,
           backgroundColor: 'background.paper',
         }}
       >

@@ -20,6 +20,7 @@ import {
   MODERATOR_ROUTES,
   USER_ROUTES,
 } from './Navigation.shared'
+import Divider from '@mui/material/Divider'
 
 const DropdownLinks = ({ onClose }: { onClose: () => void }) => {
   const appUserDetails = useGlobalStore((state) => state.appUserDetails)
@@ -55,11 +56,15 @@ const DropdownLinks = ({ onClose }: { onClose: () => void }) => {
       }}
     >
       <Box>
-        {userSpecificRouteKeys.map((key) => (
-          <Link key={key} hideUnderline href={ROUTES[key].href}>
-            <MenuItem onClick={onClose}>{ROUTES[key].label}</MenuItem>
-          </Link>
-        ))}
+        {userSpecificRouteKeys.map((key) =>
+          key === 'divider' ? (
+            <Divider key="divider" />
+          ) : (
+            <Link key={key} hideUnderline href={ROUTES[key].href}>
+              <MenuItem onClick={onClose}>{ROUTES[key].label}</MenuItem>
+            </Link>
+          )
+        )}
       </Box>
       <Box>
         {boringRoutes.map((key) => (

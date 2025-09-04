@@ -4,18 +4,20 @@ from io import BytesIO
 
 from fastapi import Form, UploadFile
 from PIL import Image
-from pydantic import BaseModel, validator
+from pydantic import BaseModel, field_validator
 
 from algorithms.og import generate_og_image
 from algorithms.utils import scale_image
 from consts import ErrorMsg
-from database.models import Palette, PaletteColor
+from database.models import Palette, PaletteColor, PermissionLevel
 from database.queries.palettes import create_palette
 from middleware.auth import RequestWithAuthState
-from routes.shared import AuthedRequest, BaseErrorResponse, BaseSuccessResponse, InvalidRequest
+from routes.shared import (
+    BaseErrorResponse,
+    BaseSuccessResponse,
+)
 from services.logger import log_error
 from services.pushover import send_pushover_notification
-from utils.auth import get_user_auth
 from utils.blurhash import encode_blurhash
 from utils.colors import hex_to_rgb
 from utils.photos import save_photo
@@ -32,7 +34,7 @@ class PaletteItem(BaseModel):
     color: str
     percent_location: list[float]
 
-    @validator("color")
+    @field_validator("color")
     def color_must_be_valid_hex(cls, v):  # noqa N805
         if not isinstance(v, str):
             raise ValueError("color must be a string")
@@ -40,7 +42,7 @@ class PaletteItem(BaseModel):
             raise ValueError("color must be a valid hex color string")
         return v
 
-    @validator("percent_location")
+    @field_validator("percent_location")
     def percent_location_must_be_two_floats(cls, v):  # noqa N805
         if not isinstance(v, list) or len(v) != TUPLE_SIZE:
             raise ValueError(f"percent_location must be a list of {TUPLE_SIZE} floats")
@@ -49,99 +51,88 @@ class PaletteItem(BaseModel):
         return [float(x) for x in v]
 
 
-def parse_request(
-    raw_request: RequestWithAuthState, palette: str, image: UploadFile
-) -> tuple[AuthedRequest, list[PaletteItem], UploadFile] | tuple[InvalidRequest, None, None]:
-    user_auth = get_user_auth(raw_request)
+class SuccessResponse(BaseSuccessResponse):
+    paletteId: uuid.UUID  # noqa #815
 
-    if not user_auth:
-        return (InvalidRequest(error=ErrorMsg.CANNOT_PERFORM_ACTION), None, None)
+
+def handle_request(
+    image: UploadFile,
+    name: str,
+    parsed_palette: list[PaletteItem],
+    request: RequestWithAuthState,
+):
+    palette_id = uuid.uuid4()
+
+    pil_image = Image.open(image.file)
+    thumbnail = scale_image(pil_image, 200)
+
+    buffer = BytesIO()
+    pil_image.save(buffer, format="JPEG")
+    img_bytes = buffer.getvalue()
+    photo_details = save_photo(img_bytes, str(palette_id), "jpeg")
+
+    hex_colors = [item.color for item in parsed_palette]
+    og_image = generate_og_image(pil_image, hex_colors)
+
+    blurhash = encode_blurhash(thumbnail)
+
+    og_photo_details = save_photo(og_image.getvalue(), f"{palette_id!s}_og", "webp")
+
+    colors = []
+    for swatch in parsed_palette:
+        r, g, b = hex_to_rgb(swatch.color)
+        colors.append(
+            PaletteColor(
+                hex=swatch.color,
+                r=r,
+                g=g,
+                b=b,
+                rgb_cube=f"({r},{g},{b})",
+                palette_id=palette_id,
+                percent_location=[round(x, 2) for x in swatch.percent_location],
+            )
+        )
+
+    new_palette = Palette(
+        id=palette_id,
+        name=name,
+        app_user_id=request.state.app_user_id,
+        photo_details=photo_details,
+        og_photo_details=og_photo_details,
+        blurhash=blurhash,
+        aspect_ratio=pil_image.width / pil_image.height,
+        colors=colors,
+    )
+
+    create_palette(new_palette)
+
+    send_pushover_notification(f"New palette submitted: {name}")
+    return SuccessResponse(
+        paletteId=new_palette.id,
+    )
+
+
+@palettes_router.post("/create")
+async def create(
+    request: RequestWithAuthState,
+    image: UploadFile,
+    name: str = Form(...),
+    palette: str = Form(...),
+):
+    if request.state.permission_level < PermissionLevel.MEMBER:
+        return BaseErrorResponse(message=ErrorMsg.CANNOT_PERFORM_ACTION)
 
     if not image:
-        return (InvalidRequest(error=ErrorMsg.RESOURCE_NOT_FOUND), None, None)
+        return BaseErrorResponse(message=ErrorMsg.RESOURCE_NOT_FOUND)
 
     json_palette = json.loads(palette)
     try:
         parsed_palette = [PaletteItem(**item) for item in json_palette]
     except Exception as e:
-        return (InvalidRequest(error=str(e)), None, None)
+        return BaseErrorResponse(message=str(e))
 
-    return (
-        AuthedRequest(auth_id=user_auth.auth_id, app_user_id=user_auth.app_user_id),
-        parsed_palette,
-        image,
-    )
-
-
-class SuccessResponse(BaseSuccessResponse):
-    paletteId: uuid.UUID  # noqa #815
-
-
-@palettes_router.post("/create")
-async def create(
-    raw_request: RequestWithAuthState,
-    image: UploadFile,
-    name: str = Form(...),
-    palette: str = Form(...),
-):
     try:
-        [parsed_request, parsed_palette, parsed_image] = parse_request(raw_request, palette, image)
-
-        match parsed_request:
-            case InvalidRequest(error=error):
-                log_error(RuntimeError(error), ROUTE_NAME)
-                return BaseErrorResponse(message=error)
-
-            case AuthedRequest(app_user_id=app_user_id):
-                palette_id = uuid.uuid4()
-
-                pil_image = Image.open(parsed_image.file)
-                thumbnail = scale_image(pil_image, 200)
-
-                buffer = BytesIO()
-                pil_image.save(buffer, format="JPEG")
-                img_bytes = buffer.getvalue()
-                photo_details = save_photo(img_bytes, str(palette_id), "jpeg")
-
-                hex_colors = [item.color for item in parsed_palette]
-                og_image = generate_og_image(pil_image, hex_colors)
-
-                blurhash = encode_blurhash(thumbnail)
-
-                og_photo_details = save_photo(og_image.getvalue(), f"{palette_id!s}_og", "webp")
-
-                colors = []
-                for swatch in parsed_palette:
-                    r, g, b = hex_to_rgb(swatch.color)
-                    colors.append(
-                        PaletteColor(
-                            hex=swatch.color,
-                            r=r,
-                            g=g,
-                            b=b,
-                            rgb_cube=f"({r},{g},{b})",
-                            palette_id=palette_id,
-                            percent_location=[round(x, 2) for x in swatch.percent_location],
-                        )
-                    )
-
-                palette = Palette(
-                    id=palette_id,
-                    name=name,
-                    app_user_id=app_user_id,
-                    photo_details=photo_details,
-                    og_photo_details=og_photo_details,
-                    blurhash=blurhash,
-                    aspect_ratio=pil_image.width / pil_image.height,
-                    colors=colors,
-                )
-
-                create_palette(palette)
-
-                send_pushover_notification(f"New palette submitted: {name}")
-                return SuccessResponse(
-                    paletteId=palette.id,
-                )
+        return handle_request(image, name, parsed_palette, request)
 
     except Exception as e:
         log_error(e, ROUTE_NAME)

@@ -12,19 +12,12 @@ from .feature_requests_router import feature_requests_router
 ROUTE_NAME = "get_feature_request_list"
 
 
-def parse_request():
-    # Shows no parsing required.
-    pass
-
-
 class SuccessResponse(BaseSuccessResponse):
     featureRequests: list[FeatureRequestResponse]  # noqa #815
 
 
 @feature_requests_router.get("/")
 async def get_list():
-    parse_request()
-
     try:
         feature_requests = get_votes()
         return SuccessResponse(
