@@ -15,7 +15,9 @@ PRODUCTION_UPLOADS_PREFIX = "cloudinary:/"
 
 
 def get_development_uploads_dir():
-    return os.path.join(os.path.dirname(os.path.dirname(__file__)), DEVELOPMENT_UPLOADS_DIR)
+    return os.path.join(
+        os.path.dirname(os.path.dirname(__file__)), DEVELOPMENT_UPLOADS_DIR
+    )
 
 
 def save_photo(photo: bytes, basename: str, extension: str) -> str:
@@ -33,6 +35,7 @@ def save_photo(photo: bytes, basename: str, extension: str) -> str:
 
 
 def get_photo_path(photo_details: str) -> str:
+    # Expects a photo path directly from the database.
     # More so for development, this will return images from cloudinary and local storage depending
     # on the prefix and not the environment.
     if photo_details.startswith(PRODUCTION_UPLOADS_PREFIX):
@@ -48,6 +51,8 @@ def delete_photo(photo_details: str) -> None:
         return delete_image_from_cloudinary(public_id)
 
     # For local development, we can just remove the file from the filesystem
-    file_path = os.path.join(get_development_uploads_dir(), os.path.basename(photo_details))
+    file_path = os.path.join(
+        get_development_uploads_dir(), os.path.basename(photo_details)
+    )
     if os.path.exists(file_path):
         os.remove(file_path)

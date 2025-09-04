@@ -18,6 +18,16 @@ import {
 // Base theme options shared between light and dark
 const baseThemeOptions: ThemeOptions = {
   components: {
+    MuiSwitch: {
+      styleOverrides: {
+        track: {
+          borderRadius: 0,
+        },
+        root: {
+          borderRadius: 0,
+        },
+      },
+    },
     MuiTooltip: {
       styleOverrides: {
         tooltip: {
@@ -125,6 +135,22 @@ const lightThemeOptions: ThemeOptions = {
     },
   },
   components: {
+    MuiSwitch: {
+      styleOverrides: {
+        switchBase: {
+          color: PALETTE.grayscale[500],
+          '&.Mui-checked': {
+            color: PALETTE.grayscale[700],
+          },
+          '&.Mui-checked + .MuiSwitch-track': {
+            backgroundColor: PALETTE.grayscale[700],
+          },
+        },
+        track: {
+          backgroundColor: PALETTE.grayscale[400],
+        },
+      },
+    },
     MuiTabs: {
       styleOverrides: {
         indicator: {
@@ -254,6 +280,25 @@ const darkThemeOptions: ThemeOptions = {
     },
   },
   components: {
+    MuiSwitch: {
+      styleOverrides: {
+        thumb: {
+          borderRadius: 0,
+        },
+        switchBase: {
+          color: PALETTE.grayscale[500],
+          '&.Mui-checked': {
+            color: PALETTE.grayscale[200],
+          },
+          '&.Mui-checked + .MuiSwitch-track': {
+            backgroundColor: PALETTE.grayscale[200],
+          },
+        },
+        track: {
+          backgroundColor: PALETTE.grayscale[600],
+        },
+      },
+    },
     MuiTabs: {
       styleOverrides: {
         indicator: {

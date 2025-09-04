@@ -2,15 +2,13 @@ import os
 from contextlib import asynccontextmanager
 
 import sentry_sdk
+from config import get_config
+from database import models
+from database.engine import db_engine
 
 # Update the import to match the actual function name in palettes.py
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
-from supabase import Client, create_client
-
-from config import get_config
-from database import models
-from database.engine import db_engine
 from middleware.auth import create_auth_middleware
 from middleware.cors import setup_cors
 from middleware.filesize import LimitUploadSizeMiddleware
@@ -20,6 +18,8 @@ from routes.feature_requests.feature_requests_router import feature_requests_rou
 from routes.ok import router as ok_router
 from routes.palettes.palettes_router import palettes_router
 from routes.users.users_router import users_router
+from supabase import Client, create_client
+from services.bsky import init_bsky_client
 
 config = get_config()
 
@@ -46,6 +46,11 @@ uploads_dir = os.path.join(os.path.dirname(__file__), "uploads")
 
 os.makedirs(uploads_dir, exist_ok=True)
 app.mount("/uploads", StaticFiles(directory=uploads_dir), name="uploads")
+
+
+@app.on_event("startup")
+def startup_event():
+    init_bsky_client()
 
 
 @asynccontextmanager

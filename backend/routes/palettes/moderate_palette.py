@@ -2,13 +2,14 @@ import uuid
 
 from consts import ErrorMsg
 from database.models import ModerationStatus, PermissionLevel
-from database.queries.palettes import update_palette_moderation_status
+from database.queries.palettes import PaletteUpdate, get_palette_by_id, update_palette
 from middleware.auth import RequestWithAuthState
 from pydantic import BaseModel
 from routes.shared import (
     BaseErrorResponse,
     BaseSuccessResponse,
 )
+from services.bsky import post_to_bsky
 from services.logger import log_error
 
 from .palettes_router import palettes_router
@@ -17,13 +18,32 @@ from .palettes_router import palettes_router
 class Body(BaseModel):
     palette_id: uuid.UUID
     status: ModerationStatus
+    share_to_socials: bool = False
 
 
 ROUTE_NAME = "moderate_palette"
 
 
-def handle_request(palette_id: uuid.UUID, status: ModerationStatus):
-    update_palette_moderation_status(palette_id, status)
+def handle_request(
+    palette_id: uuid.UUID, status: ModerationStatus, share_to_socials: bool
+):
+    palette_update = PaletteUpdate(moderation_status=status)
+    update_palette(palette_id, palette_update)
+
+    if status == ModerationStatus.APPROVED and share_to_socials:
+        palette = get_palette_by_id(palette_id)
+        if not palette:
+            raise RuntimeError("Palette not found after update")
+
+        post_to_bsky(
+            title=palette.name,
+            colors=" ".join([c.hex for c in palette.colors]),
+            image_path=palette.og_photo_details,
+            image_alt=f"{palette.name} - Colors: {' '.join([c.hex for c in palette.colors])}",
+            author_id=str(palette.app_user_id),
+            palette_id=str(palette.id),
+        )
+
     return BaseSuccessResponse()
 
 
@@ -41,7 +61,7 @@ async def moderate(
         return BaseErrorResponse(message=ErrorMsg.CANNOT_PERFORM_ACTION)
 
     try:
-        return handle_request(body.palette_id, body.status)
+        return handle_request(body.palette_id, body.status, body.share_to_socials)
     except Exception as error:
         log_error(error, ROUTE_NAME)
         return BaseErrorResponse(message=ErrorMsg.SOMETHING_WENT_WRONG)

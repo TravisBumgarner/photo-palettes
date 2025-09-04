@@ -40,9 +40,9 @@ const DropdownLinks = ({ onClose }: { onClose: () => void }) => {
   }, [appUserDetails])
   return (
     <>
-      {routeKeys.map((key) =>
+      {routeKeys.map((key, index) =>
         key === 'divider' ? (
-          <Divider key={key} />
+          <Divider key={key + index} />
         ) : (
           <Link key={key} hideUnderline href={ROUTES[key].href}>
             <MenuItem onClick={onClose}>{ROUTES[key].label}</MenuItem>

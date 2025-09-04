@@ -15,6 +15,9 @@ import useGlobalStore from '../store'
 import { BORDER_RADIUS, SPACING } from '../styles/styleConsts'
 import { activeModalSignal } from '../signals'
 import { MODAL_ID } from './Modal/Modal.types'
+import Switch from '@mui/material/Switch'
+import FormGroup from '@mui/material/FormGroup'
+import FormControlLabel from '@mui/material/FormControlLabel'
 
 const ModerationPanel = ({
   refetch,
@@ -26,13 +29,19 @@ const ModerationPanel = ({
   paletteId: string
 }) => {
   const [isFetching, setIsFetching] = useState(false)
+  const [shareToSocials, setShareToSocials] = useState(false)
   const appUserDetails = useGlobalStore((state) => state.appUserDetails)
   const addAlert = useGlobalStore((store) => store.addAlert)
+
   const handleApprove = useCallback(async () => {
     setIsFetching(true)
     try {
-      const response = moderatePalette(paletteId, MODERATION_STATUS.APPROVED)
-      if ((await response).success) {
+      const response = await moderatePalette({
+        paletteId,
+        status: MODERATION_STATUS.APPROVED,
+        shareToSocials,
+      })
+      if (response.success) {
         refetch?.()
       } else {
         addAlert('Failed to moderate palette', 'error')
@@ -41,15 +50,15 @@ const ModerationPanel = ({
       // This shouldn't matter since refetch will clear it out.
       setIsFetching(false)
     }
-  }, [paletteId, refetch, addAlert])
+  }, [paletteId, refetch, addAlert, shareToSocials])
 
   const handleReject = useCallback(async () => {
     setIsFetching(true)
     try {
-      const response = await moderatePalette(
+      const response = await moderatePalette({
         paletteId,
-        MODERATION_STATUS.REJECTED
-      )
+        status: MODERATION_STATUS.REJECTED,
+      })
       if (response.success) {
         refetch?.()
       } else {
@@ -102,6 +111,17 @@ const ModerationPanel = ({
         margin: `${SPACING.LARGE.PX} 0`,
       }}
     >
+      <FormGroup>
+        <FormControlLabel
+          control={
+            <Switch
+              checked={shareToSocials}
+              onChange={() => setShareToSocials(!shareToSocials)}
+            />
+          }
+          label="Share to socials"
+        />
+      </FormGroup>
       <Button
         variant="outlined"
         disabled={isFetching || moderationStatus === MODERATION_STATUS.APPROVED}

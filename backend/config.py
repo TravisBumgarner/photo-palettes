@@ -21,6 +21,12 @@ class SupabaseSettings(BaseServiceSettings):
     key: str = Field(default="")
 
 
+class BskySettings(BaseServiceSettings):
+    model_config = SettingsConfigDict(env_prefix="BSKY_")
+    email: str = Field(default="")
+    password: str = Field(default="")
+
+
 class Config(BaseSettings):
     environment: str = Field(default="development")
 
@@ -31,6 +37,7 @@ class Config(BaseSettings):
     database_url: str = Field(default="postgresql://localhost:5432/photo_palettes")
     supabase: SupabaseSettings = Field(default_factory=lambda: SupabaseSettings())
     pushover: PushoverSettings = Field(default_factory=lambda: PushoverSettings())
+    bsky: BskySettings = Field(default_factory=lambda: BskySettings())
     cloudinary_url: str = Field(default="")
     model_config = SettingsConfigDict(env_file=".env", extra="ignore")
     debug_cloudinary_locally: bool = Field(default=False)
