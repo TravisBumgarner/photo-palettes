@@ -1,11 +1,37 @@
 import Box from '@mui/material/Box'
 import { type TSwatch } from '../../../types'
 import Swatch from './Swatch'
+import type { Details } from '../Palette.types'
+import { type ColorMix } from '../../../types'
+import Gradient from './Gradient'
+import { getColorSchemes } from '../../../utils/color'
+import { SPACING } from '../../../styles/styleConsts'
 
-const ColorDetails = ({ swatch }: { swatch: TSwatch }) => {
+const ColorDetails = ({
+  swatch,
+  details,
+  colorMix,
+}: {
+  swatch: TSwatch
+  details: Details
+  colorMix: ColorMix
+}) => {
+  const schemes = getColorSchemes(swatch.hex)[colorMix]
   return (
-    <Box sx={{ height: '1000px' }}>
+    <Box
+      sx={{
+        display: 'flex',
+        gap: SPACING.MEDIUM.PX,
+        margin: `0 0 ${SPACING.HUGE.PX} 0`,
+        flexGrow: 1,
+      }}
+    >
       <Swatch swatch={swatch} />
+      <Box sx={{ display: 'flex', gap: SPACING.TINY.PX }}>
+        {schemes.map((hexColor) => (
+          <Gradient key={hexColor} hexColor={hexColor} details={details} />
+        ))}
+      </Box>
     </Box>
   )
 }

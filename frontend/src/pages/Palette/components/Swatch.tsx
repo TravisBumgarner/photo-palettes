@@ -34,18 +34,21 @@ const Swatch = ({ swatch: { hex, r, g, b } }: { swatch: TSwatch }) => {
 
   const sharedTextStyles: SxProps = {
     color: `${primaryText.toString()} !important`,
-    fontWeight: 'bold',
+    fontSize: FONT_SIZES.SMALL.PX,
   }
 
   return (
     <Box
-      sx={{ position: 'sticky', top: '30px', margin: `${SPACING.MEDIUM.PX} 0` }}
+      sx={{
+        flexBasis: '120px',
+        flexShrink: 0,
+        flexGrow: 0,
+      }}
     >
       <Box
         sx={{
           padding: SPACING.SMALL.PX,
           aspectRatio: '1/1',
-          width: '200px',
           backgroundColor: primaryBackground.toString(),
         }}
       >
@@ -58,7 +61,7 @@ const Swatch = ({ swatch: { hex, r, g, b } }: { swatch: TSwatch }) => {
         <Typography
           sx={{
             color: secondaryText.toString(),
-            fontSize: FONT_SIZES.LARGE.PX,
+            fontSize: FONT_SIZES.MEDIUM.PX,
             fontWeight: 'bold',
             textAlign: 'right',
             padding: SPACING.SMALL.PX,

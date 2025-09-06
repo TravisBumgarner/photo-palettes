@@ -6,7 +6,7 @@ import { SPACING } from '../../../styles/styleConsts'
 import PageTitle from '../../../styles/shared/PageTitle'
 import Link from '../../../sharedComponents/Link'
 import ColorBar from '../../../sharedComponents/ColorBar'
-import Share from '../../../sharedComponents/Share'
+// import Share from '../../../sharedComponents/Share'
 
 const Summary = ({
   palette: {
@@ -19,7 +19,7 @@ const Summary = ({
     colors,
     hasUserFavorited,
     id,
-    ogPhotoUrl,
+    // ogPhotoUrl,
   },
   refetch,
 }: {
@@ -56,11 +56,6 @@ const Summary = ({
           />
         </Box>
       </Box>
-      <Share
-        url={`palette/${id}`}
-        text={`${name} by #${appUserId.slice(0, 6)}`}
-        media={ogPhotoUrl}
-      />
       <ColorBar height={15} colors={colors.map((c) => c.hex)} />
       <BlurImage
         alt={`${name} thumbnail`}

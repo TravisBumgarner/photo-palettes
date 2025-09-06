@@ -1,4 +1,5 @@
-import { type Details, type ColorMix } from './Palette.types'
+import { type Details } from './Palette.types'
+import { type ColorMix } from '../../types'
 
 export const DETAILS: Details[] = ['none', 'hex', 'rgb', 'hsl', 'steps']
 
@@ -15,6 +16,7 @@ export const COLOR_MIXES: ColorMix[] = [
   'analogous',
   'triadic',
   'tetradic',
+  'splitComplementary',
 ]
 
 export const COLOR_MIXES_MAP: Record<ColorMix, string> = {
@@ -22,4 +24,13 @@ export const COLOR_MIXES_MAP: Record<ColorMix, string> = {
   analogous: 'Analogous',
   triadic: 'Triadic',
   tetradic: 'Tetradic',
+  splitComplementary: 'Split Complementary',
 }
+
+export const BACKGROUND_COLORS: string[] = [
+  '#fff',
+  '#ccc',
+  '#888',
+  '#444',
+  '#000',
+]

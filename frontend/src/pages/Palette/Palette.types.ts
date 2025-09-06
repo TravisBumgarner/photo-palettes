@@ -1,12 +1,9 @@
-// Controls state types
-export type BackgroundColor = 'white' | 'black' | 'transparent'
+import type { ColorMix } from '../../types'
+
 export type Details = 'none' | 'hex' | 'rgb' | 'hsl' | 'steps'
-export type ColorMix = 'complementary' | 'analogous' | 'triadic' | 'tetradic'
-export type ShareFormat = 'png' | 'jpg' | 'svg'
 
 export interface PaletteControlsState {
-  background: BackgroundColor
+  background: string
   details: Details
   mix: ColorMix
-  share: ShareFormat
 }

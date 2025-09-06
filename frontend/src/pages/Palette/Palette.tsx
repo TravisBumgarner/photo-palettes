@@ -1,6 +1,6 @@
 import React from 'react'
 import Box from '@mui/material/Box'
-import { SPACING } from '../../styles/styleConsts'
+import { SPACING, subtleBackground } from '../../styles/styleConsts'
 // import { MODERATION_STATUS } from '../../types'
 // import { getContrastColor } from '../../utils/getContrastColor'
 import Message from '../../sharedComponents/Message'
@@ -20,16 +20,17 @@ import Summary from './components/Summary'
 import Controls from './components/Controls'
 import type { PaletteControlsState } from './Palette.types'
 import ColorDetails from './components/ColorDetails'
+import { BACKGROUND_COLORS } from './Palette.consts'
+import Share from '../../sharedComponents/Share'
 
 const Palette = () => {
   const params = useParams()
 
   // Controls state
   const [controls, setControls] = React.useState<PaletteControlsState>({
-    background: 'white',
+    background: BACKGROUND_COLORS[0],
     details: 'none',
     mix: 'complementary',
-    share: 'png',
   })
 
   const { data, isLoading, error, refetch } = useQuery({
@@ -59,9 +60,19 @@ const Palette = () => {
           <Summary palette={data.palette} refetch={refetch} />
           <Controls controls={controls} setControls={setControls} />
         </LeftColumn>
-        <RightColumn>
+        <RightColumn sx={{ backgroundColor: controls.background }}>
+          <Share
+            url={`palette/${data.palette.id}`}
+            text={`${data.palette.name} by #${data.palette.appUserId.slice(0, 6)}`}
+            media={data.palette.ogPhotoUrl}
+          />
           {data.palette.colors.map((swatch) => (
-            <ColorDetails swatch={swatch} key={swatch.id} />
+            <ColorDetails
+              colorMix={controls.mix}
+              details={controls.details}
+              swatch={swatch}
+              key={swatch.id}
+            />
           ))}
         </RightColumn>
       </Container>
@@ -70,17 +81,21 @@ const Palette = () => {
 }
 
 const LeftColumn = styled(Box)(({ theme }) => ({
-  width: '300px',
-  borderRight: '2px solid',
-  borderColor: theme.palette.divider,
-  paddingRight: `${SPACING.MEDIUM.PX}`,
-  marginRight: `${SPACING.MEDIUM.PX}`,
+  flexBasis: '300px',
+  flexShrink: 0,
+  padding: `${SPACING.MEDIUM.PX}`,
+
   position: 'sticky',
   top: '0px',
   left: '0px',
+  backgroundColor: subtleBackground(theme.palette.mode),
 }))
 
-const RightColumn = styled(Box)(() => ({}))
+const RightColumn = styled(Box)(() => ({
+  padding: SPACING.MEDIUM.PX,
+  flexGrow: 1,
+  overflow: 'hidden',
+}))
 
 const Container = styled(Box)(() => ({
   display: 'flex',
@@ -88,99 +103,3 @@ const Container = styled(Box)(() => ({
 }))
 
 export default Palette
-
-//  <Box>
-
-//         <Box
-//           sx={{
-//             display: 'flex',
-//             justifyContent: 'center',
-//             alignItems: 'center',
-//             overflow: 'hidden',
-//             border: '1px solid',
-//             borderColor: 'divider',
-//             width: '100%',
-//             height: '65dvh',
-//             margin: `${SPACING.MEDIUM.PX} 0`,
-//             padding: `${SPACING.SMALL.PX}`,
-//           }}
-//         >
-//           <BlurImage
-//             blurHash={data.palette.blurhash}
-//             src={data.palette.photoUrl}
-//             alt="Palette"
-//             aspectRatio={data.palette.aspectRatio}
-//           />
-//         </Box>
-//         <Box
-//           sx={{
-//             display: 'flex',
-//             flexDirection: 'row',
-//             flexWrap: 'wrap',
-//             '& > *': {
-//               flex: '1 0 16.66%', // 6 per row by default
-//               boxSizing: 'border-box',
-//             },
-//             '@media (max-width: 700px)': {
-//               '& > *': {
-//                 flex: '1 0 33.33%', // 3 per row at <=700px
-//               },
-//             },
-//           }}
-//         >
-//           {data.palette.colors.map((color: { id: string; hex: string }) => (
-//             <Box
-//               key={color.id}
-//               style={{
-//                 backgroundColor: color.hex,
-//                 height: '50px',
-//                 display: 'flex',
-//                 justifyContent: 'center',
-//                 fontSize: '20px',
-//                 alignItems: 'center',
-//                 flexGrow: 1,
-//                 color: getContrastColor(color.hex),
-//               }}
-//             >
-//               {color.hex}
-//             </Box>
-//           ))}
-//         </Box>
-//       </Box>
-//       <Box
-//         sx={{
-//           display: 'flex',
-//           justifyContent: 'flex-end',
-//           marginTop: SPACING.MEDIUM.PX,
-//         }}
-//       >
-//         <Share
-//           url={`palette/${data.palette.id}`}
-//           text={`${data.palette.name} by #${data.palette.appUserId.slice(
-//             0,
-//             6
-//           )}`}
-//           media={data.palette.ogPhotoUrl}
-//         />
-//       </Box>
-//       <ModerationPanel
-//         refetch={refetch}
-//         moderationStatus={data.palette.moderationStatus}
-//         paletteId={data.palette.id}
-//       />
-
-// {data.palette.moderationStatus ===
-//   MODERATION_STATUS.AWAITING_MODERATION && (
-//   <Message
-//     includeVerticalMargin
-//     message="This palette is pending approval."
-//     color="info"
-//   />
-// )}
-// {data.palette.moderationStatus === MODERATION_STATUS.REJECTED && (
-//   <Message
-//     includeVerticalMargin
-//     message="This palette was rejected."
-//     color="error"
-//   />
-// )}

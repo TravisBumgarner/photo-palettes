@@ -123,3 +123,10 @@ export const zodGeneratePaletteResponse = z.discriminatedUnion('success', [
 export type TGeneratePaletteResponse = z.infer<
   typeof zodGeneratePaletteResponse
 >
+
+export type ColorMix =
+  | 'complementary'
+  | 'splitComplementary'
+  | 'triadic'
+  | 'tetradic'
+  | 'analogous'
