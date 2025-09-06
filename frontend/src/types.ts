@@ -58,6 +58,17 @@ export type TFeatureRequest = {
   votes: string[]
 }
 
+export const zodSwatch = z.object({
+  percentLocation: z.tuple([z.number(), z.number()]),
+  id: z.string(),
+  hex: z.string(),
+  r: z.number(),
+  g: z.number(),
+  b: z.number(),
+})
+
+export type TSwatch = z.infer<typeof zodSwatch>
+
 export const zodPalette = z.object({
   id: z.string(),
   name: z.string(),
@@ -70,16 +81,7 @@ export const zodPalette = z.object({
   aspectRatio: z.number(),
   favoritesCount: z.number(),
   hasUserFavorited: z.boolean(),
-  colors: z.array(
-    z.object({
-      percentLocation: z.tuple([z.number(), z.number()]),
-      id: z.string(),
-      hex: z.string(),
-      r: z.number(),
-      g: z.number(),
-      b: z.number(),
-    })
-  ),
+  colors: z.array(zodSwatch),
 })
 
 export const zodGeneratedPalette = z.object({
