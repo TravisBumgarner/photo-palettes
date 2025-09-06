@@ -16,7 +16,6 @@ interface Props {
 const BlurImage = ({
   blurHash,
   src,
-  useSquareImage,
   alt,
   loadingStartCallback,
   loadingEndCallback,
@@ -44,6 +43,12 @@ const BlurImage = ({
     }
   }, [startLoadingImage, loadingStartCallback])
 
+  // Safari be like. I have no idea.
+  const cssProp =
+    aspectRatio >= 1
+      ? { width: '100%', maxHeight: '100%' }
+      : { height: '100%', maxWidth: '100%' }
+
   return (
     <Box
       component="img"
@@ -53,23 +58,14 @@ const BlurImage = ({
       rel={startLoadingImage ? 'preload' : ''}
       alt={alt}
       sx={{
-        aspectRatio: aspectRatio,
         display: 'block',
         transition: 'all 0.3s ease',
-        maxHeight: '100%',
-        maxWidth: '100%',
+        ...cssProp,
         ...(blurDataURL
           ? {
               backgroundImage: `url(${blurDataURL})`,
               backgroundSize: 'cover',
               backgroundRepeat: 'no-repeat',
-            }
-          : {}),
-        ...(useSquareImage
-          ? {
-              objectFit: 'cover',
-              width: '100%',
-              aspectRatio: '1 / 1',
             }
           : {}),
       }}
