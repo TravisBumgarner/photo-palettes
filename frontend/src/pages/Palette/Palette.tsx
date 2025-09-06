@@ -19,6 +19,7 @@ import { styled } from '@mui/material/styles'
 import Summary from './components/Summary'
 import Controls from './components/Controls'
 import type { PaletteControlsState } from './Palette.types'
+import ColorDetails from './components/ColorDetails'
 
 const Palette = () => {
   const params = useParams()
@@ -59,7 +60,9 @@ const Palette = () => {
           <Controls controls={controls} setControls={setControls} />
         </LeftColumn>
         <RightColumn>
-          <p>hi.</p>
+          {data.palette.colors.map((swatch) => (
+            <ColorDetails swatch={swatch} key={swatch.id} />
+          ))}
         </RightColumn>
       </Container>
     </PageWrapper>
@@ -77,9 +80,7 @@ const LeftColumn = styled(Box)(({ theme }) => ({
   left: '0px',
 }))
 
-const RightColumn = styled(Box)(() => ({
-  height: '200dvh',
-}))
+const RightColumn = styled(Box)(() => ({}))
 
 const Container = styled(Box)(() => ({
   display: 'flex',

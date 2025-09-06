@@ -38,12 +38,14 @@ const Swatch = ({ swatch: { hex, r, g, b } }: { swatch: TSwatch }) => {
   }
 
   return (
-    <Box>
+    <Box
+      sx={{ position: 'sticky', top: '30px', margin: `${SPACING.MEDIUM.PX} 0` }}
+    >
       <Box
         sx={{
           padding: SPACING.SMALL.PX,
           aspectRatio: '1/1',
-          width: '300px',
+          width: '200px',
           backgroundColor: primaryBackground.toString(),
         }}
       >
