@@ -1,27 +1,18 @@
 import React from 'react'
 import Box from '@mui/material/Box'
 import { SPACING, subtleBackground } from '../../styles/styleConsts'
-// import { MODERATION_STATUS } from '../../types'
-// import { getContrastColor } from '../../utils/getContrastColor'
 import Message from '../../sharedComponents/Message'
-// import ModerationPanel from '../../sharedComponents/ModerationPanel'
-// import PageTitle from '../../styles/shared/PageTitle'
 import PageWrapper from '../../styles/shared/PageWrapper'
-// import Share from '../../sharedComponents/Share'
 import { useQuery } from '@tanstack/react-query'
 import { getPaletteById } from '../../api/palettes/getPaletteById'
 import { useParams } from 'react-router-dom'
 import Loading from '../../sharedComponents/Loading'
-// import Favorite from '../../sharedComponents/Favorite'
-// import BlurImage from '../../sharedComponents/BlurImage'
-// import Link from '../../sharedComponents/Link'
 import { styled } from '@mui/material/styles'
 import Summary from './components/Summary'
 import Controls from './components/Controls'
 import type { PaletteControlsState } from './Palette.types'
 import ColorDetails from './components/ColorDetails'
 import { BACKGROUND_COLORS } from './Palette.consts'
-import Share from '../../sharedComponents/Share'
 
 const Palette = () => {
   const params = useParams()
@@ -30,7 +21,7 @@ const Palette = () => {
   const [controls, setControls] = React.useState<PaletteControlsState>({
     background: BACKGROUND_COLORS[0],
     details: 'none',
-    mix: 'complementary',
+    mix: 'none',
   })
 
   const { data, isLoading, error, refetch } = useQuery({
@@ -61,13 +52,14 @@ const Palette = () => {
           <Controls controls={controls} setControls={setControls} />
         </LeftColumn>
         <RightColumn sx={{ backgroundColor: controls.background }}>
-          <Share
+          {/* <Share
             url={`palette/${data.palette.id}`}
             text={`${data.palette.name} by #${data.palette.appUserId.slice(0, 6)}`}
             media={data.palette.ogPhotoUrl}
-          />
-          {data.palette.colors.map((swatch) => (
+          /> */}
+          {data.palette.colors.map((swatch, index) => (
             <ColorDetails
+              index={index}
               colorMix={controls.mix}
               details={controls.details}
               swatch={swatch}
@@ -84,6 +76,7 @@ const LeftColumn = styled(Box)(({ theme }) => ({
   flexBasis: '300px',
   flexShrink: 0,
   padding: `${SPACING.MEDIUM.PX}`,
+  minHeight: '100vh',
 
   position: 'sticky',
   top: '0px',

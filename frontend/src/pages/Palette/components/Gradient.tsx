@@ -33,9 +33,7 @@ const Step = ({
       key={step}
       sx={{
         backgroundColor: stepColor.string(),
-        // height: '200px',
-        // width: '60px',
-        width: '120px',
+        flexGrow: 1,
         height: '40px',
         display: 'flex',
         justifyContent: 'center',
@@ -65,7 +63,7 @@ const Gradient = ({
   hexColor: string
 }) => {
   return (
-    <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+    <Box sx={{ display: 'flex', flexDirection: 'column', flexGrow: 1 }}>
       {STEPS.map((step) => (
         <Step key={step} step={step} details={details} hexColor={hexColor} />
       ))}

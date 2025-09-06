@@ -11,7 +11,9 @@ const ColorDetails = ({
   swatch,
   details,
   colorMix,
+  index,
 }: {
+  index: number
   swatch: TSwatch
   details: Details
   colorMix: ColorMix
@@ -19,6 +21,7 @@ const ColorDetails = ({
   const schemes = getColorSchemes(swatch.hex)[colorMix]
   return (
     <Box
+      id={`color-${index}`}
       sx={{
         display: 'flex',
         gap: SPACING.MEDIUM.PX,
@@ -27,7 +30,7 @@ const ColorDetails = ({
       }}
     >
       <Swatch swatch={swatch} />
-      <Box sx={{ display: 'flex', gap: SPACING.TINY.PX }}>
+      <Box sx={{ display: 'flex', gap: SPACING.TINY.PX, flexGrow: 1 }}>
         {schemes.map((hexColor) => (
           <Gradient key={hexColor} hexColor={hexColor} details={details} />
         ))}

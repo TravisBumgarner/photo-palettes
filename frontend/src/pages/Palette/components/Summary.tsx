@@ -19,7 +19,6 @@ const Summary = ({
     colors,
     hasUserFavorited,
     id,
-    // ogPhotoUrl,
   },
   refetch,
 }: {
@@ -33,17 +32,18 @@ const Summary = ({
           display: 'flex',
           flexDirection: 'row',
           justifyContent: 'space-between',
+          marginBottom: SPACING.SMALL.PX,
+          alignItems: 'center',
         }}
       >
         <Box
           sx={{
             display: 'flex',
             alignItems: 'baseline',
-            gap: SPACING.SMALL.PX,
+            flexDirection: 'column',
           }}
         >
           <PageTitle text={name} />
-          {'By'}
           <Link href={`/profile/${appUserId}`}>#{appUserId.slice(0, 6)}</Link>
         </Box>
 
@@ -56,7 +56,7 @@ const Summary = ({
           />
         </Box>
       </Box>
-      <ColorBar height={15} colors={colors.map((c) => c.hex)} />
+      <ColorBar interactive height={15} colors={colors.map((c) => c.hex)} />
       <BlurImage
         alt={`${name} thumbnail`}
         src={photoUrl}

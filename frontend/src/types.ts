@@ -125,6 +125,7 @@ export type TGeneratePaletteResponse = z.infer<
 >
 
 export type ColorMix =
+  | 'none'
   | 'complementary'
   | 'splitComplementary'
   | 'triadic'

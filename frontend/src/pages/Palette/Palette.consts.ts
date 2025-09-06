@@ -12,6 +12,7 @@ export const DETAILS_MAP: Record<Details, string> = {
 }
 
 export const COLOR_MIXES: ColorMix[] = [
+  'none',
   'complementary',
   'analogous',
   'triadic',
@@ -20,6 +21,7 @@ export const COLOR_MIXES: ColorMix[] = [
 ]
 
 export const COLOR_MIXES_MAP: Record<ColorMix, string> = {
+  none: 'None',
   complementary: 'Complementary',
   analogous: 'Analogous',
   triadic: 'Triadic',

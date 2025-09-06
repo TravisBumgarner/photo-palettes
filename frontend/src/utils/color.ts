@@ -49,6 +49,7 @@ export function analogous(color: ColorInstance) {
 export function getColorSchemes(hex: string) {
   const base = Color(hex)
   return {
+    none: [base.hex()],
     complementary: complementary(base).map((c) => c.hex()),
     splitComplementary: splitComplementary(base).map((c) => c.hex()),
     triadic: triadic(base).map((c) => c.hex()),
