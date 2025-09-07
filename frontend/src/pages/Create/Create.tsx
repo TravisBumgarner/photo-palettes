@@ -24,8 +24,8 @@ import { queries } from '../../database'
 type UploadStatus =
   | 'INITIAL'
   | 'UPLOADING'
-  | 'UPLOADED'
   | 'SELECTING_GENERATED_PALETTE'
+  | 'PALETTE_SELECTED'
   | 'ERROR'
   | 'SUBMITTING'
   | 'SUBMITTED'
@@ -62,7 +62,7 @@ const Create = () => {
         setPhoto(await image)
         setName(name)
         setTempId(loadedTempId)
-        setUploadStatus('UPLOADED')
+        setUploadStatus('PALETTE_SELECTED')
         setPaletteSortOrder(Array.from({ length: palette.length }, (_, i) => i))
       }
     }
@@ -83,9 +83,9 @@ const Create = () => {
   )
   const generatePaletteMutation = useMutation({
     mutationFn: generatePalette,
-    onSuccess: () => {
-      setUploadStatus('UPLOADED')
-    },
+    // onSuccess: () => {
+    //   setUploadStatus('UPLOADED')
+    // },
     onError: () => {
       logger.error('Error generating palette')
       setUploadStatus('ERROR')
@@ -138,9 +138,9 @@ const Create = () => {
 
   const createPaletteMutation = useMutation({
     mutationFn: createPalette,
-    onSuccess: () => {
-      setUploadStatus('UPLOADED')
-    },
+    // onSuccess: () => {
+    //   setUploadStatus('UPLOADED')
+    // },
     onError: () => {
       logger.error('Error saving palette')
       setUploadStatus('ERROR')
@@ -182,6 +182,12 @@ const Create = () => {
     tempId,
   ])
 
+  const handlePaletteSelection = useCallback((palette: TGeneratedPalette) => {
+    setPalette(palette)
+    setPaletteSortOrder(Array.from({ length: palette.length }, (_, i) => i))
+    setUploadStatus('PALETTE_SELECTED')
+  }, [])
+
   const handleTryAgain = useCallback(() => {
     setUploadStatus('INITIAL')
     setPalette(null)
@@ -195,7 +201,10 @@ const Create = () => {
   return (
     <PageWrapper width="full">
       {uploadStatus === 'SELECTING_GENERATED_PALETTE' && (
-        <SelectGeneratedPalette generatedPalettes={generatedPalettes} />
+        <SelectGeneratedPalette
+          handlePaletteSelection={handlePaletteSelection}
+          generatedPalettes={generatedPalettes}
+        />
       )}
       {uploadStatus === 'INITIAL' && <Dropzone onDrop={onDrop} />}
       {(uploadStatus === 'UPLOADING' || uploadStatus === 'SUBMITTED') && (
@@ -218,7 +227,8 @@ const Create = () => {
           callbackText="Try again"
         />
       )}
-      {(uploadStatus === 'UPLOADED' || uploadStatus === 'SUBMITTING') && (
+      {(uploadStatus === 'PALETTE_SELECTED' ||
+        uploadStatus === 'SUBMITTING') && (
         <Box
           sx={{
             display: 'flex',

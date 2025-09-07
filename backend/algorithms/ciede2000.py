@@ -26,15 +26,24 @@ def perceptual_color_distance(hex1: str, hex2: str) -> float:
 
 def ciede2000(image: Image.Image, mode: Literal["light", "dark"]) -> list[TSwatch]:
     img_array = np.array(image)
+    height, width = img_array.shape[:2]
     pixels = img_array.reshape(-1, 3)
     target_color = "FFFFFF" if mode == "light" else "000000"
     hex_colors = ["#{:02x}{:02x}{:02x}".format(r, g, b) for r, g, b in pixels]
+
+    # Build a mapping from color to list of indices
+    from collections import defaultdict
+
+    color_to_indices = defaultdict(list)
+    for idx, color in enumerate(hex_colors):
+        color_to_indices[color].append(idx)
 
     # Count frequencies and get sorted colors by frequency
     unique, counts = np.unique(hex_colors, return_counts=True)
     top_colors = np.argsort(counts)[::-1]
 
     palettes: list[str] = []
+    percent_locations: list[tuple[float, float]] = []
     min_distance = 10  # Adjust this threshold as needed
 
     for i in top_colors:
@@ -50,14 +59,18 @@ def ciede2000(image: Image.Image, mode: Literal["light", "dark"]) -> list[TSwatc
             continue
 
         palettes.append(color)
+        # Get first occurrence index for percent location
+        idx = color_to_indices[color][0]
+        row = idx // width
+        col = idx % width
+        x_percent = (col / (width - 1)) * 100
+        y_percent = (row / (height - 1)) * 100
+        percent_locations.append((x_percent, y_percent))
+
         if len(palettes) == 6:
             break
 
-    # return palettes
-
-    # Return top 6 colors in uppercase
-    # return [str(unique[i]).upper() for i in palettes]
-
     return [
-        TSwatch(color=str(color).upper(), percent_location=(0, 0)) for color in palettes
+        TSwatch(color=color.upper(), percent_location=percent_locations[i])
+        for i, color in enumerate(palettes)
     ]

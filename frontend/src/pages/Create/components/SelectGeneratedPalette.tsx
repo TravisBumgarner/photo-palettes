@@ -1,14 +1,25 @@
+import Button from '@mui/material/Button'
 import type { TGeneratedPalette } from '../../../types'
 
 const SelectGeneratedPalette = ({
   generatedPalettes,
+  handlePaletteSelection,
 }: {
   generatedPalettes: TGeneratedPalette[]
+  handlePaletteSelection: (palette: TGeneratedPalette) => void
 }) => {
+  const handlePaletteClick = (palette: TGeneratedPalette) => {
+    handlePaletteSelection(palette)
+  }
+
   return generatedPalettes.map((palette, index) => (
     <div key={index}>
       <h3>Palette {index + 1}</h3>
-      <div style={{ display: 'flex', gap: '10px' }}>
+      <Button
+        variant="contained"
+        style={{ display: 'flex', gap: '10px' }}
+        onClick={() => handlePaletteClick(palette)}
+      >
         {palette.map(({ color }, colorIndex) => (
           <div
             key={colorIndex}
@@ -20,7 +31,7 @@ const SelectGeneratedPalette = ({
             }}
           />
         ))}
-      </div>
+      </Button>
     </div>
   ))
 }
