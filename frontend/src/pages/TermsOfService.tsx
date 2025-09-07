@@ -2,6 +2,8 @@ import Typography from '@mui/material/Typography'
 import PageTitle from '../styles/shared/PageTitle'
 import PageWrapper from '../styles/shared/PageWrapper'
 import Link from '../sharedComponents/Link'
+import ListItem from '@mui/material/ListItem'
+import List from '@mui/material/List'
 
 const TermsOfService = () => {
   return (
@@ -39,13 +41,15 @@ const TermsOfService = () => {
       <Typography variant="body1">
         You agree not to use the Service to:
       </Typography>
-      <ul>
-        <li>Upload illegal, obscene, or infringing content.</li>
-        <li>Upload content that is not your own.</li>
-        <li>Upload AI-generated content.</li>
-        <li>Interfere with or disrupt the service.</li>
-        <li>Attempt to reverse engineer or misuse any part of the platform.</li>
-      </ul>
+      <List>
+        <ListItem>Upload illegal, obscene, or infringing content.</ListItem>
+        <ListItem>Upload content that is not your own.</ListItem>
+        <ListItem>Upload AI-generated content.</ListItem>
+        <ListItem>Interfere with or disrupt the service.</ListItem>
+        <ListItem>
+          Attempt to reverse engineer or misuse any part of the platform.
+        </ListItem>
+      </List>
 
       <Typography variant="h3">4. Intellectual Property</Typography>
       <Typography variant="body1">

@@ -13,11 +13,28 @@ import {
   BORDER_RADIUS,
   LIGHT_BUTTON_STYLES,
   DARK_BUTTON_STYLES,
+  SPACING,
 } from './styleConsts'
 
 // Base theme options shared between light and dark
 const baseThemeOptions: ThemeOptions = {
   components: {
+    MuiListItem: {
+      styleOverrides: {
+        root: {
+          display: 'list-item',
+          margin: 0,
+          padding: SPACING.TINY.PX,
+        },
+      },
+    },
+    MuiList: {
+      styleOverrides: {
+        root: {
+          listStyleType: 'square',
+        },
+      },
+    },
     MuiSwitch: {
       styleOverrides: {
         track: {

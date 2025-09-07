@@ -3,7 +3,7 @@ import { Routes, Route, Navigate, Outlet } from 'react-router-dom'
 import Browse from '../pages/Browse'
 const TermsOfService = lazy(async () => await import('../pages/TermsOfService'))
 const PrivacyPolicy = lazy(async () => await import('../pages/PrivacyPolicy'))
-const Changelog = lazy(async () => await import('../pages/Changelog'))
+const ReleaseNotes = lazy(async () => await import('../pages/ReleaseNotes'))
 const Feedback = lazy(async () => await import('../pages/Feedback'))
 const Create = lazy(async () => await import('../pages/Create/Create'))
 const CreateLite = lazy(async () => await import('../pages/Create/CreateLite'))
@@ -60,7 +60,7 @@ const Router = () => (
     <Route path="/" element={<Browse />} />
     <Route path={ROUTES.tos.href} element={<TermsOfService />} />
     <Route path={ROUTES.privacy.href} element={<PrivacyPolicy />} />
-    <Route path={ROUTES.changelog.href} element={<Changelog />} />
+    <Route path={ROUTES.releaseNotes.href} element={<ReleaseNotes />} />
     <Route path={ROUTES.feedback.href} element={<Feedback />} />
 
     <Route path={ROUTES.featureRequests.href} element={<FeatureRequests />} />

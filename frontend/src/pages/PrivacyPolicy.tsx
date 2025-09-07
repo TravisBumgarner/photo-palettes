@@ -2,6 +2,8 @@ import Typography from '@mui/material/Typography'
 import PageTitle from '../styles/shared/PageTitle'
 import PageWrapper from '../styles/shared/PageWrapper'
 import Link from '../sharedComponents/Link'
+import ListItem from '@mui/material/ListItem'
+import List from '@mui/material/List'
 
 const Privacy = () => {
   return (
@@ -23,22 +25,28 @@ const Privacy = () => {
         During this closed alpha phase, we collect limited data to help us
         improve the app. This includes:
       </Typography>
-      <ul>
-        <li>
-          <strong>Usage data</strong> collected via{' '}
-          <strong>Google Analytics</strong>, such as pages visited, session
-          duration, and basic technical details (device type, browser, etc.).
-        </li>
-        <li>
-          <strong>Error and crash data</strong> collected via{' '}
-          <strong>Sentry.io</strong>, which may include stack traces, device
-          information, and actions leading up to an error.
-        </li>
-        <li>
-          <strong>Anonymous identifiers</strong> provided by your browser or
-          device, used solely to track usage trends.
-        </li>
-      </ul>
+      <List>
+        <ListItem>
+          <Typography>
+            <strong>Usage data</strong> collected via{' '}
+            <strong>Google Analytics</strong>, such as pages visited, session
+            duration, and basic technical details (device type, browser, etc.).
+          </Typography>
+        </ListItem>
+        <ListItem>
+          <Typography>
+            <strong>Error and crash data</strong> collected via{' '}
+            <strong>Sentry.io</strong>, which may include stack traces, device
+            information, and actions leading up to an error.
+          </Typography>
+        </ListItem>
+        <ListItem>
+          <Typography>
+            <strong>Anonymous identifiers</strong> provided by your browser or
+            device, used solely to track usage trends.
+          </Typography>
+        </ListItem>
+      </List>
       <Typography variant="body1">
         We do <strong>not</strong> collect any personally identifiable
         information (PII), such as your name, email, or contact details, unless
@@ -47,11 +55,11 @@ const Privacy = () => {
 
       <Typography variant="h3">2. How We Use Your Information</Typography>
       <Typography variant="body1">We use the data collected to:</Typography>
-      <ul>
-        <li>Understand how testers use the app.</li>
-        <li>Identify bugs, crashes, or usability issues.</li>
-        <li>Improve the performance and design of the app.</li>
-      </ul>
+      <List>
+        <ListItem>Understand how testers use the app.</ListItem>
+        <ListItem>Identify bugs, crashes, or usability issues.</ListItem>
+        <ListItem>Improve the performance and design of the app.</ListItem>
+      </List>
 
       <Typography variant="h3">3. Third-Party Services</Typography>
       <Typography variant="body1">

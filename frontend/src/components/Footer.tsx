@@ -33,7 +33,12 @@ const Section = ({
         {links.map((link) => (
           <ListItem
             key={link}
-            sx={{ margin: 0, padding: 0, fontSize: FONT_SIZES.MEDIUM.PX }}
+            sx={{
+              margin: 0,
+              padding: 0,
+              fontSize: FONT_SIZES.MEDIUM.PX,
+              listStyleType: 'none',
+            }}
           >
             <Link hideBaseUnderline href={ROUTES[link].href}>
               {ROUTES[link].label}
@@ -76,7 +81,7 @@ const sections = (
     },
     {
       header: 'Site Info',
-      links: ['changelog', 'privacy', 'tos'],
+      links: ['releaseNotes', 'privacy', 'tos'],
     },
     {
       header: 'User',
