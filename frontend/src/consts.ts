@@ -88,10 +88,10 @@ export const ROUTES = {
     href: '/donations',
     label: 'Donate',
   },
-  changelog: {
-    key: 'changelog',
-    href: '/changelog',
-    label: 'Changelog',
+  releaseNotes: {
+    key: 'releasenotes',
+    href: '/releasenotes',
+    label: 'Release Notes',
   },
   error404: {
     key: 'error404',
