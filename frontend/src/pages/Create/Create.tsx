@@ -17,6 +17,7 @@ import { type TGeneratedPalette } from '../../types'
 import { resizeImage } from '../../utils/image'
 import CanvasAndPalette from './components/CanvasAndPalette'
 import Dropzone from './components/Dropzone'
+import SelectGeneratedPalette from './components/SelectGeneratedPalette'
 import { sharedCSS } from './components/shared'
 import { queries } from '../../database'
 
@@ -24,6 +25,7 @@ type UploadStatus =
   | 'INITIAL'
   | 'UPLOADING'
   | 'UPLOADED'
+  | 'SELECTING_GENERATED_PALETTE'
   | 'ERROR'
   | 'SUBMITTING'
   | 'SUBMITTED'
@@ -36,6 +38,9 @@ const Create = () => {
   const navigate = useNavigate()
 
   const [name, setName] = useState('')
+  const [generatedPalettes, setGeneratedPalettes] = useState<
+    TGeneratedPalette[]
+  >([])
   const [palette, setPalette] = useState<TGeneratedPalette | null>(null)
   const [paletteSortOrder, setPaletteSortOrder] = useState<number[]>([])
   const [tempId, setTempId] = useState<string | null>(null)
@@ -102,16 +107,16 @@ const Create = () => {
       setPhoto(resizedPhoto)
       const response = await generatePaletteMutation.mutateAsync(resizedPhoto)
       if (response.success) {
-        setPalette(response.palette)
-        setPaletteSortOrder(
-          Array.from({ length: response.palette.length }, (_, i) => i)
-        )
-        setUploadStatus('UPLOADED')
+        setGeneratedPalettes(response.palettes)
+        // setPaletteSortOrder(
+        //   Array.from({ length: response.palette.length }, (_, i) => i)
+        // )
+        setUploadStatus('SELECTING_GENERATED_PALETTE')
       } else {
         setUploadStatus('ERROR')
       }
     },
-    [generatePaletteMutation, setPalette]
+    [generatePaletteMutation, setGeneratedPalettes]
   )
 
   const handleNameChange = useCallback(
@@ -189,7 +194,9 @@ const Create = () => {
 
   return (
     <PageWrapper width="full">
-      {/* <PageTitle marginBottom text="Create" /> */}
+      {uploadStatus === 'SELECTING_GENERATED_PALETTE' && (
+        <SelectGeneratedPalette generatedPalettes={generatedPalettes} />
+      )}
       {uploadStatus === 'INITIAL' && <Dropzone onDrop={onDrop} />}
       {(uploadStatus === 'UPLOADING' || uploadStatus === 'SUBMITTED') && (
         <Box

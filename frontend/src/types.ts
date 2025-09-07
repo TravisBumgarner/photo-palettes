@@ -110,7 +110,7 @@ export type ESortBy = (typeof SORT_BY)[keyof typeof SORT_BY]
 export const zodGeneratePaletteResponse = z.discriminatedUnion('success', [
   z.object({
     success: z.literal(true),
-    palette: z.array(zodGeneratedPalette),
+    palettes: z.array(z.array(zodGeneratedPalette)),
   }),
   z.object({
     success: z.literal(false),

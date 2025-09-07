@@ -68,7 +68,9 @@ const Create = () => {
       const response = await generatePalette(photoUrl)
 
       if (response.success) {
-        setPalette(response.palette)
+        // Create.tsx has an extra step to get several palettes but CreateLite.tsx
+        // only serves one.
+        setPalette(response.palettes[0])
         setPaletteSortOrder(Array.from({ length: PALETTE_SIZE }, (_, i) => i))
         setPaletteId(uuidv4())
 
