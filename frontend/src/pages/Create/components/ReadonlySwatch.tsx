@@ -7,7 +7,6 @@ import { FONT_SIZES } from '../../../styles/styleConsts'
 
 const ReadonlySwatch = ({
   index,
-  // setActiveIndex,
   isActive,
   isOtherActive,
   swatch,
@@ -15,23 +14,10 @@ const ReadonlySwatch = ({
 }: {
   index: number
   swatch: TGeneratedSwatch
-  // setActiveIndex: (index: number | null) => void
   setHoverIndex: (index: number | null) => void
   isActive: boolean
   isOtherActive: boolean
 }) => {
-  // const [dragging, setDragging] = useState(false)
-
-  // const handleOnClick = useCallback(() => {
-  //   if (dragging) return // prevent click when dragging
-  //   // setActiveIndex(isActive ? null : index)
-  // }, [
-  //   // index,
-  //   // setActiveIndex
-  //   // isActive,
-  //   dragging,
-  // ])
-
   return (
     <Reorder.Item
       onMouseEnter={() => {
@@ -40,11 +26,6 @@ const ReadonlySwatch = ({
       onMouseLeave={() => {
         setHoverIndex(null)
       }}
-      // onDragStart={() => setDragging(true)}
-      // onDragEnd={() => {
-      // give React a tick before clearing
-      // setTimeout(() => setDragging(false), 0)
-      // }}
       as="div"
       key={index}
       value={index}
@@ -69,7 +50,6 @@ const ReadonlySwatch = ({
         zIndex: isActive ? 2 : 1,
         boxSizing: 'border-box',
       }}
-      // onClick={handleOnClick}
     >
       {isActive ? swatch.color : null}
     </Reorder.Item>
