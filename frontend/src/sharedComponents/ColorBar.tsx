@@ -13,6 +13,7 @@ const Color = ({
   index: number
   interactive?: boolean
 }) => {
+  // This should find a new home.
   const handleScroll = useCallback(() => {
     document
       .getElementById(`color-${index}`)
@@ -52,6 +53,7 @@ const ColorBar = ({
       >
         {colors.map((color, index) => (
           <Color
+            key={index}
             interactive={interactive}
             color={color}
             index={index}

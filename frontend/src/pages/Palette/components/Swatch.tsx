@@ -57,18 +57,33 @@ const Swatch = ({ swatch: { hex, r, g, b } }: { swatch: TSwatch }) => {
         <Typography sx={sharedTextStyles}>G {g}</Typography>
         <Typography sx={sharedTextStyles}>B {b}</Typography>
       </Box>
-      <Box sx={{ backgroundColor: secondaryBackground.toString() }}>
+      <Box
+        onClick={() => {
+          navigator.clipboard.writeText(hex)
+        }}
+        sx={{
+          backgroundColor: secondaryBackground.toString(),
+          cursor: 'pointer',
+          '&:hover': {
+            '& .hoverText::before': {
+              content: '"Copy"',
+            },
+          },
+        }}
+      >
         <Typography
+          className="hoverText"
           sx={{
             color: secondaryText.toString(),
             fontSize: FONT_SIZES.MEDIUM.PX,
             fontWeight: 'bold',
             textAlign: 'right',
             padding: SPACING.SMALL.PX,
+            '&::before': {
+              content: `"${hex}"`,
+            },
           }}
-        >
-          {hex}
-        </Typography>
+        ></Typography>
       </Box>
     </Box>
   )

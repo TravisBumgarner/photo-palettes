@@ -18,19 +18,40 @@ const Step = ({
   hexColor: string
 }) => {
   const stepColor = Color(hexColor).lightness(100 - step / 10)
+  const { label, copyLabel } = useMemo(() => {
+    // If a label is null or step, fallback to hex so the user has something to copy.
 
-  const label = useMemo(() => {
-    if (details == 'steps') return step
-    if (details == 'hex') return Color(stepColor).hex().toString()
-    if (details == 'none') return ''
-    if (details == 'rgb') return Color(stepColor).rgb().string(0)
-    if (details == 'hsl') return Color(stepColor).hsl().string(0)
-    return null
+    const fallbackLabel = Color(stepColor).hex().toString()
+
+    switch (details) {
+      case 'steps':
+        return { label: step, copyLabel: fallbackLabel }
+      case 'hex': {
+        const label = Color(stepColor).hex().toString()
+        return {
+          label,
+          copyLabel: label,
+        }
+      }
+      case 'none':
+        return { label: '', copyLabel: fallbackLabel }
+      case 'rgb': {
+        const label = Color(stepColor).rgb().string(0)
+        return { label, copyLabel: label }
+      }
+      case 'hsl': {
+        const label = Color(stepColor).hsl().string(0)
+        return { label, copyLabel: label }
+      }
+    }
   }, [details, step, stepColor])
 
   return (
     <Box
       key={step}
+      onClick={() => {
+        navigator.clipboard.writeText(copyLabel)
+      }}
       sx={{
         backgroundColor: stepColor.string(),
         flexGrow: 1,
@@ -38,19 +59,33 @@ const Step = ({
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
+        cursor: 'pointer',
+
+        '&:hover': {
+          '& .hoverText::before': {
+            content: '"Copy"',
+          },
+
+          '& .hoverText': {
+            color: getContrastColor(stepColor.hex().toString()),
+          },
+        },
       }}
     >
       <Typography
+        className="hoverText"
         sx={{
-          color: getContrastColor(stepColor.hex().toString()),
-          // transform: 'rotate(-90deg)',
+          position: 'relative',
           textAlign: 'center',
           whiteSpace: 'nowrap',
           fontSize: FONT_SIZES.SMALL.PX,
+          color: getContrastColor(stepColor.hex().toString()),
+
+          '&::before': {
+            content: `"${label}"`,
+          },
         }}
-      >
-        {label}
-      </Typography>
+      />
     </Box>
   )
 }

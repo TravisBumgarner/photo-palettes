@@ -25,7 +25,7 @@ const ColorDetails = ({
       sx={{
         display: 'flex',
         gap: SPACING.MEDIUM.PX,
-        margin: `0 0 ${SPACING.HUGE.PX} 0`,
+        padding: '5vh 0 50vh 0', // Main concern here is scrolling to the last color causes the left column to scroll off screen.
         flexGrow: 1,
       }}
     >
