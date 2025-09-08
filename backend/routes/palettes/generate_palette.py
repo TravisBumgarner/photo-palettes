@@ -1,7 +1,3 @@
-from fastapi import UploadFile
-from PIL import Image
-from pydantic import BaseModel
-
 from algorithms.ciede2000 import ciede2000
 from algorithms.kmeans import kmeans
 from algorithms.types import TGeneratedPalette
@@ -9,12 +5,16 @@ from algorithms.utils import convert_to_rgb, scale_image
 from config import get_config
 from consts import ErrorMsg
 from database.models import PermissionLevel
+from fastapi import UploadFile
 from middleware.auth import RequestWithAuthState
+from PIL import Image
+from pydantic import BaseModel
 from routes.shared import (
     BaseErrorResponse,
     BaseSuccessResponse,
 )
 from services.logger import log_error
+from utils.colors import sort_by_luminance
 
 from .palettes_router import palettes_router
 
@@ -52,33 +52,21 @@ class SuccessResponse(BaseSuccessResponse):
 
 
 def handle_request(thumbnail: UploadFile):
-    import time
-
     image = Image.open(thumbnail.file)
     scaled_image = scale_image(image, 100)
     rgb_image = convert_to_rgb(scaled_image)
 
-    start_kmeans = time.time()
-    palette_kmeans = kmeans(rgb_image)
-    end_kmeans = time.time()
-    print(f"ruda: kmeans took {end_kmeans - start_kmeans:.3f} seconds")
+    palettes = [
+        kmeans(rgb_image),
+        ciede2000(rgb_image, "light"),
+        ciede2000(rgb_image, "dark"),
+    ]
 
-    start_light = time.time()
-    palette_ciede2000_light = ciede2000(rgb_image, "light")
-    end_light = time.time()
-    print(f"ruda: ciede2000_light took {end_light - start_light:.3f} seconds")
+    palettes = [sort_by_luminance(palette) for palette in palettes if len(palette) == 6]
 
-    start_dark = time.time()
-    palette_ciede2000_dark = ciede2000(rgb_image, "dark")
-    end_dark = time.time()
-    print(f"ruda: ciede2000_dark took {end_dark - start_dark:.3f} seconds")
-
-    print(f"ruda: total time {end_dark - start_kmeans:.3f} seconds")
     return SuccessResponse(
         palettes=[
-            map_generate_palette_data_to_response(palette_kmeans),
-            map_generate_palette_data_to_response(palette_ciede2000_light),
-            map_generate_palette_data_to_response(palette_ciede2000_dark),
+            map_generate_palette_data_to_response(palette) for palette in palettes
         ],
     )
 
