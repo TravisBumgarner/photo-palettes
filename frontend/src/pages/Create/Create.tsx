@@ -198,16 +198,45 @@ const Create = () => {
   const nameLabel =
     name.length > 0 ? `Name: ${name.length} / ${MAX_NAME_LENGTH}` : 'Name'
 
-  return (
-    <PageWrapper width="full">
-      {uploadStatus === 'SELECTING_GENERATED_PALETTE' && (
+  if (uploadStatus === 'INITIAL') {
+    return (
+      <PageWrapper width="full">
+        <Dropzone onDrop={onDrop} />
+      </PageWrapper>
+    )
+  }
+
+  if (uploadStatus === 'SELECTING_GENERATED_PALETTE') {
+    return (
+      <PageWrapper width="full">
         <SelectGeneratedPalette
           handlePaletteSelection={handlePaletteSelection}
           generatedPalettes={generatedPalettes}
         />
-      )}
-      {uploadStatus === 'INITIAL' && <Dropzone onDrop={onDrop} />}
-      {(uploadStatus === 'UPLOADING' || uploadStatus === 'SUBMITTED') && (
+      </PageWrapper>
+    )
+  }
+
+  if (uploadStatus === 'ERROR') {
+    return (
+      <PageWrapper width="full">
+        <Message
+          message="Error generating palette"
+          color="error"
+          callback={handleTryAgain}
+          callbackText="Try again"
+        />
+      </PageWrapper>
+    )
+  }
+
+  if (
+    uploadStatus === 'UPLOADING' ||
+    uploadStatus === 'SUBMITTING' ||
+    uploadStatus === 'SUBMITTED'
+  ) {
+    return (
+      <PageWrapper width="full">
         <Box
           sx={{
             display: 'flex',
@@ -218,60 +247,54 @@ const Create = () => {
         >
           <Loading />
         </Box>
-      )}
-      {uploadStatus === 'ERROR' && (
-        <Message
-          message="Error generating palette"
-          color="error"
-          callback={handleTryAgain}
-          callbackText="Try again"
+      </PageWrapper>
+    )
+  }
+
+  return (
+    <PageWrapper width="full">
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          gap: SPACING.SMALL.PX,
+        }}
+      >
+        <CanvasAndPalette
+          photo={photo}
+          palette={palette}
+          updateSwatch={updateSwatch}
+          paletteSortOrder={paletteSortOrder}
+          setPaletteSortOrder={setPaletteSortOrder}
         />
-      )}
-      {(uploadStatus === 'PALETTE_SELECTED' ||
-        uploadStatus === 'SUBMITTING') && (
+        <TextField
+          variant="outlined"
+          fullWidth
+          label={nameLabel}
+          placeholder="Name your palette"
+          value={name}
+          onChange={handleNameChange}
+        />
         <Box
           sx={{
             display: 'flex',
-            flexDirection: 'column',
-            gap: SPACING.SMALL.PX,
+            flexDirection: 'row',
+            gap: '10px',
+            justifyContent: 'flex-end',
           }}
         >
-          <CanvasAndPalette
-            photo={photo}
-            palette={palette}
-            updateSwatch={updateSwatch}
-            paletteSortOrder={paletteSortOrder}
-            setPaletteSortOrder={setPaletteSortOrder}
-          />
-          <TextField
-            variant="outlined"
-            fullWidth
-            label={nameLabel}
-            placeholder="Name your palette"
-            value={name}
-            onChange={handleNameChange}
-          />
-          <Box
-            sx={{
-              display: 'flex',
-              flexDirection: 'row',
-              gap: '10px',
-              justifyContent: 'flex-end',
-            }}
+          <Button variant="outlined" onClick={handleClearPalette}>
+            Clear
+          </Button>
+          <Button
+            disabled={!name}
+            variant="contained"
+            onClick={handleSavePalette}
           >
-            <Button variant="outlined" onClick={handleClearPalette}>
-              Clear
-            </Button>
-            <Button
-              disabled={!name || uploadStatus === 'SUBMITTING'}
-              variant="contained"
-              onClick={handleSavePalette}
-            >
-              Save
-            </Button>
-          </Box>
+            Save
+          </Button>
         </Box>
-      )}
+      </Box>
     </PageWrapper>
   )
 }
