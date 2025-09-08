@@ -1,22 +1,20 @@
-from fastapi import UploadFile
-from PIL import Image
-
-from algorithms.kmeans import get_image_colors
+from algorithms.ciede2000 import ciede2000
+from algorithms.kmeans import kmeans
+from algorithms.types import TGeneratedPalette
 from algorithms.utils import convert_to_rgb, scale_image
 from config import get_config
 from consts import ErrorMsg
 from database.models import PermissionLevel
+from fastapi import UploadFile
 from middleware.auth import RequestWithAuthState
-from routes.palettes.palette_response_models import (
-    map_generate_palette_array_to_response,
-)
+from PIL import Image
+from pydantic import BaseModel
 from routes.shared import (
     BaseErrorResponse,
     BaseSuccessResponse,
 )
 from services.logger import log_error
 
-from .palette_response_models import GeneratePaletteResponse
 from .palettes_router import palettes_router
 
 config = get_config()
@@ -24,17 +22,52 @@ config = get_config()
 ROUTE_NAME = "generate_palette"
 
 
+class GeneratePaletteResponse(BaseModel):
+    color: str
+    percentLocation: tuple[float, float]  # noqa #815
+
+
+def map_generate_palette_to_response(
+    color: str,
+    percent_location: tuple[float, float],
+) -> GeneratePaletteResponse:
+    return GeneratePaletteResponse(
+        color=color,
+        percentLocation=(percent_location[0], percent_location[1]),
+    )
+
+
+def map_generate_palette_data_to_response(
+    generated_palette: TGeneratedPalette,
+) -> list[GeneratePaletteResponse]:
+    return [
+        map_generate_palette_to_response(item.color, item.percent_location)
+        for item in generated_palette
+    ]
+
+
 class SuccessResponse(BaseSuccessResponse):
-    palette: list[GeneratePaletteResponse]
+    palettes: list[list[GeneratePaletteResponse]]
 
 
 def handle_request(thumbnail: UploadFile):
     image = Image.open(thumbnail.file)
-    scaled_image = scale_image(image, 200)
+    scaled_image = scale_image(image, 100)
     rgb_image = convert_to_rgb(scaled_image)
-    colors = get_image_colors(rgb_image)
 
-    return SuccessResponse(palette=map_generate_palette_array_to_response(colors))
+    palettes = [
+        kmeans(rgb_image),
+        ciede2000(rgb_image, "light"),
+        ciede2000(rgb_image, "dark"),
+    ]
+
+    return SuccessResponse(
+        palettes=[
+            map_generate_palette_data_to_response(palette)
+            for palette in palettes
+            if len(palette) == 6
+        ],
+    )
 
 
 @palettes_router.post("/generate")
@@ -47,7 +80,7 @@ async def generate(
         return BaseErrorResponse(message=ErrorMsg.CANNOT_PERFORM_ACTION)
 
     if not thumbnail:
-        return BaseErrorResponse(error=ErrorMsg.RESOURCE_NOT_FOUND)
+        return BaseErrorResponse(message=ErrorMsg.RESOURCE_NOT_FOUND)
 
     try:
         return handle_request(thumbnail)

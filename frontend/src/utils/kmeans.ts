@@ -76,7 +76,7 @@ async function kmeans(blob: Blob): Promise<TGeneratePaletteResponse> {
       }
     )
 
-    return { success: true, palette }
+    return { success: true, palettes: [palette] }
   } catch (error) {
     logger.error(error)
     return { success: false, message: 'Failed to generate palette' }

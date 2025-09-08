@@ -13,11 +13,28 @@ import {
   BORDER_RADIUS,
   LIGHT_BUTTON_STYLES,
   DARK_BUTTON_STYLES,
+  SPACING,
 } from './styleConsts'
 
 // Base theme options shared between light and dark
 const baseThemeOptions: ThemeOptions = {
   components: {
+    MuiListItem: {
+      styleOverrides: {
+        root: {
+          display: 'list-item',
+          margin: 0,
+          padding: SPACING.TINY.PX,
+        },
+      },
+    },
+    MuiList: {
+      styleOverrides: {
+        root: {
+          listStyleType: 'square',
+        },
+      },
+    },
     MuiSwitch: {
       styleOverrides: {
         track: {
@@ -228,12 +245,12 @@ const lightThemeOptions: ThemeOptions = {
           },
         },
         text: {
-          color: 'pink', // For now I don't think I'm using this anywhere.
+          color: PALETTE.grayscale[700],
           '&:hover': {
-            backgroundColor: 'lightpink',
+            backgroundColor: PALETTE.grayscale[100],
           },
           '&:disabled': {
-            textColor: 'lightpink',
+            textColor: PALETTE.grayscale[400],
           },
         },
       },
@@ -374,12 +391,12 @@ const darkThemeOptions: ThemeOptions = {
           },
         },
         text: {
-          color: 'pink', // For now I don't think I'm using this anywhere.
+          color: PALETTE.grayscale[100],
           '&:hover': {
-            backgroundColor: 'lightpink',
+            backgroundColor: PALETTE.grayscale[700],
           },
           '&:disabled': {
-            textColor: 'lightpink',
+            textColor: PALETTE.grayscale[700],
           },
         },
       },

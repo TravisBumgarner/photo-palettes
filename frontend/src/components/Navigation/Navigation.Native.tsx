@@ -41,7 +41,7 @@ const DropdownLinks = ({ onClose }: { onClose: () => void }) => {
     'discord',
     'bluesky',
     'featureRequests',
-    'changelog',
+    'releaseNotes',
     'donate',
     'privacy',
     'tos',
