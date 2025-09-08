@@ -21,6 +21,7 @@ import SelectGeneratedPalette from './components/SelectGeneratedPalette'
 import { sharedCSS } from './components/shared'
 import { queries } from '../../database'
 import { styled } from '@mui/material/styles'
+import { PALETTE_SIZE } from '../../consts'
 
 type CreationStatus =
   | 'INITIAL'
@@ -43,7 +44,9 @@ const Create = () => {
     TGeneratedPalette[]
   >([])
   const [palette, setPalette] = useState<TGeneratedPalette | null>(null)
-  const [paletteSortOrder, setPaletteSortOrder] = useState<number[]>([])
+  const [paletteSortOrder, setPaletteSortOrder] = useState<number[]>(
+    Array.from({ length: PALETTE_SIZE }, (_, i) => i)
+  )
   const [tempId, setTempId] = useState<string | null>(null)
 
   useEffect(() => {
@@ -64,7 +67,6 @@ const Create = () => {
         setName(name)
         setTempId(loadedTempId)
         setCreationStatus('SELECTING_COLORS')
-        setPaletteSortOrder(Array.from({ length: palette.length }, (_, i) => i))
       }
     }
     checkAndLoadTemporaryPalette()
@@ -92,7 +94,6 @@ const Create = () => {
       setCreationStatus('ERROR')
     },
   })
-
   const onDrop = useCallback(
     async (acceptedFiles: File[]) => {
       if (acceptedFiles.length === 0) {
@@ -181,6 +182,11 @@ const Create = () => {
     tempId,
   ])
 
+  const handlePaletteChange = (palette: TGeneratedPalette) => {
+    setPalette(palette)
+    setPaletteSortOrder(Array.from({ length: PALETTE_SIZE }, (_, i) => i))
+  }
+
   const handleTryAgain = useCallback(() => {
     setCreationStatus('INITIAL')
     setPalette(null)
@@ -239,7 +245,7 @@ const Create = () => {
       <Container>
         <LeftColumn>
           <SelectGeneratedPalette
-            setActivePalette={setPalette}
+            handlePaletteChange={handlePaletteChange}
             generatedPalettes={generatedPalettes}
           />
           <TextField

@@ -5,19 +5,17 @@ import { useCallback } from 'react'
 
 const SelectGeneratedPalette = ({
   generatedPalettes,
-  setActivePalette,
+  handlePaletteChange,
 }: {
   generatedPalettes: TGeneratedPalette[]
-  setActivePalette: React.Dispatch<
-    React.SetStateAction<TGeneratedPalette | null>
-  >
+  handlePaletteChange: (palette: TGeneratedPalette) => void
 }) => {
   return generatedPalettes.map((palette, index) => (
     <Palette
       height={30}
       palette={palette}
       index={index}
-      setActivePalette={setActivePalette}
+      handlePaletteChange={handlePaletteChange}
     />
   ))
 }
@@ -25,23 +23,21 @@ const SelectGeneratedPalette = ({
 const Palette = ({
   palette,
   height,
-  setActivePalette,
+  handlePaletteChange,
 }: {
   palette: TGeneratedPalette
   height: number
   index: number
-  setActivePalette: React.Dispatch<
-    React.SetStateAction<TGeneratedPalette | null>
-  >
+  handlePaletteChange: (palette: TGeneratedPalette) => void
 }) => {
-  const handlePaletteChange = useCallback(() => {
-    setActivePalette(palette)
-  }, [palette, setActivePalette])
+  const handleClick = useCallback(() => {
+    handlePaletteChange([...palette])
+  }, [palette, handlePaletteChange])
 
   return (
     <Box
       component="button"
-      onClick={handlePaletteChange}
+      onClick={handleClick}
       sx={{
         display: 'flex',
         marginBottom: SPACING.SMALL.PX,
