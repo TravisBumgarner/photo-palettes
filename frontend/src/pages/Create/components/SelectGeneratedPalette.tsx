@@ -8,10 +8,11 @@ const SelectGeneratedPalette = ({
   handlePaletteChange,
 }: {
   generatedPalettes: TGeneratedPalette[]
-  handlePaletteChange: (palette: TGeneratedPalette) => void
+  handlePaletteChange: (paletteIndex: number) => void
 }) => {
   return generatedPalettes.map((palette, index) => (
     <Palette
+      key={index}
       height={30}
       palette={palette}
       index={index}
@@ -23,16 +24,17 @@ const SelectGeneratedPalette = ({
 const Palette = ({
   palette,
   height,
+  index,
   handlePaletteChange,
 }: {
   palette: TGeneratedPalette
   height: number
   index: number
-  handlePaletteChange: (palette: TGeneratedPalette) => void
+  handlePaletteChange: (index: number) => void
 }) => {
   const handleClick = useCallback(() => {
-    handlePaletteChange([...palette])
-  }, [palette, handlePaletteChange])
+    handlePaletteChange(index)
+  }, [index, handlePaletteChange])
 
   return (
     <Box
@@ -40,7 +42,7 @@ const Palette = ({
       onClick={handleClick}
       sx={{
         display: 'flex',
-        marginBottom: SPACING.SMALL.PX,
+        marginBottom: SPACING.TINY.PX,
         width: '100%',
         border: 0,
         cursor: 'pointer',

@@ -2,7 +2,12 @@ import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import Typography from '@mui/material/Typography'
 
-import { BORDER_RADIUS, FONT_SIZES, SPACING } from '../../styles/styleConsts'
+import {
+  BORDER_RADIUS,
+  FONT_SIZES,
+  SPACING,
+  subtleBackground,
+} from '../../styles/styleConsts'
 import { IoInformationCircleOutline } from 'react-icons/io5'
 import { useTheme } from '@mui/material/styles'
 import { IoMdWarning } from 'react-icons/io'
@@ -52,8 +57,7 @@ const Message = ({
   return (
     <Box
       sx={{
-        border: `1px solid`,
-        borderColor: 'divider',
+        backgroundColor: subtleBackground(theme.palette.mode),
         borderRadius: BORDER_RADIUS.ZERO.PX,
         padding: SPACING.MEDIUM.PX,
         margin: includeVerticalMargin ? `${SPACING.MEDIUM.PX} 0` : 0,

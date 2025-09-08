@@ -1,5 +1,5 @@
 // import { useCallback } from 'react'
-import { useCallback, useState } from 'react'
+// import { useCallback, useState } from 'react'
 import { type TGeneratedSwatch } from '../../../types'
 import { getContrastColor } from '../../../utils/getContrastColor'
 import { Reorder } from 'framer-motion'
@@ -7,31 +7,44 @@ import { FONT_SIZES } from '../../../styles/styleConsts'
 
 const ReadonlySwatch = ({
   index,
-  setActiveIndex,
+  // setActiveIndex,
   isActive,
   isOtherActive,
   swatch,
+  setHoverIndex,
 }: {
   index: number
   swatch: TGeneratedSwatch
-  setActiveIndex: (index: number | null) => void
+  // setActiveIndex: (index: number | null) => void
+  setHoverIndex: (index: number | null) => void
   isActive: boolean
   isOtherActive: boolean
 }) => {
-  const [dragging, setDragging] = useState(false)
+  // const [dragging, setDragging] = useState(false)
 
-  const handleOnClick = useCallback(() => {
-    if (dragging) return // prevent click when dragging
-    setActiveIndex(isActive ? null : index)
-  }, [index, setActiveIndex, isActive, dragging])
+  // const handleOnClick = useCallback(() => {
+  //   if (dragging) return // prevent click when dragging
+  //   // setActiveIndex(isActive ? null : index)
+  // }, [
+  //   // index,
+  //   // setActiveIndex
+  //   // isActive,
+  //   dragging,
+  // ])
 
   return (
     <Reorder.Item
-      onDragStart={() => setDragging(true)}
-      onDragEnd={() => {
-        // give React a tick before clearing
-        setTimeout(() => setDragging(false), 0)
+      onMouseEnter={() => {
+        setHoverIndex(index)
       }}
+      onMouseLeave={() => {
+        setHoverIndex(null)
+      }}
+      // onDragStart={() => setDragging(true)}
+      // onDragEnd={() => {
+      // give React a tick before clearing
+      // setTimeout(() => setDragging(false), 0)
+      // }}
       as="div"
       key={index}
       value={index}
@@ -56,9 +69,9 @@ const ReadonlySwatch = ({
         zIndex: isActive ? 2 : 1,
         boxSizing: 'border-box',
       }}
-      onClick={handleOnClick}
+      // onClick={handleOnClick}
     >
-      {swatch.color}
+      {isActive ? swatch.color : null}
     </Reorder.Item>
   )
 }

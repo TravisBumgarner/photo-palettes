@@ -74,16 +74,22 @@ export const zodPalette = z.object({
     z.object({
       percentLocation: z.tuple([z.number(), z.number()]),
       id: z.string(),
-      hex: z.string(),
-      r: z.number(),
-      g: z.number(),
-      b: z.number(),
+      hex: z
+        .string()
+        .length(7)
+        .regex(/^#[0-9A-Fa-f]{6}$/),
+      r: z.number().min(0).max(255),
+      g: z.number().min(0).max(255),
+      b: z.number().min(0).max(255),
     })
   ),
 })
 
 export const zodGeneratedPalette = z.object({
-  color: z.string(),
+  color: z
+    .string()
+    .length(7)
+    .regex(/^#[0-9A-Fa-f]{6}$/),
   percentLocation: z.tuple([z.number(), z.number()]),
 })
 

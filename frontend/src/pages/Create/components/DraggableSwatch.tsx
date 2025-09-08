@@ -14,6 +14,7 @@ const SIDE_LENGTH_SCALED = SIDE_LENGTH * 3
 const DraggableSwatch = ({
   index,
   isActive,
+  isHovered,
   setActiveIndex,
   canvasContainerRef,
   canvasRef,
@@ -24,6 +25,7 @@ const DraggableSwatch = ({
   startingPercentLocation: [number, number]
   index: number
   isActive: boolean
+  isHovered: boolean
   setActiveIndex: (index: number | null) => void
   canvasContainerRef: React.RefObject<HTMLDivElement | null>
   canvasRef: React.RefObject<HTMLCanvasElement | null>
@@ -178,7 +180,7 @@ const DraggableSwatch = ({
           width: SIDE_LENGTH,
         }}
         animate={{
-          width: isActive ? SIDE_LENGTH_SCALED : SIDE_LENGTH,
+          width: isHovered || isActive ? SIDE_LENGTH_SCALED : SIDE_LENGTH,
         }}
       >
         <div
@@ -194,16 +196,17 @@ const DraggableSwatch = ({
             gridTemplateColumns: 'repeat(3, 1fr)',
             gridTemplateRows: 'repeat(3, 1fr)',
             touchAction: 'none',
-            zIndex: isActive ? 2 : 1,
+            zIndex: isHovered || isActive ? 2 : 1,
           }}
         >
           {neighbors.map((neighbor, i) => (
             <div
               key={i}
               style={{
-                border: isActive
-                  ? `0.5px solid color-mix(in srgb, ${neighbor} ${i === CENTER_PIXEL_INDEX ? '20%' : '80%'}, white ${i === CENTER_PIXEL_INDEX ? '80%' : '20%'})`
-                  : `0.5px solid ${neighbor}`,
+                border:
+                  isActive || isHovered
+                    ? `0.5px solid color-mix(in srgb, ${neighbor} ${i === CENTER_PIXEL_INDEX ? '20%' : '80%'}, white ${i === CENTER_PIXEL_INDEX ? '80%' : '20%'})`
+                    : `0.5px solid ${neighbor}`,
                 backgroundColor: neighbor,
               }}
             />

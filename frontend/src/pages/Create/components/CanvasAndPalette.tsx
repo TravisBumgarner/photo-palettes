@@ -6,7 +6,6 @@ import { SPACING } from '../../../styles/styleConsts'
 import { type TGeneratedPalette } from '../../../types'
 import DraggableSwatch from './DraggableSwatch'
 import ReadonlySwatch from './ReadonlySwatch'
-import { sharedCSS } from './shared'
 import { Reorder } from 'framer-motion'
 
 const CanvasAndPalette = ({
@@ -14,10 +13,12 @@ const CanvasAndPalette = ({
   palette,
   updateSwatch,
   paletteSortOrder,
+  selectedPaletteIndex,
   setPaletteSortOrder,
 }: {
   photo: Blob | null
   palette: TGeneratedPalette | null
+  selectedPaletteIndex: number
   updateSwatch: (
     index: number,
     color: string,
@@ -29,6 +30,7 @@ const CanvasAndPalette = ({
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const canvasContainerRef = useRef<HTMLDivElement>(null)
   const [activeIndex, setActiveIndex] = useState<number | null>(null)
+  const [hoverIndex, setHoverIndex] = useState<number | null>(null)
   const [readyToDrawSwatches, setReadyToDrawSwatches] = useState(false)
   const [imageDimensions, setImageDimensions] = useState<{
     width: number
@@ -63,16 +65,11 @@ const CanvasAndPalette = ({
   }, [photo, setPhotoOnCanvas])
 
   return (
-    <Box sx={{ marginBottom: SPACING.MEDIUM.PX }}>
+    <Box>
       <Box
         sx={{
-          ...sharedCSS,
-          border: '1px solid',
-          borderColor: 'divider',
           display: 'flex',
           justifyContent: 'center',
-          alignItems: 'center',
-          padding: SPACING.TINY.PX,
         }}
       >
         <div
@@ -99,7 +96,8 @@ const CanvasAndPalette = ({
             palette.map((swatch, index) => (
               <DraggableSwatch
                 isActive={activeIndex === index}
-                key={index}
+                isHovered={hoverIndex === index}
+                key={`${selectedPaletteIndex}-${index}`}
                 index={index}
                 startingPercentLocation={swatch.percentLocation}
                 setActiveIndex={setActiveIndex}
@@ -131,7 +129,7 @@ const CanvasAndPalette = ({
                 swatch={palette[index]}
                 isActive={activeIndex === index}
                 isOtherActive={activeIndex !== null && activeIndex !== index}
-                setActiveIndex={setActiveIndex}
+                setHoverIndex={setHoverIndex}
               />
             ))}
         </Reorder.Group>
