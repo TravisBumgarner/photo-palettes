@@ -54,20 +54,15 @@ const Step = ({
       }}
       sx={{
         backgroundColor: stepColor.string(),
-        flexGrow: 1,
-        height: '40px',
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
         cursor: 'pointer',
+        height: '48px',
 
         '&:hover': {
           '& .hoverText::before': {
             content: '"Copy"',
-          },
-
-          '& .hoverText': {
-            color: getContrastColor(stepColor.hex().toString()),
           },
         },
       }}
@@ -98,7 +93,13 @@ const Gradient = ({
   hexColor: string
 }) => {
   return (
-    <Box sx={{ display: 'flex', flexDirection: 'column', flexGrow: 1 }}>
+    <Box
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        flexGrow: 1,
+      }}
+    >
       {STEPS.map((step) => (
         <Step key={step} step={step} details={details} hexColor={hexColor} />
       ))}

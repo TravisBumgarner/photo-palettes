@@ -30,7 +30,16 @@ const ColorDetails = ({
       }}
     >
       <Swatch swatch={swatch} />
-      <Box sx={{ display: 'flex', gap: SPACING.TINY.PX, flexGrow: 1 }}>
+      <Box
+        sx={{
+          display: 'flex',
+          gap: SPACING.TINY.PX,
+          width: '100%',
+          '& > *': {
+            flexBasis: `calc(100% / ${schemes.length})`,
+          },
+        }}
+      >
         {schemes.map((hexColor) => (
           <Gradient key={hexColor} hexColor={hexColor} details={details} />
         ))}
