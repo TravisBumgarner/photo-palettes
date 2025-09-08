@@ -1,4 +1,6 @@
 // Sorting by Colors is hard. For now I give up.
+// I think this is a good start but gee golly - https://www.alanzucconi.com/2015/09/30/colour-sorting/
+// I left of by making some color palettes in figma like all yellows, white -> gray, red -> purple. Pick up there.
 
 // import type { TGeneratedPalette } from '../types'
 // import { type Sorts } from '../pages/Create/Create.types'
