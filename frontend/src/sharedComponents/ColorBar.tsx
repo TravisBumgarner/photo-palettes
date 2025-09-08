@@ -1,24 +1,63 @@
+import { useCallback } from 'react'
 import { SPACING } from '../styles/styleConsts'
 import Box from '@mui/material/Box'
 
-const ColorBar = ({ colors, height }: { colors: string[]; height: number }) => {
+const Color = ({
+  color,
+  height,
+  index,
+  interactive,
+}: {
+  color: string
+  height: number
+  index: number
+  interactive?: boolean
+}) => {
+  // This should find a new home.
+  const handleScroll = useCallback(() => {
+    document
+      .getElementById(`color-${index}`)
+      ?.scrollIntoView({ behavior: 'smooth' })
+  }, [index])
+
+  return (
+    <Box
+      {...(interactive ? { onClick: handleScroll } : {})}
+      key={index}
+      sx={{
+        flexGrow: 1,
+        height,
+        backgroundColor: color,
+        cursor: interactive ? 'pointer' : 'default',
+      }}
+    />
+  )
+}
+
+const ColorBar = ({
+  colors,
+  height,
+  interactive,
+}: {
+  colors: string[]
+  height: number
+  interactive?: boolean
+}) => {
   return (
     colors.length > 0 && (
       <Box
         sx={{
           display: 'flex',
-          gap: SPACING.TINY.PX,
           marginBottom: SPACING.SMALL.PX,
         }}
       >
         {colors.map((color, index) => (
-          <Box
+          <Color
             key={index}
-            sx={{
-              flexGrow: 1,
-              height,
-              backgroundColor: color,
-            }}
+            interactive={interactive}
+            color={color}
+            index={index}
+            height={height}
           />
         ))}
       </Box>

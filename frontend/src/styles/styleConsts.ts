@@ -85,6 +85,10 @@ export const SPACING = {
     PX: '48px',
     INT: 48,
   },
+  OMNIPRESENT: {
+    PX: '128px',
+    INT: 128,
+  },
 } as const
 
 // // Button Styles. Used in <Button /> and Share.tsx

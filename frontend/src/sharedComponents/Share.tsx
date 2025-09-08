@@ -57,7 +57,7 @@ const Share = ({
     <Box
       sx={{
         display: 'flex',
-        gap: SPACING.SMALL.PX,
+        gap: SPACING.TINY.PX,
         '& svg > rect': {
           fill: (theme) =>
             theme.palette.mode === 'dark'

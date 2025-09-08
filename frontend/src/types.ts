@@ -58,6 +58,20 @@ export type TFeatureRequest = {
   votes: string[]
 }
 
+export const zodSwatch = z.object({
+  percentLocation: z.tuple([z.number(), z.number()]),
+  id: z.string(),
+  hex: z
+    .string()
+    .length(7)
+    .regex(/^#[0-9A-Fa-f]{6}$/),
+  r: z.number().min(0).max(255),
+  g: z.number().min(0).max(255),
+  b: z.number().min(0).max(255),
+})
+
+export type TSwatch = z.infer<typeof zodSwatch>
+
 export const zodPalette = z.object({
   id: z.string(),
   name: z.string(),
@@ -70,19 +84,7 @@ export const zodPalette = z.object({
   aspectRatio: z.number(),
   favoritesCount: z.number(),
   hasUserFavorited: z.boolean(),
-  colors: z.array(
-    z.object({
-      percentLocation: z.tuple([z.number(), z.number()]),
-      id: z.string(),
-      hex: z
-        .string()
-        .length(7)
-        .regex(/^#[0-9A-Fa-f]{6}$/),
-      r: z.number().min(0).max(255),
-      g: z.number().min(0).max(255),
-      b: z.number().min(0).max(255),
-    })
-  ),
+  colors: z.array(zodSwatch),
 })
 
 export const zodGeneratedPalette = z.object({
@@ -127,3 +129,11 @@ export const zodGeneratePaletteResponse = z.discriminatedUnion('success', [
 export type TGeneratePaletteResponse = z.infer<
   typeof zodGeneratePaletteResponse
 >
+
+export type ColorMix =
+  | 'none'
+  | 'complementary'
+  | 'splitComplementary'
+  | 'triadic'
+  | 'tetradic'
+  | 'analogous'
