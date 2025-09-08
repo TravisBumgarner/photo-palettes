@@ -1,8 +1,8 @@
 from datetime import datetime
-from typing import TypedDict
 from uuid import UUID
 
 from pydantic import BaseModel
+
 
 from database.models import Palette
 from utils.photos import get_photo_path
@@ -63,30 +63,3 @@ def map_palette_array_to_response(palettes: list[Palette]) -> list[PaletteRespon
     return [map_palette_to_response(palette) for palette in palettes]
 
 
-class GeneratePaletteResponse(BaseModel):
-    color: str
-    percentLocation: tuple[float, float]  # noqa #815
-
-
-def map_generate_palette_to_response(
-    color: str,
-    percent_location: list[float],
-) -> GeneratePaletteResponse:
-    return GeneratePaletteResponse(
-        color=color,
-        percentLocation=(percent_location[0], percent_location[1]),
-    )
-
-
-class PaletteData(TypedDict):
-    color: str
-    percent_location: list[float]
-
-
-def map_generate_palette_array_to_response(
-    palette_data: list[PaletteData],
-) -> list[GeneratePaletteResponse]:
-    return [
-        map_generate_palette_to_response(item["color"], item["percent_location"])
-        for item in palette_data
-    ]

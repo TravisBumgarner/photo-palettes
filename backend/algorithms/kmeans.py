@@ -1,21 +1,12 @@
-from typing import TypedDict
-
 import numpy as np
 from PIL import Image
 from sklearn.cluster import KMeans
 
-from .utils import rgb_to_hex
+from algorithms.types import TGeneratedPalette, TSwatch
+from algorithms.utils import rgb_to_hex
 
 
-class TSwatch(TypedDict):
-    color: str
-    percent_location: list[float]
-
-
-TGeneratedPalette = list[TSwatch]
-
-
-def get_image_colors(image: Image.Image) -> TGeneratedPalette:
+def kmeans(image: Image.Image) -> TGeneratedPalette:
     img_array = np.array(image)
     pixels = img_array.reshape(-1, 3)
     kmeans = KMeans(n_clusters=6, random_state=42)
@@ -49,7 +40,9 @@ def get_image_colors(image: Image.Image) -> TGeneratedPalette:
             # Calculate distance to each selected point
             spatial_distances = np.zeros(len(pixels))
             for i in range(len(selected_indices)):
-                dist = np.sqrt((y_coords - selected_y[i]) ** 2 + (x_coords - selected_x[i]) ** 2)
+                dist = np.sqrt(
+                    (y_coords - selected_y[i]) ** 2 + (x_coords - selected_x[i]) ** 2
+                )
                 spatial_distances = np.maximum(spatial_distances, dist)
 
             # Normalize spatial distances
@@ -71,6 +64,6 @@ def get_image_colors(image: Image.Image) -> TGeneratedPalette:
         locations.append([float(x), float(y)])
 
     return [
-        {"color": color.upper(), "percent_location": loc}
-        for color, loc in zip(hex_colors, locations, strict=True)
+        TSwatch(color=color.upper(), percent_location=loc)
+        for color, loc in zip(hex_colors, locations)
     ]

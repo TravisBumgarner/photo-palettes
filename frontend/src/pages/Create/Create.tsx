@@ -5,43 +5,60 @@ import { useMutation } from '@tanstack/react-query'
 import { useCallback, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { createPalette } from '../../api/palettes/createPalette'
-import { generatePalette } from '../../api/palettes/generatePalette'
+import { generatePalette as generatePaletteFull } from '../../api/palettes/generatePalette'
+import { useGeneratePaletteWorker } from '../../hooks/useGeneratePaletteWorker'
 import { logger } from '../../services/logging'
 import Loading from '../../sharedComponents/Loading'
 import Message from '../../sharedComponents/Message'
 import { MODAL_ID } from '../../sharedComponents/Modal/Modal.types'
 import { activeModalSignal } from '../../signals'
 import PageWrapper from '../../styles/shared/PageWrapper'
-import { SPACING } from '../../styles/styleConsts'
+import { FONT_SIZES, SPACING, subtleBackground } from '../../styles/styleConsts'
 import { type TGeneratedPalette } from '../../types'
 import { resizeImage } from '../../utils/image'
 import CanvasAndPalette from './components/CanvasAndPalette'
 import Dropzone from './components/Dropzone'
+import SelectGeneratedPalette from './components/SelectGeneratedPalette'
 import { sharedCSS } from './components/shared'
 import { queries } from '../../database'
+import { styled, type SxProps } from '@mui/material/styles'
+import { PALETTE_SIZE } from '../../consts'
+import Typography from '@mui/material/Typography'
+import { v4 as uuidv4 } from 'uuid'
+import type { TGeneratePaletteResponse } from '../../types'
 
-type UploadStatus =
+type CreationStatus =
   | 'INITIAL'
   | 'UPLOADING'
-  | 'UPLOADED'
-  | 'ERROR'
+  | 'SELECTING_COLORS'
   | 'SUBMITTING'
   | 'SUBMITTED'
+  | 'ERROR'
 
 const MAX_NAME_LENGTH = 50
 
-const Create = () => {
-  const [uploadStatus, setUploadStatus] = useState<UploadStatus>('INITIAL')
+const Create = ({ mode }: { mode: 'lite' | 'full' }) => {
+  const { generatePalette: generatePaletteLite } = useGeneratePaletteWorker()
+
+  const [creationStatus, setCreationStatus] =
+    useState<CreationStatus>('INITIAL')
   const [photo, setPhoto] = useState<Blob | null>(null)
   const navigate = useNavigate()
 
   const [name, setName] = useState('')
+  const [generatedPalettes, setGeneratedPalettes] = useState<
+    TGeneratedPalette[]
+  >([])
   const [palette, setPalette] = useState<TGeneratedPalette | null>(null)
-  const [paletteSortOrder, setPaletteSortOrder] = useState<number[]>([])
+  const [selectedPaletteIndex, setSelectedPaletteIndex] = useState(0)
+
+  const [paletteSortOrder, setPaletteSortOrder] = useState<number[]>(
+    Array.from({ length: PALETTE_SIZE }, (_, i) => i)
+  )
   const [tempId, setTempId] = useState<string | null>(null)
 
   useEffect(() => {
-    // When the user is signed out, they can create palettes via CreateLite.tsx
+    // When the user is signed out, they can create palettes.
     // If they opt to sign up or login, they'll be redirected here after. We'll
     // load their data into state.
     const checkAndLoadTemporaryPalette = async () => {
@@ -53,12 +70,11 @@ const Create = () => {
           image,
           tempId: loadedTempId,
         } = temporaryPalettes[0]
-        setPalette(palette)
+        setPalette(structuredClone(palette))
         setPhoto(await image)
         setName(name)
         setTempId(loadedTempId)
-        setUploadStatus('UPLOADED')
-        setPaletteSortOrder(Array.from({ length: palette.length }, (_, i) => i))
+        setCreationStatus('SELECTING_COLORS')
       }
     }
     checkAndLoadTemporaryPalette()
@@ -76,42 +92,54 @@ const Create = () => {
     },
     []
   )
-  const generatePaletteMutation = useMutation({
-    mutationFn: generatePalette,
-    onSuccess: () => {
-      setUploadStatus('UPLOADED')
-    },
+
+  const resetSortOrder = useCallback(() => {
+    setPaletteSortOrder(Array.from({ length: PALETTE_SIZE }, (_, i) => i))
+  }, [setPaletteSortOrder])
+
+  const generatePaletteFullMutation = useMutation({
+    mutationFn: generatePaletteFull,
     onError: () => {
       logger.error('Error generating palette')
-      setUploadStatus('ERROR')
+      setCreationStatus('ERROR')
     },
   })
-
   const onDrop = useCallback(
     async (acceptedFiles: File[]) => {
       if (acceptedFiles.length === 0) {
         // An error was thrown, it's handled internally by Dropzone.tsx
         return
       }
-      setUploadStatus('UPLOADING')
+      setCreationStatus('UPLOADING')
       const photo = acceptedFiles[0]
       const resizedPhoto = await resizeImage(photo, {
         maxWidth: 1600,
         maxHeight: 1600,
       })
       setPhoto(resizedPhoto)
-      const response = await generatePaletteMutation.mutateAsync(resizedPhoto)
-      if (response.success) {
-        setPalette(response.palette)
-        setPaletteSortOrder(
-          Array.from({ length: response.palette.length }, (_, i) => i)
-        )
-        setUploadStatus('UPLOADED')
+
+      let response: TGeneratePaletteResponse
+      if (mode === 'lite') {
+        const photoUrl = URL.createObjectURL(resizedPhoto)
+        response = await generatePaletteLite(photoUrl)
       } else {
-        setUploadStatus('ERROR')
+        response = await generatePaletteFullMutation.mutateAsync(resizedPhoto)
+      }
+      if (response.success) {
+        setCreationStatus('SELECTING_COLORS')
+        setGeneratedPalettes(response.palettes)
+        setPalette(structuredClone(response.palettes[0]))
+      } else {
+        setCreationStatus('ERROR')
       }
     },
-    [generatePaletteMutation, setPalette]
+    [
+      generatePaletteFullMutation,
+      setGeneratedPalettes,
+      setCreationStatus,
+      mode,
+      generatePaletteLite,
+    ]
   )
 
   const handleNameChange = useCallback(
@@ -123,9 +151,10 @@ const Create = () => {
 
   const handleClearPalette = useCallback(() => {
     setPalette(null)
-    setUploadStatus('INITIAL')
+    setCreationStatus('INITIAL')
     setPhoto(null)
     setName('')
+    setSelectedPaletteIndex(0)
     if (tempId) {
       queries.deleteTemporaryPalette(tempId)
     }
@@ -133,18 +162,30 @@ const Create = () => {
 
   const createPaletteMutation = useMutation({
     mutationFn: createPalette,
-    onSuccess: () => {
-      setUploadStatus('UPLOADED')
-    },
     onError: () => {
       logger.error('Error saving palette')
-      setUploadStatus('ERROR')
+      setCreationStatus('ERROR')
     },
   })
 
-  const handleSavePalette = useCallback(async () => {
+  const handleSaveLite = useCallback(() => {
+    if (!palette) return
+    setCreationStatus('SUBMITTING')
+
+    const sortedPalette = paletteSortOrder.map((index) => palette[index])
+
+    activeModalSignal.value = {
+      id: MODAL_ID.ANON_PALETTE_CREATION_MODAL,
+      palette: sortedPalette,
+      photoUrl: URL.createObjectURL(photo!),
+      paletteId: uuidv4(),
+      name,
+    }
+  }, [name, palette, paletteSortOrder, photo])
+
+  const handleSaveFull = useCallback(async () => {
     if (!palette || !photo) return
-    setUploadStatus('SUBMITTING')
+    setCreationStatus('SUBMITTING')
 
     const sortedPalette = paletteSortOrder.map((index) => palette[index])
     const response = await createPaletteMutation.mutateAsync({
@@ -163,9 +204,9 @@ const Create = () => {
         title: 'Thanks for your submission!',
         body: 'Once it is approved, it will be added to the site.',
       }
-      setUploadStatus('SUBMITTED')
+      setCreationStatus('SUBMITTED')
     } else {
-      setUploadStatus('ERROR')
+      setCreationStatus('ERROR')
     }
   }, [
     createPaletteMutation,
@@ -177,8 +218,19 @@ const Create = () => {
     tempId,
   ])
 
+  const handleSavePalette = useCallback(async () => {
+    if (mode === 'full') handleSaveFull()
+    else handleSaveLite()
+  }, [handleSaveFull, handleSaveLite, mode])
+
+  const handlePaletteChange = (paletteIndex: number) => {
+    setPalette(structuredClone(generatedPalettes[paletteIndex]))
+    setSelectedPaletteIndex(paletteIndex)
+    resetSortOrder()
+  }
+
   const handleTryAgain = useCallback(() => {
-    setUploadStatus('INITIAL')
+    setCreationStatus('INITIAL')
     setPalette(null)
     setPhoto(null)
     setName('')
@@ -187,11 +239,34 @@ const Create = () => {
   const nameLabel =
     name.length > 0 ? `Name: ${name.length} / ${MAX_NAME_LENGTH}` : 'Name'
 
-  return (
-    <PageWrapper width="full">
-      {/* <PageTitle marginBottom text="Create" /> */}
-      {uploadStatus === 'INITIAL' && <Dropzone onDrop={onDrop} />}
-      {(uploadStatus === 'UPLOADING' || uploadStatus === 'SUBMITTED') && (
+  if (creationStatus === 'INITIAL') {
+    return (
+      <PageWrapper width="full">
+        <Dropzone onDrop={onDrop} />
+      </PageWrapper>
+    )
+  }
+
+  if (creationStatus === 'ERROR') {
+    return (
+      <PageWrapper width="full">
+        <Message
+          message="Error generating palette"
+          color="error"
+          callback={handleTryAgain}
+          callbackText="Try again"
+        />
+      </PageWrapper>
+    )
+  }
+
+  if (
+    creationStatus === 'UPLOADING' ||
+    creationStatus === 'SUBMITTING' ||
+    creationStatus === 'SUBMITTED'
+  ) {
+    return (
+      <PageWrapper width="full">
         <Box
           sx={{
             display: 'flex',
@@ -202,61 +277,101 @@ const Create = () => {
         >
           <Loading />
         </Box>
-      )}
-      {uploadStatus === 'ERROR' && (
-        <Message
-          message="Error generating palette"
-          color="error"
-          callback={handleTryAgain}
-          callbackText="Try again"
-        />
-      )}
-      {(uploadStatus === 'UPLOADED' || uploadStatus === 'SUBMITTING') && (
-        <Box
-          sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            gap: SPACING.SMALL.PX,
-          }}
-        >
+      </PageWrapper>
+    )
+  }
+
+  return (
+    // creationStatus === 'selecting_colors
+    <PageWrapper width="full">
+      <Container>
+        <LeftColumn>
+          <SectionWrapper>
+            <Typography sx={labelStyles}>Starter palette</Typography>
+            <SelectGeneratedPalette
+              handlePaletteChange={handlePaletteChange}
+              generatedPalettes={generatedPalettes}
+            />
+          </SectionWrapper>
+
+          <SectionWrapper>
+            <TextField
+              size="small"
+              variant="outlined"
+              fullWidth
+              label={nameLabel}
+              placeholder="Name your palette"
+              value={name}
+              onChange={handleNameChange}
+            />
+          </SectionWrapper>
+
+          <SectionWrapper>
+            <Box
+              sx={{
+                display: 'flex',
+                flexDirection: 'row',
+                gap: '10px',
+                justifyContent: 'space-between',
+              }}
+            >
+              <Button variant="text" onClick={handleClearPalette}>
+                Clear
+              </Button>
+              <Button
+                disabled={!name}
+                variant="contained"
+                sx={{ flexGrow: 1 }}
+                onClick={handleSavePalette}
+              >
+                Save
+              </Button>
+            </Box>
+          </SectionWrapper>
+        </LeftColumn>
+        <RightColumn>
           <CanvasAndPalette
             photo={photo}
             palette={palette}
+            selectedPaletteIndex={selectedPaletteIndex}
             updateSwatch={updateSwatch}
             paletteSortOrder={paletteSortOrder}
             setPaletteSortOrder={setPaletteSortOrder}
           />
-          <TextField
-            variant="outlined"
-            fullWidth
-            label={nameLabel}
-            placeholder="Name your palette"
-            value={name}
-            onChange={handleNameChange}
-          />
-          <Box
-            sx={{
-              display: 'flex',
-              flexDirection: 'row',
-              gap: '10px',
-              justifyContent: 'flex-end',
-            }}
-          >
-            <Button variant="outlined" onClick={handleClearPalette}>
-              Clear
-            </Button>
-            <Button
-              disabled={!name || uploadStatus === 'SUBMITTING'}
-              variant="contained"
-              onClick={handleSavePalette}
-            >
-              Save
-            </Button>
-          </Box>
-        </Box>
-      )}
+        </RightColumn>
+      </Container>
     </PageWrapper>
   )
 }
+
+const SectionWrapper = styled(Box)(() => ({
+  display: 'flex',
+  gap: SPACING.TINY.PX,
+  flexDirection: 'column',
+}))
+
+const labelStyles: SxProps = {
+  fontSize: FONT_SIZES.SMALL.PX,
+}
+
+const LeftColumn = styled(Box)(({ theme }) => ({
+  flexBasis: '200px',
+  flexShrink: 0,
+  display: 'flex',
+  flexDirection: 'column',
+  gap: SPACING.MEDIUM.PX,
+  padding: `${SPACING.MEDIUM.PX}`,
+  marginRight: SPACING.MEDIUM.PX,
+  backgroundColor: subtleBackground(theme.palette.mode),
+}))
+
+const RightColumn = styled(Box)(() => ({
+  flexGrow: 1,
+}))
+
+const Container = styled(Box)(() => ({
+  display: 'flex',
+  alignItems: 'flex-start', // important, avoid stretch
+}))
 
 export default Create

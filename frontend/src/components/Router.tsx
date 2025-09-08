@@ -6,7 +6,6 @@ const PrivacyPolicy = lazy(async () => await import('../pages/PrivacyPolicy'))
 const ReleaseNotes = lazy(async () => await import('../pages/ReleaseNotes'))
 const Feedback = lazy(async () => await import('../pages/Feedback'))
 const Create = lazy(async () => await import('../pages/Create/Create'))
-const CreateLite = lazy(async () => await import('../pages/Create/CreateLite'))
 const Login = lazy(async () => await import('../pages/Login'))
 const Error500 = lazy(async () => await import('../pages/Error500'))
 const Error404 = lazy(async () => await import('../pages/Error404'))
@@ -58,6 +57,13 @@ const AdminRoute = () => {
 const Router = () => (
   <Routes>
     <Route path="/" element={<Browse />} />
+    <Route
+      path={ROUTES.create.href}
+      element={(() => {
+        const appUserDetails = useGlobalStore.getState().appUserDetails
+        return <Create mode={appUserDetails ? 'full' : 'lite'} />
+      })()}
+    />
     <Route path={ROUTES.tos.href} element={<TermsOfService />} />
     <Route path={ROUTES.privacy.href} element={<PrivacyPolicy />} />
     <Route path={ROUTES.releaseNotes.href} element={<ReleaseNotes />} />
@@ -76,14 +82,6 @@ const Router = () => (
     <Route element={<AdminRoute />}>
       <Route path={ROUTES.admin.href} element={<Admin />} />
     </Route>
-    {/* Conditional /create route */}
-    <Route
-      path={ROUTES.create.href}
-      element={(() => {
-        const appUserDetails = useGlobalStore.getState().appUserDetails
-        return appUserDetails ? <Create /> : <CreateLite />
-      })()}
-    />
 
     {/* Public only Routes */}
     <Route element={<AnonymousRoute />}>

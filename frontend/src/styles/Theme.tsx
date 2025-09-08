@@ -245,12 +245,12 @@ const lightThemeOptions: ThemeOptions = {
           },
         },
         text: {
-          color: 'pink', // For now I don't think I'm using this anywhere.
+          color: PALETTE.grayscale[700],
           '&:hover': {
-            backgroundColor: 'lightpink',
+            backgroundColor: PALETTE.grayscale[100],
           },
           '&:disabled': {
-            textColor: 'lightpink',
+            textColor: PALETTE.grayscale[400],
           },
         },
       },
@@ -391,12 +391,12 @@ const darkThemeOptions: ThemeOptions = {
           },
         },
         text: {
-          color: 'pink', // For now I don't think I'm using this anywhere.
+          color: PALETTE.grayscale[100],
           '&:hover': {
-            backgroundColor: 'lightpink',
+            backgroundColor: PALETTE.grayscale[700],
           },
           '&:disabled': {
-            textColor: 'lightpink',
+            textColor: PALETTE.grayscale[700],
           },
         },
       },
