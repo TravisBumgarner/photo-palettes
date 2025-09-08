@@ -14,7 +14,6 @@ from routes.shared import (
     BaseSuccessResponse,
 )
 from services.logger import log_error
-from utils.colors import sort_by_luminance
 
 from .palettes_router import palettes_router
 
@@ -62,11 +61,11 @@ def handle_request(thumbnail: UploadFile):
         ciede2000(rgb_image, "dark"),
     ]
 
-    palettes = [sort_by_luminance(palette) for palette in palettes if len(palette) == 6]
-
     return SuccessResponse(
         palettes=[
-            map_generate_palette_data_to_response(palette) for palette in palettes
+            map_generate_palette_data_to_response(palette)
+            for palette in palettes
+            if len(palette) == 6
         ],
     )
 
