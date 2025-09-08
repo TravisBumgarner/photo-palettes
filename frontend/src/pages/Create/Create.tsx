@@ -12,7 +12,7 @@ import Message from '../../sharedComponents/Message'
 import { MODAL_ID } from '../../sharedComponents/Modal/Modal.types'
 import { activeModalSignal } from '../../signals'
 import PageWrapper from '../../styles/shared/PageWrapper'
-import { SPACING } from '../../styles/styleConsts'
+import { SPACING, subtleBackground } from '../../styles/styleConsts'
 import { type TGeneratedPalette } from '../../types'
 import { resizeImage } from '../../utils/image'
 import CanvasAndPalette from './components/CanvasAndPalette'
@@ -20,20 +20,21 @@ import Dropzone from './components/Dropzone'
 import SelectGeneratedPalette from './components/SelectGeneratedPalette'
 import { sharedCSS } from './components/shared'
 import { queries } from '../../database'
+import { styled } from '@mui/material/styles'
 
-type UploadStatus =
+type CreationStatus =
   | 'INITIAL'
   | 'UPLOADING'
-  | 'SELECTING_GENERATED_PALETTE'
-  | 'PALETTE_SELECTED'
-  | 'ERROR'
+  | 'SELECTING_COLORS'
   | 'SUBMITTING'
   | 'SUBMITTED'
+  | 'ERROR'
 
 const MAX_NAME_LENGTH = 50
 
 const Create = () => {
-  const [uploadStatus, setUploadStatus] = useState<UploadStatus>('INITIAL')
+  const [creationStatus, setCreationStatus] =
+    useState<CreationStatus>('INITIAL')
   const [photo, setPhoto] = useState<Blob | null>(null)
   const navigate = useNavigate()
 
@@ -62,7 +63,7 @@ const Create = () => {
         setPhoto(await image)
         setName(name)
         setTempId(loadedTempId)
-        setUploadStatus('PALETTE_SELECTED')
+        setCreationStatus('SELECTING_COLORS')
         setPaletteSortOrder(Array.from({ length: palette.length }, (_, i) => i))
       }
     }
@@ -88,7 +89,7 @@ const Create = () => {
     // },
     onError: () => {
       logger.error('Error generating palette')
-      setUploadStatus('ERROR')
+      setCreationStatus('ERROR')
     },
   })
 
@@ -98,7 +99,7 @@ const Create = () => {
         // An error was thrown, it's handled internally by Dropzone.tsx
         return
       }
-      setUploadStatus('UPLOADING')
+      setCreationStatus('UPLOADING')
       const photo = acceptedFiles[0]
       const resizedPhoto = await resizeImage(photo, {
         maxWidth: 1600,
@@ -107,13 +108,11 @@ const Create = () => {
       setPhoto(resizedPhoto)
       const response = await generatePaletteMutation.mutateAsync(resizedPhoto)
       if (response.success) {
+        setCreationStatus('SELECTING_COLORS')
         setGeneratedPalettes(response.palettes)
-        // setPaletteSortOrder(
-        //   Array.from({ length: response.palette.length }, (_, i) => i)
-        // )
-        setUploadStatus('SELECTING_GENERATED_PALETTE')
+        setPalette(response.palettes[0])
       } else {
-        setUploadStatus('ERROR')
+        setCreationStatus('ERROR')
       }
     },
     [generatePaletteMutation, setGeneratedPalettes]
@@ -128,7 +127,7 @@ const Create = () => {
 
   const handleClearPalette = useCallback(() => {
     setPalette(null)
-    setUploadStatus('INITIAL')
+    setCreationStatus('INITIAL')
     setPhoto(null)
     setName('')
     if (tempId) {
@@ -143,13 +142,13 @@ const Create = () => {
     // },
     onError: () => {
       logger.error('Error saving palette')
-      setUploadStatus('ERROR')
+      setCreationStatus('ERROR')
     },
   })
 
   const handleSavePalette = useCallback(async () => {
     if (!palette || !photo) return
-    setUploadStatus('SUBMITTING')
+    setCreationStatus('SUBMITTING')
 
     const sortedPalette = paletteSortOrder.map((index) => palette[index])
     const response = await createPaletteMutation.mutateAsync({
@@ -168,9 +167,9 @@ const Create = () => {
         title: 'Thanks for your submission!',
         body: 'Once it is approved, it will be added to the site.',
       }
-      setUploadStatus('SUBMITTED')
+      setCreationStatus('SUBMITTED')
     } else {
-      setUploadStatus('ERROR')
+      setCreationStatus('ERROR')
     }
   }, [
     createPaletteMutation,
@@ -182,14 +181,8 @@ const Create = () => {
     tempId,
   ])
 
-  const handlePaletteSelection = useCallback((palette: TGeneratedPalette) => {
-    setPalette(palette)
-    setPaletteSortOrder(Array.from({ length: palette.length }, (_, i) => i))
-    setUploadStatus('PALETTE_SELECTED')
-  }, [])
-
   const handleTryAgain = useCallback(() => {
-    setUploadStatus('INITIAL')
+    setCreationStatus('INITIAL')
     setPalette(null)
     setPhoto(null)
     setName('')
@@ -198,7 +191,7 @@ const Create = () => {
   const nameLabel =
     name.length > 0 ? `Name: ${name.length} / ${MAX_NAME_LENGTH}` : 'Name'
 
-  if (uploadStatus === 'INITIAL') {
+  if (creationStatus === 'INITIAL') {
     return (
       <PageWrapper width="full">
         <Dropzone onDrop={onDrop} />
@@ -206,18 +199,7 @@ const Create = () => {
     )
   }
 
-  if (uploadStatus === 'SELECTING_GENERATED_PALETTE') {
-    return (
-      <PageWrapper width="full">
-        <SelectGeneratedPalette
-          handlePaletteSelection={handlePaletteSelection}
-          generatedPalettes={generatedPalettes}
-        />
-      </PageWrapper>
-    )
-  }
-
-  if (uploadStatus === 'ERROR') {
+  if (creationStatus === 'ERROR') {
     return (
       <PageWrapper width="full">
         <Message
@@ -231,9 +213,9 @@ const Create = () => {
   }
 
   if (
-    uploadStatus === 'UPLOADING' ||
-    uploadStatus === 'SUBMITTING' ||
-    uploadStatus === 'SUBMITTED'
+    creationStatus === 'UPLOADING' ||
+    creationStatus === 'SUBMITTING' ||
+    creationStatus === 'SUBMITTED'
   ) {
     return (
       <PageWrapper width="full">
@@ -252,51 +234,77 @@ const Create = () => {
   }
 
   return (
+    // creationStatus === 'selecting_colors
     <PageWrapper width="full">
-      <Box
-        sx={{
-          display: 'flex',
-          flexDirection: 'column',
-          gap: SPACING.SMALL.PX,
-        }}
-      >
-        <CanvasAndPalette
-          photo={photo}
-          palette={palette}
-          updateSwatch={updateSwatch}
-          paletteSortOrder={paletteSortOrder}
-          setPaletteSortOrder={setPaletteSortOrder}
-        />
-        <TextField
-          variant="outlined"
-          fullWidth
-          label={nameLabel}
-          placeholder="Name your palette"
-          value={name}
-          onChange={handleNameChange}
-        />
-        <Box
-          sx={{
-            display: 'flex',
-            flexDirection: 'row',
-            gap: '10px',
-            justifyContent: 'flex-end',
-          }}
-        >
-          <Button variant="outlined" onClick={handleClearPalette}>
-            Clear
-          </Button>
-          <Button
-            disabled={!name}
-            variant="contained"
-            onClick={handleSavePalette}
+      <Container>
+        <LeftColumn>
+          <SelectGeneratedPalette
+            setActivePalette={setPalette}
+            generatedPalettes={generatedPalettes}
+          />
+          <TextField
+            variant="outlined"
+            fullWidth
+            label={nameLabel}
+            placeholder="Name your palette"
+            value={name}
+            onChange={handleNameChange}
+          />
+          <Box
+            sx={{
+              display: 'flex',
+              flexDirection: 'row',
+              gap: '10px',
+              justifyContent: 'space-between',
+            }}
           >
-            Save
-          </Button>
-        </Box>
-      </Box>
+            <Button variant="outlined" onClick={handleClearPalette}>
+              Clear
+            </Button>
+            <Button
+              disabled={!name}
+              variant="contained"
+              onClick={handleSavePalette}
+            >
+              Save
+            </Button>
+          </Box>
+        </LeftColumn>
+        <RightColumn>
+          <CanvasAndPalette
+            photo={photo}
+            palette={palette}
+            updateSwatch={updateSwatch}
+            paletteSortOrder={paletteSortOrder}
+            setPaletteSortOrder={setPaletteSortOrder}
+          />
+        </RightColumn>
+      </Container>
     </PageWrapper>
   )
 }
+
+const LeftColumn = styled(Box)(({ theme }) => ({
+  flexBasis: '300px',
+  flexShrink: 0,
+  padding: `${SPACING.MEDIUM.PX}`,
+  minHeight: '100vh',
+
+  position: 'sticky',
+  top: '0px',
+  left: '0px',
+  backgroundColor: subtleBackground(theme.palette.mode),
+}))
+
+const RightColumn = styled(Box)(() => ({
+  padding: SPACING.MEDIUM.PX,
+  flexGrow: 1,
+  overflow: 'hidden',
+}))
+
+const Container = styled(Box)(() => ({
+  display: 'flex',
+  alignItems: 'flex-start', // important, avoid stretch
+}))
 
 export default Create
