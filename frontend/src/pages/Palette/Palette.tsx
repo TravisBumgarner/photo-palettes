@@ -10,6 +10,7 @@ import type { PaletteControlsState } from './Palette.types'
 import { BACKGROUND_COLORS } from './Palette.consts'
 import PaletteMobile from './components/Palette.Mobile'
 import PaletteDesktop from './components/Palette.Desktop'
+import { MODERATION_STATUS } from '../../types'
 
 const Palette = () => {
   const params = useParams()
@@ -46,20 +47,39 @@ const Palette = () => {
     )
   }
 
-  return isFullWidth ? (
-    <PaletteDesktop
-      controls={controls}
-      refetch={refetch}
-      palette={data.palette}
-      setControls={setControls}
-    />
-  ) : (
-    <PaletteMobile
-      controls={controls}
-      refetch={refetch}
-      setControls={setControls}
-      palette={data.palette}
-    />
+  return (
+    <>
+      {data.palette.moderationStatus ===
+        MODERATION_STATUS.AWAITING_MODERATION && (
+        <Message
+          includeVerticalMargin
+          message="This palette is pending approval."
+          color="info"
+        />
+      )}
+      {data.palette.moderationStatus === MODERATION_STATUS.REJECTED && (
+        <Message
+          includeVerticalMargin
+          message="This palette was rejected."
+          color="error"
+        />
+      )}
+      {isFullWidth ? (
+        <PaletteDesktop
+          controls={controls}
+          refetch={refetch}
+          palette={data.palette}
+          setControls={setControls}
+        />
+      ) : (
+        <PaletteMobile
+          controls={controls}
+          refetch={refetch}
+          setControls={setControls}
+          palette={data.palette}
+        />
+      )}
+    </>
   )
 }
 

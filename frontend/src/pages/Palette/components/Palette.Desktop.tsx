@@ -1,7 +1,6 @@
 import React from 'react'
 import Box from '@mui/material/Box'
 import { SPACING, subtleBackground } from '../../../styles/styleConsts'
-import Message from '../../../sharedComponents/Message'
 import PageWrapper from '../../../styles/shared/PageWrapper'
 import { styled } from '@mui/material/styles'
 import Summary from './Summary'
@@ -9,7 +8,7 @@ import Controls from './Controls'
 import type { PaletteControlsState } from '../Palette.types'
 import ColorDetails from './ColorDetails'
 import ModerationPanel from '../../../sharedComponents/ModerationPanel'
-import { MODERATION_STATUS, type TPalette } from '../../../types'
+import { type TPalette } from '../../../types'
 
 const PaletteDesktop = ({
   palette,
@@ -25,20 +24,7 @@ const PaletteDesktop = ({
   return (
     <PageWrapper width="full">
       <p>Desktop</p>
-      {palette.moderationStatus === MODERATION_STATUS.AWAITING_MODERATION && (
-        <Message
-          includeVerticalMargin
-          message="This palette is pending approval."
-          color="info"
-        />
-      )}
-      {palette.moderationStatus === MODERATION_STATUS.REJECTED && (
-        <Message
-          includeVerticalMargin
-          message="This palette was rejected."
-          color="error"
-        />
-      )}
+
       <Container>
         <LeftColumn>
           <Summary palette={palette} refetch={refetch} />
