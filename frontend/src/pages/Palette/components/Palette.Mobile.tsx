@@ -1,14 +1,22 @@
-import React from 'react'
-import Box from '@mui/material/Box'
+import React, { useCallback, useState } from 'react'
 import { SPACING, subtleBackground } from '../../../styles/styleConsts'
 import PageWrapper from '../../../styles/shared/PageWrapper'
-import { styled } from '@mui/material/styles'
+import { useTheme } from '@mui/material/styles'
 import Summary from './Summary'
 import Controls from './Controls'
 import type { PaletteControlsState } from '../Palette.types'
 import ColorDetails from './ColorDetails'
 import ModerationPanel from '../../../sharedComponents/ModerationPanel'
 import { type TPalette } from '../../../types'
+import Tab from '@mui/material/Tab'
+import Tabs from '@mui/material/Tabs'
+
+const TABS = ['overview', 'color']
+
+const TABS_LABEL = {
+  [TABS[0]]: 'Overview',
+  [TABS[1]]: 'Color Details',
+}
 
 const PaletteMobile = ({
   palette,
@@ -21,15 +29,38 @@ const PaletteMobile = ({
   controls: PaletteControlsState
   setControls: React.Dispatch<React.SetStateAction<PaletteControlsState>>
 }) => {
+  const [tabIndex, setTabIndex] = useState(0)
+  const theme = useTheme()
+  const handleTabChange = useCallback((_event: unknown, v: number) => {
+    setTabIndex(v)
+  }, [])
+
   return (
     <PageWrapper width="full">
-      <p>Mobile</p>
-      <Container>
-        <LeftColumn>
-          <Summary palette={palette} refetch={refetch} />
+      <Tabs
+        sx={{
+          position: 'sticky',
+          top: 0,
+          marginBottom: SPACING.MEDIUM.PX,
+          padding: `${SPACING.SMALL.PX} ${SPACING.MEDIUM.PX}`,
+          backgroundColor: subtleBackground(theme.palette.mode),
+        }}
+        variant="scrollable"
+        value={tabIndex}
+        onChange={handleTabChange}
+      >
+        {TABS.map((key) => (
+          <Tab key={key} label={TABS_LABEL[key]} />
+        ))}
+      </Tabs>
+
+      {TABS[tabIndex] === 'overview' && (
+        <Summary palette={palette} refetch={refetch} />
+      )}
+
+      {TABS[tabIndex] === 'color' && (
+        <>
           <Controls controls={controls} setControls={setControls} />
-        </LeftColumn>
-        <RightColumn sx={{ backgroundColor: controls.background }}>
           {palette.colors.map((swatch, index) => (
             <ColorDetails
               index={index}
@@ -39,38 +70,16 @@ const PaletteMobile = ({
               key={swatch.id}
             />
           ))}
-          <ModerationPanel
-            refetch={refetch}
-            moderationStatus={palette.moderationStatus}
-            paletteId={palette.id}
-          />
-        </RightColumn>
-      </Container>
+        </>
+      )}
+
+      <ModerationPanel
+        refetch={refetch}
+        moderationStatus={palette.moderationStatus}
+        paletteId={palette.id}
+      />
     </PageWrapper>
   )
 }
-
-const LeftColumn = styled(Box)(({ theme }) => ({
-  flexBasis: '300px',
-  flexShrink: 0,
-  padding: `${SPACING.MEDIUM.PX}`,
-  minHeight: '100vh',
-
-  position: 'sticky',
-  top: '0px',
-  left: '0px',
-  backgroundColor: subtleBackground(theme.palette.mode),
-}))
-
-const RightColumn = styled(Box)(() => ({
-  padding: SPACING.MEDIUM.PX,
-  flexGrow: 1,
-  overflow: 'hidden',
-}))
-
-const Container = styled(Box)(() => ({
-  display: 'flex',
-  alignItems: 'flex-start', // important, avoid stretch
-}))
 
 export default PaletteMobile

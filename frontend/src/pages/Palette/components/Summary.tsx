@@ -57,12 +57,14 @@ const Summary = ({
         </Box>
       </Box>
       <ColorBar interactive height={15} colors={colors.map((c) => c.hex)} />
-      <BlurImage
-        alt={`${name} thumbnail`}
-        src={photoUrl}
-        aspectRatio={aspectRatio}
-        blurHash={blurhash}
-      />
+      <Box sx={{ height: '70vh' }}>
+        <BlurImage
+          alt={`${name} thumbnail`}
+          src={photoUrl}
+          aspectRatio={aspectRatio}
+          blurHash={blurhash}
+        />
+      </Box>
     </div>
   )
 }

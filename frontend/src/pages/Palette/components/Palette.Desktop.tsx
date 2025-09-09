@@ -23,8 +23,6 @@ const PaletteDesktop = ({
 }) => {
   return (
     <PageWrapper width="full">
-      <p>Desktop</p>
-
       <Container>
         <LeftColumn>
           <Summary palette={palette} refetch={refetch} />

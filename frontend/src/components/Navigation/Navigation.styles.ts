@@ -15,7 +15,7 @@ export const WrapperSX = (theme: 'dark' | 'light'): SxProps => ({
   alignItems: 'center',
   backgroundColor: subtleBackground(theme),
   marginBottom: SPACING.MEDIUM.PX,
-  padding: SPACING.MEDIUM.PX,
+  padding: `${SPACING.SMALL.PX} ${SPACING.MEDIUM.PX}`,
 })
 
 export const createLinkSX = (theme: 'dark' | 'light'): SxProps => ({
