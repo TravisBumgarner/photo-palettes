@@ -13,6 +13,8 @@ import Controls from './components/Controls'
 import type { PaletteControlsState } from './Palette.types'
 import ColorDetails from './components/ColorDetails'
 import { BACKGROUND_COLORS } from './Palette.consts'
+import ModerationPanel from '../../sharedComponents/ModerationPanel'
+import { MODERATION_STATUS } from '../../types'
 
 const Palette = () => {
   const params = useParams()
@@ -46,6 +48,21 @@ const Palette = () => {
 
   return (
     <PageWrapper width="full">
+      {data.palette.moderationStatus ===
+        MODERATION_STATUS.AWAITING_MODERATION && (
+        <Message
+          includeVerticalMargin
+          message="This palette is pending approval."
+          color="info"
+        />
+      )}
+      {data.palette.moderationStatus === MODERATION_STATUS.REJECTED && (
+        <Message
+          includeVerticalMargin
+          message="This palette was rejected."
+          color="error"
+        />
+      )}
       <Container>
         <LeftColumn>
           <Summary palette={data.palette} refetch={refetch} />
@@ -66,6 +83,11 @@ const Palette = () => {
               key={swatch.id}
             />
           ))}
+          <ModerationPanel
+            refetch={refetch}
+            moderationStatus={data.palette.moderationStatus}
+            paletteId={data.palette.id}
+          />
         </RightColumn>
       </Container>
     </PageWrapper>

@@ -12,12 +12,13 @@ import {
 
 import { deletePalette } from '../api/palettes/deletePalette'
 import useGlobalStore from '../store'
-import { BORDER_RADIUS, SPACING } from '../styles/styleConsts'
+import { BORDER_RADIUS, SPACING, subtleBackground } from '../styles/styleConsts'
 import { activeModalSignal } from '../signals'
 import { MODAL_ID } from './Modal/Modal.types'
 import Switch from '@mui/material/Switch'
 import FormGroup from '@mui/material/FormGroup'
 import FormControlLabel from '@mui/material/FormControlLabel'
+import { useTheme } from '@mui/material/styles'
 
 const ModerationPanel = ({
   refetch,
@@ -31,6 +32,7 @@ const ModerationPanel = ({
   const [isFetching, setIsFetching] = useState(false)
   const [shareToSocials, setShareToSocials] = useState(false)
   const appUserDetails = useGlobalStore((state) => state.appUserDetails)
+  const theme = useTheme()
 
   const handleApprove = useCallback(async () => {
     setIsFetching(true)
@@ -103,8 +105,7 @@ const ModerationPanel = ({
       sx={{
         display: 'flex',
         gap: SPACING.SMALL.PX,
-        border: '2px solid',
-        borderColor: 'divider',
+        backgroundColor: subtleBackground(theme.palette.mode),
         borderRadius: BORDER_RADIUS.ZERO.PX,
         padding: SPACING.SMALL.PX,
         margin: `${SPACING.LARGE.PX} 0`,
