@@ -11,10 +11,13 @@ import { BACKGROUND_COLORS } from './Palette.consts'
 import PaletteMobile from './components/Palette.Mobile'
 import PaletteDesktop from './components/Palette.Desktop'
 import { MODERATION_STATUS } from '../../types'
+import useMediaQuery from '@mui/material/useMediaQuery'
+import { useTheme } from '@mui/material/styles'
 
 const Palette = () => {
   const params = useParams()
-  const isFullWidth = false
+  const theme = useTheme()
+  const isFullWidth = useMediaQuery(theme.breakpoints.up('sm'))
   const [controls, setControls] = React.useState<PaletteControlsState>({
     background: BACKGROUND_COLORS[0],
     details: 'none',
@@ -67,9 +70,9 @@ const Palette = () => {
       {isFullWidth ? (
         <PaletteDesktop
           controls={controls}
+          setControls={setControls}
           refetch={refetch}
           palette={data.palette}
-          setControls={setControls}
         />
       ) : (
         <PaletteMobile

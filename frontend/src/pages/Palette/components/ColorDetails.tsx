@@ -40,8 +40,12 @@ const ColorDetails = ({
           },
         }}
       >
-        {schemes.map((hexColor) => (
-          <Gradient key={hexColor} hexColor={hexColor} details={details} />
+        {schemes.map((hexColor, index) => (
+          <Gradient
+            key={`${hexColor}-${index}`}
+            hexColor={hexColor}
+            details={details}
+          />
         ))}
       </Box>
     </Box>

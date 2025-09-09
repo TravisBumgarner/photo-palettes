@@ -27,6 +27,8 @@ const Summary = ({
 }) => {
   return (
     <div>
+      <PageTitle text={name} />
+
       <Box
         sx={{
           display: 'flex',
@@ -34,6 +36,7 @@ const Summary = ({
           justifyContent: 'space-between',
           marginBottom: SPACING.SMALL.PX,
           alignItems: 'center',
+          gap: SPACING.SMALL.PX,
         }}
       >
         <Box
@@ -43,7 +46,6 @@ const Summary = ({
             flexDirection: 'column',
           }}
         >
-          <PageTitle text={name} />
           <Link href={`/profile/${appUserId}`}>#{appUserId.slice(0, 6)}</Link>
         </Box>
 
@@ -57,14 +59,12 @@ const Summary = ({
         </Box>
       </Box>
       <ColorBar interactive height={15} colors={colors.map((c) => c.hex)} />
-      <Box sx={{ height: '70vh' }}>
-        <BlurImage
-          alt={`${name} thumbnail`}
-          src={photoUrl}
-          aspectRatio={aspectRatio}
-          blurHash={blurhash}
-        />
-      </Box>
+      <BlurImage
+        alt={`${name} thumbnail`}
+        src={photoUrl}
+        aspectRatio={aspectRatio}
+        blurHash={blurhash}
+      />
     </div>
   )
 }

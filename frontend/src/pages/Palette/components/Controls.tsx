@@ -24,7 +24,6 @@ const Controls: React.FC<ControlsProps> = ({ controls, setControls }) => {
         display: 'flex',
         flexDirection: 'column',
         gap: SPACING.MEDIUM.PX,
-        marginTop: SPACING.MEDIUM.PX,
       }}
     >
       <FilterWrapper>
@@ -32,14 +31,13 @@ const Controls: React.FC<ControlsProps> = ({ controls, setControls }) => {
         <Box
           sx={{
             display: 'flex',
-            gap: SPACING.TINY.PX,
           }}
         >
           {BACKGROUND_COLORS.map((key) => (
             <Box
               sx={{
                 flexGrow: 1,
-                height: '30px',
+                height: SHARED_HEIGHT,
                 backgroundColor: key,
                 cursor: 'pointer',
               }}
@@ -57,6 +55,7 @@ const Controls: React.FC<ControlsProps> = ({ controls, setControls }) => {
         <Box sx={{ display: 'flex', gap: SPACING.TINY.PX, flexWrap: 'wrap' }}>
           {DETAILS.map((key) => (
             <Button
+              sx={filterButtonsStyles}
               size="small"
               variant={key === controls.details ? 'contained' : 'outlined'}
               key={key}
@@ -73,6 +72,7 @@ const Controls: React.FC<ControlsProps> = ({ controls, setControls }) => {
         <Box sx={{ display: 'flex', gap: SPACING.TINY.PX, flexWrap: 'wrap' }}>
           {COLOR_MIXES.map((key) => (
             <Button
+              sx={filterButtonsStyles}
               size="small"
               variant={key === controls.mix ? 'contained' : 'outlined'}
               key={key}
@@ -85,6 +85,14 @@ const Controls: React.FC<ControlsProps> = ({ controls, setControls }) => {
       </FilterWrapper>
     </Box>
   )
+}
+
+const SHARED_HEIGHT = '24px'
+
+const filterButtonsStyles: SxProps = {
+  height: SHARED_HEIGHT,
+  padding: `0 ${SPACING.SMALL.PX}`,
+  minWidth: 'auto',
 }
 
 const FilterWrapper = styled(Box)(() => ({

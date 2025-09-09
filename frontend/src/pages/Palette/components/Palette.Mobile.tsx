@@ -10,6 +10,8 @@ import ModerationPanel from '../../../sharedComponents/ModerationPanel'
 import { type TPalette } from '../../../types'
 import Tab from '@mui/material/Tab'
 import Tabs from '@mui/material/Tabs'
+import Box from '@mui/material/Box'
+import Button from '@mui/material/Button'
 
 const TABS = ['overview', 'color']
 
@@ -30,17 +32,20 @@ const PaletteMobile = ({
   setControls: React.Dispatch<React.SetStateAction<PaletteControlsState>>
 }) => {
   const [tabIndex, setTabIndex] = useState(0)
+  const [showFilters, setShowFilters] = useState(false)
   const theme = useTheme()
   const handleTabChange = useCallback((_event: unknown, v: number) => {
     setTabIndex(v)
+  }, [])
+
+  const handleFilterToggle = useCallback(() => {
+    setShowFilters((prev) => !prev)
   }, [])
 
   return (
     <PageWrapper width="full">
       <Tabs
         sx={{
-          position: 'sticky',
-          top: 0,
           marginBottom: SPACING.MEDIUM.PX,
           padding: `${SPACING.SMALL.PX} ${SPACING.MEDIUM.PX}`,
           backgroundColor: subtleBackground(theme.palette.mode),
@@ -60,16 +65,35 @@ const PaletteMobile = ({
 
       {TABS[tabIndex] === 'color' && (
         <>
-          <Controls controls={controls} setControls={setControls} />
-          {palette.colors.map((swatch, index) => (
-            <ColorDetails
-              index={index}
-              colorMix={controls.mix}
-              details={controls.details}
-              swatch={swatch}
-              key={swatch.id}
-            />
-          ))}
+          <Box sx={{ position: 'sticky', top: 0, zIndex: 999 }}>
+            <Button variant="contained" fullWidth onClick={handleFilterToggle}>
+              {showFilters ? 'Hide Filters' : 'Show Filters'}
+            </Button>
+
+            {showFilters && (
+              <Box
+                sx={{
+                  backgroundColor: subtleBackground(theme.palette.mode),
+                  padding: SPACING.MEDIUM.PX,
+                  marginBottom: SPACING.MEDIUM.PX,
+                  borderRadius: 1,
+                }}
+              >
+                <Controls setControls={setControls} controls={controls} />
+              </Box>
+            )}
+          </Box>
+          <Box sx={{ backgroundColor: controls.background }}>
+            {palette.colors.map((swatch, index) => (
+              <ColorDetails
+                index={index}
+                colorMix={controls.mix}
+                details={controls.details}
+                swatch={swatch}
+                key={swatch.id}
+              />
+            ))}
+          </Box>
         </>
       )}
 
