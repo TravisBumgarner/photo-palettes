@@ -9,7 +9,9 @@ const config: CapacitorConfig = {
   ...(isDevelopment
     ? {
         server: {
-          url: 'http://192.168.0.46:3000', // This might be needed for Simulator development. For now I can build and access the app on my
+          url: 'http://localhost:3000',
+          // I'm not sure when the next line is needed. The simulator can access localhost fine.
+          // url: 'http://192.168.0.49:3000', // This might be needed for Simulator development. For now I can build and access the app on my
           cleartext: true,
         },
       }

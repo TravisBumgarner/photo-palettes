@@ -32,13 +32,20 @@ If docker is running and a new dependency is installed, the app will crash. Run 
 
 **Mobile Development**
 
+Simulator
+
 1. Bring up all services `make up`
 1. `cd frontend`
 1. (First time) `npm run ios:list-emulators` - Grab an ID and populate `ios:dev-simulator`
 1. Start local development `npm run ios:dev-simulator`
 1. To debug, start safari, select simulator and there should be an app to select.
 
-- Note - Cannot run on a physical device because I need to replace localhost:8000 with the computer's IP for the backend. Not worrying for now because I can just build the app and use the production backend.
+Device
+
+1. `cd frontend`
+1. Start local development `npm run ios:device`
+1. Will use backend production. (Currently, I feel like I'll never need to test the local backend from a physical device, the simulator should be enough.)
+1. To debug, start safari, select simulator and there should be an app to select.
 
 Debug Notes
 
