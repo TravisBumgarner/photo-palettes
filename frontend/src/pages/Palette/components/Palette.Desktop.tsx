@@ -25,7 +25,7 @@ const PaletteDesktop = ({
     <PageWrapper width="full">
       <Container>
         <LeftColumn>
-          <Summary palette={palette} refetch={refetch} />
+          <Summary palette={palette} refetch={refetch} isMobile={false} />
           <Controls controls={controls} setControls={setControls} />
         </LeftColumn>
         <RightColumn sx={{ backgroundColor: controls.background }}>

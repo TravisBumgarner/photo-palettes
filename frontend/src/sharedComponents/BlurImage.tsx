@@ -11,6 +11,7 @@ interface Props {
   loadingStartCallback?: () => void
   loadingEndCallback?: (src: string) => void
   aspectRatio: number
+  maxDimensions?: { maxWidth?: string; maxHeight?: string } // Fuck fuck fuck.
 }
 
 const BlurImage = ({
@@ -20,6 +21,7 @@ const BlurImage = ({
   loadingStartCallback,
   loadingEndCallback,
   aspectRatio,
+  maxDimensions,
 }: Props) => {
   const imgRef = useRef<HTMLImageElement>(null)
 
@@ -44,33 +46,45 @@ const BlurImage = ({
   }, [startLoadingImage, loadingStartCallback])
 
   // Safari be like. I have no idea.
-  const cssProp =
-    aspectRatio >= 1
-      ? { width: '100%', maxHeight: '100%' }
-      : { height: '100%', maxWidth: '100%' }
+  // >=1 is landscape
+  // <1 is portrait
+  const cssProp = aspectRatio >= 1 ? { width: '100%' } : { height: '100%' }
 
   return (
     <Box
-      component="img"
-      ref={imgRef}
-      src={startLoadingImage || imgLoaded ? src : undefined}
-      loading={startLoadingImage ? 'eager' : 'lazy'}
-      rel={startLoadingImage ? 'preload' : ''}
-      alt={alt}
       sx={{
-        display: 'block',
-        transition: 'all 0.3s ease',
+        position: 'relative',
         ...cssProp,
-        ...(blurDataURL
-          ? {
-              backgroundImage: `url(${blurDataURL})`,
-              backgroundSize: 'cover',
-              backgroundRepeat: 'no-repeat',
-            }
-          : {}),
+        aspectRatio: `${aspectRatio}`,
+        backgroundImage:
+          blurDataURL && !imgLoaded ? `url(${blurDataURL})` : undefined,
+        backgroundSize: 'cover',
+        backgroundRepeat: 'no-repeat',
+        backgroundPosition: 'center',
+        overflow: 'hidden',
+        ...maxDimensions,
       }}
-      onLoad={handleOnLoad}
-    />
+    >
+      <Box
+        component="img"
+        ref={imgRef}
+        src={startLoadingImage || imgLoaded ? src : undefined}
+        loading={startLoadingImage ? 'eager' : 'lazy'}
+        rel={startLoadingImage ? 'preload' : ''}
+        alt={alt}
+        sx={{
+          width: '100%',
+          height: '100%',
+          objectFit: 'contain',
+          display: 'block',
+          transition: 'all 0.3s ease',
+          position: 'absolute',
+          top: 0,
+          left: 0,
+        }}
+        onLoad={handleOnLoad}
+      />
+    </Box>
   )
 }
 

@@ -19,6 +19,22 @@ import {
 // Base theme options shared between light and dark
 const baseThemeOptions: ThemeOptions = {
   components: {
+    MuiTabs: {
+      styleOverrides: {
+        root: {},
+        indicator: {
+          display: 'none', // hide globally
+        },
+      },
+    },
+    MuiTab: {
+      styleOverrides: {
+        root: {
+          minHeight: '36px', // for some reason both are needed.
+          height: '36px', // for some reason both are needed.
+        },
+      },
+    },
     MuiListItem: {
       styleOverrides: {
         root: {
@@ -180,7 +196,8 @@ const lightThemeOptions: ThemeOptions = {
         root: {
           color: PALETTE.grayscale[700], // text color
           '&.Mui-selected': {
-            color: PALETTE.grayscale[700], // selected tab text color
+            backgroundColor: PALETTE.grayscale[700],
+            color: PALETTE.grayscale[50],
           },
         },
       },
@@ -328,7 +345,8 @@ const darkThemeOptions: ThemeOptions = {
         root: {
           color: PALETTE.grayscale[200], // text color
           '&.Mui-selected': {
-            color: PALETTE.grayscale[200], // selected tab text color
+            backgroundColor: PALETTE.grayscale[50],
+            color: PALETTE.grayscale[900],
           },
         },
       },

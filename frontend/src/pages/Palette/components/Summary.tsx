@@ -20,8 +20,10 @@ const Summary = ({
     hasUserFavorited,
     id,
   },
+  isMobile,
   refetch,
 }: {
+  isMobile: boolean
   palette: TPalette
   refetch: () => void
 }) => {
@@ -64,6 +66,7 @@ const Summary = ({
         src={photoUrl}
         aspectRatio={aspectRatio}
         blurHash={blurhash}
+        maxDimensions={{ maxHeight: isMobile ? '90vh' : '40vh' }}
       />
     </div>
   )

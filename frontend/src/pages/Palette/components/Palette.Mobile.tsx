@@ -60,7 +60,7 @@ const PaletteMobile = ({
       </Tabs>
 
       {TABS[tabIndex] === 'overview' && (
-        <Summary palette={palette} refetch={refetch} />
+        <Summary isMobile palette={palette} refetch={refetch} />
       )}
 
       {TABS[tabIndex] === 'color' && (
