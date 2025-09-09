@@ -50,7 +50,7 @@ const PaletteDesktop = ({
 }
 
 const LeftColumn = styled(Box)(({ theme }) => ({
-  flexBasis: '240px',
+  flexBasis: '250px',
   flexShrink: 0,
   padding: `${SPACING.MEDIUM.PX}`,
   minHeight: '100vh',

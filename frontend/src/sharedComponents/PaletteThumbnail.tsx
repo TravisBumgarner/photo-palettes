@@ -24,9 +24,9 @@ const PaletteThumbnail = ({
         sx={{
           borderRadius: BORDER_RADIUS.ZERO.PX,
           padding: SPACING.SMALL.PX,
-          backgroundColor: subtleBackground(theme.palette.mode),
+          backgroundColor: subtleBackground(theme.palette.mode, 'slightly'),
           '&:hover': {
-            backgroundColor: subtleBackground(theme.palette.mode, 'slightly'),
+            backgroundColor: subtleBackground(theme.palette.mode),
           },
           display: 'flex',
           flexDirection: 'column',

@@ -17,7 +17,7 @@ import { useTheme } from '@mui/material/styles'
 const Palette = () => {
   const params = useParams()
   const theme = useTheme()
-  const isFullWidth = useMediaQuery(theme.breakpoints.up('sm'))
+  const isDesktop = useMediaQuery(theme.breakpoints.up('sm'))
   const [controls, setControls] = React.useState<PaletteControlsState>({
     background: BACKGROUND_COLORS[0],
     details: 'none',
@@ -67,7 +67,7 @@ const Palette = () => {
           color="error"
         />
       )}
-      {isFullWidth ? (
+      {isDesktop ? (
         <PaletteDesktop
           controls={controls}
           setControls={setControls}
