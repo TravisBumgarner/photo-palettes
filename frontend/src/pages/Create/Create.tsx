@@ -21,11 +21,12 @@ import Dropzone from './components/Dropzone'
 import SelectGeneratedPalette from './components/SelectGeneratedPalette'
 import { sharedCSS } from './components/shared'
 import { queries } from '../../database'
-import { styled, type SxProps } from '@mui/material/styles'
+import { styled, useTheme, type SxProps } from '@mui/material/styles'
 import { PALETTE_SIZE } from '../../consts'
 import Typography from '@mui/material/Typography'
 import { v4 as uuidv4 } from 'uuid'
 import type { TGeneratePaletteResponse } from '../../types'
+import useMediaQuery from '@mui/material/useMediaQuery'
 
 type CreationStatus =
   | 'INITIAL'
@@ -39,6 +40,8 @@ const MAX_NAME_LENGTH = 50
 
 const Create = ({ mode }: { mode: 'lite' | 'full' }) => {
   const { generatePalette: generatePaletteLite } = useGeneratePaletteWorker()
+  const theme = useTheme()
+  const isDesktop = useMediaQuery(theme.breakpoints.up('sm'))
 
   const [creationStatus, setCreationStatus] =
     useState<CreationStatus>('INITIAL')
@@ -284,8 +287,8 @@ const Create = ({ mode }: { mode: 'lite' | 'full' }) => {
   return (
     // creationStatus === 'selecting_colors
     <PageWrapper width="full">
-      <Container>
-        <LeftColumn>
+      <Container isDesktop={isDesktop}>
+        <LeftColumn isDesktop={isDesktop}>
           <SectionWrapper>
             <Typography sx={labelStyles}>Starter palette</Typography>
             <SelectGeneratedPalette
@@ -354,23 +357,27 @@ const labelStyles: SxProps = {
   fontSize: FONT_SIZES.SMALL.PX,
 }
 
-const LeftColumn = styled(Box)(({ theme }) => ({
-  flexBasis: '200px',
-  flexShrink: 0,
-  display: 'flex',
-  flexDirection: 'column',
-  gap: SPACING.MEDIUM.PX,
-  padding: `${SPACING.MEDIUM.PX}`,
-  marginRight: SPACING.MEDIUM.PX,
-  backgroundColor: subtleBackground(theme.palette.mode),
-}))
+const LeftColumn = styled(Box)<{ isDesktop: boolean }>(
+  ({ theme, isDesktop }) => ({
+    ...(isDesktop ? { flexBasis: '200px' } : {}),
+    width: '100%',
+    flexShrink: 0,
+    display: 'flex',
+    flexDirection: 'column',
+    gap: SPACING.MEDIUM.PX,
+    padding: `${SPACING.MEDIUM.PX}`,
+    backgroundColor: subtleBackground(theme.palette.mode),
+  })
+)
 
 const RightColumn = styled(Box)(() => ({
   flexGrow: 1,
 }))
 
-const Container = styled(Box)(() => ({
+const Container = styled(Box)(({ isDesktop }: { isDesktop: boolean }) => ({
   display: 'flex',
+  flexDirection: isDesktop ? 'row' : 'column',
+  gap: SPACING.MEDIUM.PX,
   alignItems: 'flex-start', // important, avoid stretch
 }))
 
