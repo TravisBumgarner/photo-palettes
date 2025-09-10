@@ -432,7 +432,7 @@ const Container = styled(Box, {
 })<{ useSingleColumnDisplay: boolean }>(({ useSingleColumnDisplay }) => ({
   display: 'flex',
   flexDirection: useSingleColumnDisplay ? 'column' : 'row',
-  gap: '16px', // or SPACING.MEDIUM.PX
+  gap: SPACING.MEDIUM.PX,
   alignItems: 'flex-start',
 }))
 

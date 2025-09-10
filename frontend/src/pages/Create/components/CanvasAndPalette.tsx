@@ -96,7 +96,8 @@ const CanvasAndPalette = ({
           display: 'flex',
           justifyContent: 'center',
           maxHeight: '70vh',
-          minHeight: '1px', // Removing this line might break the experience on Safari. See comments for isNaN() in DraggableSwatch.
+          // width: '100%',
+          // minHeight: '1px', // Removing this line might break the experience on Safari. See comments for isNaN() in DraggableSwatch.
           aspectRatio: imageDimensions.width / imageDimensions.height,
         }}
       >
@@ -106,7 +107,6 @@ const CanvasAndPalette = ({
             touchAction: 'none',
             position: 'relative',
             maxWidth: '100%',
-            maxHeight: '100%',
             aspectRatio: imageDimensions.width / imageDimensions.height,
           }}
         >
