@@ -60,7 +60,7 @@ def handle_request(thumbnail: UploadFile):
         ciede2000(rgb_image, "light"),
         ciede2000(rgb_image, "dark"),
     ]
-    print(palettes)
+
     return SuccessResponse(
         palettes=[
             map_generate_palette_data_to_response(palette)

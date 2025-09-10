@@ -103,6 +103,7 @@ const Step = ({
         >
           {label.map((part, index) => (
             <Typography
+              component="span"
               sx={{
                 color: getContrastColor(stepColor.hex().toString()),
                 fontSize: FONT_SIZES.SMALL.PX,

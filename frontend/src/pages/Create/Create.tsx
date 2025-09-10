@@ -292,8 +292,8 @@ const Create = ({ mode }: { mode: 'lite' | 'full' }) => {
   return (
     // creationStatus === 'selecting_colors
     <PageWrapper width="full">
-      <Container $useSingleColumnDisplay={useSingleColumnDisplay}>
-        <LeftColumn $useSingleColumnDisplay={useSingleColumnDisplay}>
+      <Container useSingleColumnDisplay={useSingleColumnDisplay}>
+        <LeftColumn useSingleColumnDisplay={useSingleColumnDisplay}>
           <SectionWrapper>
             <Typography sx={labelStyles}>Generated Palette(s)</Typography>
             <SelectGeneratedPalette
@@ -404,9 +404,9 @@ const labelStyles: SxProps = {
   fontSize: FONT_SIZES.SMALL.PX,
 }
 
-const LeftColumn = styled(Box)<{ $useSingleColumnDisplay: boolean }>(
-  ({ theme, $useSingleColumnDisplay }) => ({
-    ...($useSingleColumnDisplay ? {} : { flexBasis: '200px' }),
+const LeftColumn = styled(Box)<{ useSingleColumnDisplay: boolean }>(
+  ({ theme, useSingleColumnDisplay }) => ({
+    ...(useSingleColumnDisplay ? {} : { flexBasis: '200px' }),
     width: '100%',
     flexShrink: 0,
     display: 'flex',
@@ -427,9 +427,9 @@ const RightColumn = styled(Box)(() => ({
 }))
 
 const Container = styled(Box)(
-  ({ $useSingleColumnDisplay }: { $useSingleColumnDisplay: boolean }) => ({
+  ({ useSingleColumnDisplay }: { useSingleColumnDisplay: boolean }) => ({
     display: 'flex',
-    flexDirection: $useSingleColumnDisplay ? 'column' : 'row',
+    flexDirection: useSingleColumnDisplay ? 'column' : 'row',
     gap: SPACING.MEDIUM.PX,
     alignItems: 'flex-start', // important, avoid stretch
   })
