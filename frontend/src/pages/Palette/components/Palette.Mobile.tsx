@@ -65,7 +65,13 @@ const PaletteMobile = ({
 
       {TABS[tabIndex] === 'color' && (
         <>
-          <Box sx={{ position: 'sticky', top: 0, zIndex: 999 }}>
+          <Box
+            sx={{
+              position: 'sticky',
+              top: 'env(safe-area-inset-top)',
+              zIndex: 999,
+            }}
+          >
             <Button variant="contained" fullWidth onClick={handleFilterToggle}>
               {showFilters ? 'Hide Filters' : 'Show Filters'}
             </Button>

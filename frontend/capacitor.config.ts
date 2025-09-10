@@ -1,6 +1,7 @@
 // capacitor.config.js
 // @ts-check
 
+// Fuck this file. Every other fucking time I open it redlines about something.
 import os from 'os'
 
 const isDevelopment = process.env.NODE_ENV === 'development' //eslint-disable-line
