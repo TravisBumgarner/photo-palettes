@@ -404,7 +404,9 @@ const labelStyles: SxProps = {
   fontSize: FONT_SIZES.SMALL.PX,
 }
 
-const LeftColumn = styled(Box)<{ useSingleColumnDisplay: boolean }>(
+const LeftColumn = styled(Box, {
+  shouldForwardProp: (prop) => prop !== 'useSingleColumnDisplay',
+})<{ useSingleColumnDisplay: boolean }>(
   ({ theme, useSingleColumnDisplay }) => ({
     ...(useSingleColumnDisplay ? {} : { flexBasis: '200px' }),
     width: '100%',
@@ -412,11 +414,10 @@ const LeftColumn = styled(Box)<{ useSingleColumnDisplay: boolean }>(
     display: 'flex',
     flexDirection: 'column',
     gap: SPACING.MEDIUM.PX,
-    padding: `${SPACING.MEDIUM.PX}`,
+    padding: SPACING.MEDIUM.PX,
     backgroundColor: subtleBackground(theme.palette.mode),
   })
 )
-
 const RightColumn = styled(Box)(() => ({
   flexGrow: 1,
   gap: SPACING.MEDIUM.PX,
@@ -426,13 +427,13 @@ const RightColumn = styled(Box)(() => ({
   width: '100%',
 }))
 
-const Container = styled(Box)(
-  ({ useSingleColumnDisplay }: { useSingleColumnDisplay: boolean }) => ({
-    display: 'flex',
-    flexDirection: useSingleColumnDisplay ? 'column' : 'row',
-    gap: SPACING.MEDIUM.PX,
-    alignItems: 'flex-start', // important, avoid stretch
-  })
-)
+const Container = styled(Box, {
+  shouldForwardProp: (prop) => prop !== 'useSingleColumnDisplay',
+})<{ useSingleColumnDisplay: boolean }>(({ useSingleColumnDisplay }) => ({
+  display: 'flex',
+  flexDirection: useSingleColumnDisplay ? 'column' : 'row',
+  gap: '16px', // or SPACING.MEDIUM.PX
+  alignItems: 'flex-start',
+}))
 
 export default Create
