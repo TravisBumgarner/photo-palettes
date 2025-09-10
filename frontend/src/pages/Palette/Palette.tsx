@@ -1,23 +1,23 @@
 import React from 'react'
-import Box from '@mui/material/Box'
-import { SPACING, subtleBackground } from '../../styles/styleConsts'
 import Message from '../../sharedComponents/Message'
 import PageWrapper from '../../styles/shared/PageWrapper'
 import { useQuery } from '@tanstack/react-query'
 import { getPaletteById } from '../../api/palettes/getPaletteById'
 import { useParams } from 'react-router-dom'
 import Loading from '../../sharedComponents/Loading'
-import { styled } from '@mui/material/styles'
-import Summary from './components/Summary'
-import Controls from './components/Controls'
+
 import type { PaletteControlsState } from './Palette.types'
-import ColorDetails from './components/ColorDetails'
 import { BACKGROUND_COLORS } from './Palette.consts'
+import PaletteMobile from './components/Palette.Mobile'
+import PaletteDesktop from './components/Palette.Desktop'
+import { MODERATION_STATUS } from '../../types'
+import useMediaQuery from '@mui/material/useMediaQuery'
+import { useTheme } from '@mui/material/styles'
 
 const Palette = () => {
   const params = useParams()
-
-  // Controls state
+  const theme = useTheme()
+  const isDesktop = useMediaQuery(theme.breakpoints.up('sm'))
   const [controls, setControls] = React.useState<PaletteControlsState>({
     background: BACKGROUND_COLORS[0],
     details: 'none',
@@ -32,67 +32,58 @@ const Palette = () => {
   })
 
   if (isLoading) {
-    return <Loading />
+    return (
+      <PageWrapper minHeight width="full">
+        <Loading />
+      </PageWrapper>
+    )
   }
 
   if (!data?.success || error) {
     return (
-      <Message
-        color="error"
-        message="Palette not found or an error occurred."
-      />
+      <PageWrapper minHeight width="full">
+        <Message
+          color="error"
+          message="Palette not found or an error occurred."
+        />
+      </PageWrapper>
     )
   }
 
   return (
-    <PageWrapper width="full">
-      <Container>
-        <LeftColumn>
-          <Summary palette={data.palette} refetch={refetch} />
-          <Controls controls={controls} setControls={setControls} />
-        </LeftColumn>
-        <RightColumn sx={{ backgroundColor: controls.background }}>
-          {/* <Share
-            url={`palette/${data.palette.id}`}
-            text={`${data.palette.name} by #${data.palette.appUserId.slice(0, 6)}`}
-            media={data.palette.ogPhotoUrl}
-          /> */}
-          {data.palette.colors.map((swatch, index) => (
-            <ColorDetails
-              index={index}
-              colorMix={controls.mix}
-              details={controls.details}
-              swatch={swatch}
-              key={swatch.id}
-            />
-          ))}
-        </RightColumn>
-      </Container>
-    </PageWrapper>
+    <>
+      {data.palette.moderationStatus ===
+        MODERATION_STATUS.AWAITING_MODERATION && (
+        <Message
+          includeVerticalMargin
+          message="This palette is pending approval."
+          color="info"
+        />
+      )}
+      {data.palette.moderationStatus === MODERATION_STATUS.REJECTED && (
+        <Message
+          includeVerticalMargin
+          message="This palette was rejected."
+          color="error"
+        />
+      )}
+      {isDesktop ? (
+        <PaletteDesktop
+          controls={controls}
+          setControls={setControls}
+          refetch={refetch}
+          palette={data.palette}
+        />
+      ) : (
+        <PaletteMobile
+          controls={controls}
+          refetch={refetch}
+          setControls={setControls}
+          palette={data.palette}
+        />
+      )}
+    </>
   )
 }
-
-const LeftColumn = styled(Box)(({ theme }) => ({
-  flexBasis: '300px',
-  flexShrink: 0,
-  padding: `${SPACING.MEDIUM.PX}`,
-  minHeight: '100vh',
-
-  position: 'sticky',
-  top: '0px',
-  left: '0px',
-  backgroundColor: subtleBackground(theme.palette.mode),
-}))
-
-const RightColumn = styled(Box)(() => ({
-  padding: SPACING.MEDIUM.PX,
-  flexGrow: 1,
-  overflow: 'hidden',
-}))
-
-const Container = styled(Box)(() => ({
-  display: 'flex',
-  alignItems: 'flex-start', // important, avoid stretch
-}))
 
 export default Palette

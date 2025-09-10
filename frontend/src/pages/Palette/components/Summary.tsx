@@ -20,13 +20,17 @@ const Summary = ({
     hasUserFavorited,
     id,
   },
+  isMobile,
   refetch,
 }: {
+  isMobile: boolean
   palette: TPalette
   refetch: () => void
 }) => {
   return (
     <div>
+      <PageTitle text={name} />
+
       <Box
         sx={{
           display: 'flex',
@@ -34,6 +38,7 @@ const Summary = ({
           justifyContent: 'space-between',
           marginBottom: SPACING.SMALL.PX,
           alignItems: 'center',
+          gap: SPACING.SMALL.PX,
         }}
       >
         <Box
@@ -43,7 +48,6 @@ const Summary = ({
             flexDirection: 'column',
           }}
         >
-          <PageTitle text={name} />
           <Link href={`/profile/${appUserId}`}>#{appUserId.slice(0, 6)}</Link>
         </Box>
 
@@ -62,6 +66,7 @@ const Summary = ({
         src={photoUrl}
         aspectRatio={aspectRatio}
         blurHash={blurhash}
+        maxDimensions={{ maxHeight: isMobile ? '90vh' : '40vh' }}
       />
     </div>
   )

@@ -24,9 +24,9 @@ const ColorDetails = ({
       id={`color-${index}`}
       sx={{
         display: 'flex',
+        flexDirection: 'column',
         gap: SPACING.MEDIUM.PX,
-        padding: '5vh 0 50vh 0', // Main concern here is scrolling to the last color causes the left column to scroll off screen.
-        flexGrow: 1,
+        padding: `5vh ${SPACING.SMALL.PX} 50vh ${SPACING.SMALL.PX}`, // Main concern here is scrolling to the last color causes the left column to scroll off screen.
       }}
     >
       <Swatch swatch={swatch} />
@@ -40,8 +40,12 @@ const ColorDetails = ({
           },
         }}
       >
-        {schemes.map((hexColor) => (
-          <Gradient key={hexColor} hexColor={hexColor} details={details} />
+        {schemes.map((hexColor, index) => (
+          <Gradient
+            key={`${hexColor}-${index}`}
+            hexColor={hexColor}
+            details={details}
+          />
         ))}
       </Box>
     </Box>

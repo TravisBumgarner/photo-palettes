@@ -110,7 +110,7 @@ export const SORT_BY = {
 export const SORT_BY_LABEL = {
   [SORT_BY.NEWEST]: 'Newest',
   [SORT_BY.OLDEST]: 'Oldest',
-  [SORT_BY.FAVORITES_COUNT]: 'Favorites Count',
+  [SORT_BY.FAVORITES_COUNT]: 'Popular',
 }
 
 export type ESortBy = (typeof SORT_BY)[keyof typeof SORT_BY]

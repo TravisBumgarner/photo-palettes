@@ -1,30 +1,49 @@
-import type { CapacitorConfig } from '@capacitor/cli'
+// capacitor.config.js
+// @ts-check
 
-const isDevelopment = process.env.NODE_ENV === 'development' // eslint-disable-line
+// Fuck this file. Every other fucking time I open it redlines about something.
+import os from 'os'
 
-const config: CapacitorConfig = {
+const isDevelopment = process.env.NODE_ENV === 'development' //eslint-disable-line
+
+/** @type {import('@capacitor/cli').CapacitorConfig} */
+const config = {
   appId: 'com.photopalettes',
   appName: 'Photo Palettes',
   webDir: 'dist',
   ...(isDevelopment
     ? {
         server: {
-          url: 'http://192.168.0.46:3000', // This might be needed for Simulator development. For now I can build and access the app on my
+          url: `http://${getLocalIp()}:3000`,
           cleartext: true,
         },
       }
     : {}),
   ios: {
-    // This makes the app draw under the status bar but you need safe-area insets
     contentInset: 'never',
     scheme: 'Photo Palettes',
   },
   plugins: {
     SplashScreen: {
-      launchAutoHide: false, // don’t auto-hide immediately
+      launchAutoHide: false,
       backgroundColor: '#FFFFFF',
     },
   },
 }
 
-export default config
+function getLocalIp() {
+  const nets = os.networkInterfaces()
+  for (const name of Object.keys(nets)) {
+    const iface = nets[name]
+    if (!iface) continue
+
+    for (const net of iface) {
+      if (net.family === 'IPv4' && !net.internal) {
+        return net.address
+      }
+    }
+  }
+  return '127.0.0.1'
+}
+
+module.exports = config

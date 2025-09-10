@@ -16,9 +16,30 @@ import {
   SPACING,
 } from './styleConsts'
 
+const TAB_HEIGHT = '36px' // for some reason all are needed.
+
 // Base theme options shared between light and dark
 const baseThemeOptions: ThemeOptions = {
   components: {
+    MuiTabs: {
+      styleOverrides: {
+        root: {
+          minHeight: TAB_HEIGHT,
+        },
+        indicator: {
+          display: 'none', // hide globally
+        },
+      },
+    },
+    MuiTab: {
+      styleOverrides: {
+        root: {
+          textTransform: 'none',
+          minHeight: TAB_HEIGHT,
+          height: TAB_HEIGHT,
+        },
+      },
+    },
     MuiListItem: {
       styleOverrides: {
         root: {
@@ -179,8 +200,13 @@ const lightThemeOptions: ThemeOptions = {
       styleOverrides: {
         root: {
           color: PALETTE.grayscale[700], // text color
+          '&:hover': {
+            backgroundColor: PALETTE.grayscale[900],
+            color: PALETTE.grayscale[100],
+          },
           '&.Mui-selected': {
-            color: PALETTE.grayscale[700], // selected tab text color
+            backgroundColor: PALETTE.grayscale[800],
+            color: PALETTE.grayscale[100],
           },
         },
       },
@@ -328,7 +354,12 @@ const darkThemeOptions: ThemeOptions = {
         root: {
           color: PALETTE.grayscale[200], // text color
           '&.Mui-selected': {
-            color: PALETTE.grayscale[200], // selected tab text color
+            backgroundColor: PALETTE.grayscale[200],
+            color: PALETTE.grayscale[900],
+          },
+          '&:hover': {
+            backgroundColor: PALETTE.grayscale[100],
+            color: PALETTE.grayscale[900],
           },
         },
       },

@@ -21,11 +21,13 @@ import Dropzone from './components/Dropzone'
 import SelectGeneratedPalette from './components/SelectGeneratedPalette'
 import { sharedCSS } from './components/shared'
 import { queries } from '../../database'
-import { styled, type SxProps } from '@mui/material/styles'
+import { styled, useTheme, type SxProps } from '@mui/material/styles'
 import { PALETTE_SIZE } from '../../consts'
 import Typography from '@mui/material/Typography'
 import { v4 as uuidv4 } from 'uuid'
 import type { TGeneratePaletteResponse } from '../../types'
+import useMediaQuery from '@mui/material/useMediaQuery'
+import { Capacitor } from '@capacitor/core'
 
 type CreationStatus =
   | 'INITIAL'
@@ -39,6 +41,11 @@ const MAX_NAME_LENGTH = 50
 
 const Create = ({ mode }: { mode: 'lite' | 'full' }) => {
   const { generatePalette: generatePaletteLite } = useGeneratePaletteWorker()
+  const theme = useTheme()
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'))
+  const isNative = Capacitor.isNativePlatform()
+
+  const useSingleColumnDisplay = isNative || isSmallScreen
 
   const [creationStatus, setCreationStatus] =
     useState<CreationStatus>('INITIAL')
@@ -127,6 +134,7 @@ const Create = ({ mode }: { mode: 'lite' | 'full' }) => {
       }
       if (response.success) {
         setCreationStatus('SELECTING_COLORS')
+
         setGeneratedPalettes(response.palettes)
         setPalette(structuredClone(response.palettes[0]))
       } else {
@@ -284,50 +292,53 @@ const Create = ({ mode }: { mode: 'lite' | 'full' }) => {
   return (
     // creationStatus === 'selecting_colors
     <PageWrapper width="full">
-      <Container>
-        <LeftColumn>
+      <Container useSingleColumnDisplay={useSingleColumnDisplay}>
+        <LeftColumn useSingleColumnDisplay={useSingleColumnDisplay}>
           <SectionWrapper>
-            <Typography sx={labelStyles}>Starter palette</Typography>
+            <Typography sx={labelStyles}>Generated Palette(s)</Typography>
             <SelectGeneratedPalette
               handlePaletteChange={handlePaletteChange}
               generatedPalettes={generatedPalettes}
             />
           </SectionWrapper>
+          {!useSingleColumnDisplay && (
+            <>
+              <SectionWrapper>
+                <TextField
+                  size="small"
+                  variant="outlined"
+                  fullWidth
+                  label={nameLabel}
+                  placeholder="Name your palette"
+                  value={name}
+                  onChange={handleNameChange}
+                />
+              </SectionWrapper>
 
-          <SectionWrapper>
-            <TextField
-              size="small"
-              variant="outlined"
-              fullWidth
-              label={nameLabel}
-              placeholder="Name your palette"
-              value={name}
-              onChange={handleNameChange}
-            />
-          </SectionWrapper>
-
-          <SectionWrapper>
-            <Box
-              sx={{
-                display: 'flex',
-                flexDirection: 'row',
-                gap: '10px',
-                justifyContent: 'space-between',
-              }}
-            >
-              <Button variant="text" onClick={handleClearPalette}>
-                Clear
-              </Button>
-              <Button
-                disabled={!name}
-                variant="contained"
-                sx={{ flexGrow: 1 }}
-                onClick={handleSavePalette}
-              >
-                Save
-              </Button>
-            </Box>
-          </SectionWrapper>
+              <SectionWrapper>
+                <Box
+                  sx={{
+                    display: 'flex',
+                    flexDirection: 'row',
+                    gap: '10px',
+                    justifyContent: 'space-between',
+                  }}
+                >
+                  <Button variant="text" onClick={handleClearPalette}>
+                    Clear
+                  </Button>
+                  <Button
+                    disabled={!name}
+                    variant="contained"
+                    sx={{ flexGrow: 1 }}
+                    onClick={handleSavePalette}
+                  >
+                    Save
+                  </Button>
+                </Box>
+              </SectionWrapper>
+            </>
+          )}
         </LeftColumn>
         <RightColumn>
           <CanvasAndPalette
@@ -338,6 +349,44 @@ const Create = ({ mode }: { mode: 'lite' | 'full' }) => {
             paletteSortOrder={paletteSortOrder}
             setPaletteSortOrder={setPaletteSortOrder}
           />
+          {useSingleColumnDisplay && (
+            <>
+              <SectionWrapper>
+                <TextField
+                  size="small"
+                  variant="outlined"
+                  fullWidth
+                  label={nameLabel}
+                  placeholder="Name your palette"
+                  value={name}
+                  onChange={handleNameChange}
+                />
+              </SectionWrapper>
+
+              <SectionWrapper>
+                <Box
+                  sx={{
+                    display: 'flex',
+                    flexDirection: 'row',
+                    gap: '10px',
+                    justifyContent: 'space-between',
+                  }}
+                >
+                  <Button variant="text" onClick={handleClearPalette}>
+                    Clear
+                  </Button>
+                  <Button
+                    disabled={!name}
+                    variant="contained"
+                    sx={{ flexGrow: 1 }}
+                    onClick={handleSavePalette}
+                  >
+                    Save
+                  </Button>
+                </Box>
+              </SectionWrapper>
+            </>
+          )}
         </RightColumn>
       </Container>
     </PageWrapper>
@@ -348,30 +397,43 @@ const SectionWrapper = styled(Box)(() => ({
   display: 'flex',
   gap: SPACING.TINY.PX,
   flexDirection: 'column',
+  width: '100%',
 }))
 
 const labelStyles: SxProps = {
   fontSize: FONT_SIZES.SMALL.PX,
 }
 
-const LeftColumn = styled(Box)(({ theme }) => ({
-  flexBasis: '200px',
-  flexShrink: 0,
-  display: 'flex',
-  flexDirection: 'column',
-  gap: SPACING.MEDIUM.PX,
-  padding: `${SPACING.MEDIUM.PX}`,
-  marginRight: SPACING.MEDIUM.PX,
-  backgroundColor: subtleBackground(theme.palette.mode),
-}))
-
+const LeftColumn = styled(Box, {
+  shouldForwardProp: (prop) => prop !== 'useSingleColumnDisplay',
+})<{ useSingleColumnDisplay: boolean }>(
+  ({ theme, useSingleColumnDisplay }) => ({
+    ...(useSingleColumnDisplay ? {} : { flexBasis: '200px' }),
+    width: '100%',
+    flexShrink: 0,
+    display: 'flex',
+    flexDirection: 'column',
+    gap: SPACING.MEDIUM.PX,
+    padding: SPACING.MEDIUM.PX,
+    backgroundColor: subtleBackground(theme.palette.mode),
+  })
+)
 const RightColumn = styled(Box)(() => ({
   flexGrow: 1,
+  gap: SPACING.MEDIUM.PX,
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+  width: '100%',
 }))
 
-const Container = styled(Box)(() => ({
+const Container = styled(Box, {
+  shouldForwardProp: (prop) => prop !== 'useSingleColumnDisplay',
+})<{ useSingleColumnDisplay: boolean }>(({ useSingleColumnDisplay }) => ({
   display: 'flex',
-  alignItems: 'flex-start', // important, avoid stretch
+  flexDirection: useSingleColumnDisplay ? 'column' : 'row',
+  gap: '16px', // or SPACING.MEDIUM.PX
+  alignItems: 'flex-start',
 }))
 
 export default Create

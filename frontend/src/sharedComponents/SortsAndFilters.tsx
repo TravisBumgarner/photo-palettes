@@ -1,8 +1,6 @@
 import Box from '@mui/material/Box'
-import FormControl from '@mui/material/FormControl'
-import InputLabel from '@mui/material/InputLabel'
-import MenuItem from '@mui/material/MenuItem'
-import Select from '@mui/material/Select'
+import Tabs from '@mui/material/Tabs'
+import Tab from '@mui/material/Tab'
 
 import { SORT_BY, SORT_BY_LABEL, type ESortBy } from '../types'
 import { BORDER_RADIUS, SPACING } from '../styles/styleConsts'
@@ -22,24 +20,21 @@ const SortsAndFilters = ({
         marginBottom: SPACING.MEDIUM.PX,
       }}
     >
-      <FormControl sx={{ width: '200px' }}>
-        <InputLabel size="small" id="sort-by-label">
-          Sort By
-        </InputLabel>
-        <Select
-          size="small"
-          labelId="sort-by-label"
-          value={sortBy}
-          label="Sort By"
-          onChange={(e) => handleSortChange(e.target.value as ESortBy)}
-        >
-          {Object.values(SORT_BY).map((value) => (
-            <MenuItem key={value} value={value}>
-              {SORT_BY_LABEL[value as keyof typeof SORT_BY_LABEL]}
-            </MenuItem>
-          ))}
-        </Select>
-      </FormControl>
+      <Tabs
+        value={sortBy}
+        onChange={(_, value) => handleSortChange(value as ESortBy)}
+        variant="scrollable"
+        scrollButtons="auto"
+        aria-label="Sort By Tabs"
+      >
+        {Object.values(SORT_BY).map((value) => (
+          <Tab
+            key={value}
+            value={value}
+            label={SORT_BY_LABEL[value as keyof typeof SORT_BY_LABEL]}
+          />
+        ))}
+      </Tabs>
     </Box>
   )
 }

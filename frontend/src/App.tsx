@@ -51,6 +51,18 @@ function App() {
 
   return (
     <QueryClientProvider client={queryClient}>
+      <Box
+        // Hide anything in the notch on iOS
+        sx={{
+          height: 'env(safe-area-inset-top);',
+          backgroundColor: 'background.default',
+          position: 'fixed',
+          left: 0,
+          top: 0,
+          width: '100%',
+          zIndex: 999,
+        }}
+      />
       {Capacitor.isNativePlatform() ? <NativeNavigation /> : <WebNavigation />}
       <Router />
       <Footer />

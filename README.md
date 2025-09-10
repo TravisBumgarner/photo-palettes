@@ -10,7 +10,7 @@ Social platform for generating color palettes from photos.
 
 ### Backend
 
-**Tests**
+### Tests
 
 1. Test users are stored in ProtonPass.
 1. Grab their credentials and populate the .env.
@@ -20,31 +20,44 @@ Run tests - docker-compose exec -T backend pytest
 
 ## Frontend
 
-**Installing dependencies**
+### Installing dependencies
 
 If docker is running and a new dependency is installed, the app will crash. Run `docker compose exec frontend npm i` after installing a dependency to have it synced to Docker. Will need a better approach in the future but this is a nice bandaid.
 
-**Testing index.js (Server for frontend)**
+### Testing index.js (Server for frontend)
 
 1. `docker compose up backend db`
 1. `npm run build:development`
 1. `npm run start` (Server changes just require a restart)
 
-**Mobile Development**
+### Mobile Development
+
+#### Simulator
+
+Notes
+
+- Safari dev tools sucks. If IP address changes, in capacitor.config.js, need to quit safari.
+- Console.logs are currently just not showing up?? Again, Safari sucks. I had to quit Safari multiple times before I could see the output from the simulator.
 
 1. Bring up all services `make up`
 1. `cd frontend`
-1. (First time) `npm run ios:list-emulators` - Grab an ID and populate `ios:dev-simulator`
-1. Start local development `npm run ios:dev-simulator`
+1. Start local development
+   - `npm run ios:dev-development` - for simulators ONLY, testing local frontend and local backend
+   - `npm run ios:dev-production` - for simulators AND devices, testing local frontend and production backend
 1. To debug, start safari, select simulator and there should be an app to select.
 
-- Note - Cannot run on a physical device because I need to replace localhost:8000 with the computer's IP for the backend. Not worrying for now because I can just build the app and use the production backend.
+#### Device
+
+1. `cd frontend`
+1. Start local development `npm run ios:device`
+1. Will use backend production. (Currently, I feel like I'll never need to test the local backend from a physical device, the simulator should be enough.)
+1. To debug, start safari, select simulator and there should be an app to select.
 
 Debug Notes
 
 - If stuck on splash screen could be because `make up` hasn't been run.
 
-**Adding new packages**
+### Adding new packages
 
 Unsure if this is the best route but I believe it works if Docker gets mad about missing NPM packages.
 
@@ -53,7 +66,7 @@ Unsure if this is the best route but I believe it works if Docker gets mad about
 
 ## Backend
 
-**Migrations**
+### Migrations
 
 1. From `backend/`
 1. `make migration` - Give migration a helpful name of changes `user_and_color_palettes` or `add_cube_extension`

@@ -48,20 +48,31 @@ const DraggableSwatch = ({
   const sampleColorAtPosition = useCallback(
     (x: number, y: number) => {
       const canvas = canvasRef.current
-      if (!canvas) return '#FF00FF'
+
+      if (!canvas) return '#000000'
 
       const ctx = canvas.getContext('2d', { willReadFrequently: true })
-      if (!ctx) return '#FFFF00'
+      if (!ctx) return '#000000'
 
       const rect = canvas.getBoundingClientRect()
+
       const scaleX = canvas.width / rect.width
+
       const scaleY = canvas.height / rect.height
 
       // Clamp to canvas dimensions
       const pixelX = Math.max(0, Math.min(canvas.width - 1, x * scaleX))
       const pixelY = Math.max(0, Math.min(canvas.height - 1, y * scaleY))
 
+      if (isNaN(pixelX) || isNaN(pixelY)) {
+        // Not quite sure why this happens. Chrome handles it fine, safari does not.
+        // Might be a race condition or alternatively there might be situations where
+        // The size of the canvas is 0 due to variable layout.
+        return '#000000'
+      }
+
       const pixel = ctx.getImageData(pixelX, pixelY, 1, 1).data
+
       return `#${pixel[0].toString(16).padStart(2, '0')}${pixel[1].toString(16).padStart(2, '0')}${pixel[2].toString(16).padStart(2, '0')}`.toUpperCase()
     },
     [canvasRef]
@@ -188,7 +199,7 @@ const DraggableSwatch = ({
             width: '100%',
             aspectRatio: '1/1',
             cursor: 'none',
-            border: `2px solid rgba(255, 255, 255, 0.7)`,
+            border: `2px solid rgba(255, 255, 255, 0.9)`,
             overflow: 'hidden',
             boxShadow: '0 0 10px rgba(0,0,0,0.9)',
             backdropFilter: 'blur(10px)',

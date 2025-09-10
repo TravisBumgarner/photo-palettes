@@ -46,7 +46,7 @@ const Favorite = ({
 
   if (!appUserDetails) {
     return (
-      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+      <Box sx={{ display: 'flex', alignItems: 'center' }}>
         <Typography
           variant="body1"
           component="span"
@@ -60,7 +60,7 @@ const Favorite = ({
   }
 
   return (
-    <div>
+    <Box sx={{ display: 'flex', alignItems: 'center' }}>
       <Typography
         variant="body1"
         component="span"
@@ -99,7 +99,7 @@ const Favorite = ({
           </IconButton>
         </Tooltip>
       )}
-    </div>
+    </Box>
   )
 }
 
