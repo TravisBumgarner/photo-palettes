@@ -37,7 +37,7 @@ If docker is running and a new dependency is installed, the app will crash. Run 
 Notes
 
 - Safari dev tools sucks. If IP address changes, in capacitor.config.js, need to quit safari.
-- Console.logs are currently just not showing up?? I have no idea why, I don't currently care now that the issue I was debugging is resolved.
+- Console.logs are currently just not showing up?? Again, Safari sucks. I had to quit Safari multiple times before I could see the output from the simulator.
 
 1. Bring up all services `make up`
 1. `cd frontend`

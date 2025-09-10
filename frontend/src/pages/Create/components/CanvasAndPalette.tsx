@@ -66,10 +66,38 @@ const CanvasAndPalette = ({
 
   return (
     <Box>
+      <Tooltip title="Drag to reorder." placement="bottom">
+        <Reorder.Group
+          as="div"
+          axis="x"
+          values={paletteSortOrder}
+          onReorder={setPaletteSortOrder}
+          style={{
+            display: 'flex',
+            flexDirection: 'row',
+            marginBottom: SPACING.MEDIUM.PX,
+          }}
+        >
+          {palette &&
+            paletteSortOrder.map((index) => (
+              <ReadonlySwatch
+                key={index}
+                index={index}
+                swatch={palette[index]}
+                isActive={activeIndex === index}
+                isOtherActive={activeIndex !== null && activeIndex !== index}
+                setHoverIndex={setHoverIndex}
+              />
+            ))}
+        </Reorder.Group>
+      </Tooltip>
       <Box
         sx={{
           display: 'flex',
           justifyContent: 'center',
+          maxHeight: '70vh',
+          minHeight: '400px', // Removing this line might break the experience on Safari. See comments for isNaN() in DraggableSwatch.
+          aspectRatio: imageDimensions.width / imageDimensions.height,
         }}
       >
         <div
@@ -109,31 +137,6 @@ const CanvasAndPalette = ({
             ))}
         </div>
       </Box>
-      <Tooltip title="Drag to reorder." placement="bottom">
-        <Reorder.Group
-          as="div"
-          axis="x"
-          values={paletteSortOrder}
-          onReorder={setPaletteSortOrder}
-          style={{
-            display: 'flex',
-            flexDirection: 'row',
-            marginTop: SPACING.MEDIUM.PX,
-          }}
-        >
-          {palette &&
-            paletteSortOrder.map((index) => (
-              <ReadonlySwatch
-                key={index}
-                index={index}
-                swatch={palette[index]}
-                isActive={activeIndex === index}
-                isOtherActive={activeIndex !== null && activeIndex !== index}
-                setHoverIndex={setHoverIndex}
-              />
-            ))}
-        </Reorder.Group>
-      </Tooltip>
     </Box>
   )
 }

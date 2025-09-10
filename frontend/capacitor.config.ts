@@ -1,9 +1,9 @@
 // capacitor.config.js
 // @ts-check
 
-const os = require('os')
+import os from 'os'
 
-const isDevelopment = process.env.NODE_ENV === 'development'
+const isDevelopment = process.env.NODE_ENV === 'development' //eslint-disable-line
 
 /** @type {import('@capacitor/cli').CapacitorConfig} */
 const config = {
