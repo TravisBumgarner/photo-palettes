@@ -1,4 +1,5 @@
 import { GiHamburgerMenu } from 'react-icons/gi'
+import { FaApple } from 'react-icons/fa'
 
 import Box from '@mui/material/Box'
 import IconButton from '@mui/material/IconButton'
@@ -132,6 +133,34 @@ const Navigation = () => {
         >
           <DropdownLinks onClose={handleClose} />
         </Menu>
+      </Box>
+      <Box
+        sx={{
+          position: 'fixed',
+          right: '20px',
+          bottom: '20px',
+          backgroundColor: 'text.primary',
+          '& svg': {
+            fill: theme.palette.background.default,
+          },
+        }}
+      >
+        <Link
+          href="https://testflight.apple.com/join/qxjus9mV"
+          hideBaseUnderline
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            padding: SPACING.SMALL.PX,
+          }}
+        >
+          <FaApple color="background.primary" />
+          <Typography
+            sx={{ color: 'background.default', marginLeft: SPACING.SMALL.PX }}
+          >
+            Join the Beta
+          </Typography>
+        </Link>
       </Box>
     </Box>
   )
