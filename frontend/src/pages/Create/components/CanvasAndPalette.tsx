@@ -104,7 +104,6 @@ const CanvasAndPalette = ({
         <div
           ref={canvasContainerRef}
           style={{
-            touchAction: 'none',
             position: 'relative',
             maxWidth: '100%',
             aspectRatio: imageDimensions.width / imageDimensions.height,
@@ -112,7 +111,6 @@ const CanvasAndPalette = ({
         >
           <canvas
             style={{
-              touchAction: 'none',
               display: 'block',
               maxWidth: '100%',
               maxHeight: '100%',

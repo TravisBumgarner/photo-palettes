@@ -1,4 +1,51 @@
 import { getContrastColor } from './getContrastColor'
+import { Directory, Filesystem } from '@capacitor/filesystem'
+import { Share } from '@capacitor/share'
+
+import { Capacitor } from '@capacitor/core'
+
+const blobToBase64 = (blob: Blob): Promise<string> =>
+  new Promise((resolve, reject) => {
+    const reader = new FileReader()
+    reader.onerror = reject
+    reader.onload = () => {
+      const dataUrl = reader.result as string
+      resolve(dataUrl.split(',')[1]) // strip "data:image/png;base64,"
+    }
+    reader.readAsDataURL(blob)
+  })
+
+const downloadNative = async (paletteId: string, blob: Blob) => {
+  const result = await Filesystem.writeFile({
+    path: `${paletteId}.png`,
+    data: await blobToBase64(blob), // blobs supported web only.
+    directory: Directory.Documents,
+  })
+  alert(result.uri)
+
+  await Share.share({
+    title: 'Save your palette',
+    text: 'Created with Photo Palettes',
+    url: result.uri, // Native file URI
+    dialogTitle: 'Share Palette',
+  })
+}
+
+const downloadWeb = (paletteId: string, blob: Blob) => {
+  const url = URL.createObjectURL(blob)
+
+  // Trigger download
+  const a = document.createElement('a')
+  a.href = url
+  a.download = `${paletteId}.png`
+  document.body.appendChild(a)
+  a.click()
+  document.body.removeChild(a)
+  Filesystem.writeFile({
+    path: 'foo.jpg',
+    data: blob,
+  })
+}
 
 const downloadPalette = async ({
   paletteId,
@@ -89,19 +136,14 @@ const downloadPalette = async ({
 
   canvas.toBlob((blob) => {
     if (!blob) return
-    const url = URL.createObjectURL(blob)
 
-    // Trigger download
-    const a = document.createElement('a')
-    a.href = url
-    a.download = `${paletteId}.png`
-    document.body.appendChild(a)
-    a.click()
-    document.body.removeChild(a)
-
-    // Clean up
-    URL.revokeObjectURL(url)
-  }, 'image/png')
+    if (Capacitor.isNativePlatform()) {
+      downloadNative(paletteId, blob)
+    } else {
+      // Web
+      downloadWeb(paletteId, blob)
+    }
+  })
 }
 
 export default downloadPalette

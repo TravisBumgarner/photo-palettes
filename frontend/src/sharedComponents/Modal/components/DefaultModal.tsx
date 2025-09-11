@@ -7,7 +7,6 @@ import { BORDER_RADIUS, SPACING, Z_INDICES } from '../../../styles/styleConsts'
 import { activeModalSignal } from '../../../signals'
 interface ActiveModal {
   children: React.ReactNode | React.ReactNode[]
-  hideCloseButton?: boolean
 }
 
 const Modal: FC<ActiveModal> = ({ children }) => {

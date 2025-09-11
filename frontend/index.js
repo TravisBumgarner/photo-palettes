@@ -15,7 +15,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const app = express()
 const port = process.env.PORT || 3000
 
-const frontendDist = path.join(__dirname, 'dist')
+const frontendDist = path.join(__dirname, 'dist-web')
 app.set('view engine', 'ejs')
 app.set('views', frontendDist)
 

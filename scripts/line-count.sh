@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # Directories to ignore (space-separated)
-IGNORE_DIRS="node_modules dist build .git frontend/ios frontend/android explorations"
+IGNORE_DIRS="node_modules dist dist-web dist-native build .git frontend/ios frontend/android explorations"
 
 # Extensions to ignore (space-separated, no leading dot)
 IGNORE_EXTS="jpg png gif svg mp4 mp3 zip gz tar lock ttf woff woff2 xml jar webp"

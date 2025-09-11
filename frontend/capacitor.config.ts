@@ -10,7 +10,7 @@ const isDevelopment = process.env.NODE_ENV === 'development' //eslint-disable-li
 const config = {
   appId: 'com.photopalettes',
   appName: 'Photo Palettes',
-  webDir: 'dist',
+  webDir: 'dist-native',
   ...(isDevelopment
     ? {
         server: {
@@ -45,5 +45,5 @@ function getLocalIp() {
   }
   return '127.0.0.1'
 }
-
+console.log('config', config) // eslint-disable-line
 module.exports = config
