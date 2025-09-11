@@ -45,5 +45,5 @@ function getLocalIp() {
   }
   return '127.0.0.1'
 }
-
+console.log('config', config) // eslint-disable-line
 module.exports = config

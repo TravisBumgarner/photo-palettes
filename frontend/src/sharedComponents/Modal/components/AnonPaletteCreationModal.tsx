@@ -27,6 +27,7 @@ const AnonPaletteCreationModal = ({
   name,
 }: AnonPaletteCreationModalProps) => {
   const colors = palette.map((swatch) => swatch.color)
+  const navigate = useNavigate()
 
   const handleDownload = useCallback(async () => {
     await downloadPalette({
@@ -34,9 +35,8 @@ const AnonPaletteCreationModal = ({
       photoUrl,
       colors,
     })
-  }, [photoUrl, colors, paletteId])
-
-  const navigate = useNavigate()
+    navigate(ROUTES.browse.href)
+  }, [photoUrl, colors, paletteId, navigate])
 
   const handleConfirm = useCallback(async () => {
     queries.createTemporaryPalette({
@@ -50,7 +50,7 @@ const AnonPaletteCreationModal = ({
   }, [palette, name, photoUrl, paletteId, navigate])
 
   return (
-    <DefaultModal hideCloseButton>
+    <DefaultModal>
       <Box sx={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
         <img
           style={{ width: '100%', height: 'auto' }}
@@ -70,7 +70,7 @@ const AnonPaletteCreationModal = ({
           }}
         >
           <Button variant="outlined" onClick={handleDownload}>
-            Download
+            Download!
           </Button>
           <Button variant="contained" onClick={handleConfirm}>
             Sign up
