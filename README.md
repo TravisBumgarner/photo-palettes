@@ -93,8 +93,7 @@ Useful commands:
 
 # Deploy to App Store
 
-1. `npx cap sync ios`
-1. `npx cap open ios`
+1. `npm run ios:build`
 1. XCode -> Product -> Archive
 1. Check test flight for build: https://appstoreconnect.apple.com/teams/2399b798-4024-4423-8dab-254bb827c7aa/apps/6751658619/testflight/ios
 1. Under Internal Testing -> Test Group can add folks via email.

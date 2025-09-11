@@ -92,7 +92,7 @@ const Navigation = () => {
                 left: '5px',
               }}
             >
-              Alpha
+              Beta
             </sup>
           </Link>
         </Typography>
