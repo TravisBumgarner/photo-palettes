@@ -10,7 +10,7 @@ import { globalIgnores } from 'eslint/config'
 
 export default tseslint.config(
   [
-    globalIgnores(['dist', 'ios', 'android']),
+    globalIgnores(['dist-web', 'dist-native', 'ios', 'android']),
     {
       files: ['**/*.{ts,tsx}'],
       extends: [

@@ -10,7 +10,7 @@ const isDevelopment = process.env.NODE_ENV === 'development' //eslint-disable-li
 const config = {
   appId: 'com.photopalettes',
   appName: 'Photo Palettes',
-  webDir: 'dist',
+  webDir: 'dist-native',
   ...(isDevelopment
     ? {
         server: {
