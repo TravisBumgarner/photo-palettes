@@ -2,14 +2,14 @@ import IconButton from '@mui/material/IconButton'
 import Tooltip from '@mui/material/Tooltip'
 import Typography from '@mui/material/Typography'
 
-import { FaHeart, FaRegHeart } from 'react-icons/fa'
+import Box from '@mui/material/Box'
+import { useTheme } from '@mui/material/styles'
 import { useMutation } from '@tanstack/react-query'
+import { FaHeart, FaRegHeart } from 'react-icons/fa'
 import addToFavorites from '../api/favorites/addToFavorites'
 import removeFromFavorites from '../api/favorites/removeFromFavorites'
-import { useTheme } from '@mui/material/styles'
-import { PALETTE } from '../styles/styleConsts'
 import useGlobalStore from '../store'
-import Box from '@mui/material/Box'
+import { PALETTE, SPACING } from '../styles/styleConsts'
 
 interface FavoriteProps {
   paletteId: string
@@ -46,7 +46,9 @@ const Favorite = ({
 
   if (!appUserDetails) {
     return (
-      <Box sx={{ display: 'flex', alignItems: 'center' }}>
+      <Box
+        sx={{ display: 'flex', alignItems: 'center', gap: SPACING.SMALL.PX }}
+      >
         <Typography
           variant="body1"
           component="span"
