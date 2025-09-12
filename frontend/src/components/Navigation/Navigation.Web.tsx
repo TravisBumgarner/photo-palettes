@@ -139,6 +139,7 @@ const Navigation = () => {
           position: 'fixed',
           right: '20px',
           bottom: '20px',
+          zIndex: 999,
           backgroundColor: 'text.primary',
           '& svg': {
             fill: theme.palette.background.default,
@@ -156,7 +157,11 @@ const Navigation = () => {
         >
           <FaApple color="background.primary" />
           <Typography
-            sx={{ color: 'background.default', marginLeft: SPACING.SMALL.PX }}
+            sx={{
+              fontWeight: 900,
+              color: 'background.default',
+              marginLeft: SPACING.SMALL.PX,
+            }}
           >
             Join the Beta
           </Typography>

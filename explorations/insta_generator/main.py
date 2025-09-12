@@ -1,0 +1,171 @@
+import os
+from dotenv import load_dotenv
+from instagrapi import Client
+from PIL import Image, ImageDraw, ImageFont
+import tempfile
+from pathlib import Path
+
+load_dotenv()
+TARGET_WIDTH = 1600
+TARGET_HEIGHT = 1600
+PADDING = 300
+FONT_PATH = "font2.ttf"
+FONT_SIZE = 75
+TEXT_HORIZONTAL_ORIGIN = 500
+FONT = ImageFont.truetype(str(FONT_PATH), FONT_SIZE)
+
+MIDDLE_GRAY = 186  # Approximate middle gray for luminance calculation
+
+
+def get_text_color(hex_color):
+    r, g, b = tuple(int(hex_color[i : i + 2], 16) for i in (1, 3, 5))
+    luminance = 0.299 * r + 0.587 * g + 0.114 * b
+    return "black" if luminance > MIDDLE_GRAY else "white"
+
+
+# Maybe use Instagram's supported aspect ratios to do this better.
+
+
+def draw_background(og_image: Image.Image, colors: list[str]):
+    draw = ImageDraw.Draw(og_image)
+
+    n = len(colors)
+    block_width = TARGET_WIDTH
+    base_height = TARGET_HEIGHT // n
+    extra_pixels = TARGET_HEIGHT % n
+
+    # Distribute extra pixels: first 'extra_pixels' blocks get +1 pixel
+    y_start = 0
+    for i, hex_color in enumerate(colors):
+        h = base_height + (1 if i < extra_pixels else 0)
+        y_end = y_start + h
+        draw.rectangle([0, y_start, block_width, y_end], fill=hex_color)
+        y_start = y_end
+    return og_image
+
+
+def draw_image_1(og_image: Image.Image, image_to_draw: Image.Image):
+    width, height = image_to_draw.size
+    aspect_ratio = width / height
+
+    if aspect_ratio >= 1:
+        # Landscape or square
+        resize_width = og_image.width - 2 * PADDING
+        resize_height = int(resize_width / aspect_ratio)
+        center_y_offset = (og_image.height - resize_height) // 2
+        paste_y = center_y_offset
+    else:
+        # Portrait
+        resize_height = og_image.height - 2 * PADDING
+        resize_width = int(aspect_ratio * resize_height)
+        paste_y = PADDING
+
+    image_to_draw = image_to_draw.resize(
+        (resize_width, resize_height), Image.Resampling.BICUBIC
+    )
+
+    # Draw white border rectangle before pasting image
+    border_thickness = 20
+    draw = ImageDraw.Draw(og_image)
+    left = PADDING - border_thickness
+    top = paste_y - border_thickness
+    right = PADDING + resize_width + border_thickness
+    bottom = paste_y + resize_height + border_thickness
+    draw.rectangle([left, top, right, bottom], outline="white", width=border_thickness)
+
+    og_image.paste(image_to_draw, (PADDING, paste_y))
+    return og_image
+
+
+def generate_image_1(file_path):
+    photo = Image.open(file_path)
+    image = Image.new("RGB", (TARGET_WIDTH, TARGET_HEIGHT), "white")
+    image = draw_background(
+        image, ["#35000C", "#041C1E", "#75111B", "#8A390E", "#6E716B", "#93AAA4"]
+    )
+    image = draw_image_1(image, photo)
+
+    # if not os.path.exists("output"):
+    #     os.makedirs("output")
+    # image.save(f"output/1{file_path}")
+    return image
+
+
+def draw_text_2(og_image: Image.Image, colors: list[str]):
+    draw = ImageDraw.Draw(og_image)
+    block_height = TARGET_HEIGHT // len(colors)
+
+    # Draw text on each color block, right-aligned near the edge
+    for i, hex_color in enumerate(colors):
+        y0 = int(i * block_height + block_height // 2)
+        text = hex_color.upper()
+        text_width = draw.textlength(text, font=FONT)
+        # Place text close to the right edge, with a small margin
+        margin = 40
+        x_right = TARGET_WIDTH - margin
+        x0 = x_right - text_width
+        draw.text(
+            (x0, y0),
+            text,
+            fill=get_text_color(hex_color),
+            font=FONT,
+            anchor="lm",  # left-middle anchor for right alignment
+        )
+    return og_image
+
+
+def generate_image_2(file_path):
+    image = Image.new("RGB", (TARGET_WIDTH, TARGET_HEIGHT), "white")
+    image = draw_background(
+        image, ["#35000C", "#041C1E", "#75111B", "#8A390E", "#6E716B", "#93AAA4"]
+    )
+    image = draw_text_2(
+        image, ["#35000C", "#041C1E", "#75111B", "#8A390E", "#6E716B", "#93AAA4"]
+    )
+    # if not os.path.exists("output"):
+    #     os.makedirs("output")
+    # image.save(f"output/2{file_path}")
+
+    return image
+
+
+# generate_image_1("landscape.webp")
+# generate_image_1("portrait.jpeg")
+# generate_image_2("landscape.webp")
+# generate_image_2("portrait.jpeg")
+
+cl = Client()
+INSTAGRAM_USERNAME = os.getenv("INSTAGRAM_USERNAME")
+INSTAGRAM_PASSWORD = os.getenv("INSTAGRAM_PASSWORD")
+
+
+cl.login(INSTAGRAM_USERNAME, INSTAGRAM_PASSWORD)
+
+
+def post_image(cl, image_paths, caption):
+    cl.album_upload(paths=image_paths, caption=caption)
+    print(f"Posted image: {image_paths}")
+    return
+
+
+def post_image_from_memory(cl, pil_images, caption):
+    temp_files = []
+    for img in pil_images:
+        temp = tempfile.NamedTemporaryFile(suffix=".jpg", delete=False)
+        img.save(temp.name, format="JPEG")
+        temp_files.append(Path(temp.name))
+        temp.close()
+    cl.album_upload(paths=temp_files, caption=caption)
+    # Optionally, delete temp files after upload
+    for temp_path in temp_files:
+        os.remove(temp_path)
+
+
+def main():
+    filename = "portrait.jpeg"
+    img_1 = generate_image_1(filename)
+    img_2 = generate_image_2(filename)
+    post_image_from_memory(cl, [img_1, img_2], "Check out these images!")
+
+
+main()
