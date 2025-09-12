@@ -27,6 +27,12 @@ class BskySettings(BaseServiceSettings):
     password: str = Field(default="")
 
 
+class InstagramSettings(BaseServiceSettings):
+    model_config = SettingsConfigDict(env_prefix="INSTAGRAM_")
+    username: str = Field(default="")
+    password: str = Field(default="")
+
+
 class Config(BaseSettings):
     environment: str = Field(default="development")
 
@@ -38,6 +44,7 @@ class Config(BaseSettings):
     supabase: SupabaseSettings = Field(default_factory=lambda: SupabaseSettings())
     pushover: PushoverSettings = Field(default_factory=lambda: PushoverSettings())
     bsky: BskySettings = Field(default_factory=lambda: BskySettings())
+    instagram: InstagramSettings = Field(default_factory=lambda: InstagramSettings())
     cloudinary_url: str = Field(default="")
     model_config = SettingsConfigDict(env_file=".env", extra="ignore")
     debug_cloudinary_locally: bool = Field(default=False)
