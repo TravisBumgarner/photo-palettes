@@ -1,23 +1,25 @@
-import React, { useCallback, useState } from 'react'
-import { SPACING, subtleBackground } from '../../../styles/styleConsts'
-import PageWrapper from '../../../styles/shared/PageWrapper'
-import { useTheme } from '@mui/material/styles'
-import Summary from './Summary'
-import Controls from './Controls'
-import type { PaletteControlsState } from '../Palette.types'
-import ColorDetails from './ColorDetails'
-import ModerationPanel from '../../../sharedComponents/ModerationPanel'
-import { type TPalette } from '../../../types'
-import Tab from '@mui/material/Tab'
-import Tabs from '@mui/material/Tabs'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
+import { useTheme } from '@mui/material/styles'
+import Tab from '@mui/material/Tab'
+import Tabs from '@mui/material/Tabs'
+import React, { useCallback, useState } from 'react'
+import BlurImage from '../../../sharedComponents/BlurImage'
+import ColorBar from '../../../sharedComponents/ColorBar'
+import ModerationPanel from '../../../sharedComponents/ModerationPanel'
+import PageWrapper from '../../../styles/shared/PageWrapper'
+import { SPACING, subtleBackground } from '../../../styles/styleConsts'
+import { type TPalette } from '../../../types'
+import type { PaletteControlsState } from '../Palette.types'
+import ColorDetails from './ColorDetails'
+import Controls from './Controls'
+import Summary from './Summary'
 
-const TABS = ['overview', 'color']
+const TABS = ['photo', 'color']
 
 const TABS_LABEL = {
-  [TABS[0]]: 'Overview',
-  [TABS[1]]: 'Color Details',
+  [TABS[0]]: 'Photo',
+  [TABS[1]]: 'Color Exploration',
 }
 
 const PaletteMobile = ({
@@ -44,16 +46,11 @@ const PaletteMobile = ({
 
   return (
     <PageWrapper width="full">
-      <ModerationPanel
-        refetch={refetch}
-        moderationStatus={palette.moderationStatus}
-        paletteId={palette.id}
-      />
+      <Summary isMobile palette={palette} refetch={refetch} />
+
       <Tabs
         sx={{
           marginBottom: SPACING.MEDIUM.PX,
-          padding: `${SPACING.SMALL.PX} ${SPACING.MEDIUM.PX}`,
-          backgroundColor: subtleBackground(theme.palette.mode),
         }}
         variant="scrollable"
         value={tabIndex}
@@ -64,8 +61,14 @@ const PaletteMobile = ({
         ))}
       </Tabs>
 
-      {TABS[tabIndex] === 'overview' && (
-        <Summary isMobile palette={palette} refetch={refetch} />
+      {TABS[tabIndex] === 'photo' && (
+        <BlurImage
+          alt={`${name} thumbnail`}
+          src={palette.photoUrl}
+          aspectRatio={palette.aspectRatio}
+          blurHash={palette.blurhash}
+          maxDimensions={{ maxHeight: '90vh' }}
+        />
       )}
 
       {TABS[tabIndex] === 'color' && (
@@ -75,8 +78,19 @@ const PaletteMobile = ({
               position: 'sticky',
               top: 'env(safe-area-inset-top)',
               zIndex: 999,
+              padding: SPACING.SMALL.PX,
+              backgroundColor: subtleBackground(theme.palette.mode, 'slightly'),
+              gap: SPACING.SMALL.PX,
+              display: 'flex',
+              flexDirection: 'column',
             }}
           >
+            <ColorBar
+              interactive
+              height={25}
+              colors={palette.colors.map((c) => c.hex)}
+            />
+
             <Button variant="contained" fullWidth onClick={handleFilterToggle}>
               {showFilters ? 'Hide Filters' : 'Show Filters'}
             </Button>
@@ -107,6 +121,11 @@ const PaletteMobile = ({
           </Box>
         </>
       )}
+      <ModerationPanel
+        refetch={refetch}
+        moderationStatus={palette.moderationStatus}
+        paletteId={palette.id}
+      />
     </PageWrapper>
   )
 }

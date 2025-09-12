@@ -1,6 +1,5 @@
-import { useCallback } from 'react'
-import { SPACING } from '../styles/styleConsts'
 import Box from '@mui/material/Box'
+import { useCallback } from 'react'
 
 const Color = ({
   color,
@@ -48,7 +47,6 @@ const ColorBar = ({
       <Box
         sx={{
           display: 'flex',
-          marginBottom: SPACING.SMALL.PX,
         }}
       >
         {colors.map((color, index) => (

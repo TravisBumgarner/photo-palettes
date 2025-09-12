@@ -1,6 +1,8 @@
-import Typography from '@mui/material/Typography'
-import type { PaletteControlsState } from '../Palette.types'
 import Box from '@mui/material/Box'
+import Button from '@mui/material/Button'
+import { styled, type SxProps } from '@mui/material/styles'
+import Typography from '@mui/material/Typography'
+import { FONT_SIZES, SPACING } from '../../../styles/styleConsts'
 import {
   BACKGROUND_COLORS,
   COLOR_MIXES,
@@ -8,9 +10,7 @@ import {
   DETAILS,
   DETAILS_MAP,
 } from '../Palette.consts'
-import Button from '@mui/material/Button'
-import { FONT_SIZES, SPACING } from '../../../styles/styleConsts'
-import { styled, type SxProps } from '@mui/material/styles'
+import type { PaletteControlsState } from '../Palette.types'
 
 interface ControlsProps {
   controls: PaletteControlsState
@@ -23,7 +23,7 @@ const Controls: React.FC<ControlsProps> = ({ controls, setControls }) => {
       sx={{
         display: 'flex',
         flexDirection: 'column',
-        gap: SPACING.MEDIUM.PX,
+        gap: SPACING.SMALL.PX,
       }}
     >
       <FilterWrapper>
