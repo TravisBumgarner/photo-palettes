@@ -192,7 +192,7 @@ const lightThemeOptions: ThemeOptions = {
     MuiTabs: {
       styleOverrides: {
         indicator: {
-          backgroundColor: PALETTE.grayscale[700], // underline color
+          backgroundColor: PALETTE.grayscale[200], // underline color
         },
       },
     },
@@ -201,12 +201,12 @@ const lightThemeOptions: ThemeOptions = {
         root: {
           color: PALETTE.grayscale[700], // text color
           '&:hover': {
-            backgroundColor: PALETTE.grayscale[900],
-            color: PALETTE.grayscale[100],
+            backgroundColor: PALETTE.grayscale[800],
+            color: PALETTE.grayscale[50],
           },
           '&.Mui-selected': {
-            backgroundColor: PALETTE.grayscale[800],
-            color: PALETTE.grayscale[100],
+            backgroundColor: PALETTE.grayscale[200],
+            color: PALETTE.grayscale[900],
           },
         },
       },
@@ -354,8 +354,8 @@ const darkThemeOptions: ThemeOptions = {
         root: {
           color: PALETTE.grayscale[200], // text color
           '&.Mui-selected': {
-            backgroundColor: PALETTE.grayscale[200],
-            color: PALETTE.grayscale[900],
+            backgroundColor: PALETTE.grayscale[700],
+            color: PALETTE.grayscale[200],
           },
           '&:hover': {
             backgroundColor: PALETTE.grayscale[100],

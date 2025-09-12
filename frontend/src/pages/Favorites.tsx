@@ -1,17 +1,17 @@
 import { useQuery } from '@tanstack/react-query'
 import { useCallback, useEffect, useMemo, useState } from 'react'
+import getFavoritesList from '../api/favorites/getFavoritesList'
+import { PAGINATION_SIZE, ROUTES } from '../consts'
 import { logger } from '../services/logging'
+import Loading from '../sharedComponents/Loading'
+import Message from '../sharedComponents/Message'
+import Pagination from '../sharedComponents/Pagination'
+import PaletteThumbnail from '../sharedComponents/PaletteThumbnail'
+import SortsAndFilters from '../sharedComponents/SortsAndFilters'
 import PageTitle from '../styles/shared/PageTitle'
 import PageWrapper from '../styles/shared/PageWrapper'
 import ThumbnailGridDisplay from '../styles/shared/ThumbnailGallery'
-import Loading from '../sharedComponents/Loading'
-import Message from '../sharedComponents/Message'
-import PaletteThumbnail from '../sharedComponents/PaletteThumbnail'
-import Pagination from '../sharedComponents/Pagination'
-import { PAGINATION_SIZE, ROUTES } from '../consts'
 import { type ESortBy, SORT_BY } from '../types'
-import SortsAndFilters from '../sharedComponents/SortsAndFilters'
-import getFavoritesList from '../api/favorites/getFavoritesList'
 
 const Favorites = () => {
   const [page, setPage] = useState(1)
@@ -59,7 +59,7 @@ const Favorites = () => {
       )
     if (!data.success) return <Message message={data.message} color="error" />
     if (data.palettes.length === 0)
-      return <Message message="No favorite palettes found" color="info" />
+      return <Message message="Go favorite a pallette!" color="info" />
 
     return (
       <>
