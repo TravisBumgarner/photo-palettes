@@ -1,12 +1,11 @@
-from typing import Optional
-
-from database import db_engine
-from database.models import ServiceSession
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
+from database import db_engine
+from database.models import ServiceSession
 
-def get_service_session(service: str) -> Optional[dict]:
+
+def get_service_session(service: str) -> dict | None:
     with Session(db_engine) as session:
         stmt = select(ServiceSession).where(ServiceSession.service == service)
         result = session.execute(stmt).scalar_one_or_none()

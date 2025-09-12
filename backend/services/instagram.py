@@ -9,6 +9,7 @@ from PIL import Image, ImageDraw, ImageFont
 
 from config import get_config
 from database.queries.service_sessions import get_service_session, set_service_session
+from services.logger import log_error
 
 TARGET_WIDTH = 1600
 TARGET_HEIGHT = 1600
@@ -66,9 +67,7 @@ def draw_image_1(og_image: Image.Image, image_to_draw: Image.Image):
         resize_width = int(aspect_ratio * resize_height)
         paste_y = PADDING
 
-    image_to_draw = image_to_draw.resize(
-        (resize_width, resize_height), Image.Resampling.BICUBIC
-    )
+    image_to_draw = image_to_draw.resize((resize_width, resize_height), Image.Resampling.BICUBIC)
 
     # Draw white border rectangle before pasting image
     border_thickness = 20
@@ -122,12 +121,6 @@ def generate_image_2(colors: list[str]):
     return image
 
 
-def post_image(cl, image_paths, caption):
-    cl.album_upload(paths=image_paths, caption=caption)
-    print(f"Posted image: {image_paths}")
-    return
-
-
 def post_image_from_memory(cl, pil_images, caption):
     temp_files = []
     for img in pil_images:
@@ -143,21 +136,24 @@ def post_image_from_memory(cl, pil_images, caption):
 
 def post_to_instagram(photo_path: str, colors: list[str], description: str) -> bool:
     service_name = "instagram"
-
-    # Init client
     cl = Client()
 
     # Try loading existing session
     session_json = get_service_session(service_name)
     if session_json:
         cl.set_settings(session_json)
-
-    try:
-        cl.login(config.instagram.username, config.instagram.password)
-    except Exception:
-        # If login fails, reset and retry with fresh login
-        cl.set_settings({})
-        cl.login(config.instagram.username, config.instagram.password)
+        try:
+            cl.get_timeline_feed()  # lightweight request to verify session is valid
+            return True  # already logged in
+        except Exception:
+            # Session expired -> reset and re-login
+            cl.set_settings({})
+    else:
+        # No valid session, so login fresh
+        try:
+            cl.login(config.instagram.username, config.instagram.password)
+        except Exception as e:
+            log_error(e, name="Instagram Login Failed")
 
     # Save latest session back to DB
     set_service_session(service_name, cl.get_settings())
