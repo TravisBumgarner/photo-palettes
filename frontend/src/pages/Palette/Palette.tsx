@@ -1,23 +1,21 @@
+import { useQuery } from '@tanstack/react-query'
 import React from 'react'
+import { useParams } from 'react-router-dom'
+import { getPaletteById } from '../../api/palettes/getPaletteById'
+import Loading from '../../sharedComponents/Loading'
 import Message from '../../sharedComponents/Message'
 import PageWrapper from '../../styles/shared/PageWrapper'
-import { useQuery } from '@tanstack/react-query'
-import { getPaletteById } from '../../api/palettes/getPaletteById'
-import { useParams } from 'react-router-dom'
-import Loading from '../../sharedComponents/Loading'
 
-import type { PaletteControlsState } from './Palette.types'
-import { BACKGROUND_COLORS } from './Palette.consts'
-import PaletteMobile from './components/Palette.Mobile'
-import PaletteDesktop from './components/Palette.Desktop'
-import { MODERATION_STATUS } from '../../types'
 import useMediaQuery from '../../hooks/UseMediaQuery'
+import { MODERATION_STATUS } from '../../types'
+import { BACKGROUND_COLORS } from './Palette.consts'
+import type { PaletteControlsState } from './Palette.types'
+import PaletteDesktop from './components/Palette.Desktop'
+import PaletteMobile from './components/Palette.Mobile'
 
 const Palette = () => {
   const params = useParams()
   const isDesktop = useMediaQuery('(min-width:600px)')
-  // const isDesktop = useMediaQuery(theme.breakpoints.up('sm'), { noSsr: true })
-  // console.log(isDesktop) //eslint-disable-line
   const [controls, setControls] = React.useState<PaletteControlsState>({
     background: BACKGROUND_COLORS[0],
     details: 'none',
