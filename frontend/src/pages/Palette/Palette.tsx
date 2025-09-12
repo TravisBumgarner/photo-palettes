@@ -1,23 +1,21 @@
+import { useQuery } from '@tanstack/react-query'
 import React from 'react'
+import { useParams } from 'react-router-dom'
+import { getPaletteById } from '../../api/palettes/getPaletteById'
+import Loading from '../../sharedComponents/Loading'
 import Message from '../../sharedComponents/Message'
 import PageWrapper from '../../styles/shared/PageWrapper'
-import { useQuery } from '@tanstack/react-query'
-import { getPaletteById } from '../../api/palettes/getPaletteById'
-import { useParams } from 'react-router-dom'
-import Loading from '../../sharedComponents/Loading'
 
-import type { PaletteControlsState } from './Palette.types'
-import { BACKGROUND_COLORS } from './Palette.consts'
-import PaletteMobile from './components/Palette.Mobile'
-import PaletteDesktop from './components/Palette.Desktop'
+import useMediaQuery from '../../hooks/UseMediaQuery'
 import { MODERATION_STATUS } from '../../types'
-import useMediaQuery from '@mui/material/useMediaQuery'
-import { useTheme } from '@mui/material/styles'
+import { BACKGROUND_COLORS } from './Palette.consts'
+import type { PaletteControlsState } from './Palette.types'
+import PaletteDesktop from './components/Palette.Desktop'
+import PaletteMobile from './components/Palette.Mobile'
 
 const Palette = () => {
   const params = useParams()
-  const theme = useTheme()
-  const isDesktop = useMediaQuery(theme.breakpoints.up('sm'))
+  const isDesktop = useMediaQuery('(min-width:600px)')
   const [controls, setControls] = React.useState<PaletteControlsState>({
     background: BACKGROUND_COLORS[0],
     details: 'none',

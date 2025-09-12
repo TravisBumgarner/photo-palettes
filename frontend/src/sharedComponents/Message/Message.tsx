@@ -2,17 +2,17 @@ import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import Typography from '@mui/material/Typography'
 
+import { useTheme } from '@mui/material/styles'
+import { useMemo } from 'react'
+import { GiPartyPopper } from 'react-icons/gi'
+import { IoMdWarning } from 'react-icons/io'
+import { IoInformationCircleOutline } from 'react-icons/io5'
 import {
   BORDER_RADIUS,
   FONT_SIZES,
   SPACING,
   subtleBackground,
 } from '../../styles/styleConsts'
-import { IoInformationCircleOutline } from 'react-icons/io5'
-import { useTheme } from '@mui/material/styles'
-import { IoMdWarning } from 'react-icons/io'
-import { useMemo } from 'react'
-import { GiPartyPopper } from 'react-icons/gi'
 
 const Message = ({
   message,
@@ -57,7 +57,7 @@ const Message = ({
   return (
     <Box
       sx={{
-        backgroundColor: subtleBackground(theme.palette.mode),
+        backgroundColor: subtleBackground(theme.palette.mode, 'slightly'),
         borderRadius: BORDER_RADIUS.ZERO.PX,
         padding: SPACING.MEDIUM.PX,
         margin: includeVerticalMargin ? `${SPACING.MEDIUM.PX} 0` : 0,

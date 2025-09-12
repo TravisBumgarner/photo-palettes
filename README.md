@@ -83,6 +83,7 @@ Unsure if this is the best route but I believe it works if Docker gets mad about
 
 1. Bring up services to run tests before deploying - `make up`
 1. Deploy make deploy-all
+1. Check for any new migrations.
 
 Useful commands:
 

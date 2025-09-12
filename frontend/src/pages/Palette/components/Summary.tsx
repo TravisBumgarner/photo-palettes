@@ -1,26 +1,11 @@
 import Box from '@mui/material/Box'
-import BlurImage from '../../../sharedComponents/BlurImage'
 import Favorite from '../../../sharedComponents/Favorite'
-import { type TPalette } from '../../../types'
-import { SPACING } from '../../../styles/styleConsts'
-import PageTitle from '../../../styles/shared/PageTitle'
 import Link from '../../../sharedComponents/Link'
-import ColorBar from '../../../sharedComponents/ColorBar'
-// import Share from '../../../sharedComponents/Share'
+import PageTitle from '../../../styles/shared/PageTitle'
+import { type TPalette } from '../../../types'
 
 const Summary = ({
-  palette: {
-    name,
-    blurhash,
-    photoUrl,
-    aspectRatio,
-    appUserId,
-    favoritesCount,
-    colors,
-    hasUserFavorited,
-    id,
-  },
-  isMobile,
+  palette: { name, appUserId, favoritesCount, hasUserFavorited, id },
   refetch,
 }: {
   isMobile: boolean
@@ -36,20 +21,10 @@ const Summary = ({
           display: 'flex',
           flexDirection: 'row',
           justifyContent: 'space-between',
-          marginBottom: SPACING.SMALL.PX,
           alignItems: 'center',
-          gap: SPACING.SMALL.PX,
         }}
       >
-        <Box
-          sx={{
-            display: 'flex',
-            alignItems: 'baseline',
-            flexDirection: 'column',
-          }}
-        >
-          <Link href={`/profile/${appUserId}`}>#{appUserId.slice(0, 6)}</Link>
-        </Box>
+        <Link href={`/profile/${appUserId}`}>#{appUserId.slice(0, 6)}</Link>
 
         <Box>
           <Favorite
@@ -60,14 +35,6 @@ const Summary = ({
           />
         </Box>
       </Box>
-      <ColorBar interactive height={15} colors={colors.map((c) => c.hex)} />
-      <BlurImage
-        alt={`${name} thumbnail`}
-        src={photoUrl}
-        aspectRatio={aspectRatio}
-        blurHash={blurhash}
-        maxDimensions={{ maxHeight: isMobile ? '90vh' : '40vh' }}
-      />
     </div>
   )
 }

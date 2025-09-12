@@ -1,8 +1,8 @@
 import { moderatePalette } from '../api/moderatePalette'
 
-import { useCallback, useState } from 'react'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
+import { useCallback, useState } from 'react'
 
 import {
   MODERATION_STATUS,
@@ -10,15 +10,15 @@ import {
   type EModerationStatus,
 } from '../types'
 
+import FormControlLabel from '@mui/material/FormControlLabel'
+import FormGroup from '@mui/material/FormGroup'
+import { useTheme } from '@mui/material/styles'
+import Switch from '@mui/material/Switch'
 import { deletePalette } from '../api/palettes/deletePalette'
+import { activeModalSignal } from '../signals'
 import useGlobalStore from '../store'
 import { BORDER_RADIUS, SPACING, subtleBackground } from '../styles/styleConsts'
-import { activeModalSignal } from '../signals'
 import { MODAL_ID } from './Modal/Modal.types'
-import Switch from '@mui/material/Switch'
-import FormGroup from '@mui/material/FormGroup'
-import FormControlLabel from '@mui/material/FormControlLabel'
-import { useTheme } from '@mui/material/styles'
 
 const ModerationPanel = ({
   refetch,
@@ -108,7 +108,6 @@ const ModerationPanel = ({
         backgroundColor: subtleBackground(theme.palette.mode),
         borderRadius: BORDER_RADIUS.ZERO.PX,
         padding: SPACING.SMALL.PX,
-        margin: `${SPACING.LARGE.PX} 0`,
       }}
     >
       <FormGroup>

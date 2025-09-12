@@ -1,11 +1,11 @@
 import type { SxProps } from '@mui/material/styles'
 
 import {
-  SPACING,
   BORDER_RADIUS,
-  subtleBackground,
-  LIGHT_BUTTON_STYLES,
   DARK_BUTTON_STYLES,
+  LIGHT_BUTTON_STYLES,
+  SPACING,
+  subtleBackground,
 } from '../../styles/styleConsts'
 
 export const WrapperSX = (theme: 'dark' | 'light'): SxProps => ({
@@ -13,7 +13,7 @@ export const WrapperSX = (theme: 'dark' | 'light'): SxProps => ({
   flexDirection: 'row',
   justifyContent: 'space-between',
   alignItems: 'center',
-  backgroundColor: subtleBackground(theme),
+  backgroundColor: subtleBackground(theme, 'slightly'),
   marginBottom: SPACING.MEDIUM.PX,
   padding: `${SPACING.SMALL.PX} ${SPACING.MEDIUM.PX}`,
 })

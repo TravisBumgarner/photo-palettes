@@ -1,13 +1,12 @@
 import Box from '@mui/material/Box'
-import type { Details } from '../Palette.types'
-import { useMemo } from 'react'
-import Color from 'color'
-import { getContrastColor } from '../../../utils/getContrastColor'
-import Typography from '@mui/material/Typography'
-import { FONT_SIZES, SPACING } from '../../../styles/styleConsts'
 import Tooltip from '@mui/material/Tooltip'
-import { useTheme } from '@mui/material/styles'
-import useMediaQuery from '@mui/material/useMediaQuery'
+import Typography from '@mui/material/Typography'
+import Color from 'color'
+import { useMemo } from 'react'
+import useMediaQuery from '../../../hooks/UseMediaQuery'
+import { FONT_SIZES, SPACING } from '../../../styles/styleConsts'
+import { getContrastColor } from '../../../utils/getContrastColor'
+import type { Details } from '../Palette.types'
 
 const STEPS = [50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 950]
 
@@ -20,8 +19,7 @@ const Step = ({
   details: Details
   hexColor: string
 }) => {
-  const theme = useTheme()
-  const switchVertical = useMediaQuery(theme.breakpoints.down('md'))
+  const switchVertical = useMediaQuery('(max-width:700px)')
 
   const stepColor = Color(hexColor).lightness(100 - step / 10)
 
