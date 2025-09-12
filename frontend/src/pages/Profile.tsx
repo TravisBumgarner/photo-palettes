@@ -2,8 +2,14 @@ import Tab from '@mui/material/Tab'
 import Tabs from '@mui/material/Tabs'
 import { useQuery } from '@tanstack/react-query'
 import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useNavigate, useParams } from 'react-router-dom'
 import getPaletteList from '../api/palettes/getPaletteList'
+import { PAGINATION_SIZE, ROUTES } from '../consts'
 import { logger } from '../services/logging'
+import Loading from '../sharedComponents/Loading'
+import Message from '../sharedComponents/Message'
+import Pagination from '../sharedComponents/Pagination'
+import PaletteThumbnail from '../sharedComponents/PaletteThumbnail'
 import useGlobalStore from '../store'
 import PageTitle from '../styles/shared/PageTitle'
 import PageWrapper from '../styles/shared/PageWrapper'
@@ -12,12 +18,6 @@ import { SPACING } from '../styles/styleConsts'
 import { MODERATION_STATUS, MODERATION_STATUS_LABEL, SORT_BY } from '../types'
 import { getContrastColor } from '../utils/getContrastColor'
 import { getUserColorFromUUID } from '../utils/getUserColorFromUUID'
-import Loading from '../sharedComponents/Loading'
-import Message from '../sharedComponents/Message'
-import PaletteThumbnail from '../sharedComponents/PaletteThumbnail'
-import { useNavigate, useParams } from 'react-router-dom'
-import Pagination from '../sharedComponents/Pagination'
-import { PAGINATION_SIZE, ROUTES } from '../consts'
 
 const STATUS_TABS = [
   MODERATION_STATUS.APPROVED,
@@ -113,7 +113,9 @@ const Profile = () => {
         text={displayName}
         marginBottom
         sx={{
+          padding: SPACING.SMALL.PX,
           fontWeight: 700,
+          width: '100%',
           color: getContrastColor(displayName),
           backgroundColor: displayName,
           alignSelf: 'flex-start',
