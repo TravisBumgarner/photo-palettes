@@ -8,9 +8,9 @@ from pathlib import Path
 load_dotenv()
 TARGET_WIDTH = 1600
 TARGET_HEIGHT = 1600
-PADDING = 150
+PADDING = 300
 FONT_PATH = "font2.ttf"
-FONT_SIZE = 200
+FONT_SIZE = 75
 TEXT_HORIZONTAL_ORIGIN = 500
 FONT = ImageFont.truetype(str(FONT_PATH), FONT_SIZE)
 
@@ -29,14 +29,18 @@ def get_text_color(hex_color):
 def draw_background(og_image: Image.Image, colors: list[str]):
     draw = ImageDraw.Draw(og_image)
 
-    block_height = TARGET_HEIGHT // len(colors)
+    n = len(colors)
     block_width = TARGET_WIDTH
+    base_height = TARGET_HEIGHT // n
+    extra_pixels = TARGET_HEIGHT % n
 
-    # Draw each color block
+    # Distribute extra pixels: first 'extra_pixels' blocks get +1 pixel
+    y_start = 0
     for i, hex_color in enumerate(colors):
-        draw.rectangle(
-            [0, i * block_height, block_width, (i + 1) * block_height], fill=hex_color
-        )
+        h = base_height + (1 if i < extra_pixels else 0)
+        y_end = y_start + h
+        draw.rectangle([0, y_start, block_width, y_end], fill=hex_color)
+        y_start = y_end
     return og_image
 
 
@@ -91,18 +95,21 @@ def draw_text_2(og_image: Image.Image, colors: list[str]):
     draw = ImageDraw.Draw(og_image)
     block_height = TARGET_HEIGHT // len(colors)
 
-    # Draw text on each color block
+    # Draw text on each color block, right-aligned near the edge
     for i, hex_color in enumerate(colors):
         y0 = int(i * block_height + block_height // 2)
-        x_right = TARGET_WIDTH - PADDING
-        text_width = draw.textlength(hex_color.upper(), font=FONT)
-        x0 = x_right - text_width // 2
+        text = hex_color.upper()
+        text_width = draw.textlength(text, font=FONT)
+        # Place text close to the right edge, with a small margin
+        margin = 40
+        x_right = TARGET_WIDTH - margin
+        x0 = x_right - text_width
         draw.text(
             (x0, y0),
-            hex_color.upper(),
+            text,
             fill=get_text_color(hex_color),
             font=FONT,
-            anchor="mm",
+            anchor="lm",  # left-middle anchor for right alignment
         )
     return og_image
 
@@ -155,7 +162,7 @@ def post_image_from_memory(cl, pil_images, caption):
 
 
 def main():
-    filename = "landscape.webp"
+    filename = "portrait.jpeg"
     img_1 = generate_image_1(filename)
     img_2 = generate_image_2(filename)
     post_image_from_memory(cl, [img_1, img_2], "Check out these images!")
