@@ -1,9 +1,9 @@
 // import { useCallback } from 'react'
 // import { useCallback, useState } from 'react'
-import { type TGeneratedSwatch } from '../../../types'
-import { getContrastColor } from '../../../utils/getContrastColor'
 import { Reorder } from 'framer-motion'
 import { FONT_SIZES } from '../../../styles/styleConsts'
+import { type TGeneratedSwatch } from '../../../types'
+import { getContrastColor } from '../../../utils/getContrastColor'
 
 const ReadonlySwatch = ({
   index,

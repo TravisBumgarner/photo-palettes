@@ -1,6 +1,6 @@
+import { useDrag } from '@use-gesture/react'
 import { motion } from 'framer-motion'
 import { useCallback, useEffect, useState } from 'react'
-import { useDrag } from '@use-gesture/react'
 import {
   BORDER_WIDTH,
   CENTER_PIXEL_INDEX,
@@ -99,6 +99,7 @@ const DraggableSwatch = ({
 
   useEffect(() => {
     // Update pixel's neighbors when dragging or hovering over a swatch.
+    if (!readyToDrawSwatches) return
 
     const container = canvasContainerRef.current
     if (!container) return
@@ -110,10 +111,6 @@ const DraggableSwatch = ({
     )
 
     setNeighbors(newColors)
-    updateSwatch(index, newColors[CENTER_PIXEL_INDEX], [
-      percentLocation.left,
-      percentLocation.top,
-    ])
   }, [
     sampleColorsAtPosition,
     canvasContainerRef,
@@ -143,13 +140,14 @@ const DraggableSwatch = ({
       )
 
       setPercentLocation({ left, top })
-    }
 
-    if (last) {
       updateSwatch(index, neighbors[CENTER_PIXEL_INDEX], [
         percentLocation.left,
         percentLocation.top,
       ])
+    }
+
+    if (last) {
       setActiveIndex(null)
     }
   })
