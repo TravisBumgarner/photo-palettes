@@ -1,18 +1,18 @@
-import useMediaQuery from '@mui/material/useMediaQuery'
 import CssBaseline from '@mui/material/CssBaseline'
 import {
   createTheme,
   type ThemeOptions,
   ThemeProvider,
 } from '@mui/material/styles'
+import useMediaQuery from '@mui/material/useMediaQuery'
 import merge from 'lodash/merge'
 import { useMemo } from 'react'
 import {
-  FONT_SIZES,
-  PALETTE,
   BORDER_RADIUS,
-  LIGHT_BUTTON_STYLES,
   DARK_BUTTON_STYLES,
+  FONT_SIZES,
+  LIGHT_BUTTON_STYLES,
+  PALETTE,
   SPACING,
 } from './styleConsts'
 

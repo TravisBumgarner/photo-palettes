@@ -1,12 +1,19 @@
+import { Capacitor } from '@capacitor/core'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
+import { styled, type SxProps } from '@mui/material/styles'
 import TextField from '@mui/material/TextField'
+import Typography from '@mui/material/Typography'
 import { useMutation } from '@tanstack/react-query'
 import { useCallback, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { v4 as uuidv4 } from 'uuid'
 import { createPalette } from '../../api/palettes/createPalette'
 import { generatePalette as generatePaletteFull } from '../../api/palettes/generatePalette'
+import { PALETTE_SIZE } from '../../consts'
+import { queries } from '../../database'
 import { useGeneratePaletteWorker } from '../../hooks/useGeneratePaletteWorker'
+import useMediaQuery from '../../hooks/UseMediaQuery'
 import { logger } from '../../services/logging'
 import Loading from '../../sharedComponents/Loading'
 import Message from '../../sharedComponents/Message'
@@ -14,20 +21,13 @@ import { MODAL_ID } from '../../sharedComponents/Modal/Modal.types'
 import { activeModalSignal } from '../../signals'
 import PageWrapper from '../../styles/shared/PageWrapper'
 import { FONT_SIZES, SPACING, subtleBackground } from '../../styles/styleConsts'
+import type { TGeneratePaletteResponse } from '../../types'
 import { type TGeneratedPalette } from '../../types'
 import { resizeImage } from '../../utils/image'
 import CanvasAndPalette from './components/CanvasAndPalette'
 import Dropzone from './components/Dropzone'
 import SelectGeneratedPalette from './components/SelectGeneratedPalette'
 import { sharedCSS } from './components/shared'
-import { queries } from '../../database'
-import { styled, useTheme, type SxProps } from '@mui/material/styles'
-import { PALETTE_SIZE } from '../../consts'
-import Typography from '@mui/material/Typography'
-import { v4 as uuidv4 } from 'uuid'
-import type { TGeneratePaletteResponse } from '../../types'
-import useMediaQuery from '@mui/material/useMediaQuery'
-import { Capacitor } from '@capacitor/core'
 
 type CreationStatus =
   | 'INITIAL'
@@ -41,8 +41,7 @@ const MAX_NAME_LENGTH = 50
 
 const Create = ({ mode }: { mode: 'lite' | 'full' }) => {
   const { generatePalette: generatePaletteLite } = useGeneratePaletteWorker()
-  const theme = useTheme()
-  const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'))
+  const isSmallScreen = useMediaQuery('(max-width:700px)')
   const isNative = Capacitor.isNativePlatform()
 
   const useSingleColumnDisplay = isNative || isSmallScreen
