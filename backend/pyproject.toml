@@ -6,7 +6,7 @@ python_functions = ["test_*"]
 [tool.ruff]
 # Enable pycodestyle (`E`), Pyflakes (`F`), and isort (`I`) codes
 select = ["E", "F", "I", "N", "W", "B", "C4", "UP", "PL", "RUF", "T20"]
-ignore = []
+ignore = ["B008"]
 
 # Allow autofix for all enabled rules (when `--fix`) is provided.
 fixable = ["ALL"]
@@ -45,9 +45,6 @@ dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
 
 # Assume Python 3.13
 target-version = "py313"
-
-[tool.ruff]
-ignore = ["B008"]
 
 [tool.ruff.mccabe]
 # Unlike Flake8, default to a complexity level of 10.

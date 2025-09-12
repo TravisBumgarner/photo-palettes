@@ -1,13 +1,14 @@
 from io import BytesIO
 
 import requests
+from PIL import Image
+
 from algorithms.og import generate_og_image
 from consts import ErrorMsg
 from database import models
 from database.models import PermissionLevel
 from database.queries.palettes import PaletteUpdate, get_palettes, update_palette
 from middleware.auth import RequestWithAuthState
-from PIL import Image
 from routes.shared import (
     BaseErrorResponse,
     BaseSuccessResponse,
@@ -35,9 +36,7 @@ def handle_request():
             image = Image.open(BytesIO(response.content))
             og_image = generate_og_image(image, [x.hex for x in palette.colors])
 
-            og_photo_details = save_photo(
-                og_image.getvalue(), f"{palette.id!s}_og", "webp"
-            )
+            og_photo_details = save_photo(og_image.getvalue(), f"{palette.id!s}_og", "webp")
             palette_update = PaletteUpdate(og_photo_details=og_photo_details)
             update_palette(palette.id, palette_update)
     return BaseSuccessResponse()

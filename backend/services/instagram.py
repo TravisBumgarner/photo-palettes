@@ -1,21 +1,26 @@
 import os
 import tempfile
+from io import BytesIO
 from pathlib import Path
 
-from dotenv import load_dotenv
+import requests
 from instagrapi import Client
 from PIL import Image, ImageDraw, ImageFont
 
-load_dotenv()
+from config import get_config
+from database.queries.service_sessions import get_service_session, set_service_session
+
 TARGET_WIDTH = 1600
 TARGET_HEIGHT = 1600
 PADDING = 300
-FONT_PATH = "font.ttf"
+FONT_PATH = Path(__file__).parent.parent / "fonts" / "0xProto-Bold.ttf"
 FONT_SIZE = 75
 TEXT_HORIZONTAL_ORIGIN = 500
 FONT = ImageFont.truetype(str(FONT_PATH), FONT_SIZE)
 
-MIDDLE_GRAY = 186  # Approximate middle gray for luminance calculation
+MIDDLE_GRAY = 255 // 2  # Approximate middle gray for luminance calculation
+
+config = get_config()
 
 
 def get_text_color(hex_color):
@@ -78,22 +83,16 @@ def draw_image_1(og_image: Image.Image, image_to_draw: Image.Image):
     return og_image
 
 
-def generate_image_1(file_path):
-    photo = Image.open(file_path)
+def generate_image_1(photo: Image.Image, colors: list[str]):
     image = Image.new("RGB", (TARGET_WIDTH, TARGET_HEIGHT), "white")
-    image = draw_background(
-        image, ["#35000C", "#041C1E", "#75111B", "#8A390E", "#6E716B", "#93AAA4"]
-    )
+    image = draw_background(image, colors)
     image = draw_image_1(image, photo)
 
-    # if not os.path.exists("output"):
-    #     os.makedirs("output")
-    # image.save(f"output/1{file_path}")
     return image
 
 
-def draw_text_2(og_image: Image.Image, colors: list[str]):
-    draw = ImageDraw.Draw(og_image)
+def draw_text_2(image: Image.Image, colors: list[str]):
+    draw = ImageDraw.Draw(image)
     block_height = TARGET_HEIGHT // len(colors)
 
     # Draw text on each color block, right-aligned near the edge
@@ -112,35 +111,15 @@ def draw_text_2(og_image: Image.Image, colors: list[str]):
             font=FONT,
             anchor="lm",  # left-middle anchor for right alignment
         )
-    return og_image
-
-
-def generate_image_2(file_path):
-    image = Image.new("RGB", (TARGET_WIDTH, TARGET_HEIGHT), "white")
-    image = draw_background(
-        image, ["#35000C", "#041C1E", "#75111B", "#8A390E", "#6E716B", "#93AAA4"]
-    )
-    image = draw_text_2(
-        image, ["#35000C", "#041C1E", "#75111B", "#8A390E", "#6E716B", "#93AAA4"]
-    )
-    # if not os.path.exists("output"):
-    #     os.makedirs("output")
-    # image.save(f"output/2{file_path}")
-
     return image
 
 
-# generate_image_1("landscape.webp")
-# generate_image_1("portrait.jpeg")
-# generate_image_2("landscape.webp")
-# generate_image_2("portrait.jpeg")
+def generate_image_2(colors: list[str]):
+    image = Image.new("RGB", (TARGET_WIDTH, TARGET_HEIGHT), "white")
+    image = draw_background(image, colors)
+    image = draw_text_2(image, colors)
 
-cl = Client()
-INSTAGRAM_USERNAME = os.getenv("INSTAGRAM_USERNAME")
-INSTAGRAM_PASSWORD = os.getenv("INSTAGRAM_PASSWORD")
-
-
-cl.login(INSTAGRAM_USERNAME, INSTAGRAM_PASSWORD)
+    return image
 
 
 def post_image(cl, image_paths, caption):
@@ -162,13 +141,44 @@ def post_image_from_memory(cl, pil_images, caption):
         os.remove(temp_path)
 
 
-def main():
-    filename = "image.png"
-    img_1 = generate_image_1(filename)
-    img_2 = generate_image_2(filename)
-    img_1.save("output1.jpg", format="JPEG")
-    img_2.save("output2.jpg", format="JPEG")
-    # post_image_from_memory(cl, [img_1, img_2], "Check out these images!")
+def post_to_instagram(photo_path: str, colors: list[str], description: str) -> bool:
+    service_name = "instagram"
 
+    # Init client
+    cl = Client()
 
-main()
+    # Try loading existing session
+    session_json = get_service_session(service_name)
+    if session_json:
+        cl.set_settings(session_json)
+
+    try:
+        cl.login(config.instagram.username, config.instagram.password)
+    except Exception:
+        # If login fails, reset and retry with fresh login
+        cl.set_settings({})
+        cl.login(config.instagram.username, config.instagram.password)
+
+    # Save latest session back to DB
+    set_service_session(service_name, cl.get_settings())
+
+    # Generate images
+    if not config.is_production:
+        # I'm not sure why this is needed.
+        # I copied the code for backfilling OG images and that works just fine.
+        # However, if I use the abs_image_path above in development, the server gets
+        # stuck in an infinite loop requesting itself while in the middle of a request.
+        # Since this is only development, I'm hardcoding an image URL that I know works.
+        photo_path = "https://res.cloudinary.com/hqjbxtyku/image/upload/f_auto,q_auto/359f027f-3ac4-4909-8662-b03027b11e60"
+
+    response = requests.get(photo_path)
+    response.raise_for_status()
+
+    photo = Image.open(BytesIO(response.content)).convert("RGB")
+    img_1 = generate_image_1(photo, colors)
+    img_2 = generate_image_2(colors)
+
+    # Post images (assuming helper handles in-memory uploads)
+    post_image_from_memory(cl, [img_1, img_2], description)
+
+    return True

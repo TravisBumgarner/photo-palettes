@@ -2,8 +2,9 @@ from io import BytesIO
 
 import requests
 from atproto import Client, client_utils
-from config import get_config
 from PIL import Image
+
+from config import get_config
 from utils.photos import get_photo_path
 
 bsky_client: Client | None = None
@@ -41,7 +42,7 @@ def post_to_bsky(
         # However, if I use the abs_image_path above in development, the server gets
         # stuck in an infinite loop requesting itself while in the middle of a request.
         # Since this is only development, I'm hardcoding an image URL that I know works.
-        abs_image_path = "https://res.cloudinary.com/hqjbxtyku/image/upload/v1757012480/57cfd5bd-1b59-43b5-9afa-f5e444b602ef_og.webp"
+        abs_image_path = "https://res.cloudinary.com/hqjbxtyku/image/upload/f_auto,q_auto/359f027f-3ac4-4909-8662-b03027b11e60image.open"
 
     response = requests.get(abs_image_path)
     response.raise_for_status()
