@@ -1,7 +1,11 @@
 import os
-
+from dotenv import load_dotenv
+from instagrapi import Client
 from PIL import Image, ImageDraw, ImageFont
+import tempfile
+from pathlib import Path
 
+load_dotenv()
 TARGET_WIDTH = 1600
 TARGET_HEIGHT = 1600
 PADDING = 150
@@ -77,9 +81,10 @@ def generate_image_1(file_path):
     )
     image = draw_image_1(image, photo)
 
-    if not os.path.exists("output"):
-        os.makedirs("output")
-    image.save(f"output/1{file_path}")
+    # if not os.path.exists("output"):
+    #     os.makedirs("output")
+    # image.save(f"output/1{file_path}")
+    return image
 
 
 def draw_text_2(og_image: Image.Image, colors: list[str]):
@@ -110,12 +115,50 @@ def generate_image_2(file_path):
     image = draw_text_2(
         image, ["#35000C", "#041C1E", "#75111B", "#8A390E", "#6E716B", "#93AAA4"]
     )
-    if not os.path.exists("output"):
-        os.makedirs("output")
-    image.save(f"output/2{file_path}")
+    # if not os.path.exists("output"):
+    #     os.makedirs("output")
+    # image.save(f"output/2{file_path}")
+
+    return image
 
 
-generate_image_1("landscape.webp")
-generate_image_1("portrait.jpeg")
-generate_image_2("landscape.webp")
-generate_image_2("portrait.jpeg")
+# generate_image_1("landscape.webp")
+# generate_image_1("portrait.jpeg")
+# generate_image_2("landscape.webp")
+# generate_image_2("portrait.jpeg")
+
+cl = Client()
+INSTAGRAM_USERNAME = os.getenv("INSTAGRAM_USERNAME")
+INSTAGRAM_PASSWORD = os.getenv("INSTAGRAM_PASSWORD")
+
+
+cl.login(INSTAGRAM_USERNAME, INSTAGRAM_PASSWORD)
+
+
+def post_image(cl, image_paths, caption):
+    cl.album_upload(paths=image_paths, caption=caption)
+    print(f"Posted image: {image_paths}")
+    return
+
+
+def post_image_from_memory(cl, pil_images, caption):
+    temp_files = []
+    for img in pil_images:
+        temp = tempfile.NamedTemporaryFile(suffix=".jpg", delete=False)
+        img.save(temp.name, format="JPEG")
+        temp_files.append(Path(temp.name))
+        temp.close()
+    cl.album_upload(paths=temp_files, caption=caption)
+    # Optionally, delete temp files after upload
+    for temp_path in temp_files:
+        os.remove(temp_path)
+
+
+def main():
+    filename = "landscape.webp"
+    img_1 = generate_image_1(filename)
+    img_2 = generate_image_2(filename)
+    post_image_from_memory(cl, [img_1, img_2], "Check out these images!")
+
+
+main()
