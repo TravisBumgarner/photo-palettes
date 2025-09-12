@@ -289,17 +289,18 @@ const Create = ({ mode }: { mode: 'lite' | 'full' }) => {
   }
 
   return (
-    // creationStatus === 'selecting_colors
     <PageWrapper width="full">
       <Container useSingleColumnDisplay={useSingleColumnDisplay}>
         <LeftColumn useSingleColumnDisplay={useSingleColumnDisplay}>
-          <SectionWrapper>
-            <Typography sx={labelStyles}>Generated Palette(s)</Typography>
-            <SelectGeneratedPalette
-              handlePaletteChange={handlePaletteChange}
-              generatedPalettes={generatedPalettes}
-            />
-          </SectionWrapper>
+          {mode === 'full' && (
+            <SectionWrapper>
+              <Typography sx={labelStyles}>Starter Palettes</Typography>
+              <SelectGeneratedPalette
+                handlePaletteChange={handlePaletteChange}
+                generatedPalettes={generatedPalettes}
+              />
+            </SectionWrapper>
+          )}
           {!useSingleColumnDisplay && (
             <>
               <SectionWrapper>
