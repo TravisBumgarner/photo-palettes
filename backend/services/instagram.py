@@ -1,11 +1,14 @@
 import os
 import tempfile
+from io import BytesIO
 from pathlib import Path
 
+import requests
 from instagrapi import Client
 from PIL import Image, ImageDraw, ImageFont
 
 from config import get_config
+from database.queries.service_sessions import get_service_session, set_service_session
 
 TARGET_WIDTH = 1600
 TARGET_HEIGHT = 1600
@@ -138,11 +141,44 @@ def post_image_from_memory(cl, pil_images, caption):
         os.remove(temp_path)
 
 
-def post_to_instagram(photo: Image.Image, colors: list[str], description: str):
-    #  Todo - need to start here and figure out how to get OTPs or sessions or ??.
-    # https://www.reddit.com/r/learnpython/comments/1g83i42/authentication_with_instagrapi/
+def post_to_instagram(photo_path: str, colors: list[str], description: str) -> bool:
+    service_name = "instagram"
+
+    # Init client
     cl = Client()
-    cl.login(config.instagram.username, config.instagram.password)
+
+    # Try loading existing session
+    session_json = get_service_session(service_name)
+    if session_json:
+        cl.set_settings(session_json)
+
+    try:
+        cl.login(config.instagram.username, config.instagram.password)
+    except Exception:
+        # If login fails, reset and retry with fresh login
+        cl.set_settings({})
+        cl.login(config.instagram.username, config.instagram.password)
+
+    # Save latest session back to DB
+    set_service_session(service_name, cl.get_settings())
+
+    # Generate images
+    if not config.is_production:
+        # I'm not sure why this is needed.
+        # I copied the code for backfilling OG images and that works just fine.
+        # However, if I use the abs_image_path above in development, the server gets
+        # stuck in an infinite loop requesting itself while in the middle of a request.
+        # Since this is only development, I'm hardcoding an image URL that I know works.
+        photo_path = "https://res.cloudinary.com/hqjbxtyku/image/upload/f_auto,q_auto/359f027f-3ac4-4909-8662-b03027b11e60"
+
+    response = requests.get(photo_path)
+    response.raise_for_status()
+
+    photo = Image.open(BytesIO(response.content)).convert("RGB")
     img_1 = generate_image_1(photo, colors)
     img_2 = generate_image_2(colors)
+
+    # Post images (assuming helper handles in-memory uploads)
     post_image_from_memory(cl, [img_1, img_2], description)
+
+    return True

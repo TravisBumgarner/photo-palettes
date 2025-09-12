@@ -4,6 +4,7 @@ from enum import Enum, IntEnum
 
 from sqlalchemy import (
     ARRAY,
+    JSON,
     UUID,
     DateTime,
     Float,
@@ -168,3 +169,12 @@ class FeatureRequest(Base):
     votes: Mapped[list["FeatureRequestVote"]] = relationship(
         "FeatureRequestVote", back_populates="request"
     )
+
+
+class ServiceSession(Base):
+    __tablename__ = "service_sessions"
+
+    id: Mapped[uuid.UUID] = mapped_column(primary_key=True, default=uuid.uuid4)
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.now)
+    service: Mapped[str] = mapped_column(String, unique=True)  # e.g. "instagram"
+    session_json: Mapped[dict] = mapped_column(JSON)

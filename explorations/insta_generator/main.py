@@ -1,15 +1,16 @@
 import os
+import tempfile
+from pathlib import Path
+
 from dotenv import load_dotenv
 from instagrapi import Client
 from PIL import Image, ImageDraw, ImageFont
-import tempfile
-from pathlib import Path
 
 load_dotenv()
 TARGET_WIDTH = 1600
 TARGET_HEIGHT = 1600
 PADDING = 300
-FONT_PATH = "font2.ttf"
+FONT_PATH = "font.ttf"
 FONT_SIZE = 75
 TEXT_HORIZONTAL_ORIGIN = 500
 FONT = ImageFont.truetype(str(FONT_PATH), FONT_SIZE)
@@ -162,10 +163,12 @@ def post_image_from_memory(cl, pil_images, caption):
 
 
 def main():
-    filename = "portrait.jpeg"
+    filename = "image.png"
     img_1 = generate_image_1(filename)
     img_2 = generate_image_2(filename)
-    post_image_from_memory(cl, [img_1, img_2], "Check out these images!")
+    img_1.save("output1.jpg", format="JPEG")
+    img_2.save("output2.jpg", format="JPEG")
+    # post_image_from_memory(cl, [img_1, img_2], "Check out these images!")
 
 
 main()

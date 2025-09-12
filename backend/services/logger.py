@@ -16,6 +16,8 @@ def log_error(
             scope.set_extra("name", name)
             if sub_name:
                 scope.set_extra("sub_name", sub_name)
+            if app_user_id:
+                scope.set_user({"id": str(app_user_id)})
             sentry_sdk.capture_exception(error)
     else:
         print("sentry_error", name, error)  # noqa: T201

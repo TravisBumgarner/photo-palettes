@@ -23,6 +23,11 @@ const PaletteDesktop = ({
 }) => {
   return (
     <PageWrapper width="full">
+      <ModerationPanel
+        refetch={refetch}
+        moderationStatus={palette.moderationStatus}
+        paletteId={palette.id}
+      />
       <Container>
         <LeftColumn>
           <Summary palette={palette} refetch={refetch} isMobile={false} />
@@ -38,11 +43,6 @@ const PaletteDesktop = ({
               key={swatch.id}
             />
           ))}
-          <ModerationPanel
-            refetch={refetch}
-            moderationStatus={palette.moderationStatus}
-            paletteId={palette.id}
-          />
         </RightColumn>
       </Container>
     </PageWrapper>

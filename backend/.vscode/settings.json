@@ -1,9 +1,7 @@
 {
   "editor.formatOnSave": true,
-  "ruff.enable": true,
-  "ruff.organizeImports": true,
-  "ruff.fixAll": true,
-  "mypy.dmypyExecutable": "./backend/.venv-backend/bin/dmypy",
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+
   "[python]": {
     "editor.defaultFormatter": "charliermarsh.ruff",
     "editor.formatOnSave": true,

@@ -44,6 +44,11 @@ const PaletteMobile = ({
 
   return (
     <PageWrapper width="full">
+      <ModerationPanel
+        refetch={refetch}
+        moderationStatus={palette.moderationStatus}
+        paletteId={palette.id}
+      />
       <Tabs
         sx={{
           marginBottom: SPACING.MEDIUM.PX,
@@ -102,12 +107,6 @@ const PaletteMobile = ({
           </Box>
         </>
       )}
-
-      <ModerationPanel
-        refetch={refetch}
-        moderationStatus={palette.moderationStatus}
-        paletteId={palette.id}
-      />
     </PageWrapper>
   )
 }
