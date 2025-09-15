@@ -25,3 +25,15 @@ def set_service_session(service: str, session_json: dict) -> bool:
 
         session.commit()
         return True
+
+
+def delete_service_session(service: str) -> bool:
+    with Session(db_engine) as session:
+        stmt = select(ServiceSession).where(ServiceSession.service == service)
+        result = session.execute(stmt).scalar_one_or_none()
+
+        if result:
+            session.delete(result)
+            session.commit()
+            return True
+        return False
