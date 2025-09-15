@@ -1,7 +1,7 @@
-import type { Meta, StoryObj } from '@storybook/react-vite'
-import Swatch from './Swatch'
-import type { TSwatch } from '../../../types'
 import Box from '@mui/material/Box'
+import type { Meta, StoryObj } from '@storybook/react-vite'
+import type { TSwatch } from '../../../types'
+import Swatch from './Swatch'
 
 const meta = {
   title: 'Example/Swatch',
@@ -17,6 +17,7 @@ type Story = StoryObj<typeof meta>
 
 export const SwatchStory: Story = {
   args: {
+    details: 'hex',
     swatch: {
       percentLocation: [0, 0],
       id: 'default',
@@ -29,6 +30,7 @@ export const SwatchStory: Story = {
   render: () => (
     <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: '20px' }}>
       <Swatch
+        details="hex"
         swatch={
           {
             percentLocation: [0, 0],
@@ -41,6 +43,7 @@ export const SwatchStory: Story = {
         }
       />
       <Swatch
+        details="hex"
         swatch={
           {
             percentLocation: [0, 0],
@@ -53,6 +56,7 @@ export const SwatchStory: Story = {
         }
       />
       <Swatch
+        details="hex"
         swatch={
           {
             percentLocation: [0, 0],
@@ -65,6 +69,7 @@ export const SwatchStory: Story = {
         }
       />
       <Swatch
+        details="hex"
         swatch={
           {
             percentLocation: [0, 0],
@@ -77,6 +82,7 @@ export const SwatchStory: Story = {
         }
       />
       <Swatch
+        details="hex"
         swatch={
           {
             percentLocation: [0, 0],
@@ -89,6 +95,7 @@ export const SwatchStory: Story = {
         }
       />
       <Swatch
+        details="hex"
         swatch={
           {
             percentLocation: [0, 0],

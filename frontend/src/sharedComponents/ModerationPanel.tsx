@@ -45,7 +45,7 @@ const ModerationPanel = ({
       if (response.success) {
         refetch?.()
       } else {
-        alert('Failed to moderate palette')
+        alert('Failed to moderate palette') // eslint-disable-line
       }
     } finally {
       // This shouldn't matter since refetch will clear it out.
@@ -63,7 +63,7 @@ const ModerationPanel = ({
       if (response.success) {
         refetch?.()
       } else {
-        alert('Failed to moderate palette')
+        alert('Failed to moderate palette') // eslint-disable-line
       }
     } finally {
       // This shouldn't matter since refetch will clear it out.
@@ -75,11 +75,11 @@ const ModerationPanel = ({
     setIsFetching(true)
     const response = await deletePalette(paletteId)
     if (response.success) {
-      alert('Palette deleted successfully')
+      alert('Palette deleted successfully') // eslint-disable-line
       activeModalSignal.value = null
     } else {
-      alert('Failed to delete palette')
-    }
+      alert('Failed to delete palette') // eslint-disable-line
+    } 
   }, [paletteId, setIsFetching])
 
   const handleDelete = useCallback(async () => {

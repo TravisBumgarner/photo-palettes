@@ -3,6 +3,7 @@ import Favorite from '../../../sharedComponents/Favorite'
 import Link from '../../../sharedComponents/Link'
 import PageTitle from '../../../styles/shared/PageTitle'
 import { type TPalette } from '../../../types'
+import { getUserColorFromUUID } from '../../../utils/getUserColorFromUUID'
 
 const Summary = ({
   palette: { name, appUserId, favoritesCount, hasUserFavorited, id },
@@ -24,7 +25,9 @@ const Summary = ({
           alignItems: 'center',
         }}
       >
-        <Link href={`/profile/${appUserId}`}>#{appUserId.slice(0, 6)}</Link>
+        <Link hideBaseUnderline href={`/profile/${appUserId}`}>
+          {getUserColorFromUUID(appUserId)}
+        </Link>
 
         <Box>
           <Favorite

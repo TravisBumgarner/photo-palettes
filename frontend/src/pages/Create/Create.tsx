@@ -291,55 +291,63 @@ const Create = ({ mode }: { mode: 'lite' | 'full' }) => {
   return (
     <PageWrapper width="full">
       <Container useSingleColumnDisplay={useSingleColumnDisplay}>
-        <LeftColumn useSingleColumnDisplay={useSingleColumnDisplay}>
-          {mode === 'full' && (
-            <SectionWrapper>
-              <Typography sx={labelStyles}>Starter Palettes</Typography>
-              <SelectGeneratedPalette
-                handlePaletteChange={handlePaletteChange}
-                generatedPalettes={generatedPalettes}
-              />
-            </SectionWrapper>
-          )}
-          {!useSingleColumnDisplay && (
-            <>
+        {/* 
+          When mode === 'lite' && useSingleColumnDisplay ? null
+          LeftColumn becomes empty. No GeneratedPalettes are shown
+          and the TextField is moved to the right column.
+          Therefore, hide it.
+        */}
+        {mode === 'lite' && useSingleColumnDisplay ? null : (
+          <LeftColumn useSingleColumnDisplay={useSingleColumnDisplay}>
+            {mode === 'full' && (
               <SectionWrapper>
-                <TextField
-                  size="small"
-                  variant="outlined"
-                  fullWidth
-                  label={nameLabel}
-                  placeholder="Name your palette"
-                  value={name}
-                  onChange={handleNameChange}
+                <Typography sx={labelStyles}>Starter Palettes</Typography>
+                <SelectGeneratedPalette
+                  handlePaletteChange={handlePaletteChange}
+                  generatedPalettes={generatedPalettes}
                 />
               </SectionWrapper>
+            )}
+            {!useSingleColumnDisplay && (
+              <>
+                <SectionWrapper>
+                  <TextField
+                    size="small"
+                    variant="outlined"
+                    fullWidth
+                    label={nameLabel}
+                    placeholder="Name your palette"
+                    value={name}
+                    onChange={handleNameChange}
+                  />
+                </SectionWrapper>
 
-              <SectionWrapper>
-                <Box
-                  sx={{
-                    display: 'flex',
-                    flexDirection: 'row',
-                    gap: '10px',
-                    justifyContent: 'space-between',
-                  }}
-                >
-                  <Button variant="text" onClick={handleClearPalette}>
-                    Clear
-                  </Button>
-                  <Button
-                    disabled={!name}
-                    variant="contained"
-                    sx={{ flexGrow: 1 }}
-                    onClick={handleSavePalette}
+                <SectionWrapper>
+                  <Box
+                    sx={{
+                      display: 'flex',
+                      flexDirection: 'row',
+                      gap: '10px',
+                      justifyContent: 'space-between',
+                    }}
                   >
-                    Save
-                  </Button>
-                </Box>
-              </SectionWrapper>
-            </>
-          )}
-        </LeftColumn>
+                    <Button variant="text" onClick={handleClearPalette}>
+                      Clear
+                    </Button>
+                    <Button
+                      disabled={!name}
+                      variant="contained"
+                      sx={{ flexGrow: 1 }}
+                      onClick={handleSavePalette}
+                    >
+                      Save
+                    </Button>
+                  </Box>
+                </SectionWrapper>
+              </>
+            )}
+          </LeftColumn>
+        )}
         <RightColumn>
           <CanvasAndPalette
             photo={photo}
@@ -415,7 +423,7 @@ const LeftColumn = styled(Box, {
     flexDirection: 'column',
     gap: SPACING.MEDIUM.PX,
     padding: SPACING.MEDIUM.PX,
-    backgroundColor: subtleBackground(theme.palette.mode),
+    backgroundColor: subtleBackground(theme.palette.mode, 'slightly'),
   })
 )
 const RightColumn = styled(Box)(() => ({

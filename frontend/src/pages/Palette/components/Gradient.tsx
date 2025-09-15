@@ -1,11 +1,11 @@
 import Box from '@mui/material/Box'
-import Tooltip from '@mui/material/Tooltip'
 import Typography from '@mui/material/Typography'
 import Color from 'color'
 import { useMemo } from 'react'
 import useMediaQuery from '../../../hooks/UseMediaQuery'
 import { FONT_SIZES, SPACING } from '../../../styles/styleConsts'
 import { getContrastColor } from '../../../utils/getContrastColor'
+import { DETAILS_MAP } from '../Palette.consts'
 import type { Details } from '../Palette.types'
 
 const STEPS = [50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 950]
@@ -22,6 +22,13 @@ const Step = ({
   const switchVertical = useMediaQuery('(max-width:700px)')
 
   const stepColor = Color(hexColor).lightness(100 - step / 10)
+
+  const colorFormat = useMemo(() => {
+    if (details === 'none' || details === 'steps') {
+      return DETAILS_MAP['hex']
+    }
+    return DETAILS_MAP[details]
+  }, [details])
 
   const { label, copyLabel } = useMemo<{
     label: string[]
@@ -72,50 +79,60 @@ const Step = ({
   }, [details, step, stepColor])
 
   return (
-    <Tooltip title="Click to copy" placement="left">
-      <Box
-        key={step}
-        onClick={() => {
-          navigator.clipboard.writeText(copyLabel)
-        }}
+    <Box
+      key={step}
+      onClick={() => {
+        navigator.clipboard.writeText(copyLabel)
+      }}
+      sx={{
+        backgroundColor: stepColor.string(),
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        cursor: 'pointer',
+        padding: SPACING.SMALL.PX,
+        minHeight: '48px',
+        '&:hover .normalText': { display: 'none' },
+        '&:hover .hoverText': { display: 'initial' },
+      }}
+    >
+      <Typography
+        className="hoverText"
         sx={{
-          backgroundColor: stepColor.string(),
+          position: 'relative',
+          textAlign: 'center',
+          fontSize: FONT_SIZES.SMALL.PX,
           display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          cursor: 'pointer',
-          padding: SPACING.SMALL.PX,
-          minHeight: '48px',
+          flexDirection: switchVertical ? 'column' : 'row',
+          gap: SPACING.TINY.PX,
         }}
       >
         <Typography
           className="hoverText"
           sx={{
-            position: 'relative',
-            textAlign: 'center',
-            fontSize: FONT_SIZES.SMALL.PX,
-            display: 'flex',
-            flexDirection: switchVertical ? 'column' : 'row',
-            gap: SPACING.TINY.PX,
+            display: 'none',
+            color: getContrastColor(stepColor.hex().toString()),
           }}
         >
-          {label.map((part, index) => (
-            <Typography
-              component="span"
-              sx={{
-                color: getContrastColor(stepColor.hex().toString()),
-                fontSize: FONT_SIZES.SMALL.PX,
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}
-              key={`${part}-${index}`}
-            >
-              {part}
-            </Typography>
-          ))}
+          Copy {colorFormat}
         </Typography>
-      </Box>
-    </Tooltip>
+        {label.map((labelPart, index) => (
+          <Typography
+            component="span"
+            className="normalText"
+            sx={{
+              color: getContrastColor(stepColor.hex().toString()),
+              fontSize: FONT_SIZES.SMALL.PX,
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+            key={`${labelPart}-${index}`}
+          >
+            {labelPart}
+          </Typography>
+        ))}
+      </Typography>
+    </Box>
   )
 }
 

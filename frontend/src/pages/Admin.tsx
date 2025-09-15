@@ -1,13 +1,13 @@
+import Box from '@mui/material/Box'
+import Button from '@mui/material/Button'
+import Typography from '@mui/material/Typography'
+import { useCallback } from 'react'
+import { backfillOpenGraphImages } from '../api/admin/backfillOpenGraphImages'
+import { MODAL_ID } from '../sharedComponents/Modal/Modal.types'
+import { activeModalSignal } from '../signals'
 import PageTitle from '../styles/shared/PageTitle'
 import PageWrapper from '../styles/shared/PageWrapper'
-import Button from '@mui/material/Button'
-import { useCallback } from 'react'
-import { activeModalSignal } from '../signals'
-import { MODAL_ID } from '../sharedComponents/Modal/Modal.types'
-import { backfillOpenGraphImages } from '../api/admin/backfillOpenGraphImages'
-import Box from '@mui/material/Box'
 import { SPACING } from '../styles/styleConsts'
-import Typography from '@mui/material/Typography'
 
 const Admin = () => {
   const handleBackfill = useCallback(() => {
@@ -20,10 +20,10 @@ const Admin = () => {
       confirmationCallback: async () => {
         const response = await backfillOpenGraphImages()
         if (response.success) {
-          alert('Backfill Successful')
+          alert('Backfill Successful') // eslint-disable-line
           activeModalSignal.value = null
         } else {
-          alert('Backfill failed')
+          alert('Backfill failed') // eslint-disable-line
         }
       },
       cancelCallback: () => {
