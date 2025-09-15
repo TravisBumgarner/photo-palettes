@@ -28,7 +28,7 @@ const ColorDetails = ({
         padding: `${SPACING.MEDIUM.PX} ${SPACING.SMALL.PX}`,
       }}
     >
-      <Swatch swatch={swatch} />
+      <Swatch swatch={swatch} details={details} />
       <Box
         sx={{
           display: 'flex',
