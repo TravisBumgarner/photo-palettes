@@ -1,6 +1,6 @@
-import { getContrastColor } from './getContrastColor'
 import { Directory, Filesystem } from '@capacitor/filesystem'
 import { Share } from '@capacitor/share'
+import { getContrastColor } from './getContrastColor'
 
 import { Capacitor } from '@capacitor/core'
 
@@ -21,7 +21,6 @@ const downloadNative = async (paletteId: string, blob: Blob) => {
     data: await blobToBase64(blob), // blobs supported web only.
     directory: Directory.Documents,
   })
-  alert(result.uri)
 
   await Share.share({
     title: 'Save your palette',

@@ -16,7 +16,7 @@ const Color = ({
   const handleScroll = useCallback(() => {
     document
       .getElementById(`color-${index}`)
-      ?.scrollIntoView({ behavior: 'smooth' })
+      ?.scrollIntoView({ behavior: 'smooth', block: 'center' })
   }, [index])
 
   return (

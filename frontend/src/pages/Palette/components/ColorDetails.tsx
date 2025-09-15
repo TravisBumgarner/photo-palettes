@@ -25,7 +25,7 @@ const ColorDetails = ({
         display: 'flex',
         flexDirection: 'column',
         gap: SPACING.SMALL.PX,
-        padding: `${SPACING.MEDIUM.PX} ${SPACING.SMALL.PX}`, // Main concern here is scrolling to the last color causes the left column to scroll off screen.
+        padding: `${SPACING.MEDIUM.PX} ${SPACING.SMALL.PX}`,
       }}
     >
       <Swatch swatch={swatch} />
