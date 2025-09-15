@@ -8,6 +8,7 @@ import { useMutation } from '@tanstack/react-query'
 import { FaHeart, FaRegHeart } from 'react-icons/fa'
 import addToFavorites from '../api/favorites/addToFavorites'
 import removeFromFavorites from '../api/favorites/removeFromFavorites'
+import { trackEvent } from '../services/analytics'
 import useGlobalStore from '../store'
 import { PALETTE, SPACING } from '../styles/styleConsts'
 
@@ -76,6 +77,7 @@ const Favorite = ({
             aria-label="unfavorite-palette"
             aria-controls={'unfavorite-palette'}
             onClick={(event) => {
+              trackEvent({ event: 'user_unfavorite_button' })
               removeMutation.mutate()
               event.stopPropagation()
               event.preventDefault()
@@ -91,6 +93,7 @@ const Favorite = ({
             aria-label="favorite-palette"
             aria-controls={'favorite-palette'}
             onClick={(event) => {
+              trackEvent({ event: 'user_favorite_button' })
               addMutation.mutate()
               event.stopPropagation()
               event.preventDefault()

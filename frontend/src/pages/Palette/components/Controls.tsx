@@ -2,6 +2,7 @@ import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import { styled, type SxProps } from '@mui/material/styles'
 import Typography from '@mui/material/Typography'
+import { trackEvent } from '../../../services/analytics'
 import { FONT_SIZES, SPACING } from '../../../styles/styleConsts'
 import {
   BACKGROUND_COLORS,
@@ -42,9 +43,15 @@ const Controls: React.FC<ControlsProps> = ({ controls, setControls }) => {
                 cursor: 'pointer',
               }}
               key={key}
-              onClick={() =>
+              onClick={() => {
+                trackEvent({
+                  event: 'palette_filter_button',
+                  properties: {
+                    background: key,
+                  },
+                })
                 setControls((prev) => ({ ...prev, background: key }))
-              }
+              }}
             />
           ))}
         </Box>
@@ -59,7 +66,15 @@ const Controls: React.FC<ControlsProps> = ({ controls, setControls }) => {
               size="small"
               variant={key === controls.details ? 'contained' : 'outlined'}
               key={key}
-              onClick={() => setControls((prev) => ({ ...prev, details: key }))}
+              onClick={() => {
+                trackEvent({
+                  event: 'palette_filter_button',
+                  properties: {
+                    details: key,
+                  },
+                })
+                setControls((prev) => ({ ...prev, details: key }))
+              }}
             >
               {DETAILS_MAP[key]}
             </Button>
@@ -76,7 +91,15 @@ const Controls: React.FC<ControlsProps> = ({ controls, setControls }) => {
               size="small"
               variant={key === controls.mix ? 'contained' : 'outlined'}
               key={key}
-              onClick={() => setControls((prev) => ({ ...prev, mix: key }))}
+              onClick={() => {
+                trackEvent({
+                  event: 'palette_filter_button',
+                  properties: {
+                    color_mix: key,
+                  },
+                })
+                setControls((prev) => ({ ...prev, mix: key }))
+              }}
             >
               {COLOR_MIXES_MAP[key]}
             </Button>

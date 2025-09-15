@@ -85,7 +85,7 @@ const UPDATES: Update[] = [
 
 const ReleaseNotes = () => {
   return (
-    <PageWrapper width="medium" staticContent>
+    <PageWrapper width="full" staticContent>
       <PageTitle text="Release Notes" />
       {UPDATES.map((update) => (
         <Update key={update.title + update.date} {...update} />

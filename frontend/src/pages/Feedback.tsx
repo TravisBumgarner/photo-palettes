@@ -4,10 +4,10 @@ import TextField from '@mui/material/TextField'
 import Typography from '@mui/material/Typography'
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { ROUTES } from '../consts'
-import PageTitle from '../styles/shared/PageTitle'
-import PageWrapper from '../styles/shared/PageWrapper'
 import Link from '../sharedComponents/Link'
 import Message from '../sharedComponents/Message'
+import PageTitle from '../styles/shared/PageTitle'
+import PageWrapper from '../styles/shared/PageWrapper'
 
 const Contact = () => {
   const [success, setSuccess] = useState(false)
@@ -79,7 +79,7 @@ const Contact = () => {
   }, [success, failure])
 
   return (
-    <PageWrapper minHeight width="small" staticContent>
+    <PageWrapper minHeight verticallyAlign width="small" staticContent>
       <PageTitle text="Feedback" />
       <Typography variant="body1">
         Join the discussion on{' '}

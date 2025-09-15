@@ -2,18 +2,19 @@ import Button from '@mui/material/Button'
 import TextField from '@mui/material/TextField'
 import Typography from '@mui/material/Typography'
 import { type ChangeEvent, useCallback, useState } from 'react'
+import { Navigate, useNavigate } from 'react-router-dom'
 import { z } from 'zod'
 import { MINIMUM_PASSWORD_LENGTH, ROUTES } from '../consts'
+import { trackEvent } from '../services/analytics'
 import { signup } from '../services/supabase'
+import Link from '../sharedComponents/Link'
+import { MODAL_ID } from '../sharedComponents/Modal/Modal.types'
+import { activeModalSignal } from '../signals'
 import useGlobalStore from '../store'
 import authFormCSS from '../styles/shared/authFormCSS'
 import PageTitle from '../styles/shared/PageTitle'
 import PageWrapper from '../styles/shared/PageWrapper'
-import Link from '../sharedComponents/Link'
-import { Navigate, useNavigate } from 'react-router-dom'
 import { loadUserIntoState } from '../utils/loadUserIntoState'
-import { activeModalSignal } from '../signals'
-import { MODAL_ID } from '../sharedComponents/Modal/Modal.types'
 
 const SignupSchema = z.object({
   email: z.string().email(),
@@ -74,6 +75,10 @@ export default function SignupPage() {
         const response = await signup({ email, password })
         if (response.success) {
           await loadUserIntoState()
+          trackEvent({
+            event: 'user_sign_up',
+            properties: { method: 'email' },
+          })
           activeModalSignal.value = {
             id: MODAL_ID.CONFIRMATION_MODAL,
             title: 'Signup Successful',

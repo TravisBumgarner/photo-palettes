@@ -11,10 +11,11 @@ import authFormCSS from '../styles/shared/authFormCSS'
 import PageTitle from '../styles/shared/PageTitle'
 import PageWrapper from '../styles/shared/PageWrapper'
 
-import Link from '../sharedComponents/Link'
 import { Navigate, useNavigate } from 'react-router-dom'
-import { loadUserIntoState } from '../utils/loadUserIntoState'
 import { queries } from '../database'
+import { trackEvent } from '../services/analytics'
+import Link from '../sharedComponents/Link'
+import { loadUserIntoState } from '../utils/loadUserIntoState'
 
 const LoginSchema = z.object({
   email: z.email(),
@@ -57,6 +58,9 @@ export default function LoginPage() {
       const response = await login({ email, password })
 
       if (response.success) {
+        trackEvent({
+          event: 'user_log_in',
+        })
         const success = await loadUserIntoState()
         if (success) {
           const hasTemporaryPalettes =

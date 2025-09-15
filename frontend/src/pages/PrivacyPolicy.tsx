@@ -1,13 +1,13 @@
+import List from '@mui/material/List'
+import ListItem from '@mui/material/ListItem'
 import Typography from '@mui/material/Typography'
+import Link from '../sharedComponents/Link'
 import PageTitle from '../styles/shared/PageTitle'
 import PageWrapper from '../styles/shared/PageWrapper'
-import Link from '../sharedComponents/Link'
-import ListItem from '@mui/material/ListItem'
-import List from '@mui/material/List'
 
 const Privacy = () => {
   return (
-    <PageWrapper width="medium" staticContent>
+    <PageWrapper width="full" staticContent>
       <PageTitle text="Privacy Policy" />
       <Typography variant="body1">
         <em>Last updated: April 17, 2025</em>

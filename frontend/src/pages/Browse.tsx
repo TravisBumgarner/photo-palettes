@@ -1,16 +1,17 @@
 import { useQuery } from '@tanstack/react-query'
 import { useCallback, useEffect, useState } from 'react'
 import getPaletteList from '../api/palettes/getPaletteList'
+import { PAGINATION_SIZE } from '../consts'
+import { trackEvent } from '../services/analytics'
 import { logger } from '../services/logging'
-import PageWrapper from '../styles/shared/PageWrapper'
-import ThumbnailGridDisplay from '../styles/shared/ThumbnailGallery'
 import Loading from '../sharedComponents/Loading'
 import Message from '../sharedComponents/Message'
-import PaletteThumbnail from '../sharedComponents/PaletteThumbnail'
 import Pagination from '../sharedComponents/Pagination'
-import { PAGINATION_SIZE } from '../consts'
-import { type ESortBy, SORT_BY } from '../types'
+import PaletteThumbnail from '../sharedComponents/PaletteThumbnail'
 import SortsAndFilters from '../sharedComponents/SortsAndFilters'
+import PageWrapper from '../styles/shared/PageWrapper'
+import ThumbnailGridDisplay from '../styles/shared/ThumbnailGallery'
+import { type ESortBy, SORT_BY } from '../types'
 
 const Palettes = ({
   page,
@@ -92,11 +93,26 @@ const Browse = () => {
   const [page, setPage] = useState(1)
   const [sortBy, setSortBy] = useState<ESortBy>(SORT_BY.NEWEST)
 
-  const handlePageChange = useCallback((newPage: number) => {
-    setPage(newPage)
-  }, [])
+  const handlePageChange = useCallback(
+    (newPage: number) => {
+      trackEvent({
+        event: 'browse_navigation',
+        properties: {
+          browse_filter: sortBy,
+          page: 'browse',
+          page_number: newPage,
+        },
+      })
+      setPage(newPage)
+    },
+    [sortBy]
+  )
 
   const handleSortChange = useCallback((newSortBy: ESortBy) => {
+    trackEvent({
+      event: 'browse_filter_button',
+      properties: { browse_filter: newSortBy, page: 'browse' },
+    })
     setSortBy(newSortBy)
     setPage(1)
   }, [])
