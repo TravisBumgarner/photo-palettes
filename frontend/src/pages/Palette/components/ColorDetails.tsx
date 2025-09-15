@@ -1,11 +1,10 @@
 import Box from '@mui/material/Box'
-import { type TSwatch } from '../../../types'
-import Swatch from './Swatch'
-import type { Details } from '../Palette.types'
-import { type ColorMix } from '../../../types'
-import Gradient from './Gradient'
-import { getColorSchemes } from '../../../utils/color'
 import { SPACING } from '../../../styles/styleConsts'
+import { type ColorMix, type TSwatch } from '../../../types'
+import { getColorSchemes } from '../../../utils/color'
+import type { Details } from '../Palette.types'
+import Gradient from './Gradient'
+import Swatch from './Swatch'
 
 const ColorDetails = ({
   swatch,
@@ -25,8 +24,8 @@ const ColorDetails = ({
       sx={{
         display: 'flex',
         flexDirection: 'column',
-        gap: SPACING.MEDIUM.PX,
-        padding: `5vh ${SPACING.SMALL.PX} 50vh ${SPACING.SMALL.PX}`, // Main concern here is scrolling to the last color causes the left column to scroll off screen.
+        gap: SPACING.SMALL.PX,
+        padding: `${SPACING.MEDIUM.PX} ${SPACING.SMALL.PX}`, // Main concern here is scrolling to the last color causes the left column to scroll off screen.
       }}
     >
       <Swatch swatch={swatch} />

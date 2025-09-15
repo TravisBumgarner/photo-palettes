@@ -79,7 +79,7 @@ const LeftColumn = styled(Box)(({ theme }) => ({
 }))
 
 const RightColumn = styled(Box)(() => ({
-  padding: SPACING.MEDIUM.PX,
+  padding: `${SPACING.MEDIUM.PX} ${SPACING.MEDIUM.PX} 40vh ${SPACING.MEDIUM.PX}`,
   flexGrow: 1,
   overflow: 'hidden',
 }))
