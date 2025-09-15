@@ -4,20 +4,19 @@ import TextField from '@mui/material/TextField'
 import Typography from '@mui/material/Typography'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { Reorder } from 'framer-motion'
-import React, { useCallback, useState, useEffect } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import { Navigate } from 'react-router-dom'
 import addFeatureRequest from '../api/featureRequests/addFeatureRequest'
 import getFeatureRequests from '../api/featureRequests/getFeatureRequests'
 import upvoteFeatureRequest from '../api/featureRequests/upvoteFeatureRequst'
-import useGlobalStore from '../store'
-import { FONT_SIZES, SPACING } from '../styles/styleConsts'
-import { PERMISSION_LEVEL, type TFeatureRequest } from '../types'
 import Link from '../sharedComponents/Link'
 import Loading from '../sharedComponents/Loading'
 import Message from '../sharedComponents/Message'
+import useGlobalStore from '../store'
 import PageTitle from '../styles/shared/PageTitle'
 import PageWrapper from '../styles/shared/PageWrapper'
-import { Navigate } from 'react-router-dom'
-import { useMemo } from 'react'
+import { FONT_SIZES, SPACING } from '../styles/styleConsts'
+import { PERMISSION_LEVEL, type TFeatureRequest } from '../types'
 
 const FeatureRequestCard = ({
   featureRequest,
@@ -240,9 +239,7 @@ const FeatureRequests = () => {
     <PageWrapper width="medium">
       <PageTitle marginBottom text="Feature Requests" />
       {!appUserDetails && (
-        <Typography variant="body1">
-          <Link href="/login">Log in to upvote.</Link>
-        </Typography>
+        <Typography variant="body1">Log in to upvote.</Typography>
       )}
       <Typography variant="body1">
         <Link href="/feedback">Submit a feature request.</Link>

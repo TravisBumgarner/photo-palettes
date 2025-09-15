@@ -1,10 +1,10 @@
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
 
-import PageTitle from '../styles/shared/PageTitle'
-import PageWrapper from '../styles/shared/PageWrapper'
 import List from '@mui/material/List'
 import ListItem from '@mui/material/ListItem'
+import PageTitle from '../styles/shared/PageTitle'
+import PageWrapper from '../styles/shared/PageWrapper'
 
 type Update = {
   title: string
@@ -31,6 +31,19 @@ const Update = ({ title, date, updates }: Update) => {
 }
 
 const UPDATES: Update[] = [
+  {
+    title: 'Open Beta Release',
+    date: '2025-09-15',
+    updates: [
+      'Added: Two new color extraction algorithms - "Shades" and "Tints".',
+      'Added: iOS App beta via TestFlight',
+      'Added: Integration with Instagram to automatically post palettes when they are approved.',
+      'Updated: Logged out color palette generation now runs much more quickly.',
+      'Updated: "Overhauled "Browse Single Palette" experience now with lots more color details.',
+      'Fix: Proper image scaling throughout the app across all browsers and devices.',
+      'Fix: iOS photo palette download not working.',
+    ],
+  },
   {
     title: 'Feedback from Closed Alpha & Bug Fixes',
     date: '2025-08-27',
