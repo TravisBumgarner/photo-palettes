@@ -177,7 +177,7 @@ const Create = ({ mode }: { mode: 'lite' | 'full' }) => {
 
   const handleSaveLite = useCallback(() => {
     if (!palette) return
-    setCreationStatus('SUBMITTING')
+    setCreationStatus('SUBMITTED')
 
     const sortedPalette = paletteSortOrder.map((index) => palette[index])
 

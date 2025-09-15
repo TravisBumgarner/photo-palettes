@@ -2,15 +2,15 @@ import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import Typography from '@mui/material/Typography'
 import { useCallback } from 'react'
-import { type MODAL_ID } from '../Modal.types'
-import DefaultModal from './DefaultModal'
-import { activeModalSignal } from '../../../signals'
-import ColorBar from '../../ColorBar'
-import downloadPalette from '../../../utils/downloadPalette'
-import { queries } from '../../../database'
-import { photoUrlToBlob } from '../../../utils/image'
 import { useNavigate } from 'react-router-dom'
 import { ROUTES } from '../../../consts'
+import { queries } from '../../../database'
+import { activeModalSignal } from '../../../signals'
+import downloadPalette from '../../../utils/downloadPalette'
+import { photoUrlToBlob } from '../../../utils/image'
+import ColorBar from '../../ColorBar'
+import { type MODAL_ID } from '../Modal.types'
+import DefaultModal from './DefaultModal'
 
 export interface AnonPaletteCreationModalProps {
   id: typeof MODAL_ID.ANON_PALETTE_CREATION_MODAL
@@ -49,8 +49,12 @@ const AnonPaletteCreationModal = ({
     navigate(ROUTES.signup.href)
   }, [palette, name, photoUrl, paletteId, navigate])
 
+  const handleCloseCallback = useCallback(() => {
+    navigate(ROUTES.browse.href)
+  }, [navigate])
+
   return (
-    <DefaultModal>
+    <DefaultModal closeCallback={handleCloseCallback}>
       <Box sx={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
         <img
           style={{ width: '100%', height: 'auto' }}
