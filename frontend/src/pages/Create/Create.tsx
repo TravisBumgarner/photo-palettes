@@ -226,7 +226,7 @@ const Create = ({ mode }: { mode: 'lite' | 'full' }) => {
   ])
 
   const handleSavePalette = useCallback(async () => {
-    if (mode === 'full') handleSaveFull()
+    if (!useSingleColumnDisplay) handleSaveFull()
     else handleSaveLite()
   }, [handleSaveFull, handleSaveLite, mode])
 
@@ -291,8 +291,8 @@ const Create = ({ mode }: { mode: 'lite' | 'full' }) => {
   return (
     <PageWrapper width="full">
       <Container useSingleColumnDisplay={useSingleColumnDisplay}>
-        <LeftColumn useSingleColumnDisplay={useSingleColumnDisplay}>
-          {mode === 'full' && (
+        {!useSingleColumnDisplay && (
+          <LeftColumn useSingleColumnDisplay={useSingleColumnDisplay}>
             <SectionWrapper>
               <Typography sx={labelStyles}>Starter Palettes</Typography>
               <SelectGeneratedPalette
@@ -300,8 +300,6 @@ const Create = ({ mode }: { mode: 'lite' | 'full' }) => {
                 generatedPalettes={generatedPalettes}
               />
             </SectionWrapper>
-          )}
-          {!useSingleColumnDisplay && (
             <>
               <SectionWrapper>
                 <TextField
@@ -338,8 +336,8 @@ const Create = ({ mode }: { mode: 'lite' | 'full' }) => {
                 </Box>
               </SectionWrapper>
             </>
-          )}
-        </LeftColumn>
+          </LeftColumn>
+        )}
         <RightColumn>
           <CanvasAndPalette
             photo={photo}
