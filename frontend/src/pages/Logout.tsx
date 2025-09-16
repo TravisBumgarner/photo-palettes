@@ -5,6 +5,7 @@ import useGlobalStore from '../store'
 import PageTitle from '../styles/shared/PageTitle'
 import PageWrapper from '../styles/shared/PageWrapper'
 import { useNavigate } from 'react-router-dom'
+import { setUserId } from '@amplitude/analytics-browser'
 
 export default function Logout() {
   const navigate = useNavigate()
@@ -15,6 +16,7 @@ export default function Logout() {
     const logoutUser = async () => {
       setAuthId(null)
       setAppUserDetails(null)
+      setUserId(undefined)
       const response = await logout()
       if (response?.success) {
         navigate('/')

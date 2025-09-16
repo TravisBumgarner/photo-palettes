@@ -58,10 +58,10 @@ export default function LoginPage() {
       const response = await login({ email, password })
 
       if (response.success) {
+        const success = await loadUserIntoState()
         trackEvent({
           event: 'user_log_in',
         })
-        const success = await loadUserIntoState()
         if (success) {
           const hasTemporaryPalettes =
             (await queries.getTemporaryPalettes()).length > 0
