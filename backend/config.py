@@ -1,60 +1,58 @@
+import os
 import sys
 from functools import lru_cache
 
-from pydantic import Field, ValidationError, field_validator
-from pydantic_settings import BaseSettings, SettingsConfigDict
+from dotenv import load_dotenv
+from pydantic import BaseModel, Field, ValidationError
+
+# Load .env into os.environ
+load_dotenv()
 
 
-class BaseServiceSettings(BaseSettings):
-    model_config = SettingsConfigDict(env_file=".env", extra="ignore")
+class PushoverSettings(BaseModel):
+    app_token: str = Field(default_factory=lambda: os.getenv("PUSHOVER_APP_TOKEN", ""))
+    user_token: str = Field(default_factory=lambda: os.getenv("PUSHOVER_USER_TOKEN", ""))
 
 
-class PushoverSettings(BaseServiceSettings):
-    model_config = SettingsConfigDict(env_prefix="PUSHOVER_")
-    app_token: str = Field(default="")
-    user_token: str = Field(default="")
+class SupabaseSettings(BaseModel):
+    url: str = Field(default_factory=lambda: os.getenv("SUPABASE_URL", ""))
+    key: str = Field(default_factory=lambda: os.getenv("SUPABASE_KEY", ""))
 
 
-class SupabaseSettings(BaseServiceSettings):
-    model_config = SettingsConfigDict(env_prefix="SUPABASE_")
-    url: str = Field(default="")
-    key: str = Field(default="")
+class BskySettings(BaseModel):
+    email: str = Field(default_factory=lambda: os.getenv("BSKY_EMAIL", ""))
+    password: str = Field(default_factory=lambda: os.getenv("BSKY_PASSWORD", ""))
 
 
-class BskySettings(BaseServiceSettings):
-    model_config = SettingsConfigDict(env_prefix="BSKY_")
-    email: str = Field(default="")
-    password: str = Field(default="")
+class InstagramSettings(BaseModel):
+    username: str = Field(default_factory=lambda: os.getenv("INSTAGRAM_USERNAME", ""))
+    password: str = Field(default_factory=lambda: os.getenv("INSTAGRAM_PASSWORD", ""))
 
 
-class InstagramSettings(BaseServiceSettings):
-    model_config = SettingsConfigDict(env_prefix="INSTAGRAM_")
-    username: str = Field(default="")
-    password: str = Field(default="")
+def get_database_url() -> str:
+    raw = os.getenv("DATABASE_URL", "postgresql://localhost:5432/photo_palettes")
+    if raw.startswith("postgres://"):
+        print("ruda returning better")
+        return raw.replace("postgres://", "postgresql+psycopg://", 1)
+    print("ruda returning raw")
+    return raw
 
 
-class Config(BaseSettings):
-    environment: str = Field(default="development")
+class Config(BaseModel):
+    environment: str = Field(default_factory=lambda: os.getenv("ENVIRONMENT", "development"))
+    database_url: str = Field(default_factory=get_database_url)
+    supabase: SupabaseSettings = Field(default_factory=SupabaseSettings)
+    pushover: PushoverSettings = Field(default_factory=PushoverSettings)
+    bsky: BskySettings = Field(default_factory=BskySettings)
+    instagram: InstagramSettings = Field(default_factory=InstagramSettings)
+    cloudinary_url: str = Field(default_factory=lambda: os.getenv("CLOUDINARY_URL", ""))
+    debug_cloudinary_locally: bool = Field(
+        default_factory=lambda: os.getenv("DEBUG_CLOUDINARY_LOCALLY", "false").lower() == "true"
+    )
 
     @property
     def is_production(self) -> bool:
         return self.environment.lower() == "production"
-
-    database_url: str = Field(default="postgresql://localhost:5432/photo_palettes")
-    supabase: SupabaseSettings = Field(default_factory=lambda: SupabaseSettings())
-    pushover: PushoverSettings = Field(default_factory=lambda: PushoverSettings())
-    bsky: BskySettings = Field(default_factory=lambda: BskySettings())
-    instagram: InstagramSettings = Field(default_factory=lambda: InstagramSettings())
-    cloudinary_url: str = Field(default="")
-    model_config = SettingsConfigDict(env_file=".env", extra="ignore")
-    debug_cloudinary_locally: bool = Field(default=False)
-
-    # SqlAlchemy expects postgresql://, but postgres:// is what we get from Heroku.
-    @field_validator("database_url")
-    def convert_postgres_url(cls, v: str) -> str:  # noqa: N805 Unsure why cls isn't being recognized.
-        if v.startswith("postgres://"):
-            return v.replace("postgres://", "postgresql://", 1)
-        return v
 
 
 @lru_cache

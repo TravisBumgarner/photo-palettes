@@ -1,9 +1,10 @@
 from typing import Annotated
 
+from fastapi import Query
+
 from consts import ErrorMsg
 from database.models import ModerationStatus, PermissionLevel
 from database.queries.palettes import get_palettes, get_palettes_count
-from fastapi import Query
 from middleware.auth import RequestWithAuthState
 from routes.shared import (
     BaseErrorResponse,

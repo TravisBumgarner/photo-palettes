@@ -6,6 +6,8 @@ from config import get_config
 config = get_config()
 
 # Engine with connection pooling
+print("Database URL:", config.database_url)
+
 db_engine = create_engine(
     config.database_url,
     echo=False,  # Less logging

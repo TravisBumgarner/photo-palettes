@@ -29,8 +29,9 @@ def handle_request():
         for palette in palettes:
             image_path = palette.photo_details
             abs_image_path = get_photo_path(image_path)
-            # I have no idea why the following line works. In posting to Bsky, it doesn't and causes the app
-            # to crash because it's making a request of itself while in the middle of a request.
+            # I have no idea why the following line works. In posting to Bsky, it doesn't and causes
+            # the app to crash because it's making a request of itself while in the middle of a
+            # request.
             response = requests.get(abs_image_path)
             response.raise_for_status()
             image = Image.open(BytesIO(response.content))
