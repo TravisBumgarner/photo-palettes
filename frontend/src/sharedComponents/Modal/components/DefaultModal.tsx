@@ -3,17 +3,23 @@ import IconButton from '@mui/material/IconButton'
 import MUIModal from '@mui/material/Modal'
 import { useCallback, type FC } from 'react'
 import { IoMdClose } from 'react-icons/io'
-import { BORDER_RADIUS, SPACING, Z_INDICES } from '../../../styles/styleConsts'
 import { activeModalSignal } from '../../../signals'
+import { BORDER_RADIUS, SPACING, Z_INDICES } from '../../../styles/styleConsts'
 interface ActiveModal {
   children: React.ReactNode | React.ReactNode[]
+  closeCallback?: () => void
 }
 
-const Modal: FC<ActiveModal> = ({ children }) => {
-  const handleClose = useCallback((_event: unknown, reason?: string) => {
-    if (reason === 'backdropClick') return
-    activeModalSignal.value = null
-  }, [])
+const Modal: FC<ActiveModal> = ({ children, closeCallback }) => {
+  const handleClose = useCallback(
+    (_event: unknown, reason?: string) => {
+      if (closeCallback) closeCallback()
+
+      if (reason === 'backdropClick') return
+      activeModalSignal.value = null
+    },
+    [closeCallback]
+  )
 
   return (
     <MUIModal
@@ -46,6 +52,7 @@ const Modal: FC<ActiveModal> = ({ children }) => {
           sx={{
             display: 'flex',
             justifyContent: 'flex-end',
+            paddingBottom: SPACING.SMALL.PX,
           }}
         >
           <IconButton component="button" onClick={handleClose}>

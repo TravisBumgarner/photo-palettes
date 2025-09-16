@@ -53,8 +53,12 @@ const AnonPaletteCreationModal = ({
     navigate(ROUTES.signup.href)
   }, [palette, name, photoUrl, paletteId, navigate])
 
+  const handleCloseCallback = useCallback(() => {
+    navigate(ROUTES.browse.href)
+  }, [navigate])
+
   return (
-    <DefaultModal>
+    <DefaultModal closeCallback={handleCloseCallback}>
       <Box sx={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
         <img
           style={{ width: '100%', height: 'auto' }}

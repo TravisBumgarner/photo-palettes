@@ -15,6 +15,7 @@ mkdir $DEPLOY_DIR
 cp -r $BACKEND_DIR/* $DEPLOY_DIR/
 cp $BACKEND_DIR/requirements.txt $DEPLOY_DIR/
 cp $BACKEND_DIR/.python-version $DEPLOY_DIR/
+cp $BACKEND_DIR/.gitignore $DEPLOY_DIR/
 cp Procfile $DEPLOY_DIR/  # Copy from root directory
 
 cd $DEPLOY_DIR

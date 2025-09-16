@@ -8,8 +8,12 @@ from instagrapi import Client
 from PIL import Image, ImageDraw, ImageFont
 
 from config import get_config
-from database.queries.service_sessions import get_service_session, set_service_session
-from services.logger import log_error
+from database.queries.service_sessions import (
+    delete_service_session,
+    get_service_session,
+    set_service_session,
+)
+from utils.photos import get_photo_path
 
 TARGET_WIDTH = 1600
 TARGET_HEIGHT = 1600
@@ -144,19 +148,18 @@ def post_to_instagram(photo_path: str, colors: list[str], description: str) -> b
         cl.set_settings(session_json)
         try:
             cl.get_timeline_feed()  # lightweight request to verify session is valid
-            return True  # already logged in
         except Exception:
             # Session expired -> reset and re-login
             cl.set_settings({})
+            delete_service_session(service_name)
     else:
         # No valid session, so login fresh
-        try:
-            cl.login(config.instagram.username, config.instagram.password)
-        except Exception as e:
-            log_error(e, name="Instagram Login Failed")
+        cl.login(config.instagram.username, config.instagram.password)
 
     # Save latest session back to DB
     set_service_session(service_name, cl.get_settings())
+
+    abs_image_path = get_photo_path(photo_path)
 
     # Generate images
     if not config.is_production:
@@ -165,9 +168,9 @@ def post_to_instagram(photo_path: str, colors: list[str], description: str) -> b
         # However, if I use the abs_image_path above in development, the server gets
         # stuck in an infinite loop requesting itself while in the middle of a request.
         # Since this is only development, I'm hardcoding an image URL that I know works.
-        photo_path = "https://res.cloudinary.com/hqjbxtyku/image/upload/f_auto,q_auto/359f027f-3ac4-4909-8662-b03027b11e60"
+        abs_image_path = "https://res.cloudinary.com/hqjbxtyku/image/upload/f_auto,q_auto/359f027f-3ac4-4909-8662-b03027b11e60"
 
-    response = requests.get(photo_path)
+    response = requests.get(abs_image_path)
     response.raise_for_status()
 
     photo = Image.open(BytesIO(response.content)).convert("RGB")
