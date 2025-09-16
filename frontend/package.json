@@ -32,6 +32,8 @@
     "printWidth": 80
   },
   "dependencies": {
+    "@amplitude/analytics-browser": "^2.24.0",
+    "@amplitude/plugin-session-replay-browser": "^1.22.13",
     "@capacitor/android": "^7.4.3",
     "@capacitor/core": "^7.4.3",
     "@capacitor/filesystem": "^7.1.4",

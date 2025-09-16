@@ -14,6 +14,7 @@ import { PALETTE_SIZE } from '../../consts'
 import { queries } from '../../database'
 import { useGeneratePaletteWorker } from '../../hooks/useGeneratePaletteWorker'
 import useMediaQuery from '../../hooks/UseMediaQuery'
+import { trackEvent } from '../../services/analytics'
 import { logger } from '../../services/logging'
 import Loading from '../../sharedComponents/Loading'
 import Message from '../../sharedComponents/Message'
@@ -43,6 +44,7 @@ const Create = ({ mode }: { mode: 'lite' | 'full' }) => {
   const { generatePalette: generatePaletteLite } = useGeneratePaletteWorker()
   const isSmallScreen = useMediaQuery('(max-width:700px)')
   const isNative = Capacitor.isNativePlatform()
+  const [wasLoadedFromLiteMode, setWasLoadedFromLiteMode] = useState(false)
 
   const useSingleColumnDisplay = isNative || isSmallScreen
 
@@ -62,7 +64,6 @@ const Create = ({ mode }: { mode: 'lite' | 'full' }) => {
     Array.from({ length: PALETTE_SIZE }, (_, i) => i)
   )
   const [tempId, setTempId] = useState<string | null>(null)
-
   useEffect(() => {
     // When the user is signed out, they can create palettes.
     // If they opt to sign up or login, they'll be redirected here after. We'll
@@ -81,6 +82,7 @@ const Create = ({ mode }: { mode: 'lite' | 'full' }) => {
         setName(name)
         setTempId(loadedTempId)
         setCreationStatus('SELECTING_COLORS')
+        setWasLoadedFromLiteMode(true)
       }
     }
     checkAndLoadTemporaryPalette()
@@ -112,6 +114,7 @@ const Create = ({ mode }: { mode: 'lite' | 'full' }) => {
   })
   const onDrop = useCallback(
     async (acceptedFiles: File[]) => {
+      trackEvent({ event: 'create_photo_selected', properties: { mode } })
       if (acceptedFiles.length === 0) {
         // An error was thrown, it's handled internally by Dropzone.tsx
         return
@@ -132,6 +135,8 @@ const Create = ({ mode }: { mode: 'lite' | 'full' }) => {
         response = await generatePaletteFullMutation.mutateAsync(resizedPhoto)
       }
       if (response.success) {
+        trackEvent({ event: 'create_photo_loaded', properties: { mode } })
+
         setCreationStatus('SELECTING_COLORS')
 
         setGeneratedPalettes(response.palettes)
@@ -190,6 +195,19 @@ const Create = ({ mode }: { mode: 'lite' | 'full' }) => {
     }
   }, [name, palette, paletteSortOrder, photo])
 
+  const handleSaveFullCallback = useCallback(
+    (paletteId: string) => {
+      trackEvent({
+        event: 'create_palette_created',
+        properties: {
+          mode: wasLoadedFromLiteMode ? 'lite' : 'full',
+        },
+      })
+      navigate(`/palette/${paletteId}`)
+    },
+    [navigate, wasLoadedFromLiteMode]
+  )
+
   const handleSaveFull = useCallback(async () => {
     if (!palette || !photo) return
     setCreationStatus('SUBMITTING')
@@ -205,9 +223,7 @@ const Create = ({ mode }: { mode: 'lite' | 'full' }) => {
       if (tempId) queries.deleteTemporaryPalette(tempId)
       activeModalSignal.value = {
         id: MODAL_ID.CONFIRMATION_MODAL,
-        confirmationCallback: () => {
-          navigate(`/palette/${response.paletteId}`)
-        },
+        confirmationCallback: () => handleSaveFullCallback(response.paletteId),
         title: 'Thanks for your submission!',
         body: 'Once it is approved, it will be added to the site.',
       }
@@ -217,18 +233,22 @@ const Create = ({ mode }: { mode: 'lite' | 'full' }) => {
     }
   }, [
     createPaletteMutation,
+    handleSaveFullCallback,
     name,
     palette,
-    navigate,
     paletteSortOrder,
     photo,
     tempId,
   ])
 
   const handleSavePalette = useCallback(async () => {
+    trackEvent({
+      event: 'create_palette_save',
+      properties: { mode, lite_mode_conversion: wasLoadedFromLiteMode },
+    })
     if (mode === 'full') handleSaveFull()
     else handleSaveLite()
-  }, [handleSaveFull, handleSaveLite, mode])
+  }, [handleSaveFull, handleSaveLite, mode, wasLoadedFromLiteMode])
 
   const handlePaletteChange = (paletteIndex: number) => {
     setPalette(structuredClone(generatedPalettes[paletteIndex]))

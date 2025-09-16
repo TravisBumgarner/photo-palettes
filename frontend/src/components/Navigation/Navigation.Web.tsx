@@ -1,5 +1,5 @@
-import { GiHamburgerMenu } from 'react-icons/gi'
 import { FaApple } from 'react-icons/fa'
+import { GiHamburgerMenu } from 'react-icons/gi'
 
 import Box from '@mui/material/Box'
 import IconButton from '@mui/material/IconButton'
@@ -8,22 +8,23 @@ import MenuItem from '@mui/material/MenuItem'
 import Tooltip from '@mui/material/Tooltip'
 import Typography from '@mui/material/Typography'
 import { useTheme } from '@mui/material/styles'
-import MuiLink from '@mui/material/Link'
 
+import Divider from '@mui/material/Divider'
 import { useCallback, useMemo, useState } from 'react'
+import { useLocation } from 'react-router-dom'
 import { ROUTES } from '../../consts'
+import { trackEvent } from '../../services/analytics'
+import Link from '../../sharedComponents/Link'
 import useGlobalStore from '../../store'
 import { BORDER_RADIUS, FONT_SIZES, SPACING } from '../../styles/styleConsts'
 import { PERMISSION_LEVEL } from '../../types'
-import { createLinkSX, WrapperSX } from './Navigation.styles'
-import Link from '../../sharedComponents/Link'
 import {
   ADMIN_ROUTES,
   ANON_ROUTES,
   MODERATOR_ROUTES,
   USER_ROUTES,
 } from './Navigation.shared'
-import Divider from '@mui/material/Divider'
+import { createLinkSX, WrapperSX } from './Navigation.styles'
 
 const DropdownLinks = ({ onClose }: { onClose: () => void }) => {
   const appUserDetails = useGlobalStore((state) => state.appUserDetails)
@@ -60,6 +61,9 @@ const DropdownLinks = ({ onClose }: { onClose: () => void }) => {
 }
 
 const Navigation = () => {
+  const appUserDetails = useGlobalStore((state) => state.appUserDetails)
+  const location = useLocation()
+
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
   const open = Boolean(anchorEl)
 
@@ -107,12 +111,20 @@ const Navigation = () => {
           alignItems: 'center',
         }}
       >
-        <MuiLink
+        <Link
           sx={createLinkSX(theme.palette.mode)}
           href={ROUTES.create.href}
+          onClick={() => {
+            if (location.pathname !== ROUTES.create.href) {
+              trackEvent({
+                event: 'create_button_clicked',
+                properties: { mode: appUserDetails ? 'full' : 'lite' },
+              })
+            }
+          }}
         >
           {ROUTES.create.label}
-        </MuiLink>
+        </Link>
         <Tooltip title="Menu">
           <IconButton
             aria-label="menu"

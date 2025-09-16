@@ -236,7 +236,7 @@ const FeatureRequests = () => {
   }
 
   return (
-    <PageWrapper width="medium">
+    <PageWrapper width="full">
       <PageTitle marginBottom text="Feature Requests" />
       {!appUserDetails && (
         <Typography variant="body1">Log in to upvote.</Typography>

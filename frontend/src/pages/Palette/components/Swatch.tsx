@@ -1,7 +1,8 @@
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
 import Color from 'color'
-import { useMemo } from 'react'
+import { useCallback, useMemo } from 'react'
+import { trackEvent } from '../../../services/analytics'
 import { FONT_SIZES, SPACING } from '../../../styles/styleConsts'
 import type { TSwatch } from '../../../types'
 import { DETAILS_MAP } from '../Palette.consts'
@@ -49,12 +50,22 @@ const Swatch = ({
     }
   }, [details, hex])
 
+  const handleCopyClick = useCallback(() => {
+    trackEvent({
+      event: 'copy_color_detail',
+      properties: {
+        detail: details,
+        step: -1,
+        is_swatch: true,
+      },
+    })
+    navigator.clipboard.writeText(copyLabel)
+  }, [copyLabel, details])
+
   return (
     <Box>
       <Box
-        onClick={() => {
-          navigator.clipboard.writeText(copyLabel)
-        }}
+        onClick={handleCopyClick}
         sx={{
           height: '80px',
           backgroundColor: primaryBackground.toString(),

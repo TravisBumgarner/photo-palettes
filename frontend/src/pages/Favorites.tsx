@@ -2,6 +2,7 @@ import { useQuery } from '@tanstack/react-query'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import getFavoritesList from '../api/favorites/getFavoritesList'
 import { PAGINATION_SIZE, ROUTES } from '../consts'
+import { trackEvent } from '../services/analytics'
 import { logger } from '../services/logging'
 import Loading from '../sharedComponents/Loading'
 import Message from '../sharedComponents/Message'
@@ -33,13 +34,28 @@ const Favorites = () => {
   }, [page, sortBy])
 
   const handleSortChange = useCallback((newSortBy: ESortBy) => {
+    trackEvent({
+      event: 'browse_filter_button',
+      properties: { browse_filter: newSortBy, page: 'favorites' },
+    })
     setSortBy(newSortBy)
     setPage(1)
   }, [])
 
-  const handlePageChange = useCallback((newPage: number) => {
-    setPage(newPage)
-  }, [])
+  const handlePageChange = useCallback(
+    (newPage: number) => {
+      trackEvent({
+        event: 'browse_navigation',
+        properties: {
+          browse_filter: sortBy,
+          page: 'favorites',
+          page_number: newPage,
+        },
+      })
+      setPage(newPage)
+    },
+    [sortBy]
+  )
 
   useEffect(() => {
     if (error) logger.error(error)

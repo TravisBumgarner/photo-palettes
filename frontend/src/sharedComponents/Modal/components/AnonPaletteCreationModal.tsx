@@ -5,6 +5,7 @@ import { useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { ROUTES } from '../../../consts'
 import { queries } from '../../../database'
+import { trackEvent } from '../../../services/analytics'
 import { activeModalSignal } from '../../../signals'
 import downloadPalette from '../../../utils/downloadPalette'
 import { photoUrlToBlob } from '../../../utils/image'
@@ -30,6 +31,8 @@ const AnonPaletteCreationModal = ({
   const navigate = useNavigate()
 
   const handleDownload = useCallback(async () => {
+    trackEvent({ event: 'anon_model_download' })
+
     await downloadPalette({
       paletteId,
       photoUrl,
@@ -39,6 +42,7 @@ const AnonPaletteCreationModal = ({
   }, [photoUrl, colors, paletteId, navigate])
 
   const handleConfirm = useCallback(async () => {
+    trackEvent({ event: 'anon_model_sign_up' })
     queries.createTemporaryPalette({
       palette,
       name,

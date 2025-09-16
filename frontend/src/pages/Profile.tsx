@@ -5,6 +5,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import getPaletteList from '../api/palettes/getPaletteList'
 import { PAGINATION_SIZE, ROUTES } from '../consts'
+import { trackEvent } from '../services/analytics'
 import { logger } from '../services/logging'
 import Loading from '../sharedComponents/Loading'
 import Message from '../sharedComponents/Message'
@@ -51,6 +52,14 @@ const Profile = () => {
   })
 
   const handlePageChange = useCallback((newPage: number) => {
+    trackEvent({
+      event: 'browse_navigation',
+      properties: {
+        browse_filter: 'newest',
+        page: 'profile',
+        page_number: newPage,
+      },
+    })
     setPage(newPage)
   }, [])
 

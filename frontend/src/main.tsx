@@ -1,10 +1,29 @@
+import * as amplitude from '@amplitude/analytics-browser'
+import { sessionReplayPlugin } from '@amplitude/plugin-session-replay-browser'
+import { init } from '@sentry/react'
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
-import { init } from '@sentry/react'
-
 import App from './App.tsx'
-import './styles/global.css'
+
 import config from './config.ts'
+import './styles/global.css'
+
+if (config.isProduction) {
+  amplitude.add(sessionReplayPlugin())
+  amplitude.init('d398356d5961d66d5f5aa55ccf5ea679', {
+    autocapture: {
+      attribution: true,
+      fileDownloads: true,
+      formInteractions: true,
+      pageViews: true,
+      sessions: true,
+      elementInteractions: true,
+      networkTracking: true,
+      webVitals: true,
+      frustrationInteractions: true,
+    },
+  })
+}
 
 init({
   dsn: 'https://3f84cd19644b1a6cb6ec5cc55c9c1486@o196886.ingest.us.sentry.io/4509883299397632',

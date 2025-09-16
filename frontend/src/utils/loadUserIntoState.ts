@@ -1,6 +1,7 @@
 import { getMe } from '../api/getMe'
 import { getUser } from '../services/supabase'
 import useGlobalStore from '../store'
+import { setUserId } from '@amplitude/analytics-browser'
 
 export const loadUserIntoState = async () => {
   const { user } = await getUser()
@@ -12,6 +13,7 @@ export const loadUserIntoState = async () => {
     store.setAuthId(user.id)
     const userDetails = await getMe()
     if (userDetails.success) {
+      setUserId(user.id)
       store.setAppUserDetails(userDetails)
       success = true
     }

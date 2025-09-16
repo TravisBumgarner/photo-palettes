@@ -1,8 +1,9 @@
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
 import Color from 'color'
-import { useMemo } from 'react'
+import { useCallback, useMemo } from 'react'
 import useMediaQuery from '../../../hooks/UseMediaQuery'
+import { trackEvent } from '../../../services/analytics'
 import { FONT_SIZES, SPACING } from '../../../styles/styleConsts'
 import { getContrastColor } from '../../../utils/getContrastColor'
 import { DETAILS_MAP } from '../Palette.consts'
@@ -78,12 +79,22 @@ const Step = ({
     }
   }, [details, step, stepColor])
 
+  const handleCopyClick = useCallback(() => {
+    trackEvent({
+      event: 'copy_color_detail',
+      properties: {
+        detail: details,
+        step,
+        is_swatch: false,
+      },
+    })
+    navigator.clipboard.writeText(copyLabel)
+  }, [copyLabel, details, step])
+
   return (
     <Box
       key={step}
-      onClick={() => {
-        navigator.clipboard.writeText(copyLabel)
-      }}
+      onClick={handleCopyClick}
       sx={{
         backgroundColor: stepColor.string(),
         display: 'flex',
