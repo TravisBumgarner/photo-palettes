@@ -123,7 +123,7 @@ export const trackEvent = (event: Event) => {
     platform: Capacitor.getPlatform(),
     ...('properties' in event ? event.properties : {}),
   }
-  if (config.isProduction) {
+  if (!config.isProduction) {
     // eslint-disable-next-line no-console
     console.log('Analytics event:', event.event, properties)
     return
