@@ -1,0 +1,16 @@
+# Python
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.pyw
+*.pyz
+.pytest_cache/
+uploads/
+
+.dmypy.json
+.mypy_cache/
+
+.env.prod

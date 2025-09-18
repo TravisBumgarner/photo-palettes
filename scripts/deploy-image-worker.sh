@@ -1,0 +1,30 @@
+#!/bin/bash
+
+# Test everything
+if ! ./scripts/check-image-worker.sh; then
+    echo "Error: check-image-worker.sh failed"
+    exit 1
+fi
+
+BACKEND_DIR="image-worker"
+DEPLOY_DIR="tmp-heroku-deploy"
+
+# Deploy FastAPI backend to Heroku
+rm -rf $DEPLOY_DIR
+mkdir $DEPLOY_DIR
+cp -r $BACKEND_DIR/* $DEPLOY_DIR/
+cp $BACKEND_DIR/requirements.txt $DEPLOY_DIR/
+cp $BACKEND_DIR/.python-version $DEPLOY_DIR/
+cp $BACKEND_DIR/.gitignore $DEPLOY_DIR/
+cp Procfile $DEPLOY_DIR/  # Copy from root directory
+
+cd $DEPLOY_DIR
+git init
+git remote add heroku https://git.heroku.com/photo-palettes-image-worker.git
+git add .
+git commit -m "Deploy image worker"
+git push -f heroku main
+cd ..
+rm -rf $DEPLOY_DIR
+
+heroku open --app photo-palettes-image-worker

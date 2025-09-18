@@ -9,6 +9,7 @@ help:
 	@echo "  make deploy-all   - Deploy all services"
 	@echo "  make deploy-backend - Deploy backend"
 	@echo "  make deploy-frontend - Deploy frontend"
+	@echo "  make deploy-image-worker - Deploy image worker"
 	@echo "  make nuke-docker - Remove all docker containers, volumes, and images"
 
 	
@@ -27,6 +28,7 @@ deploy-all:
 	@echo "Deploying all services..."
 	@./scripts/deploy-frontend.sh
 	@./scripts/deploy-backend.sh
+	@./scripts/deploy-image-worker.sh
 
 deploy-backend:
 	@echo "Deploying backend..."
@@ -35,6 +37,10 @@ deploy-backend:
 deploy-frontend:
 	@echo "Deploying frontend..."
 	@./scripts/deploy-frontend.sh
+
+deploy-image-worker:
+	@echo "Deploying image worker..."
+	@./scripts/deploy-image-worker.sh
 
 nuke-docker:
 	@echo "Nuking docker..."
