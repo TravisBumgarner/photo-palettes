@@ -61,9 +61,7 @@ class PaletteColor(Base):
     __tablename__ = "palette_colors"
 
     id: Mapped[uuid.UUID] = mapped_column(primary_key=True, default=uuid.uuid4)
-    palette_id: Mapped[uuid.UUID] = mapped_column(
-        ForeignKey("palettes.id", ondelete="CASCADE")
-    )
+    palette_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("palettes.id", ondelete="CASCADE"))
     hex: Mapped[str] = mapped_column(String)
     r: Mapped[int] = mapped_column(Integer)
     g: Mapped[int] = mapped_column(Integer)
@@ -95,9 +93,7 @@ class Palette(Base):
     has_user_favorited: bool = False  # Not a DB column, used for runtime annotation
 
     id: Mapped[uuid.UUID] = mapped_column(primary_key=True, default=uuid.uuid4)
-    app_user_id: Mapped[uuid.UUID] = mapped_column(
-        ForeignKey("app_users.id", ondelete="CASCADE")
-    )
+    app_user_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("app_users.id", ondelete="CASCADE"))
     created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.now)
     name: Mapped[str] = mapped_column(String(50))
     photo_details: Mapped[str] = mapped_column(String)
@@ -154,13 +150,9 @@ class FeatureRequestVote(Base):
     request_id: Mapped[uuid.UUID] = mapped_column(
         ForeignKey("feature_requests.id", ondelete="CASCADE")
     )
-    app_user_id: Mapped[uuid.UUID] = mapped_column(
-        ForeignKey("app_users.id", ondelete="CASCADE")
-    )
+    app_user_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("app_users.id", ondelete="CASCADE"))
 
-    request: Mapped["FeatureRequest"] = relationship(
-        "FeatureRequest", back_populates="votes"
-    )
+    request: Mapped["FeatureRequest"] = relationship("FeatureRequest", back_populates="votes")
 
 
 class FeatureRequest(Base):
@@ -185,3 +177,29 @@ class ServiceSession(Base):
     created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.now)
     service: Mapped[str] = mapped_column(String, unique=True)  # e.g. "instagram"
     session_json: Mapped[dict] = mapped_column(JSON)
+
+
+class ImageImageWorkerStatusEnum(str, Enum):
+    GENERATE_OG = "generate_og"
+
+
+class ImageWorkerStatusEnum(str, Enum):
+    PENDING = "pending"
+    IN_PROGRESS = "in_progress"
+    COMPLETED = "completed"
+    FAILED = "failed"
+
+
+class ImageWorker(Base):
+    __tablename__ = "worker_actions"
+
+    id: Mapped[uuid.UUID] = mapped_column(primary_key=True, default=uuid.uuid4)
+    palette_id: Mapped[uuid.UUID] = mapped_column(
+        ForeignKey("palettes.id", ondelete="SET NULL"), nullable=True
+    )
+    action_type: Mapped[ImageWorkerStatusEnum] = mapped_column(String)
+    status: Mapped[ImageWorkerStatusEnum] = mapped_column(
+        String, default=ImageWorkerStatusEnum.PENDING
+    )
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.now)
+    processed_at: Mapped[datetime | None] = mapped_column(DateTime, nullable=True)

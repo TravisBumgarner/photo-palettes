@@ -24,6 +24,13 @@
       "settings": {
         "python.defaultInterpreterPath": ".venv-database/bin/python"
       }
+    },
+    {
+      "name": "image-worker",
+      "path": "./image-worker",
+      "settings": {
+        "python.defaultInterpreterPath": ".venv-image-worker/bin/python"
+      }
     }
   ]
 }
