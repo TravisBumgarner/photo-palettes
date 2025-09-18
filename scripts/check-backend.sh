@@ -16,5 +16,5 @@ source .venv-backend/bin/activate
 
 echo "Checking backend..."
 echo "Running tests..."
-docker-compose exec -T backend pytest
+pytest 
 

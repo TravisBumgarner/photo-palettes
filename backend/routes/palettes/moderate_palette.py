@@ -1,9 +1,9 @@
 import uuid
 
+from common.models import ModerationStatus, PermissionLevel
 from pydantic import BaseModel
 
 from consts import ErrorMsg
-from database.models import ModerationStatus, PermissionLevel
 from database.queries.palettes import PaletteUpdate, get_palette_by_id, update_palette
 from middleware.auth import RequestWithAuthState
 from routes.shared import (

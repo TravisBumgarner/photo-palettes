@@ -2,6 +2,7 @@ import os
 from contextlib import asynccontextmanager
 
 import sentry_sdk
+from common import models
 
 # Update the import to match the actual function name in palettes.py
 from fastapi import FastAPI
@@ -9,7 +10,6 @@ from fastapi.staticfiles import StaticFiles
 from supabase import Client, create_client
 
 from config import get_config
-from database import models
 from database.engine import db_engine
 from middleware.auth import create_auth_middleware
 from middleware.cors import setup_cors

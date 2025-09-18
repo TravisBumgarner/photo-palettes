@@ -1,8 +1,8 @@
+from common.models import ServiceSession
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from database import db_engine
-from database.models import ServiceSession
 
 
 def get_service_session(service: str) -> dict | None:

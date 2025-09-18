@@ -2,6 +2,7 @@ import json
 import uuid
 from io import BytesIO
 
+from common.models import Palette, PaletteColor, PermissionLevel
 from fastapi import Form, UploadFile
 from PIL import Image
 from pydantic import BaseModel, field_validator
@@ -9,7 +10,6 @@ from pydantic import BaseModel, field_validator
 from algorithms.og import generate_og_image
 from algorithms.utils import scale_image
 from consts import ErrorMsg
-from database.models import Palette, PaletteColor, PermissionLevel
 from database.queries.palettes import create_palette
 from middleware.auth import RequestWithAuthState
 from routes.shared import (

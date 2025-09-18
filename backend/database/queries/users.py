@@ -1,10 +1,10 @@
 import uuid
 from datetime import datetime
 
+from common.models import AppUser
 from sqlalchemy.orm import Session
 
 from database.engine import db_engine
-from database.models import AppUser
 
 
 def get_app_user_by_app_user_id(app_user_id: uuid.UUID) -> AppUser | None:

@@ -3,9 +3,9 @@ import uuid
 
 import pytest
 import requests
+from common.models import ModerationStatus
 
 from consts import ErrorMsg
-from database.models import ModerationStatus
 from database.queries.palettes import create_palette, delete_palette_by_id
 
 from .utils import (
@@ -68,18 +68,14 @@ def test_get_palettes_list():
     palette_approved_2.colors.append(color)
     create_palette(palette=palette_approved_2)
 
-    palette_unapproved = generate_palette(
-        app_user_id, moderation_status=ModerationStatus.REJECTED
-    )
+    palette_unapproved = generate_palette(app_user_id, moderation_status=ModerationStatus.REJECTED)
     palette_unapproved.colors.append(color)
     create_palette(palette=palette_unapproved)
     try:
         # A user, when requesting without a moderation status, should only see approved palettes
         response = requests.get(f"{BASE_URL}/palettes", headers=get_user_auth_headers())
         assert "palettes" in response.json()
-        response_ids = [
-            uuid.UUID(palette["id"]) for palette in response.json()["palettes"]
-        ]
+        response_ids = [uuid.UUID(palette["id"]) for palette in response.json()["palettes"]]
         assert palette_approved_1.id in response_ids
         assert palette_approved_2.id in response_ids
         assert palette_unapproved.id not in response_ids
@@ -90,9 +86,7 @@ def test_get_palettes_list():
             headers=get_user_auth_headers(),
         )
         assert "palettes" in response.json()
-        response_ids = [
-            uuid.UUID(palette["id"]) for palette in response.json()["palettes"]
-        ]
+        response_ids = [uuid.UUID(palette["id"]) for palette in response.json()["palettes"]]
         assert palette_approved_1.id in response_ids
         assert palette_approved_2.id in response_ids
         assert palette_unapproved.id not in response_ids
@@ -103,9 +97,7 @@ def test_get_palettes_list():
             headers=get_user_auth_headers(),
         )
         assert "palettes" in response.json()
-        response_ids = [
-            uuid.UUID(palette["id"]) for palette in response.json()["palettes"]
-        ]
+        response_ids = [uuid.UUID(palette["id"]) for palette in response.json()["palettes"]]
         assert palette_unapproved.id in response_ids
         assert palette_approved_1.id not in response_ids
 
@@ -115,9 +107,7 @@ def test_get_palettes_list():
             headers=get_moderator_auth_headers(),
         )
         assert "palettes" in response.json()
-        response_ids = [
-            uuid.UUID(palette["id"]) for palette in response.json()["palettes"]
-        ]
+        response_ids = [uuid.UUID(palette["id"]) for palette in response.json()["palettes"]]
         assert palette_approved_1.id in response_ids
         assert palette_approved_2.id in response_ids
         assert palette_unapproved.id not in response_ids
@@ -128,9 +118,7 @@ def test_get_palettes_list():
             headers=get_moderator_auth_headers(),
         )
         assert "palettes" in response.json()
-        response_ids = [
-            uuid.UUID(palette["id"]) for palette in response.json()["palettes"]
-        ]
+        response_ids = [uuid.UUID(palette["id"]) for palette in response.json()["palettes"]]
         assert palette_unapproved.id not in response_ids
         assert palette_approved_1.id in response_ids
         assert palette_approved_2.id in response_ids

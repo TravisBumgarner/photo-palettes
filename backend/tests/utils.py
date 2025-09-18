@@ -2,11 +2,11 @@ import os
 import uuid
 from pathlib import Path
 
+from common.models import ModerationStatus, Palette, PaletteColor
 from dotenv import load_dotenv
 from supabase import create_client
 
 from config import get_config
-from database.models import ModerationStatus, Palette, PaletteColor
 from database.queries.users import get_app_user_by_email
 
 # Load environment variables from tests/.env

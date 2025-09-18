@@ -1,7 +1,8 @@
 import uuid
 
+from common.models import PermissionLevel
+
 from consts import ErrorMsg
-from database.models import PermissionLevel
 from database.queries.palettes import delete_palette_by_id, get_palette_by_id
 from middleware.auth import RequestWithAuthState
 from routes.shared import (

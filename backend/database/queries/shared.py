@@ -1,6 +1,5 @@
+from common.models import Palette, PaletteFavorite, SortBy
 from sqlalchemy import func
-
-from database.models import Palette, PaletteFavorite, SortBy
 
 ORDER_BY = {
     SortBy.NEWEST: Palette.created_at.desc(),

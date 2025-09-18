@@ -68,7 +68,7 @@ Unsure if this is the best route but I believe it works if Docker gets mad about
 
 ### Migrations
 
-1. From `backend/`
+1. From `database/`
 1. `make migration` - Give migration a helpful name of changes `user_and_color_palettes` or `add_cube_extension`
 1. Populate newly created file in `backend/alembic/versions`
 1. `make development-migrate` - Apply migration to docker DB

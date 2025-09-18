@@ -1,9 +1,10 @@
 import uuid
 
-from consts import ErrorMsg
-from database.models import ModerationStatus, SortBy
-from database.queries.palettes import get_palettes, get_palettes_count
+from common.models import ModerationStatus, SortBy
 from fastapi import Query
+
+from consts import ErrorMsg
+from database.queries.palettes import get_palettes, get_palettes_count
 from middleware.auth import RequestWithAuthState
 from routes.shared import BaseErrorResponse, BaseSuccessResponse
 from services.logger import log_error
@@ -43,9 +44,7 @@ def handle_request(
     )
 
     moderation_status = (
-        moderation_status
-        if can_see_all_moderation_statuses
-        else ModerationStatus.APPROVED
+        moderation_status if can_see_all_moderation_statuses else ModerationStatus.APPROVED
     )
 
     palettes = get_palettes(

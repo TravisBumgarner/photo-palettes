@@ -1,7 +1,8 @@
 import uuid
 
+from common.models import PermissionLevel
+
 from consts import ErrorMsg
-from database.models import PermissionLevel
 from database.queries.users import get_app_user_by_auth_id
 from middleware.auth import RequestWithAuthState
 from routes.shared import (
@@ -38,10 +39,7 @@ def handle_request(auth_id: uuid.UUID):
 
 @users_router.get("/me")
 async def me(request: RequestWithAuthState):
-    if (
-        request.state.permission_level < PermissionLevel.MEMBER
-        or request.state.auth_id is None
-    ):
+    if request.state.permission_level < PermissionLevel.MEMBER or request.state.auth_id is None:
         log_error(RuntimeError(ErrorMsg.CANNOT_PERFORM_ACTION), ROUTE_NAME)
         return BaseErrorResponse(message=ErrorMsg.CANNOT_PERFORM_ACTION)
 

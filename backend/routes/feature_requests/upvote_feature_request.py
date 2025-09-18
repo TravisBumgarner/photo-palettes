@@ -1,9 +1,9 @@
 import uuid
 
+from common.models import PermissionLevel
 from pydantic import BaseModel
 
 from consts import ErrorMsg
-from database.models import PermissionLevel
 from database.queries.feature_requests import cast_vote, has_user_voted
 from middleware.auth import RequestWithAuthState
 from routes.shared import (
@@ -32,10 +32,7 @@ def handle_request(feature_request_id: uuid.UUID, app_user_id: uuid.UUID):
 
 @feature_requests_router.post("/upvote")
 async def post_feature_request(request: RequestWithAuthState, body: Body):
-    if (
-        request.state.permission_level < PermissionLevel.MEMBER
-        or request.state.app_user_id is None
-    ):
+    if request.state.permission_level < PermissionLevel.MEMBER or request.state.app_user_id is None:
         log_error(RuntimeError(ErrorMsg.CANNOT_PERFORM_ACTION), ROUTE_NAME)
         return BaseErrorResponse(message=ErrorMsg.CANNOT_PERFORM_ACTION)
 

@@ -1,11 +1,11 @@
 import uuid
 from typing import Annotated
 
+from common.models import PermissionLevel, SortBy
 from fastapi import Query
 from pydantic import BaseModel
 
 from consts import ErrorMsg
-from database.models import PermissionLevel, SortBy
 from database.queries.favorites import get_app_user_favorites, get_favorites_count
 from middleware.auth import RequestWithAuthState
 from routes.shared import BaseErrorResponse
@@ -48,10 +48,7 @@ async def get_favorite_palettes(
     offset: Annotated[int, Query(ge=0)] = 0,
     sort_by: Annotated[SortBy, Query()] = SortBy.NEWEST,
 ):
-    if (
-        request.state.permission_level < PermissionLevel.MEMBER
-        or request.state.app_user_id is None
-    ):
+    if request.state.permission_level < PermissionLevel.MEMBER or request.state.app_user_id is None:
         log_error(RuntimeError(ErrorMsg.CANNOT_PERFORM_ACTION), ROUTE_NAME)
         return BaseErrorResponse(message=ErrorMsg.CANNOT_PERFORM_ACTION)
 

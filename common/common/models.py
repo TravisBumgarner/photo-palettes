@@ -14,10 +14,17 @@ from sqlalchemy import (
     exists,
     select,
 )
-from sqlalchemy.orm import Mapped, mapped_column, relationship
+from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
+from sqlalchemy.types import UserDefinedType
 
-from .engine import Base
-from .types import Cube
+
+class Cube(UserDefinedType):
+    def get_col_spec(self, **kw):
+        return "CUBE"
+
+
+class Base(DeclarativeBase):
+    pass
 
 
 class PermissionLevel(IntEnum):

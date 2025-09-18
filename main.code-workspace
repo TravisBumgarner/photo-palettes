@@ -1,6 +1,29 @@
 {
   "folders": [
-    { "name": "backend", "path": "./backend" },
-    { "name": "frontend", "path": "./frontend" }
-  ],
+    {
+      "name": "backend",
+      "path": "./backend",
+      "settings": {
+        "python.defaultInterpreterPath": ".venv-backend/bin/python"
+      }
+    },
+    {
+      "name": "frontend",
+      "path": "./frontend"
+    },
+    {
+      "name": "common",
+      "path": "./common",
+      "settings": {
+        "python.defaultInterpreterPath": ".venv-common/bin/python"
+      }
+    },
+    {
+      "name": "database",
+      "path": "./database",
+      "settings": {
+        "python.defaultInterpreterPath": ".venv-database/bin/python"
+      }
+    }
+  ]
 }

@@ -1,12 +1,11 @@
 from io import BytesIO
 
 import requests
+from common.models import ModerationStatus, PermissionLevel
 from PIL import Image
 
 from algorithms.og import generate_og_image
 from consts import ErrorMsg
-from database import models
-from database.models import PermissionLevel
 from database.queries.palettes import PaletteUpdate, get_palettes, update_palette
 from middleware.auth import RequestWithAuthState
 from routes.shared import (
@@ -22,7 +21,7 @@ ROUTE_NAME = "/backfill_open_graph_images"
 
 
 def handle_request():
-    for moderation_status in models.ModerationStatus:
+    for moderation_status in ModerationStatus:
         palettes = get_palettes(
             moderation_status, size=10, offset=0
         )  # Should return a list of Palette objects
