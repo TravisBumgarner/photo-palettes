@@ -1,7 +1,6 @@
 {
   "editor.formatOnSave": true,
-  "editor.defaultFormatter": "esbenp.prettier-vscode",
-  "python.defaultInterpreterPath": "venv-image-worker/bin/python",
+  "python.analysis.extraPaths": ["../common"],
   "[python]": {
     "editor.defaultFormatter": "charliermarsh.ruff",
     "editor.formatOnSave": true,

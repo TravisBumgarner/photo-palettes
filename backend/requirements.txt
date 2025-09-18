@@ -13,7 +13,6 @@ charset-normalizer==3.4.1
 click==8.1.8
 cloudinary==1.44.0
 colormath==3.0.0
--e git+ssh://git@github.com/TravisBumgarner/photo-palettes.git@785bc674b9c67050cef4b7a9cc6cdf5ec89255c2#egg=common&subdirectory=common
 cryptography==45.0.7
 decorator==4.4.2
 deprecation==2.1.0

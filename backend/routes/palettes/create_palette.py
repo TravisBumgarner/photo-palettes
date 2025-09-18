@@ -2,7 +2,7 @@ import json
 import uuid
 from io import BytesIO
 
-from common.models import Palette, PaletteColor, PermissionLevel
+from common.models import ImageWorkerActionEnum, Palette, PaletteColor, PermissionLevel
 from fastapi import Form, UploadFile
 from PIL import Image
 from pydantic import BaseModel, field_validator
@@ -10,6 +10,7 @@ from pydantic import BaseModel, field_validator
 from algorithms.og import generate_og_image
 from algorithms.utils import scale_image
 from consts import ErrorMsg
+from database.queries.image_worker import insert_image_worker
 from database.queries.palettes import create_palette
 from middleware.auth import RequestWithAuthState
 from routes.shared import (
@@ -105,6 +106,8 @@ def handle_request(
     )
 
     create_palette(new_palette)
+
+    insert_image_worker(palette_id=palette_id, action_type=ImageWorkerActionEnum.GENERATE_OG)
 
     send_pushover_notification(f"New palette submitted: {name}")
     return SuccessResponse(

@@ -17,6 +17,24 @@ services:
       db:
         condition: service_healthy
 
+  image-worker:
+    build:
+      context: ./image-worker
+      dockerfile: Dockerfile
+    env_file:
+      - ./image-worker/.env
+    volumes:
+      - ./image-worker:/app     # << mount code here
+      - ./common:/common
+    environment:
+      - PYTHONPATH=/app:/common
+    depends_on:
+      db:
+        condition: service_healthy
+    command: watchfiles --filter python "python -u main.py"
+
+
+
   frontend:
     build:
       context: ./frontend
