@@ -1,7 +1,7 @@
+import * as Sentry from '@sentry/node'
 import express from 'express'
 import path from 'path'
 import { fileURLToPath } from 'url'
-import * as Sentry from '@sentry/node'
 
 Sentry.init({
   dsn: 'https://09e385e8da03f5dbbdbf102e7ae6b53a@o196886.ingest.us.sentry.io/4509889456766977',
