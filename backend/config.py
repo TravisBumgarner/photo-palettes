@@ -34,7 +34,7 @@ class InstagramSettings(BaseServiceSettings):
 
 
 class Config(BaseSettings):
-    environment: str = Field(default="development")
+    environment: str = Field(default="development", alias="ENVIRONMENT")
 
     @property
     def is_production(self) -> bool:
