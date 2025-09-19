@@ -67,6 +67,7 @@ def update_image_worker_status(worker_id: uuid.UUID, status: ImageWorkerStatusEn
         if not worker:
             return False
         worker.status = status
+        worker.processed_at = func.now()
         session.commit()
         return True
 

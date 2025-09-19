@@ -33,12 +33,59 @@ echo "Installing dependencies..."
 source .venv-backend/bin/activate
 pip install -r requirements.txt
 deactivate
+cd ..
 
 echo "######################### Setting up frontend #########################"
 
 echo "Installing dependencies..."
-cd ../frontend && npm install
-# make set-ip I don't think this is needed anymore
+cd frontend && npm install
+cd ..
+
+echo "######################### Setting up Common #########################"
+
+cd common
+
+if [ ! -d ".venv-common" ]; then
+    echo "Creating common venv..."
+    python3 -m venv .venv-common
+fi
+
+echo "Installing dependencies..."
+source .venv-common/bin/activate
+pip install -r requirements.txt
+deactivate
+cd ..
+
+echo "######################### Setting up Database #########################"
+
+cd common
+
+if [ ! -d ".venv-database" ]; then
+    echo "Creating database venv..."
+    python3 -m venv .venv-database
+fi
+
+echo "Installing dependencies..."
+source .venv-database/bin/activate
+pip install -r requirements.txt
+deactivate
+cd ..
+
+echo "######################### Setting up image-worker #########################"
+
+cd common
+
+if [ ! -d ".venv-image-worker" ]; then
+    echo "Creating image-worker venv..."
+    python3 -m venv .venv-image-worker
+fi
+
+echo "Installing dependencies..."
+source .venv-image-worker/bin/activate
+pip install -r requirements.txt
+deactivate
+cd ..
+
 
 echo "######################### Manual Setup #########################"
 

@@ -27,6 +27,7 @@ services:
     volumes:
       - ./image-worker:/app     # << mount code here
       - ./common:/common
+      - ./uploads:/app/uploads   # shared
     environment:
       - PYTHONPATH=/app:/common
     depends_on:

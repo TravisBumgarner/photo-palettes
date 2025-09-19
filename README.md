@@ -64,7 +64,7 @@ Unsure if this is the best route but I believe it works if Docker gets mad about
 1. `docker compose exec frontend sh`
 1. `npm i`
 
-## Backend
+## Database
 
 ### Migrations
 

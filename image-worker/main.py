@@ -28,7 +28,6 @@ config = get_config()
 
 while True:
     obj = get_next_image_worker()
-    print("result", obj)
     if not obj:
         time.sleep(10)  # todo - bump to much higher.
         continue
@@ -58,11 +57,7 @@ while True:
 
     response = requests.get(abs_image_path)
     response.raise_for_status()
-    # image = Image.open(BytesIO(response.content))
-    # buf = BytesIO()
-    # image.save(buf, format="WEBP")
-    # buf.seek(0)
-    # image_bytes = buf.read()
+
     photo = Image.open(BytesIO(response.content)).convert("RGB")
 
     match obj.action_type:
@@ -76,7 +71,7 @@ while True:
                 basename=f"{palette.id!s}_og",
                 extension="webp",
             )
-            pass
+            update_image_worker_status(obj.id, ImageWorkerStatusEnum.COMPLETED)
 
         case ImageWorkerActionEnum.POST_TO_BSKY:
             pass
