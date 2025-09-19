@@ -18,7 +18,8 @@ mkdir $DEPLOY_DIR
 cp -r $BACKEND_DIR/* $DEPLOY_DIR/
 
 # Copy common into deploy dir
-cp -r $COMMON_DIR $DEPLOY_DIR/$COMMON_DIR
+mkdir -p $DEPLOY_DIR/common
+cp -r $COMMON_DIR/common/* $DEPLOY_DIR/common/
 
 # Rewrite requirements.txt so common is local instead of git
 sed 's|^-e git+.*subdirectory=common.*$|-e ./common|' \

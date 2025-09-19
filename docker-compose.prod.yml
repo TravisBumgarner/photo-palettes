@@ -1,4 +1,5 @@
 services:
   backend:
     env_file:
-      - ./backend/.env.prod
+      - ./database/.env.prod
+c

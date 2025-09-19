@@ -19,11 +19,11 @@ development-downgrade:
 production-migrate:
 	@read -p "Are you sure you want to run this on production? (y/n): " confirm; \
 	if [ "$$confirm" = "y" ]; then \
-		heroku run alembic upgrade head --app $(APP); \
+		set -a && source .env.prod && set +a && \
+		PYTHONPATH=./backend:./common alembic upgrade head; \
 	else \
 		echo "Migration cancelled"; \
 	fi
-
 production-downgrade:
 	@read -p "Are you sure you want to downgrade production? (y/n): " confirm; \
 	if [ "$$confirm" = "y" ]; then \

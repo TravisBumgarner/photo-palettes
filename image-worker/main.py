@@ -4,6 +4,7 @@ from io import BytesIO
 import requests
 import sentry_sdk
 from common.models import ImageWorkerActionEnum, ImageWorkerStatusEnum
+from common.services.cloudinary import init_cloudinary
 from common.utils.photos import get_photo_path, save_photo
 from PIL import Image
 
@@ -25,6 +26,8 @@ sentry_sdk.init(
 )
 
 config = get_config()
+
+init_cloudinary(config.cloudinary.url)
 
 while True:
     obj = get_next_image_worker()

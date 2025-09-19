@@ -18,7 +18,8 @@ mkdir $DEPLOY_DIR
 cp -r $IMAGE_WORKER_DIR/* $DEPLOY_DIR/
 
 # Copy common into deploy dir
-cp -r $COMMON_DIR $DEPLOY_DIR/$COMMON_DIR
+mkdir -p $DEPLOY_DIR/common
+cp -r $COMMON_DIR/common/* $DEPLOY_DIR/common/
 
 # Rewrite requirements.txt so common is local instead of git
 sed 's|^-e git+.*subdirectory=common.*$|-e ./common|' \
@@ -37,8 +38,6 @@ git commit -m "Deploy image worker"
 git push -f heroku main
 cd ..
 rm -rf $DEPLOY_DIR
-
-heroku open --app photo-palettes-image-worker
 
 echo "Do you need to deploy migrations?"
 echo "Do you need to deploy migrations?"

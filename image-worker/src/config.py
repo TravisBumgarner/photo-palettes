@@ -21,10 +21,17 @@ class InstagramSettings(BaseServiceSettings):
     password: str = Field(default="")
 
 
+class CloudinarySettings(BaseServiceSettings):
+    model_config = SettingsConfigDict(env_prefix="CLOUDINARY_")
+    url: str = Field(default="")
+
+
 class Config(BaseSettings):
     environment: str = Field(default="development", alias="ENVIRONMENT")
     bsky: BskySettings = Field(default_factory=lambda: BskySettings())
     instagram: InstagramSettings = Field(default_factory=lambda: InstagramSettings())
+    debug_cloudinary_locally: bool = Field(default=False)
+    cloudinary: CloudinarySettings = Field(default_factory=lambda: CloudinarySettings())
 
     @property
     def is_production(self) -> bool:
