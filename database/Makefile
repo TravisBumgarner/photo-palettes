@@ -6,7 +6,7 @@ help:
 	@echo "  make production-migrate    - Run migrations on Heroku"
 	@echo "  make production-downgrade  - Downgrade one step on Heroku"
 
-make-migration:
+migration:
 	@read -p "Enter migration message: " msg; \
 	alembic revision --autogenerate -m "$$msg"
 

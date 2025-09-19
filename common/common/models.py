@@ -189,6 +189,8 @@ class ServiceSession(Base):
 
 class ImageWorkerActionEnum(str, Enum):
     GENERATE_OG = "generate_og"
+    POST_TO_INSTAGRAM = "post_to_instagram"
+    POST_TO_BSKY = "post_to_bsky"
 
 
 class ImageWorkerStatusEnum(str, Enum):
@@ -211,3 +213,4 @@ class ImageWorker(Base):
     )
     created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.now)
     processed_at: Mapped[datetime | None] = mapped_column(DateTime, nullable=True)
+    json_data: Mapped[dict | None] = mapped_column(JSON, nullable=True)

@@ -1,6 +1,7 @@
 import uuid
 
 from common.models import PermissionLevel
+from common.utils.photos import delete_photo
 
 from consts import ErrorMsg
 from database.queries.palettes import delete_palette_by_id, get_palette_by_id
@@ -10,7 +11,6 @@ from routes.shared import (
     BaseSuccessResponse,
 )
 from services.logger import log_error
-from utils.photos import delete_photo
 
 from .palettes_router import palettes_router
 

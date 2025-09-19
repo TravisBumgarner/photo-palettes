@@ -1,12 +1,87 @@
 import time
+from io import BytesIO
 
-from queries import get_next_image_worker
+import requests
+import sentry_sdk
+from common.models import ImageWorkerActionEnum, ImageWorkerStatusEnum
+from common.utils.photos import get_photo_path, save_photo
+from PIL import Image
+
+from src.bsky import init_bsky_client
+from src.config import get_config
+from src.logger import log_error
+from src.og import generate_og_image
+from src.queries import get_next_image_worker, get_palette_by_id, update_image_worker_status
 
 print("Starting image-worker...")
+init_bsky_client()
 
+# Todo - disable in prod
+sentry_sdk.init(
+    dsn="https://49e9a542e6aab66deac28daccfb162f5@o196886.ingest.us.sentry.io/4510043657207808",
+    # Add data like request headers and IP for users,
+    # see https://docs.sentry.io/platforms/python/data-management/data-collected/ for more info
+    send_default_pii=True,
+)
+
+config = get_config()
 
 while True:
     obj = get_next_image_worker()
-    print(f"Worker ready to process: {obj}")
+    print("result", obj)
+    if not obj:
+        time.sleep(10)  # todo - bump to much higher.
+        continue
+
+    palette = get_palette_by_id(obj.palette_id)
+    if not palette:
+        log_error(
+            Exception("Palette not found"),
+            "image_worker_palette_not_found",
+            sub_name=str(obj.palette_id),
+        )
+        update_image_worker_status(obj.id, ImageWorkerStatusEnum.FAILED)
+        time.sleep(10)
+        continue
+
+    print(f"Worker ready to process: {obj.id} for palette {palette.id}")
+
+    abs_image_path = get_photo_path(palette.photo_details)
+
+    if not config.is_production:
+        # I'm not sure why this is needed.
+        # I copied the code for backfilling OG images and that works just fine.
+        # However, if I use the abs_image_path above in development, the server gets
+        # stuck in an infinite loop requesting itself while in the middle of a request.
+        # Since this is only development, I'm hardcoding an image URL that I know works.
+        abs_image_path = "https://res.cloudinary.com/hqjbxtyku/image/upload/f_auto,q_auto/359f027f-3ac4-4909-8662-b03027b11e60"
+
+    response = requests.get(abs_image_path)
+    response.raise_for_status()
+    # image = Image.open(BytesIO(response.content))
+    # buf = BytesIO()
+    # image.save(buf, format="WEBP")
+    # buf.seek(0)
+    # image_bytes = buf.read()
+    photo = Image.open(BytesIO(response.content)).convert("RGB")
+
+    match obj.action_type:
+        case ImageWorkerActionEnum.GENERATE_OG:
+            hex_colors = [color.hex for color in palette.colors]
+            og_image = generate_og_image(photo, hex_colors)
+            og_photo_details = save_photo(
+                is_production=config.is_production,
+                debug_cloudinary_locally=False,
+                photo=og_image.getvalue(),
+                basename=f"{palette.id!s}_og",
+                extension="webp",
+            )
+            pass
+
+        case ImageWorkerActionEnum.POST_TO_BSKY:
+            pass
+
+        case ImageWorkerActionEnum.POST_TO_INSTAGRAM:
+            pass
 
     time.sleep(10)

@@ -1,13 +1,10 @@
 import os
 
-from config import get_config
-from services.cloudinary import (
+from common.services.cloudinary import (
     delete_image_from_cloudinary,
     get_image_from_cloudinary,
     save_image_to_cloudinary,
 )
-
-config = get_config()
 
 DEVELOPMENT_UPLOADS_DIR = "uploads"
 DEVELOPMENT_UPLOADS_PREFIX = f"/{DEVELOPMENT_UPLOADS_DIR}"
@@ -20,8 +17,14 @@ def get_development_uploads_dir():
     )
 
 
-def save_photo(photo: bytes, basename: str, extension: str) -> str:
-    if config.is_production or config.debug_cloudinary_locally:
+def save_photo(
+    is_production: bool,
+    debug_cloudinary_locally: bool,
+    photo: bytes,
+    basename: str,
+    extension: str,
+) -> str:
+    if is_production or debug_cloudinary_locally:
         result = save_image_to_cloudinary(photo, basename)
         return f"{PRODUCTION_UPLOADS_PREFIX}{result}"
     else:

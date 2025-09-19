@@ -2,12 +2,6 @@ import cloudinary
 import cloudinary.uploader
 from cloudinary.utils import cloudinary_url
 
-from config import get_config
-
-config = get_config()
-
-# Configuration
-
 
 def parse_cloudinary_url(cloudinary_url: str) -> dict[str, str]:
     # cloudinary_url is in the format of cloudinary://<API_KEY>:<API_SECRET>@<CLOUD_NAME>
@@ -24,10 +18,11 @@ def parse_cloudinary_url(cloudinary_url: str) -> dict[str, str]:
     }
 
 
-cloudinary.config(
-    **parse_cloudinary_url(config.cloudinary_url),
-    secure=True,
-)
+def init_cloudinary(cloudinary_url: str):
+    cloudinary.config(
+        **parse_cloudinary_url(cloudinary_url),
+        secure=True,
+    )
 
 
 def save_image_to_cloudinary(image_bytes: bytes, public_id: str) -> str:

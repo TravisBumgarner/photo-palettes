@@ -1,8 +1,8 @@
-"""worker-table
+"""add_worker_table
 
-Revision ID: 4ff7d28c1ed6
+Revision ID: cd7f388ebe1d
 Revises: 435cd9019f86
-Create Date: 2025-09-18 17:24:47.477676
+Create Date: 2025-09-18 19:51:41.159098
 
 """
 from typing import Sequence, Union
@@ -12,7 +12,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision: str = '4ff7d28c1ed6'
+revision: str = 'cd7f388ebe1d'
 down_revision: Union[str, None] = '435cd9019f86'
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
@@ -28,6 +28,7 @@ def upgrade() -> None:
     sa.Column('status', sa.String(), nullable=False),
     sa.Column('created_at', sa.DateTime(), nullable=False),
     sa.Column('processed_at', sa.DateTime(), nullable=True),
+    sa.Column('json_data', sa.JSON(), nullable=True),
     sa.ForeignKeyConstraint(['palette_id'], ['palettes.id'], ondelete='SET NULL'),
     sa.PrimaryKeyConstraint('id')
     )

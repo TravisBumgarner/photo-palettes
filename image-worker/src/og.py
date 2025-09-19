@@ -116,3 +116,5 @@ def generate_og_image(image_to_draw: Image.Image, colors: list[str]):
     webp_bytes.seek(0)
 
     return webp_bytes
+
+

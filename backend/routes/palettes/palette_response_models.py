@@ -2,9 +2,8 @@ from datetime import datetime
 from uuid import UUID
 
 from common.models import Palette
+from common.utils.photos import get_photo_path
 from pydantic import BaseModel
-
-from utils.photos import get_photo_path
 
 
 class PaletteColorResponse(BaseModel):

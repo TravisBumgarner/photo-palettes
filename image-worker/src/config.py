@@ -2,11 +2,29 @@ import sys
 from functools import lru_cache
 
 from pydantic import Field, ValidationError, field_validator
-from pydantic_settings import BaseSettings
+from pydantic_settings import BaseSettings, SettingsConfigDict
+
+
+class BaseServiceSettings(BaseSettings):
+    model_config = SettingsConfigDict(env_file=".env", extra="ignore")
+
+
+class BskySettings(BaseServiceSettings):
+    model_config = SettingsConfigDict(env_prefix="BSKY_")
+    email: str = Field(default="")
+    password: str = Field(default="")
+
+
+class InstagramSettings(BaseServiceSettings):
+    model_config = SettingsConfigDict(env_prefix="INSTAGRAM_")
+    username: str = Field(default="")
+    password: str = Field(default="")
 
 
 class Config(BaseSettings):
     environment: str = Field(default="development", alias="ENVIRONMENT")
+    bsky: BskySettings = Field(default_factory=lambda: BskySettings())
+    instagram: InstagramSettings = Field(default_factory=lambda: InstagramSettings())
 
     @property
     def is_production(self) -> bool:

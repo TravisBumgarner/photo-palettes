@@ -4,16 +4,17 @@ from io import BytesIO
 from pathlib import Path
 
 import requests
+from common.utils.photos import get_photo_path
 from instagrapi import Client
 from PIL import Image, ImageDraw, ImageFont
 
-from config import get_config
-from database.queries.service_sessions import (
+from src.config import get_config
+
+from .queries import (
     delete_service_session,
     get_service_session,
     set_service_session,
 )
-from utils.photos import get_photo_path
 
 TARGET_WIDTH = 1600
 TARGET_HEIGHT = 1600

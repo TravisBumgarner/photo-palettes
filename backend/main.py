@@ -20,7 +20,6 @@ from routes.feature_requests.feature_requests_router import feature_requests_rou
 from routes.ok import router as ok_router
 from routes.palettes.palettes_router import palettes_router
 from routes.users.users_router import users_router
-from services.bsky import init_bsky_client
 
 config = get_config()
 
@@ -47,11 +46,6 @@ uploads_dir = os.path.join(os.path.dirname(__file__), "uploads")
 
 os.makedirs(uploads_dir, exist_ok=True)
 app.mount("/uploads", StaticFiles(directory=uploads_dir), name="uploads")
-
-
-@app.on_event("startup")
-def startup_event():
-    init_bsky_client()
 
 
 @asynccontextmanager
