@@ -11,6 +11,7 @@ services:
       - ./backend:/app
       - ./backend/uploads:/app/uploads
       - ./common:/common
+
     environment:
       - PYTHONPATH=/app:/common
     depends_on:

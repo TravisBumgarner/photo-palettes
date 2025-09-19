@@ -18,6 +18,9 @@ COPY . .
 # # Install any new packages that might have been added
 # RUN pip install --no-cache-dir -r requirements.txt
 
+# uploads folder persists inside container
+RUN mkdir -p /app/uploads
+
 EXPOSE 8000
 
 CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000", "--reload", "--log-level", "debug"]
