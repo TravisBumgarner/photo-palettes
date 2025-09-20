@@ -38,5 +38,3 @@ git commit -m "Deploy image worker"
 git push -f heroku main
 cd ..
 rm -rf $DEPLOY_DIR
-
-heroku logs --app photo-palettes-image-worker 
