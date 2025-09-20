@@ -2,4 +2,3 @@ services:
   backend:
     env_file:
       - ./database/.env.prod
-c
