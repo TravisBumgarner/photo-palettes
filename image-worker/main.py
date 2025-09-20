@@ -20,25 +20,29 @@ from src.queries import (
     update_image_worker_status,
 )
 
-print("Starting image-worker...")
-init_bsky_client()
-
-# Todo - disable in prod
-sentry_sdk.init(
-    dsn="https://49e9a542e6aab66deac28daccfb162f5@o196886.ingest.us.sentry.io/4510043657207808",
-    # Add data like request headers and IP for users,
-    # see https://docs.sentry.io/platforms/python/data-management/data-collected/ for more info
-    send_default_pii=True,
-)
+print("Starting image-worker...")  # noqa T201
 
 config = get_config()
 
+if config.is_production:
+    SLEEP = 60
+    sentry_sdk.init(
+        dsn="https://49e9a542e6aab66deac28daccfb162f5@o196886.ingest.us.sentry.io/4510043657207808",
+        # Add data like request headers and IP for users,
+        # see https://docs.sentry.io/platforms/python/data-management/data-collected/ for more info
+        send_default_pii=True,
+    )
+else:
+    SLEEP = 10
+
+
+init_bsky_client()
 init_cloudinary(config.cloudinary.url)
 
 while True:
     obj = get_next_image_worker()
     if not obj:
-        time.sleep(10)  # todo - bump to much higher.
+        time.sleep(SLEEP)
         continue
 
     palette = get_palette_by_id(obj.palette_id)
@@ -49,7 +53,6 @@ while True:
             sub_name=str(obj.palette_id),
         )
         update_image_worker_status(obj.id, ImageWorkerStatusEnum.FAILED)
-        time.sleep(10)
         continue
 
     print(f"Worker ready to process: {obj.id} for palette {palette.id}")
@@ -94,5 +97,3 @@ while True:
 
         case ImageWorkerActionEnum.POST_TO_INSTAGRAM:
             pass
-
-    time.sleep(10)
