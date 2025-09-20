@@ -1,10 +1,12 @@
 import uuid
 
 from common.models import ModerationStatus, PermissionLevel
+from common.queries.palettes import PaletteUpdate, update_palette
 from pydantic import BaseModel
 
 from consts import ErrorMsg
-from database.queries.palettes import PaletteUpdate, get_palette_by_id, update_palette
+from database import db_engine
+from database.queries.palettes import get_palette_by_id
 from middleware.auth import RequestWithAuthState
 from routes.shared import (
     BaseErrorResponse,
@@ -26,7 +28,7 @@ ROUTE_NAME = "moderate_palette"
 
 def handle_request(palette_id: uuid.UUID, status: ModerationStatus, share_to_socials: bool):
     palette_update = PaletteUpdate(moderation_status=status)
-    update_palette(palette_id, palette_update)
+    update_palette(db_engine=db_engine, palette_id=palette_id, update=palette_update)
 
     if status == ModerationStatus.APPROVED and share_to_socials:
         palette = get_palette_by_id(palette_id)

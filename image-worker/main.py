@@ -4,6 +4,7 @@ from io import BytesIO
 import requests
 import sentry_sdk
 from common.models import ImageWorkerActionEnum, ImageWorkerStatusEnum
+from common.queries.palettes import PaletteUpdate, update_palette
 from common.services.cloudinary import init_cloudinary
 from common.utils.photos import get_photo_path, save_photo
 from PIL import Image
@@ -12,7 +13,12 @@ from src.bsky import init_bsky_client
 from src.config import get_config
 from src.logger import log_error
 from src.og import generate_og_image
-from src.queries import get_next_image_worker, get_palette_by_id, update_image_worker_status
+from src.queries import (
+    db_engine,
+    get_next_image_worker,
+    get_palette_by_id,
+    update_image_worker_status,
+)
 
 print("Starting image-worker...")
 init_bsky_client()
@@ -74,6 +80,13 @@ while True:
                 basename=f"{palette.id!s}_og",
                 extension="webp",
             )
+
+            update_palette(
+                db_engine=db_engine,
+                palette_id=palette.id,
+                update=PaletteUpdate(og_photo_details=og_photo_details),
+            )
+
             update_image_worker_status(obj.id, ImageWorkerStatusEnum.COMPLETED)
 
         case ImageWorkerActionEnum.POST_TO_BSKY:

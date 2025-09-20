@@ -1,8 +1,8 @@
 from common.models import ImageWorkerActionEnum, ModerationStatus, PermissionLevel
+from database.queries.palettes import get_palettes
 
 from consts import ErrorMsg
 from database.queries.image_worker import insert_image_worker
-from database.queries.palettes import get_palettes
 from middleware.auth import RequestWithAuthState
 from routes.shared import (
     BaseErrorResponse,

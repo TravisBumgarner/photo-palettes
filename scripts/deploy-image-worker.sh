@@ -39,6 +39,4 @@ git push -f heroku main
 cd ..
 rm -rf $DEPLOY_DIR
 
-echo "Do you need to deploy migrations?"
-echo "Do you need to deploy migrations?"
-echo "Do you need to deploy migrations?"
+heroku logs --app photo-palettes-image-worker 
