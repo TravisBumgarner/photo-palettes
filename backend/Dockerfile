@@ -19,7 +19,7 @@ COPY . .
 # RUN pip install --no-cache-dir -r requirements.txt
 
 # uploads folder persists inside container
-RUN mkdir -p /app/uploads
+# RUN mkdir -p /app/uploads
 
 EXPOSE 8000
 
