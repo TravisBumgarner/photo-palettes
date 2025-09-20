@@ -58,7 +58,7 @@ cd ..
 
 echo "######################### Setting up Database #########################"
 
-cd common
+cd database
 
 if [ ! -d ".venv-database" ]; then
     echo "Creating database venv..."
@@ -73,7 +73,7 @@ cd ..
 
 echo "######################### Setting up image-worker #########################"
 
-cd common
+cd image-worker
 
 if [ ! -d ".venv-image-worker" ]; then
     echo "Creating image-worker venv..."
@@ -92,5 +92,5 @@ echo "######################### Manual Setup #########################"
 echo "1. Configure backend/.env and backend/.env.prod with values from Heroku"
 echo "2. Configure backend/tests/.env with values from ProtonPass"
 echo "3. Run 'make up' to start the services."
-echo "4. Run database migrations cd backend && make development-migrate"
+echo "4. Run database migrations cd database && make development-migrate"
 echo "5. Login with both test users so their credentials get populated, set the moderator flag in the database."
