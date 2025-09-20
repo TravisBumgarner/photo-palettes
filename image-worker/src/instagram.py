@@ -4,17 +4,17 @@ from io import BytesIO
 from pathlib import Path
 
 import requests
-from common.utils.photos import get_photo_path
-from instagrapi import Client
-from PIL import Image, ImageDraw, ImageFont
-
-from src.config import get_config
-
-from .queries import (
+from common.queries.service_session import (
     delete_service_session,
     get_service_session,
     set_service_session,
 )
+from common.utils.photos import get_photo_path
+from instagrapi import Client
+from PIL import Image, ImageDraw, ImageFont
+
+from engine import db_engine
+from src.config import get_config
 
 TARGET_WIDTH = 1600
 TARGET_HEIGHT = 1600
@@ -144,7 +144,7 @@ def post_to_instagram(photo_path: str, colors: list[str], description: str) -> b
     cl = Client()
 
     # Try loading existing session
-    session_json = get_service_session(service_name)
+    session_json = get_service_session(db_engine, service_name)
     if session_json:
         cl.set_settings(session_json)
         try:
@@ -152,13 +152,13 @@ def post_to_instagram(photo_path: str, colors: list[str], description: str) -> b
         except Exception:
             # Session expired -> reset and re-login
             cl.set_settings({})
-            delete_service_session(service_name)
+            delete_service_session(db_engine, service_name)
     else:
         # No valid session, so login fresh
         cl.login(config.instagram.username, config.instagram.password)
 
     # Save latest session back to DB
-    set_service_session(service_name, cl.get_settings())
+    set_service_session(db_engine, service_name, cl.get_settings())
 
     abs_image_path = get_photo_path(photo_path)
 

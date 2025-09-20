@@ -4,21 +4,20 @@ from io import BytesIO
 import requests
 import sentry_sdk
 from common.models import ImageWorkerActionEnum, ImageWorkerStatusEnum
-from common.queries.palettes import PaletteUpdate, update_palette
+from common.queries.palettes import PaletteUpdate, get_palette_by_id, update_palette
+from common.queries.worker import (
+    get_next_image_worker,
+    update_image_worker_status,
+)
 from common.services.cloudinary import init_cloudinary
 from common.utils.photos import get_photo_path, save_photo
 from PIL import Image
 
 from src.bsky import init_bsky_client
 from src.config import get_config
+from src.engine import db_engine
 from src.logger import log_error
 from src.og import generate_og_image
-from src.queries import (
-    db_engine,
-    get_next_image_worker,
-    get_palette_by_id,
-    update_image_worker_status,
-)
 
 print("Starting image-worker...")  # noqa T201
 
@@ -40,19 +39,21 @@ init_bsky_client()
 init_cloudinary(config.cloudinary.url)
 
 while True:
-    obj = get_next_image_worker()
+    obj = get_next_image_worker(db_engine=db_engine)
     if not obj:
         time.sleep(SLEEP)
         continue
 
-    palette = get_palette_by_id(obj.palette_id)
+    palette = get_palette_by_id(db_engine=db_engine, palette_id=obj.palette_id)
     if not palette:
         log_error(
             Exception("Palette not found"),
             "image_worker_palette_not_found",
             sub_name=str(obj.palette_id),
         )
-        update_image_worker_status(obj.id, ImageWorkerStatusEnum.FAILED)
+        update_image_worker_status(
+            db_engine=db_engine, worker_id=obj.id, status=ImageWorkerStatusEnum.FAILED
+        )
         continue
 
     print(f"Worker ready to process: {obj.id} for palette {palette.id}")
@@ -90,7 +91,9 @@ while True:
                 update=PaletteUpdate(og_photo_details=og_photo_details),
             )
 
-            update_image_worker_status(obj.id, ImageWorkerStatusEnum.COMPLETED)
+            update_image_worker_status(
+                db_engine=db_engine, worker_id=obj.id, status=ImageWorkerStatusEnum.COMPLETED
+            )
 
         case ImageWorkerActionEnum.POST_TO_BSKY:
             pass
