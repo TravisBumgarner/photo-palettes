@@ -1,10 +1,10 @@
 import uuid
 
+from common.models import ModerationStatus, Palette, PaletteFavorite, SortBy
 from sqlalchemy import func
 from sqlalchemy.orm import Session, joinedload
 
 from database.engine import db_engine
-from database.models import ModerationStatus, Palette, PaletteFavorite, SortBy
 from database.queries.shared import ORDER_BY
 
 

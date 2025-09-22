@@ -1,11 +1,9 @@
 from datetime import datetime
 from uuid import UUID
 
+from common.models import Palette
+from common.utils.photos import get_photo_path
 from pydantic import BaseModel
-
-
-from database.models import Palette
-from utils.photos import get_photo_path
 
 
 class PaletteColorResponse(BaseModel):
@@ -61,5 +59,3 @@ def map_palette_to_response(palette: Palette) -> PaletteResponse:
 
 def map_palette_array_to_response(palettes: list[Palette]) -> list[PaletteResponse]:
     return [map_palette_to_response(palette) for palette in palettes]
-
-

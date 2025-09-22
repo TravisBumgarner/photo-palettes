@@ -1,11 +1,6 @@
-from io import BytesIO
-
-import requests
 from atproto import Client, client_utils
-from PIL import Image
 
-from config import get_config
-from utils.photos import get_photo_path
+from src.config import get_config
 
 bsky_client: Client | None = None
 
@@ -31,28 +26,12 @@ def init_bsky_client() -> None:
 
 
 def post_to_bsky(
-    title: str, colors: str, image_alt, palette_id: str, image_path: str, author_id: str
+    title: str, colors: str, image_alt, palette_id: str, image_bytes: bytes, author_id: str
 ) -> None:
     c = get_bsky_client()
-    abs_image_path = get_photo_path(image_path)
-
-    if not config.is_production:
-        # I'm not sure why this is needed.
-        # I copied the code for backfilling OG images and that works just fine.
-        # However, if I use the abs_image_path above in development, the server gets
-        # stuck in an infinite loop requesting itself while in the middle of a request.
-        # Since this is only development, I'm hardcoding an image URL that I know works.
-        abs_image_path = "https://res.cloudinary.com/hqjbxtyku/image/upload/f_auto,q_auto/359f027f-3ac4-4909-8662-b03027b11e60image.open"
-
-    response = requests.get(abs_image_path)
-    response.raise_for_status()
 
     # Convert image to bytes (e.g., WEBP)
-    image = Image.open(BytesIO(response.content))
-    buf = BytesIO()
-    image.save(buf, format="WEBP")
-    buf.seek(0)
-    image_bytes = buf.read()
+
     text_builder = (
         client_utils.TextBuilder()
         .link(

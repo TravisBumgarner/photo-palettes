@@ -1,12 +1,12 @@
 import uuid
 
+from common.models import PermissionLevel
 from fastapi import Request
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 from supabase import Client
 
 from config import get_config
-from database.models import PermissionLevel
 from database.queries.users import get_or_create_app_user
 from services.logger import log_error
 

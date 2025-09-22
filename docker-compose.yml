@@ -9,12 +9,33 @@ services:
       - ./backend/.env
     volumes:
       - ./backend:/app
-      - ./backend/alembic:/app/alembic
       - ./backend/uploads:/app/uploads
+      - ./common:/common
 
+    environment:
+      - PYTHONPATH=/app:/common
     depends_on:
       db:
         condition: service_healthy
+
+  image-worker:
+    build:
+      context: ./image-worker
+      dockerfile: Dockerfile
+    env_file:
+      - ./image-worker/.env
+    volumes:
+      - ./image-worker:/app     # << mount code here
+      - ./common:/common
+      - ./image-worker/uploads:/app/uploads
+    environment:
+      - PYTHONPATH=/app:/common
+    depends_on:
+      db:
+        condition: service_healthy
+    command: watchfiles --filter python "python -u main.py"
+
+
 
   frontend:
     build:

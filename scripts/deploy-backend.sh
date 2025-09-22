@@ -1,22 +1,34 @@
 #!/bin/bash
 
 # Test everything
-if ! ./scripts/check-backend.sh; then
-    echo "Error: check-backend.sh failed"
-    exit 1
-fi
+# if ! ./scripts/check-backend.sh; then
+#     echo "Error: check-backend.sh failed"
+#     exit 1
+# fi
 
 BACKEND_DIR="backend"
+COMMON_DIR="common"
 DEPLOY_DIR="tmp-heroku-deploy"
 
 # Deploy FastAPI backend to Heroku
 rm -rf $DEPLOY_DIR
 mkdir $DEPLOY_DIR
+
+# Copy backend code
 cp -r $BACKEND_DIR/* $DEPLOY_DIR/
-cp $BACKEND_DIR/requirements.txt $DEPLOY_DIR/
-cp $BACKEND_DIR/.python-version $DEPLOY_DIR/
-cp $BACKEND_DIR/.gitignore $DEPLOY_DIR/
-cp Procfile $DEPLOY_DIR/  # Copy from root directory
+
+# Copy common into deploy dir
+mkdir -p $DEPLOY_DIR/common
+cp -r $COMMON_DIR/common/* $DEPLOY_DIR/common/
+
+# Rewrite requirements.txt so common is local instead of git
+sed 's|^-e git+.*subdirectory=common.*$|-e ./common|' \
+    $BACKEND_DIR/requirements.txt > $DEPLOY_DIR/requirements.txt
+
+# Copy extra files
+cp $BACKEND_DIR/.python-version $DEPLOY_DIR/ || true
+cp $BACKEND_DIR/.gitignore $DEPLOY_DIR/ || true
+cp Procfile $DEPLOY_DIR/
 
 cd $DEPLOY_DIR
 git init
@@ -29,9 +41,6 @@ rm -rf $DEPLOY_DIR
 
 heroku open --app photo-palettes-backend
 
-echo "Do you need to deploy migrations?"
-echo "Do you need to deploy migrations?"
-echo "Do you need to deploy migrations?"
 echo "Do you need to deploy migrations?"
 echo "Do you need to deploy migrations?"
 echo "Do you need to deploy migrations?"

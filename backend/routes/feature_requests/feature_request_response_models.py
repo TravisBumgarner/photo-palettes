@@ -1,8 +1,7 @@
 import uuid
 
+from common.models import FeatureRequest
 from pydantic import BaseModel
-
-from database.models import FeatureRequest
 
 
 class FeatureRequestResponse(BaseModel):

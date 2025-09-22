@@ -2,14 +2,16 @@ import json
 import uuid
 from io import BytesIO
 
+from common.models import ImageWorkerActionEnum, Palette, PaletteColor, PermissionLevel
+from common.utils.photos import save_photo
 from fastapi import Form, UploadFile
 from PIL import Image
 from pydantic import BaseModel, field_validator
 
-from algorithms.og import generate_og_image
 from algorithms.utils import scale_image
+from config import get_config
 from consts import ErrorMsg
-from database.models import Palette, PaletteColor, PermissionLevel
+from database.queries.image_worker import insert_image_worker
 from database.queries.palettes import create_palette
 from middleware.auth import RequestWithAuthState
 from routes.shared import (
@@ -20,7 +22,6 @@ from services.logger import log_error
 from services.pushover import send_pushover_notification
 from utils.blurhash import encode_blurhash
 from utils.colors import hex_to_rgb
-from utils.photos import save_photo
 
 from .palettes_router import palettes_router
 
@@ -28,6 +29,8 @@ ROUTE_NAME = "create_palette"
 
 TUPLE_SIZE = 2
 HEX_LENGTH = 7
+
+config = get_config()
 
 
 class PaletteItem(BaseModel):
@@ -69,14 +72,15 @@ def handle_request(
     buffer = BytesIO()
     pil_image.save(buffer, format="JPEG")
     img_bytes = buffer.getvalue()
-    photo_details = save_photo(img_bytes, str(palette_id), "jpeg")
-
-    hex_colors = [item.color for item in parsed_palette]
-    og_image = generate_og_image(pil_image, hex_colors)
+    photo_details = save_photo(
+        is_production=config.is_production,
+        debug_cloudinary_locally=config.debug_cloudinary_locally,
+        photo=img_bytes,
+        basename=str(palette_id),
+        extension="jpeg",
+    )
 
     blurhash = encode_blurhash(thumbnail)
-
-    og_photo_details = save_photo(og_image.getvalue(), f"{palette_id!s}_og", "webp")
 
     colors = []
     for swatch in parsed_palette:
@@ -98,13 +102,15 @@ def handle_request(
         name=name,
         app_user_id=request.state.app_user_id,
         photo_details=photo_details,
-        og_photo_details=og_photo_details,
+        og_photo_details="",
         blurhash=blurhash,
         aspect_ratio=pil_image.width / pil_image.height,
         colors=colors,
     )
 
     create_palette(new_palette)
+
+    insert_image_worker(palette_id=palette_id, action_type=ImageWorkerActionEnum.GENERATE_OG)
 
     send_pushover_notification(f"New palette submitted: {name}")
     return SuccessResponse(

@@ -1,0 +1,13 @@
+{
+  "editor.formatOnSave": true,
+  "python.analysis.extraPaths": ["../common"],
+  "[python]": {
+    "editor.defaultFormatter": "charliermarsh.ruff",
+    "editor.formatOnSave": true,
+    "editor.codeActionsOnSave": {
+      "source.fixAll": "always",
+      "source.organizeImports": "always"
+    }
+  },
+  "python.analysis.typeCheckingMode": "strict"
+}

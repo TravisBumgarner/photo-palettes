@@ -1,5 +1,4 @@
 from sqlalchemy import create_engine
-from sqlalchemy.orm import DeclarativeBase
 
 from config import get_config
 
@@ -14,7 +13,3 @@ db_engine = create_engine(
     pool_timeout=30,  # seconds to wait before giving up
     pool_recycle=1800,  # recycle connections every 30 min
 )
-
-
-class Base(DeclarativeBase):
-    pass

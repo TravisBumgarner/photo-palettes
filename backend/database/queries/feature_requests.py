@@ -1,9 +1,9 @@
 import uuid
 
+from common.models import FeatureRequest, FeatureRequestVote
 from sqlalchemy.orm import Session, joinedload
 
 from database.engine import db_engine
-from database.models import FeatureRequest, FeatureRequestVote
 
 
 def cast_vote(request_id: uuid.UUID, app_user_id: uuid.UUID) -> bool:

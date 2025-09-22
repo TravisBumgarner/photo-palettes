@@ -1,0 +1,17 @@
+.env.prod
+# Python packaging metadata
+*.egg-info/
+*.egg
+*.dist-info/
+.eggs/
+
+# Virtual environments
+.venv*/
+venv*/
+ENV*/
+
+# Bytecode + caches
+__pycache__/
+*.pyc
+*.pyo
+*.pyd

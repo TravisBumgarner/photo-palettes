@@ -1,7 +1,9 @@
 from uuid import UUID
 
+from common.queries.palettes import get_palette_by_id
+
 from consts import ErrorMsg
-from database.queries.palettes import get_palette_by_id
+from database.engine import db_engine
 from middleware.auth import RequestWithAuthState
 from routes.shared import BaseErrorResponse, BaseSuccessResponse
 from services.logger import log_error
@@ -17,7 +19,7 @@ class SuccessResponse(BaseSuccessResponse):
 
 
 def handle_request(id: str, app_user_id: UUID | None):
-    palette = get_palette_by_id(UUID(id), app_user_id)
+    palette = get_palette_by_id(db_engine=db_engine, palette_id=UUID(id), app_user_id=app_user_id)
     if not palette:
         log_error(RuntimeError(ErrorMsg.RESOURCE_NOT_FOUND), ROUTE_NAME)
         return BaseErrorResponse(message=ErrorMsg.RESOURCE_NOT_FOUND)

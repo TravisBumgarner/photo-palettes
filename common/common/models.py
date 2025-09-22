@@ -14,10 +14,17 @@ from sqlalchemy import (
     exists,
     select,
 )
-from sqlalchemy.orm import Mapped, mapped_column, relationship
+from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
+from sqlalchemy.types import UserDefinedType
 
-from .engine import Base
-from .types import Cube
+
+class Cube(UserDefinedType):
+    def get_col_spec(self, **kw):
+        return "CUBE"
+
+
+class Base(DeclarativeBase):
+    pass
 
 
 class PermissionLevel(IntEnum):
@@ -178,3 +185,32 @@ class ServiceSession(Base):
     created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.now)
     service: Mapped[str] = mapped_column(String, unique=True)  # e.g. "instagram"
     session_json: Mapped[dict] = mapped_column(JSON)
+
+
+class ImageWorkerActionEnum(str, Enum):
+    GENERATE_OG = "generate_og"
+    POST_TO_INSTAGRAM = "post_to_instagram"
+    POST_TO_BSKY = "post_to_bsky"
+
+
+class ImageWorkerStatusEnum(str, Enum):
+    PENDING = "pending"
+    IN_PROGRESS = "in_progress"
+    COMPLETED = "completed"
+    FAILED = "failed"
+
+
+class ImageWorker(Base):
+    __tablename__ = "worker_actions"
+
+    id: Mapped[uuid.UUID] = mapped_column(primary_key=True, default=uuid.uuid4)
+    palette_id: Mapped[uuid.UUID] = mapped_column(
+        ForeignKey("palettes.id", ondelete="SET NULL"), nullable=True
+    )
+    action_type: Mapped[ImageWorkerActionEnum] = mapped_column(String)
+    status: Mapped[ImageWorkerStatusEnum] = mapped_column(
+        String, default=ImageWorkerStatusEnum.PENDING
+    )
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.now)
+    processed_at: Mapped[datetime | None] = mapped_column(DateTime, nullable=True)
+    json_data: Mapped[dict | None] = mapped_column(JSON, nullable=True)

@@ -1,10 +1,11 @@
 import uuid
 
+from common.models import PermissionLevel
+from pydantic import BaseModel
+
 from consts import ErrorMsg
-from database.models import PermissionLevel
 from database.queries.feature_requests import add_feature_request
 from middleware.auth import RequestWithAuthState
-from pydantic import BaseModel
 from routes.shared import (
     BaseErrorResponse,
     BaseSuccessResponse,

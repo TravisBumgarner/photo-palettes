@@ -1,17 +1,16 @@
 import uuid
 
+from common.models import ModerationStatus, PermissionLevel
+from common.queries.palettes import PaletteUpdate, get_palette_by_id, update_palette
 from pydantic import BaseModel
 
 from consts import ErrorMsg
-from database.models import ModerationStatus, PermissionLevel
-from database.queries.palettes import PaletteUpdate, get_palette_by_id, update_palette
+from database.engine import db_engine
 from middleware.auth import RequestWithAuthState
 from routes.shared import (
     BaseErrorResponse,
     BaseSuccessResponse,
 )
-from services.bsky import post_to_bsky
-from services.instagram import post_to_instagram
 from services.logger import log_error
 
 from .palettes_router import palettes_router
@@ -28,33 +27,12 @@ ROUTE_NAME = "moderate_palette"
 
 def handle_request(palette_id: uuid.UUID, status: ModerationStatus, share_to_socials: bool):
     palette_update = PaletteUpdate(moderation_status=status)
-    update_palette(palette_id, palette_update)
+    update_palette(db_engine=db_engine, palette_id=palette_id, update=palette_update)
 
     if status == ModerationStatus.APPROVED and share_to_socials:
-        palette = get_palette_by_id(palette_id)
+        palette = get_palette_by_id(db_engine=db_engine, palette_id=palette_id)
         if not palette:
             raise RuntimeError("Palette not found after update")
-
-        try:
-            post_to_bsky(
-                title=palette.name,
-                colors=" ".join([c.hex for c in palette.colors]),
-                image_path=palette.og_photo_details,
-                image_alt=f"{palette.name} - Colors: {' '.join([c.hex for c in palette.colors])}",
-                author_id=str(palette.app_user_id),
-                palette_id=str(palette.id),
-            )
-        except Exception as e:
-            log_error(e, ROUTE_NAME)
-
-        try:
-            post_to_instagram(
-                photo_path=palette.photo_details,
-                colors=[c.hex for c in palette.colors],
-                description=f"{palette.name} - Colors: {' '.join([c.hex for c in palette.colors])}",
-            )
-        except Exception as e:
-            log_error(e, ROUTE_NAME)
 
     return BaseSuccessResponse()
 

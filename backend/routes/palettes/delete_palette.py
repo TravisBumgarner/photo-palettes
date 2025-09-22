@@ -1,15 +1,18 @@
 import uuid
 
+from common.models import PermissionLevel
+from common.queries.palettes import get_palette_by_id
+from common.utils.photos import delete_photo
+
 from consts import ErrorMsg
-from database.models import PermissionLevel
-from database.queries.palettes import delete_palette_by_id, get_palette_by_id
+from database.engine import db_engine
+from database.queries.palettes import delete_palette_by_id
 from middleware.auth import RequestWithAuthState
 from routes.shared import (
     BaseErrorResponse,
     BaseSuccessResponse,
 )
 from services.logger import log_error
-from utils.photos import delete_photo
 
 from .palettes_router import palettes_router
 
@@ -17,7 +20,9 @@ ROUTE_NAME = "delete_palette"
 
 
 def handle_request(id: str, app_user_id: uuid.UUID):
-    palette = get_palette_by_id(uuid.UUID(id), app_user_id)
+    palette = get_palette_by_id(
+        db_engine=db_engine, palette_id=uuid.UUID(id), app_user_id=app_user_id
+    )
     if not palette:
         return BaseErrorResponse(message=ErrorMsg.RESOURCE_NOT_FOUND)
 
