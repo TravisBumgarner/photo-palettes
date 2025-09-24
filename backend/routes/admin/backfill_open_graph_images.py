@@ -1,8 +1,9 @@
 from common.models import ImageWorkerActionEnum, ModerationStatus, PermissionLevel
-from database.queries.palettes import get_palettes
+from common.queries.worker import insert_image_worker
 
 from consts import ErrorMsg
-from database.queries.image_worker import insert_image_worker
+from database.engine import db_engine
+from database.queries.palettes import get_palettes
 from middleware.auth import RequestWithAuthState
 from routes.shared import (
     BaseErrorResponse,
@@ -22,7 +23,9 @@ def handle_request():
         )  # Should return a list of Palette objects
         for palette in palettes:
             insert_image_worker(
-                palette_id=palette.id, action_type=ImageWorkerActionEnum.GENERATE_OG
+                db_engine=db_engine,
+                palette_id=palette.id,
+                action_type=ImageWorkerActionEnum.GENERATE_OG,
             )
     return BaseSuccessResponse()
 

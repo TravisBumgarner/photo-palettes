@@ -1,10 +1,11 @@
 import { type FC } from 'react'
 
-import ConfirmationModal from './components/ConfirmationModal'
-import AnonPaletteCreationModal from './components/AnonPaletteCreationModal'
 import { useSignals } from '@preact/signals-react/runtime'
-import { MODAL_ID } from './Modal.types'
 import { activeModalSignal } from '../../signals'
+import AnonPaletteCreationModal from './components/AnonPaletteCreationModal'
+import ConfirmationModal from './components/ConfirmationModal'
+import ModeratorSharePostToSocials from './components/ModeratorSharePostToSocials'
+import { MODAL_ID } from './Modal.types'
 
 const RenderModal: FC = () => {
   useSignals()
@@ -16,6 +17,8 @@ const RenderModal: FC = () => {
       return <AnonPaletteCreationModal {...activeModalSignal.value} />
     case MODAL_ID.CONFIRMATION_MODAL:
       return <ConfirmationModal {...activeModalSignal.value} />
+    case MODAL_ID.MODERATOR_SHARE_POST_TO_SOCIALS:
+      return <ModeratorSharePostToSocials {...activeModalSignal.value} />
   }
 }
 

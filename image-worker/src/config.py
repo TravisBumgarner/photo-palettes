@@ -9,8 +9,8 @@ class BaseServiceSettings(BaseSettings):
     model_config = SettingsConfigDict(env_file=".env", extra="ignore")
 
 
-class BskySettings(BaseServiceSettings):
-    model_config = SettingsConfigDict(env_prefix="BSKY_")
+class BlueskySettings(BaseServiceSettings):
+    model_config = SettingsConfigDict(env_prefix="BLUESKY_")
     email: str = Field(default="")
     password: str = Field(default="")
 
@@ -28,7 +28,7 @@ class CloudinarySettings(BaseServiceSettings):
 
 class Config(BaseSettings):
     environment: str = Field(default="development", alias="ENVIRONMENT")
-    bsky: BskySettings = Field(default_factory=lambda: BskySettings())
+    bluesky: BlueskySettings = Field(default_factory=lambda: BlueskySettings())
     instagram: InstagramSettings = Field(default_factory=lambda: InstagramSettings())
     debug_cloudinary_locally: bool = Field(default=False)
     cloudinary: CloudinarySettings = Field(default_factory=lambda: CloudinarySettings())

@@ -1,4 +1,4 @@
-import { moderatePalette } from '../api/moderatePalette'
+import { moderatePalette } from '../api/moderation/moderatePalette'
 
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
@@ -8,12 +8,10 @@ import {
   MODERATION_STATUS,
   PERMISSION_LEVEL,
   type EModerationStatus,
+  type TPalette,
 } from '../types'
 
-import FormControlLabel from '@mui/material/FormControlLabel'
-import FormGroup from '@mui/material/FormGroup'
 import { useTheme } from '@mui/material/styles'
-import Switch from '@mui/material/Switch'
 import { deletePalette } from '../api/palettes/deletePalette'
 import { activeModalSignal } from '../signals'
 import useGlobalStore from '../store'
@@ -23,24 +21,29 @@ import { MODAL_ID } from './Modal/Modal.types'
 const ModerationPanel = ({
   refetch,
   moderationStatus,
-  paletteId,
+  palette,
 }: {
   refetch: () => void
   moderationStatus: EModerationStatus
-  paletteId: string
+  palette: TPalette
 }) => {
   const [isFetching, setIsFetching] = useState(false)
-  const [shareToSocials, setShareToSocials] = useState(false)
   const appUserDetails = useGlobalStore((state) => state.appUserDetails)
   const theme = useTheme()
+
+  const handleShareToSocials = useCallback(() => {
+    activeModalSignal.value = {
+      id: MODAL_ID.MODERATOR_SHARE_POST_TO_SOCIALS,
+      palette,
+    }
+  }, [palette])
 
   const handleApprove = useCallback(async () => {
     setIsFetching(true)
     try {
       const response = await moderatePalette({
-        paletteId,
+        paletteId: palette.id,
         status: MODERATION_STATUS.APPROVED,
-        shareToSocials,
       })
       if (response.success) {
         refetch?.()
@@ -51,13 +54,13 @@ const ModerationPanel = ({
       // This shouldn't matter since refetch will clear it out.
       setIsFetching(false)
     }
-  }, [paletteId, refetch, shareToSocials])
+  }, [palette.id, refetch])
 
   const handleReject = useCallback(async () => {
     setIsFetching(true)
     try {
       const response = await moderatePalette({
-        paletteId,
+        paletteId: palette.id,
         status: MODERATION_STATUS.REJECTED,
       })
       if (response.success) {
@@ -69,18 +72,18 @@ const ModerationPanel = ({
       // This shouldn't matter since refetch will clear it out.
       setIsFetching(false)
     }
-  }, [paletteId, refetch])
+  }, [palette.id, refetch])
 
   const handleDeleteCallback = useCallback(async () => {
     setIsFetching(true)
-    const response = await deletePalette(paletteId)
+    const response = await deletePalette(palette.id)
     if (response.success) {
       alert('Palette deleted successfully') // eslint-disable-line
       activeModalSignal.value = null
     } else {
       alert('Failed to delete palette') // eslint-disable-line
-    } 
-  }, [paletteId, setIsFetching])
+    }
+  }, [palette.id, setIsFetching])
 
   const handleDelete = useCallback(async () => {
     activeModalSignal.value = {
@@ -110,23 +113,19 @@ const ModerationPanel = ({
         padding: SPACING.SMALL.PX,
       }}
     >
-      <FormGroup>
-        <FormControlLabel
-          control={
-            <Switch
-              checked={shareToSocials}
-              onChange={() => setShareToSocials(!shareToSocials)}
-            />
-          }
-          label="Share to socials"
-        />
-      </FormGroup>
       <Button
         variant="outlined"
         disabled={isFetching || moderationStatus === MODERATION_STATUS.APPROVED}
         onClick={handleApprove}
       >
         Approve
+      </Button>
+      <Button
+        variant="outlined"
+        disabled={isFetching || moderationStatus !== MODERATION_STATUS.APPROVED}
+        onClick={handleShareToSocials}
+      >
+        Share to socials
       </Button>
       <Button
         variant="outlined"

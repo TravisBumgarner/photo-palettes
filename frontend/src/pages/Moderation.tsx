@@ -4,17 +4,17 @@ import Tabs from '@mui/material/Tabs'
 import { useQuery } from '@tanstack/react-query'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { getListAsModerator } from '../api/palettes/getPaletteListAsModerator'
+import { PAGINATION_SIZE } from '../consts'
 import { logger } from '../services/logging'
+import Loading from '../sharedComponents/Loading'
+import Message from '../sharedComponents/Message'
+import ModerationPanel from '../sharedComponents/ModerationPanel'
+import Pagination from '../sharedComponents/Pagination'
+import PaletteThumbnail from '../sharedComponents/PaletteThumbnail'
 import PageTitle from '../styles/shared/PageTitle'
 import PageWrapper from '../styles/shared/PageWrapper'
 import ThumbnailGridDisplay from '../styles/shared/ThumbnailGallery'
 import { MODERATION_STATUS, MODERATION_STATUS_LABEL } from '../types'
-import Loading from '../sharedComponents/Loading'
-import Message from '../sharedComponents/Message'
-import ModerationPanel from '../sharedComponents/ModerationPanel'
-import PaletteThumbnail from '../sharedComponents/PaletteThumbnail'
-import { PAGINATION_SIZE } from '../consts'
-import Pagination from '../sharedComponents/Pagination'
 
 const STATUS_TABS = [
   MODERATION_STATUS.AWAITING_MODERATION,
@@ -79,7 +79,7 @@ const Moderation = () => {
               <ModerationPanel
                 refetch={refetch}
                 moderationStatus={STATUS_TABS[filterTabIndex]}
-                paletteId={palette.id}
+                palette={palette}
               />
             </Box>
           ))}

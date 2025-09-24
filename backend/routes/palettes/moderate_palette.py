@@ -1,7 +1,7 @@
 import uuid
 
 from common.models import ModerationStatus, PermissionLevel
-from common.queries.palettes import PaletteUpdate, get_palette_by_id, update_palette
+from common.queries.palettes import PaletteUpdate, update_palette
 from pydantic import BaseModel
 
 from consts import ErrorMsg
@@ -19,20 +19,14 @@ from .palettes_router import palettes_router
 class Body(BaseModel):
     palette_id: uuid.UUID
     status: ModerationStatus
-    share_to_socials: bool = False
 
 
 ROUTE_NAME = "moderate_palette"
 
 
-def handle_request(palette_id: uuid.UUID, status: ModerationStatus, share_to_socials: bool):
+def handle_request(palette_id: uuid.UUID, status: ModerationStatus):
     palette_update = PaletteUpdate(moderation_status=status)
     update_palette(db_engine=db_engine, palette_id=palette_id, update=palette_update)
-
-    if status == ModerationStatus.APPROVED and share_to_socials:
-        palette = get_palette_by_id(db_engine=db_engine, palette_id=palette_id)
-        if not palette:
-            raise RuntimeError("Palette not found after update")
 
     return BaseSuccessResponse()
 
@@ -51,7 +45,7 @@ async def moderate(
         return BaseErrorResponse(message=ErrorMsg.CANNOT_PERFORM_ACTION)
 
     try:
-        return handle_request(body.palette_id, body.status, body.share_to_socials)
+        return handle_request(body.palette_id, body.status)
     except Exception as error:
         log_error(error, ROUTE_NAME)
         return BaseErrorResponse(message=ErrorMsg.SOMETHING_WENT_WRONG)

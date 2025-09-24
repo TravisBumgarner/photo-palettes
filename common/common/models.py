@@ -2,6 +2,7 @@ import uuid
 from datetime import datetime
 from enum import Enum, IntEnum
 
+from pydantic import BaseModel
 from sqlalchemy import (
     ARRAY,
     JSON,
@@ -190,7 +191,7 @@ class ServiceSession(Base):
 class ImageWorkerActionEnum(str, Enum):
     GENERATE_OG = "generate_og"
     POST_TO_INSTAGRAM = "post_to_instagram"
-    POST_TO_BSKY = "post_to_bsky"
+    POST_TO_BLUESKY = "post_to_bluesky"
 
 
 class ImageWorkerStatusEnum(str, Enum):
@@ -198,6 +199,18 @@ class ImageWorkerStatusEnum(str, Enum):
     IN_PROGRESS = "in_progress"
     COMPLETED = "completed"
     FAILED = "failed"
+
+
+class BlueskyPostData(BaseModel):
+    palette_id: uuid.UUID
+    hashtags: list[str] = []
+    caption: str
+
+
+class InstagramPostData(BaseModel):
+    palette_id: uuid.UUID
+    hashtags: list[str] = []
+    caption: str
 
 
 class ImageWorker(Base):
@@ -213,4 +226,6 @@ class ImageWorker(Base):
     )
     created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.now)
     processed_at: Mapped[datetime | None] = mapped_column(DateTime, nullable=True)
-    json_data: Mapped[dict | None] = mapped_column(JSON, nullable=True)
+    json_data: Mapped[InstagramPostData | BlueskyPostData | None] = mapped_column(
+        JSON, nullable=True
+    )

@@ -4,20 +4,22 @@ from io import BytesIO
 import requests
 import sentry_sdk
 from common.models import ImageWorkerActionEnum, ImageWorkerStatusEnum
-from common.queries.palettes import PaletteUpdate, get_palette_by_id, update_palette
+from common.queries.palettes import get_palette_by_id
 from common.queries.worker import (
     get_next_image_worker,
     update_image_worker_status,
 )
 from common.services.cloudinary import init_cloudinary
-from common.utils.photos import get_photo_path, save_photo
+from common.utils.photos import get_photo_path
 from PIL import Image
 
-from src.bsky import init_bsky_client
+from src.bluesky import init_bluesky_client
 from src.config import get_config
 from src.engine import db_engine
+from src.handle_bluesky_post import handle_bluesky_post
+from src.handle_instagram_post import handle_instagram_post
+from src.handle_open_graph_image import handle_open_graph_image
 from src.logger import log_error
-from src.og import generate_og_image
 
 print("Starting image-worker...")  # noqa T201
 
@@ -35,28 +37,28 @@ else:
     SLEEP = 10
 
 
-init_bsky_client()
+init_bluesky_client()
 init_cloudinary(config.cloudinary.url)
 
 while True:
-    obj = get_next_image_worker(db_engine=db_engine)
-    if not obj:
+    task = get_next_image_worker(db_engine=db_engine)
+    if not task:
         time.sleep(SLEEP)
         continue
 
-    palette = get_palette_by_id(db_engine=db_engine, palette_id=obj.palette_id)
+    palette = get_palette_by_id(db_engine=db_engine, palette_id=task.palette_id)
     if not palette:
         log_error(
             Exception("Palette not found"),
             "image_worker_palette_not_found",
-            sub_name=str(obj.palette_id),
+            sub_name=str(task.palette_id),
         )
         update_image_worker_status(
-            db_engine=db_engine, worker_id=obj.id, status=ImageWorkerStatusEnum.FAILED
+            db_engine=db_engine, worker_id=task.id, status=ImageWorkerStatusEnum.FAILED
         )
         continue
 
-    print(f"Worker ready to process: {obj.id} for palette {palette.id}")
+    print(f"Worker ready to process: {task.id} for palette {palette.id}")
 
     abs_image_path = get_photo_path(palette.photo_details)
 
@@ -73,30 +75,12 @@ while True:
 
     photo = Image.open(BytesIO(response.content)).convert("RGB")
 
-    match obj.action_type:
+    match task.action_type:
         case ImageWorkerActionEnum.GENERATE_OG:
-            hex_colors = [color.hex for color in palette.colors]
-            og_image = generate_og_image(photo, hex_colors)
-            og_photo_details = save_photo(
-                is_production=config.is_production,
-                debug_cloudinary_locally=False,
-                photo=og_image.getvalue(),
-                basename=f"{palette.id!s}_og",
-                extension="webp",
-            )
+            handle_open_graph_image(palette, photo, task)
 
-            update_palette(
-                db_engine=db_engine,
-                palette_id=palette.id,
-                update=PaletteUpdate(og_photo_details=og_photo_details),
-            )
-
-            update_image_worker_status(
-                db_engine=db_engine, worker_id=obj.id, status=ImageWorkerStatusEnum.COMPLETED
-            )
-
-        case ImageWorkerActionEnum.POST_TO_BSKY:
-            pass
+        case ImageWorkerActionEnum.POST_TO_BLUESKY:
+            handle_bluesky_post(palette, photo, task)
 
         case ImageWorkerActionEnum.POST_TO_INSTAGRAM:
-            pass
+            handle_instagram_post(palette, photo, task)
