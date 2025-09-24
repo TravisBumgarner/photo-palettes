@@ -101,6 +101,13 @@ type CopyColorDetailEvent = {
   }
 }
 
+type UserOriginEvent = {
+  event: 'user_origin'
+  properties: {
+    source: string
+  }
+}
+
 type Event =
   | CreateButtonClickedEvent
   | CreatePhotoSelectedEvent
@@ -117,6 +124,7 @@ type Event =
   | CreatePaletteCreatedEvent
   | BrowseNavigationEvent
   | CopyColorDetailEvent
+  | UserOriginEvent
 
 export const trackEvent = (event: Event) => {
   const properties = {
