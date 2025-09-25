@@ -4,17 +4,19 @@ from common.queries.worker import (
     update_image_worker_status,
 )
 from common.utils.photos import save_photo
-from PIL import Image
 
 from src.config import get_config
 from src.engine import db_engine
 from src.logger import log_error
 from src.og import generate_og_image
+from src.utilites import photo_path_to_pil_image
 
 config = get_config()
 
 
-def handle_open_graph_image(palette: Palette, photo: Image.Image, task: ImageWorker):
+def handle_open_graph_image(palette: Palette, task: ImageWorker):
+    photo = photo_path_to_pil_image(palette.photo_details)
+
     try:
         hex_colors = [color.hex for color in palette.colors]
         og_image = generate_og_image(photo, hex_colors)

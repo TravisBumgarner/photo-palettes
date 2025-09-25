@@ -1,7 +1,5 @@
 import time
-from io import BytesIO
 
-import requests
 import sentry_sdk
 from common.models import ImageWorkerActionEnum, ImageWorkerStatusEnum
 from common.queries.palettes import get_palette_by_id
@@ -10,8 +8,6 @@ from common.queries.worker import (
     update_image_worker_status,
 )
 from common.services.cloudinary import init_cloudinary
-from common.utils.photos import get_photo_path
-from PIL import Image
 
 from src.bluesky import init_bluesky_client
 from src.config import get_config
@@ -58,29 +54,14 @@ while True:
         )
         continue
 
-    print(f"Worker ready to process: {task.id} for palette {palette.id}")
-
-    abs_image_path = get_photo_path(palette.photo_details)
-
-    if not config.is_production:
-        # I'm not sure why this is needed.
-        # I copied the code for backfilling OG images and that works just fine.
-        # However, if I use the abs_image_path above in development, the server gets
-        # stuck in an infinite loop requesting itself while in the middle of a request.
-        # Since this is only development, I'm hardcoding an image URL that I know works.
-        abs_image_path = "https://res.cloudinary.com/hqjbxtyku/image/upload/f_auto,q_auto/359f027f-3ac4-4909-8662-b03027b11e60"
-
-    response = requests.get(abs_image_path)
-    response.raise_for_status()
-
-    photo = Image.open(BytesIO(response.content)).convert("RGB")
+    print(f"Worker ready to process: {task.id} for palette {palette.id}")  # noqa T201
 
     match task.action_type:
         case ImageWorkerActionEnum.GENERATE_OG:
-            handle_open_graph_image(palette, photo, task)
+            handle_open_graph_image(palette, task)
 
         case ImageWorkerActionEnum.POST_TO_BLUESKY:
-            handle_bluesky_post(palette, photo, task)
+            handle_bluesky_post(palette, task)
 
         case ImageWorkerActionEnum.POST_TO_INSTAGRAM:
-            handle_instagram_post(palette, photo, task)
+            handle_instagram_post(palette, task)

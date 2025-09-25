@@ -4,7 +4,7 @@ import { useSignals } from '@preact/signals-react/runtime'
 import { activeModalSignal } from '../../signals'
 import AnonPaletteCreationModal from './components/AnonPaletteCreationModal'
 import ConfirmationModal from './components/ConfirmationModal'
-import ModeratorSharePostToSocials from './components/ModeratorSharePostToSocials'
+import ModeratorSharePostToSocials from './components/ShareToSocialsModal'
 import { MODAL_ID } from './Modal.types'
 
 const RenderModal: FC = () => {
@@ -17,7 +17,7 @@ const RenderModal: FC = () => {
       return <AnonPaletteCreationModal {...activeModalSignal.value} />
     case MODAL_ID.CONFIRMATION_MODAL:
       return <ConfirmationModal {...activeModalSignal.value} />
-    case MODAL_ID.MODERATOR_SHARE_POST_TO_SOCIALS:
+    case MODAL_ID.SHARE_TO_SOCIALS:
       return <ModeratorSharePostToSocials {...activeModalSignal.value} />
   }
 }

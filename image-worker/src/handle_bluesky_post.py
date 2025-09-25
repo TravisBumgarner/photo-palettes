@@ -1,33 +1,29 @@
 import json
-from io import BytesIO
 
 from common.models import BlueskyPostData, ImageWorker, ImageWorkerStatusEnum, Palette
 from common.queries.worker import (
     update_image_worker_status,
 )
-from PIL import Image
 
 from src.bluesky import post_to_bluesky
 from src.config import get_config
 from src.engine import db_engine
 from src.logger import log_error
+from src.utilites import photo_path_to_bytes
 
 config = get_config()
 
 
-def handle_bluesky_post(palette: Palette, photo: Image.Image, task: ImageWorker):
+def handle_bluesky_post(palette: Palette, task: ImageWorker):
     try:
+        image_bytes = photo_path_to_bytes(palette.og_photo_details)
         hex_colors = " ".join([color.hex for color in palette.colors])
-
-        buf = BytesIO()
-        photo.save(buf, format="WEBP")
-        buf.seek(0)
-        image_bytes = buf.read()
 
         post_data = BlueskyPostData.model_validate_json(json.dumps(task.json_data))
 
         post_to_bluesky(
-            title=post_data.caption,
+            title=palette.name,
+            caption=post_data.caption,
             colors=hex_colors,
             image_alt=post_data.caption,
             image_bytes=image_bytes,

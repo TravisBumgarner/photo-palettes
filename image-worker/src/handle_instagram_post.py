@@ -4,18 +4,19 @@ from common.models import ImageWorker, ImageWorkerStatusEnum, InstagramPostData,
 from common.queries.worker import (
     update_image_worker_status,
 )
-from PIL import Image
 
 from src.config import get_config
 from src.engine import db_engine
 from src.instagram import post_to_instagram
 from src.logger import log_error
+from src.utilites import photo_path_to_pil_image
 
 config = get_config()
 
 
-def handle_instagram_post(palette: Palette, image: Image.Image, task: ImageWorker):
+def handle_instagram_post(palette: Palette, task: ImageWorker):
     try:
+        image = photo_path_to_pil_image(palette.photo_details)
         hex_colors = [color.hex for color in palette.colors]
 
         post_data = InstagramPostData.model_validate_json(json.dumps(task.json_data))

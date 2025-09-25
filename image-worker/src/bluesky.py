@@ -29,6 +29,7 @@ def init_bluesky_client() -> None:
 
 def post_to_bluesky(
     title: str,
+    caption: str,
     colors: str,
     image_alt,
     palette_id: uuid.UUID,
@@ -51,9 +52,15 @@ def post_to_bluesky(
             url=f"https://photopalettes.com/profile/{author_id}",
             text=f"#{str(author_id)[:6]}",
         )
-        .text(f"\n{colors}\n")
-        .text(" ".join([f"#{tag}" for tag in hashtags]))
+        .text(f"\n\nColors: {colors}\n\n")
     )
+
+    if caption:
+        text_builder.text(f"{caption}\n\n")
+
+    for tag in hashtags:
+        text_builder.tag(text=f"#{tag} ", tag=tag)
+
     client.send_image(
         text=text_builder,
         image=image_bytes,  # Pass bytes, not a PIL Image
