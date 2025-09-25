@@ -239,6 +239,7 @@ const ModeratorSharePostToSocials = ({
             />
           </Box>
         </Box>
+        <Typography>{palette.name}</Typography>
         <TextField
           size="small"
           label="Caption (Optional)"

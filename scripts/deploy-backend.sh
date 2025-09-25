@@ -1,10 +1,10 @@
 #!/bin/bash
 
 # Test everything
-# if ! ./scripts/check-backend.sh; then
-#     echo "Error: check-backend.sh failed"
-#     exit 1
-# fi
+if ! ./scripts/check-backend.sh; then
+    echo "Error: check-backend.sh failed"
+    exit 1
+fi
 
 BACKEND_DIR="backend"
 COMMON_DIR="common"

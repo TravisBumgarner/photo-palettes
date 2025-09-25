@@ -107,7 +107,7 @@ const Step = ({
         '&:hover .hoverText': { display: 'initial' },
       }}
     >
-      <Typography
+      <Box
         className="hoverText"
         sx={{
           position: 'relative',
@@ -142,7 +142,7 @@ const Step = ({
             {labelPart}
           </Typography>
         ))}
-      </Typography>
+      </Box>
     </Box>
   )
 }

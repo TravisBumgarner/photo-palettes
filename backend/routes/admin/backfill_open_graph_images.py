@@ -17,16 +17,33 @@ ROUTE_NAME = "/backfill_open_graph_images"
 
 
 def handle_request():
+    # Paginate through all palettes to avoid memory issues with large datasets
+    page_size = 100
+    total_processed = 0
+
     for moderation_status in ModerationStatus:
-        palettes = get_palettes(
-            moderation_status, size=10, offset=0
-        )  # Should return a list of Palette objects
-        for palette in palettes:
-            insert_image_worker(
-                db_engine=db_engine,
-                palette_id=palette.id,
-                action_type=ImageWorkerActionEnum.GENERATE_OG,
-            )
+        offset = 0
+        while True:
+            palettes = get_palettes(moderation_status, size=page_size, offset=offset)
+
+            if not palettes:  # No more palettes for this status
+                break
+
+            for palette in palettes:
+                insert_image_worker(
+                    db_engine=db_engine,
+                    palette_id=palette.id,
+                    action_type=ImageWorkerActionEnum.GENERATE_OG,
+                    json_data=None,
+                )
+                total_processed += 1
+
+            offset += page_size
+
+            # Break if we got fewer results than page_size (last page)
+            if len(palettes) < page_size:
+                break
+
     return BaseSuccessResponse()
 
 

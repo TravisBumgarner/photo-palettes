@@ -1,10 +1,10 @@
 #!/bin/bash
 
 # Test everything
-# if ! ./scripts/check-image-worker.sh; then
-#     echo "Error: check-image-worker.sh failed"
-#     exit 1
-# fi
+if ! ./scripts/check-image-worker.sh; then
+    echo "Error: check-image-worker.sh failed"
+    exit 1
+fi
 
 IMAGE_WORKER_DIR="image-worker"
 COMMON_DIR="common"
