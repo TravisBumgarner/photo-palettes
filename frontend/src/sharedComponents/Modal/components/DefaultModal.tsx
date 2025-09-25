@@ -1,6 +1,7 @@
 import Box from '@mui/material/Box'
 import IconButton from '@mui/material/IconButton'
 import MUIModal from '@mui/material/Modal'
+import type { SxProps } from '@mui/material/styles'
 import { useCallback, type FC } from 'react'
 import { IoMdClose } from 'react-icons/io'
 import { activeModalSignal } from '../../../signals'
@@ -8,9 +9,10 @@ import { BORDER_RADIUS, SPACING, Z_INDICES } from '../../../styles/styleConsts'
 interface ActiveModal {
   children: React.ReactNode | React.ReactNode[]
   closeCallback?: () => void
+  sx?: SxProps
 }
 
-const Modal: FC<ActiveModal> = ({ children, closeCallback }) => {
+const Modal: FC<ActiveModal> = ({ children, closeCallback, sx }) => {
   const handleClose = useCallback(
     (_event: unknown, reason?: string) => {
       if (closeCallback) closeCallback()
@@ -46,6 +48,7 @@ const Modal: FC<ActiveModal> = ({ children, closeCallback }) => {
           color: 'text.primary',
           padding: SPACING.MEDIUM.PX,
           borderRadius: BORDER_RADIUS.ZERO.PX,
+          ...sx,
         }}
       >
         <Box

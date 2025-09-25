@@ -23,11 +23,9 @@ def handle_instagram_post(palette: Palette, task: ImageWorker):
 
         post_to_instagram(
             caption=post_data.caption,
+            title=palette.name,
             colors=hex_colors,
-            image_alt=post_data.caption,
             image=image,
-            author_id=palette.app_user_id,
-            palette_id=palette.id,
             hashtags=post_data.hashtags,
         )
 

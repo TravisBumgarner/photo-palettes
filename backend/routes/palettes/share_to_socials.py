@@ -1,6 +1,12 @@
 import uuid
 
-from common.models import BlueskyPostData, ImageWorkerActionEnum, InstagramPostData, PermissionLevel
+from common.models import (
+    BlueskyPostData,
+    ImageWorkerActionEnum,
+    InstagramPostData,
+    PermissionLevel,
+    TwitterPostData,
+)
 from common.queries.worker import insert_image_worker
 from pydantic import BaseModel
 
@@ -20,8 +26,10 @@ class Body(BaseModel):
     palette_id: uuid.UUID
     share_to_bluesky: bool
     share_to_instagram: bool
+    share_to_twitter: bool
     bluesky_hashtags: list[str] = []
     instagram_hashtags: list[str] = []
+    twitter_hashtags: list[str] = []
     caption: str
 
 
@@ -55,6 +63,20 @@ def handle_request(body: Body):
             palette_id=body.palette_id,
             action_type=ImageWorkerActionEnum.POST_TO_INSTAGRAM,
             json_data=instagram_post_data,
+        )
+
+    if body.share_to_twitter:
+        twitter_post_data = TwitterPostData(
+            palette_id=body.palette_id,
+            hashtags=body.twitter_hashtags,
+            caption=body.caption,
+        )
+
+        insert_image_worker(
+            db_engine=db_engine,
+            palette_id=body.palette_id,
+            action_type=ImageWorkerActionEnum.POST_TO_TWITTER,
+            json_data=twitter_post_data,
         )
 
     return BaseSuccessResponse()

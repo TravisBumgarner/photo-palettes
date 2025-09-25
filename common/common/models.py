@@ -192,6 +192,7 @@ class ImageWorkerActionEnum(str, Enum):
     GENERATE_OG = "generate_og"
     POST_TO_INSTAGRAM = "post_to_instagram"
     POST_TO_BLUESKY = "post_to_bluesky"
+    POST_TO_TWITTER = "post_to_twitter"
 
 
 class ImageWorkerStatusEnum(str, Enum):
@@ -208,6 +209,12 @@ class BlueskyPostData(BaseModel):
 
 
 class InstagramPostData(BaseModel):
+    palette_id: uuid.UUID
+    hashtags: list[str] = []
+    caption: str
+
+
+class TwitterPostData(BaseModel):
     palette_id: uuid.UUID
     hashtags: list[str] = []
     caption: str

@@ -9,6 +9,7 @@ from common.models import (
     ImageWorkerActionEnum,
     ImageWorkerStatusEnum,
     InstagramPostData,
+    TwitterPostData,
 )
 
 
@@ -16,7 +17,7 @@ def insert_image_worker(
     db_engine,
     palette_id: uuid.UUID,
     action_type: ImageWorkerActionEnum,
-    json_data: BlueskyPostData | InstagramPostData | None,
+    json_data: BlueskyPostData | InstagramPostData | TwitterPostData | None,
 ):
     with Session(db_engine) as session:
         worker = ImageWorker(

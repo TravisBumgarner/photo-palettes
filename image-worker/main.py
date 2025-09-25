@@ -15,7 +15,9 @@ from src.engine import db_engine
 from src.handle_bluesky_post import handle_bluesky_post
 from src.handle_instagram_post import handle_instagram_post
 from src.handle_open_graph_image import handle_open_graph_image
+from src.handle_twitter_post import handle_twitter_post
 from src.logger import log_error
+from src.twitter import init_twitter_clients
 
 print("Starting image-worker...")  # noqa T201
 
@@ -34,6 +36,7 @@ else:
 
 
 init_bluesky_client()
+init_twitter_clients()
 init_cloudinary(config.cloudinary.url)
 
 while True:
@@ -65,3 +68,6 @@ while True:
 
         case ImageWorkerActionEnum.POST_TO_INSTAGRAM:
             handle_instagram_post(palette, task)
+
+        case ImageWorkerActionEnum.POST_TO_TWITTER:
+            handle_twitter_post(palette, task)

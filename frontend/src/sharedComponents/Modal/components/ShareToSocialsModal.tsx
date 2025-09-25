@@ -2,6 +2,7 @@ import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import FormControlLabel from '@mui/material/FormControlLabel'
 import FormGroup from '@mui/material/FormGroup'
+import type { SxProps } from '@mui/material/styles'
 import Switch from '@mui/material/Switch'
 import TextField from '@mui/material/TextField'
 import Typography from '@mui/material/Typography'
@@ -47,14 +48,22 @@ const getInstagramHashtags = () => {
   return hashTags.join(' ')
 }
 
+const getTwitterHashtags = () => {
+  const hashTags: string[] = []
+
+  return hashTags.join(' ')
+}
+
 const ModeratorSharePostToSocials = ({
   palette,
 }: ModeratorSharePostToSocialsProps) => {
   const [shareToBluesky, setShareToBluesky] = useState(false)
   const [shareToInstagram, setShareToInstagram] = useState(false)
+  const [shareToTwitter, setShareToTwitter] = useState(false)
   const [blueskyHashtags, setBlueskyHashtags] = useState(getBlueskyHashtags())
   const [instagramHashtags, setInstagramHashtags] =
     useState(getInstagramHashtags)
+  const [twitterHashtags, setTwitterHashtags] = useState(getTwitterHashtags())
   const [caption, setCaption] = useState('')
 
   const colors = palette.colors.map((swatch) => swatch.hex)
@@ -67,6 +76,8 @@ const ModeratorSharePostToSocials = ({
       blueskyHashtags,
       instagramHashtags,
       caption,
+      shareToTwitter,
+      twitterHashtags,
     })
 
     if (result.success) {
@@ -82,6 +93,8 @@ const ModeratorSharePostToSocials = ({
     blueskyHashtags,
     instagramHashtags,
     caption,
+    shareToTwitter,
+    twitterHashtags,
   ])
 
   const handleCloseCallback = useCallback(() => {
@@ -126,10 +139,15 @@ const ModeratorSharePostToSocials = ({
     !shareToBluesky || blueskyHashtags.trim() !== ''
   const readyToSubmitToInstagram =
     !shareToInstagram || instagramHashtags.trim() !== ''
-  const submitDisabled = !readyToSubmitToBlueSky || !readyToSubmitToInstagram
+  const readyToSubmitToTwitter =
+    !shareToTwitter || twitterHashtags.trim() !== ''
+  const submitDisabled =
+    !readyToSubmitToBlueSky ||
+    !readyToSubmitToInstagram ||
+    !readyToSubmitToTwitter
 
   return (
-    <DefaultModal closeCallback={handleCloseCallback}>
+    <DefaultModal closeCallback={handleCloseCallback} sx={{ width: '800px' }}>
       <Box
         sx={{
           display: 'flex',
@@ -145,57 +163,82 @@ const ModeratorSharePostToSocials = ({
         <ColorBar colors={colors} height={10} />
         <Typography variant="body1">Share this palette</Typography>
         <Button variant="outlined" onClick={copyAIPrompt}>
-          Copy Image + Prompt to AI
+          Copy Image + Prompt to generate tags in AI
         </Button>
-
-        <FormGroup>
-          <FormControlLabel
-            control={
-              <Switch
-                sx={{ marginLeft: SPACING.SMALL.PX }}
-                size="small"
-                checked={shareToBluesky}
-                onChange={() => setShareToBluesky(!shareToBluesky)}
+        <Box sx={{ display: 'flex', gap: SPACING.MEDIUM.PX }}>
+          <Box sx={tagsSectionSX}>
+            <FormGroup>
+              <FormControlLabel
+                control={
+                  <Switch
+                    sx={{ marginLeft: SPACING.SMALL.PX }}
+                    checked={shareToTwitter}
+                    onChange={() => setShareToTwitter(!shareToTwitter)}
+                  />
+                }
+                label="Share to Twitter"
               />
-            }
-            label="Share to Bluesky"
-          />
-        </FormGroup>
-        <TextField
-          size="small"
-          label="Bluesky Hashtags (Space separated, no #)"
-          variant="outlined"
-          multiline
-          disabled={!shareToBluesky}
-          rows={2}
-          fullWidth
-          value={blueskyHashtags}
-          onChange={(e) => setBlueskyHashtags(e.target.value)}
-        />
-        <FormGroup>
-          <FormControlLabel
-            control={
-              <Switch
-                sx={{ marginLeft: SPACING.SMALL.PX }}
-                size="small"
-                checked={shareToInstagram}
-                onChange={() => setShareToInstagram(!shareToInstagram)}
+            </FormGroup>
+            <TextField
+              label="Twitter Hashtags"
+              variant="outlined"
+              multiline
+              disabled={!shareToTwitter}
+              rows={4}
+              fullWidth
+              value={twitterHashtags}
+              onChange={(e) => setTwitterHashtags(e.target.value)}
+            />
+          </Box>
+          <Box sx={tagsSectionSX}>
+            <FormGroup>
+              <FormControlLabel
+                control={
+                  <Switch
+                    sx={{ marginLeft: SPACING.SMALL.PX }}
+                    checked={shareToBluesky}
+                    onChange={() => setShareToBluesky(!shareToBluesky)}
+                  />
+                }
+                label="Share to Bluesky"
               />
-            }
-            label="Share to Instagram"
-          />
-        </FormGroup>
-        <TextField
-          size="small"
-          label="Instagram Hashtags (Space separated, no #)"
-          variant="outlined"
-          multiline
-          disabled={!shareToInstagram}
-          rows={2}
-          fullWidth
-          value={instagramHashtags}
-          onChange={(e) => setInstagramHashtags(e.target.value)}
-        />
+            </FormGroup>
+            <TextField
+              label="Bluesky Hashtags"
+              variant="outlined"
+              multiline
+              disabled={!shareToBluesky}
+              rows={4}
+              fullWidth
+              value={blueskyHashtags}
+              onChange={(e) => setBlueskyHashtags(e.target.value)}
+            />
+          </Box>
+          <Box sx={tagsSectionSX}>
+            <FormGroup>
+              <FormControlLabel
+                control={
+                  <Switch
+                    sx={{ marginLeft: SPACING.SMALL.PX }}
+                    checked={shareToInstagram}
+                    onChange={() => setShareToInstagram(!shareToInstagram)}
+                  />
+                }
+                label="Share to Instagram"
+              />
+            </FormGroup>
+            <TextField
+              label="Instagram Hashtags"
+              variant="outlined"
+              multiline
+              disabled={!shareToInstagram}
+              rows={4}
+              fullWidth
+              value={instagramHashtags}
+              onChange={(e) => setInstagramHashtags(e.target.value)}
+            />
+          </Box>
+        </Box>
         <TextField
           size="small"
           label="Caption (Optional)"
@@ -213,11 +256,18 @@ const ModeratorSharePostToSocials = ({
           variant="contained"
           onClick={handleConfirm}
         >
-          Submit
+          Queue Posts
         </Button>
       </Box>
     </DefaultModal>
   )
+}
+
+const tagsSectionSX: SxProps = {
+  flex: 1,
+  display: 'flex',
+  gap: SPACING.TINY.PX,
+  flexDirection: 'column',
 }
 
 export default ModeratorSharePostToSocials

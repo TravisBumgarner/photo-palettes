@@ -8,36 +8,42 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 class BaseServiceSettings(BaseSettings):
     model_config = SettingsConfigDict(env_file=".env", extra="ignore")
 
+    @field_validator("*", mode="after")
+    def not_none_or_empty(cls, v: str | None, info):
+        if not str(v).strip():
+            raise ValueError(f"{cls.__name__}.{info.field_name} must not be empty")
+        return v
+
 
 class PushoverSettings(BaseServiceSettings):
     model_config = SettingsConfigDict(env_prefix="PUSHOVER_")
-    app_token: str = Field(default="")
-    user_token: str = Field(default="")
+    app_token: str = ""
+    user_token: str = ""
 
 
 class SupabaseSettings(BaseServiceSettings):
     model_config = SettingsConfigDict(env_prefix="SUPABASE_")
-    url: str = Field(default="")
-    key: str = Field(default="")
+    url: str = ""
+    key: str = ""
 
 
 class Config(BaseSettings):
     environment: str = Field(default="development", alias="ENVIRONMENT")
+
+    supabase: SupabaseSettings = SupabaseSettings()
+    pushover: PushoverSettings = PushoverSettings()
+    cloudinary_url: str = ""
+    debug_cloudinary_locally: bool = Field(default=False)
 
     @property
     def is_production(self) -> bool:
         return self.environment.lower() == "production"
 
     database_url: str = Field(default="postgresql://localhost:5432/photo_palettes")
-    supabase: SupabaseSettings = Field(default_factory=lambda: SupabaseSettings())
-    pushover: PushoverSettings = Field(default_factory=lambda: PushoverSettings())
-    cloudinary_url: str = Field(default="")
-    model_config = SettingsConfigDict(env_file=".env", extra="ignore")
-    debug_cloudinary_locally: bool = Field(default=False)
 
     # SqlAlchemy expects postgresql://, but postgres:// is what we get from Heroku.
     @field_validator("database_url")
-    def convert_postgres_url(cls, v: str) -> str:  # noqa: N805 Unsure why cls isn't being recognized.
+    def convert_postgres_url(cls, v: str) -> str:  # noqa: N805
         if v.startswith("postgres://"):
             return v.replace("postgres://", "postgresql://", 1)
         return v

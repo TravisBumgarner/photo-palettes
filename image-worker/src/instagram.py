@@ -1,6 +1,5 @@
 import os
 import tempfile
-import uuid
 from pathlib import Path
 
 from common.queries.service_session import (
@@ -138,12 +137,10 @@ def post_image_from_memory(cl, pil_images, caption):
 
 
 def post_to_instagram(
+    title: str,
     caption: str,
     colors: list[str],
-    image_alt: str,
-    palette_id: uuid.UUID,
     image: Image.Image,
-    author_id: uuid.UUID,
     hashtags: list[str],
 ) -> None:
     service_name = "instagram"
@@ -169,7 +166,11 @@ def post_to_instagram(
     img_1 = generate_image_1(image, colors)
     img_2 = generate_image_2(colors)
 
+    text = f"{title}\n"
+    if caption:
+        text += f"{caption}\n"
+
+    text += "\n" + " ".join([f"#{tag}" for tag in hashtags])
+
     # Post images (assuming helper handles in-memory uploads)
-    post_image_from_memory(
-        client, [img_1, img_2], caption + "\n\n" + " ".join([f"#{tag}" for tag in hashtags])
-    )
+    post_image_from_memory(client, [img_1, img_2], text)

@@ -47,12 +47,12 @@ def post_to_bluesky(
             url=f"https://photopalettes.com/palette/{palette_id}",
             text=f"{title}",
         )
-        .text(" by ")
+        .text(" by user ")
         .link(
             url=f"https://photopalettes.com/profile/{author_id}",
             text=f"#{str(author_id)[:6]}",
         )
-        .text(f"\n\nColors: {colors}\n\n")
+        .text(f"\nColors: {colors}\n")
     )
 
     if caption:

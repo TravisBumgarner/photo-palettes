@@ -18,6 +18,8 @@ export const shareToSocials = async ({
   shareToInstagram,
   blueskyHashtags,
   instagramHashtags,
+  shareToTwitter,
+  twitterHashtags,
   caption,
 }: {
   paletteId: string
@@ -25,6 +27,8 @@ export const shareToSocials = async ({
   shareToInstagram: boolean
   blueskyHashtags: string
   instagramHashtags: string
+  shareToTwitter: boolean
+  twitterHashtags: string
   caption: string
 }) => {
   const tokenResponse = await getToken()
@@ -43,6 +47,8 @@ export const shareToSocials = async ({
       share_to_instagram: shareToInstagram,
       bluesky_hashtags: blueskyHashtags.split(' ').filter((tag) => tag),
       instagram_hashtags: instagramHashtags.split(' ').filter((tag) => tag),
+      share_to_twitter: shareToTwitter,
+      twitter_hashtags: twitterHashtags.split(' ').filter((tag) => tag),
       caption,
     }),
     headers: {
