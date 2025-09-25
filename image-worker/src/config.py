@@ -8,30 +8,53 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 class BaseServiceSettings(BaseSettings):
     model_config = SettingsConfigDict(env_file=".env", extra="ignore")
 
+    @field_validator("*", mode="after")
+    def not_none_or_empty(cls, v: str | None, info):
+        if not str(v).strip():
+            raise ValueError(f"{cls.__name__}.{info.field_name} must not be empty")
+        return v
 
-class BskySettings(BaseServiceSettings):
-    model_config = SettingsConfigDict(env_prefix="BSKY_")
-    email: str = Field(default="")
-    password: str = Field(default="")
+
+class TwitterSettings(BaseServiceSettings):
+    model_config = SettingsConfigDict(env_prefix="TWITTER_")
+
+    api_key: str = ""
+    api_key_secret: str = ""
+    access_token: str = ""
+    access_token_secret: str = ""
+    client_id: str = ""
+    client_secret: str = ""
+
+
+class BlueskySettings(BaseServiceSettings):
+    model_config = SettingsConfigDict(env_prefix="BLUESKY_")
+
+    email: str = ""
+    password: str = ""
 
 
 class InstagramSettings(BaseServiceSettings):
     model_config = SettingsConfigDict(env_prefix="INSTAGRAM_")
-    username: str = Field(default="")
-    password: str = Field(default="")
+
+    username: str = ""
+    password: str = ""
 
 
 class CloudinarySettings(BaseServiceSettings):
     model_config = SettingsConfigDict(env_prefix="CLOUDINARY_")
-    url: str = Field(default="")
+
+    url: str = ""
 
 
 class Config(BaseSettings):
     environment: str = Field(default="development", alias="ENVIRONMENT")
-    bsky: BskySettings = Field(default_factory=lambda: BskySettings())
-    instagram: InstagramSettings = Field(default_factory=lambda: InstagramSettings())
+
+    twitter: TwitterSettings = TwitterSettings()
+    bluesky: BlueskySettings = BlueskySettings()
+    instagram: InstagramSettings = InstagramSettings()
+    cloudinary: CloudinarySettings = CloudinarySettings()
+
     debug_cloudinary_locally: bool = Field(default=False)
-    cloudinary: CloudinarySettings = Field(default_factory=lambda: CloudinarySettings())
 
     @property
     def is_production(self) -> bool:
@@ -41,7 +64,7 @@ class Config(BaseSettings):
 
     # SqlAlchemy expects postgresql://, but postgres:// is what we get from Heroku.
     @field_validator("database_url")
-    def convert_postgres_url(cls, v: str) -> str:  # noqa: N805 Unsure why cls isn't being recognized.
+    def convert_postgres_url(cls, v: str) -> str:  # noqa: N805
         if v.startswith("postgres://"):
             return v.replace("postgres://", "postgresql://", 1)
         return v

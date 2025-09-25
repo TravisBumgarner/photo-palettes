@@ -124,7 +124,7 @@ const PaletteMobile = ({
       <ModerationPanel
         refetch={refetch}
         moderationStatus={palette.moderationStatus}
-        paletteId={palette.id}
+        palette={palette}
       />
     </PageWrapper>
   )

@@ -1,34 +1,43 @@
+import uuid
+
 from atproto import Client, client_utils
 
 from src.config import get_config
 
-bsky_client: Client | None = None
+bluesky_client: Client | None = None
 
 
 config = get_config()
 
 
-def get_bsky_client() -> Client:
+def get_bluesky_client() -> Client:
     """Return the initialized Bluesky client, or raise if not yet initialized."""
-    if bsky_client is None:
+    if bluesky_client is None:
         raise RuntimeError("Bluesky client not initialized yet")
-    return bsky_client
+    return bluesky_client
 
 
-def init_bsky_client() -> None:
-    global bsky_client
+def init_bluesky_client() -> None:
+    global bluesky_client
     cfg = get_config()
     c = Client()
     print("About to login to Bluesky…")
-    c.login(cfg.bsky.email, cfg.bsky.password)
+    c.login(cfg.bluesky.email, cfg.bluesky.password)
     print("Login success")
-    bsky_client = c
+    bluesky_client = c
 
 
-def post_to_bsky(
-    title: str, colors: str, image_alt, palette_id: str, image_bytes: bytes, author_id: str
+def post_to_bluesky(
+    title: str,
+    caption: str,
+    colors: str,
+    image_alt,
+    palette_id: uuid.UUID,
+    image_bytes: bytes,
+    author_id: uuid.UUID,
+    hashtags: list[str],
 ) -> None:
-    c = get_bsky_client()
+    client = get_bluesky_client()
 
     # Convert image to bytes (e.g., WEBP)
 
@@ -38,14 +47,21 @@ def post_to_bsky(
             url=f"https://photopalettes.com/palette/{palette_id}",
             text=f"{title}",
         )
-        .text(" by ")
+        .text(" by user ")
         .link(
             url=f"https://photopalettes.com/profile/{author_id}",
-            text=f"#{author_id[:6]}",
+            text=f"#{str(author_id)[:6]}",
         )
-        .text(f"\n{colors}")
+        .text(f"\nColors: {colors}\n")
     )
-    c.send_image(
+
+    if caption:
+        text_builder.text(f"{caption}\n\n")
+
+    for tag in hashtags:
+        text_builder.tag(text=f"#{tag} ", tag=tag)
+
+    client.send_image(
         text=text_builder,
         image=image_bytes,  # Pass bytes, not a PIL Image
         image_alt=image_alt,

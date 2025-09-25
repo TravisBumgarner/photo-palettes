@@ -4,9 +4,31 @@ from sqlalchemy import func
 from sqlalchemy.orm import Session
 
 from common.models import (
+    BlueskyPostData,
     ImageWorker,
+    ImageWorkerActionEnum,
     ImageWorkerStatusEnum,
+    InstagramPostData,
+    TwitterPostData,
 )
+
+
+def insert_image_worker(
+    db_engine,
+    palette_id: uuid.UUID,
+    action_type: ImageWorkerActionEnum,
+    json_data: BlueskyPostData | InstagramPostData | TwitterPostData | None,
+):
+    with Session(db_engine) as session:
+        worker = ImageWorker(
+            palette_id=palette_id,
+            action_type=action_type,
+            json_data=json_data.model_dump(mode="json") if json_data else None,
+        )
+        session.add(worker)
+        session.commit()
+        session.refresh(worker)
+        return worker
 
 
 def get_next_image_worker(db_engine):
