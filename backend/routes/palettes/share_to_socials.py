@@ -38,6 +38,7 @@ ROUTE_NAME = "share_to_socials"
 
 def handle_request(body: Body):
     if body.share_to_bluesky:
+        # Linter sometimes complains about BlueskyPostData relying on itself???s
         bluesky_post_data = BlueskyPostData(
             palette_id=body.palette_id,
             hashtags=body.bluesky_hashtags,
