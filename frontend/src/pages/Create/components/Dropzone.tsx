@@ -1,11 +1,32 @@
-import { useDropzone } from 'react-dropzone'
-import { useState } from 'react'
-import Box from '@mui/material/Box'
-import { sharedCSS } from './shared'
-import { logger } from '../../../services/logging'
 import { Capacitor } from '@capacitor/core'
+import Box from '@mui/material/Box'
+import Typography from '@mui/material/Typography'
+import { useState } from 'react'
+import { useDropzone } from 'react-dropzone'
+import { logger } from '../../../services/logging'
 import Message from '../../../sharedComponents/Message'
 import { SPACING } from '../../../styles/styleConsts'
+import { sharedCSS } from './shared'
+
+const SUPPORTED_FORMATS = {
+  'image/png': [],
+  'image/jpeg': [],
+  'image/jpg': [],
+  'image/webp': [],
+  'image/gif': [],
+  'image/bmp': [],
+  'image/avif': [],
+  // Known currently not supported
+  // 'image/x-adobe-dng': [],
+  // 'image/tiff': [],
+  // 'image/heic': [],
+  // 'image/heif': [],
+  // 'image/jxl': [],
+}
+
+const SUPPORTED_FORMATS_FLAT = Object.keys(SUPPORTED_FORMATS)
+  .join(', ')
+  .replaceAll('image/', '')
 
 const Dropzone = ({ onDrop }: { onDrop: (acceptedFiles: File[]) => void }) => {
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
@@ -14,9 +35,7 @@ const Dropzone = ({ onDrop }: { onDrop: (acceptedFiles: File[]) => void }) => {
     onDrop,
     maxFiles: 1,
     // maxSize: 1024 * 1024 * 5, // The image is converted on a canvas to another type. Separately, we already check on the backend for large files.
-    accept: {
-      'image/*': ['.png', '.jpg', '.jpeg'],
-    },
+    accept: SUPPORTED_FORMATS,
     onDropRejected: (fileRejections) => {
       // There are multiple errors thrown if too many files are uploaded.
       // It looks goofy so we'll just display the first error and let the user try again.
@@ -32,7 +51,9 @@ const Dropzone = ({ onDrop }: { onDrop: (acceptedFiles: File[]) => void }) => {
     <Box
       sx={{ display: 'flex', flexDirection: 'column', gap: SPACING.MEDIUM.PX }}
     >
-      {errorMessage && <Message message={errorMessage} color="error" />}
+      {errorMessage && (
+        <Message includeVerticalMargin message={errorMessage} color="error" />
+      )}
       <Box
         sx={{
           ...sharedCSS,
@@ -42,19 +63,23 @@ const Dropzone = ({ onDrop }: { onDrop: (acceptedFiles: File[]) => void }) => {
           justifyContent: 'center',
           alignItems: 'center',
           cursor: 'pointer',
+          flexDirection: 'column',
         }}
         {...getRootProps()}
       >
         <input {...getInputProps()} />
         {isDragActive ? (
-          <p>Drop photo here ...</p>
+          <Typography>Drop photo here...</Typography>
         ) : (
-          <p>
+          <Typography>
             {Capacitor.isNativePlatform()
               ? 'Tap to select photo'
               : 'Drag and drop photo or click to select photo'}
-          </p>
+          </Typography>
         )}
+        <Typography variant="body2">
+          (Supported: {SUPPORTED_FORMATS_FLAT})
+        </Typography>
       </Box>
     </Box>
   )

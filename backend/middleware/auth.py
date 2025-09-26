@@ -20,7 +20,8 @@ class AuthState:
 
 
 class RequestWithAuthState(Request):
-    state: AuthState
+    # I'll deal with this later. For now, I get proper type checking in my IDE.
+    state: AuthState  # type: ignore
 
 
 def get_auth_user(supabase: Client, token: str):
@@ -102,7 +103,7 @@ def create_auth_middleware(supabase: Client):
                 content={"error": "Internal Server Error", "message": "User error"},
             )
 
-        request.state.auth_id = uuid.UUID(auth_user.id)
+        request.state.auth_id = uuid.UUID(auth_user.id) if auth_user and auth_user.id else None
         request.state.app_user_id = user_details.app_user_id
         request.state.permission_level = user_details.permission_level
 

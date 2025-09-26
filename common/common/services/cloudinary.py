@@ -31,12 +31,18 @@ def save_image_to_cloudinary(image_bytes: bytes, public_id: str) -> str:
         public_id=public_id,
         overwrite=True,
         invalidate=True,
+        resource_type="image",
     )
     return upload_result["public_id"]
 
 
 def get_image_from_cloudinary(public_id: str) -> str:
-    return cloudinary_url(public_id, fetch_format="auto", quality="auto")[0]
+    return cloudinary_url(
+        public_id,
+        fetch_format="auto",
+        quality="auto",
+        secure=True,
+    )[0]
 
 
 def delete_image_from_cloudinary(public_id: str) -> None:

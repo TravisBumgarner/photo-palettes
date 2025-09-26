@@ -170,7 +170,9 @@ def post_to_instagram(
     if caption:
         text += f"{caption}\n"
 
-    text += "\n" + " ".join([f"#{tag}" for tag in hashtags])
+    text += "Colors: " + " ".join([f"{color}" for color in colors])
+
+    text += "\n\n" + " ".join([f"#{tag}" for tag in hashtags])
 
     # Post images (assuming helper handles in-memory uploads)
     post_image_from_memory(client, [img_1, img_2], text)

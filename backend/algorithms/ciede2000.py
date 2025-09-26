@@ -10,7 +10,7 @@ from algorithms.types import TSwatch
 
 # colormath seems to not work with newer versions of numpy. So monkey patch.
 if not hasattr(np, "asscalar"):
-    np.asscalar = lambda a: a.item()
+    np.asscalar = lambda a: a.item()  # type: ignore
 
 
 def perceptual_color_distance(hex1: str, hex2: str) -> float:
@@ -29,7 +29,7 @@ def ciede2000(image: Image.Image, mode: Literal["light", "dark"]) -> list[TSwatc
     height, width = img_array.shape[:2]
     pixels = img_array.reshape(-1, 3)
     target_color = "FFFFFF" if mode == "light" else "000000"
-    hex_colors = ["#{:02x}{:02x}{:02x}".format(r, g, b) for r, g, b in pixels]
+    hex_colors = [f"#{r:02x}{g:02x}{b:02x}" for r, g, b in pixels]
 
     # Build a mapping from color to list of indices
     from collections import defaultdict
@@ -49,10 +49,7 @@ def ciede2000(image: Image.Image, mode: Literal["light", "dark"]) -> list[TSwatc
     for i in top_colors:
         color = str(unique[i])
         # Skip if too similar to any existing color
-        if any(
-            perceptual_color_distance(color, existing) < min_distance
-            for existing in palettes
-        ):
+        if any(perceptual_color_distance(color, existing) < min_distance for existing in palettes):
             continue
 
         if perceptual_color_distance(color, target_color) > 30:

@@ -26,12 +26,14 @@ down:
 
 deploy-all:
 	@echo "Deploying all services..."
+	@./scripts/is-docker-running.sh
 	@./scripts/deploy-frontend.sh
 	@./scripts/deploy-backend.sh
 	@./scripts/deploy-image-worker.sh
 
 deploy-backend:
 	@echo "Deploying backend..."
+	@./scripts/is-docker-running.sh
 	@./scripts/deploy-backend.sh
 
 deploy-frontend:

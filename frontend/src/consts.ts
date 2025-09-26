@@ -83,6 +83,16 @@ export const ROUTES = {
     href: 'https://bsky.app/profile/photopalettes.com',
     label: 'Bluesky',
   },
+  instagram: {
+    key: 'instagram',
+    href: 'https://www.instagram.com/photocolorpalettes',
+    label: 'Instagram',
+  },
+  twitter: {
+    key: 'twitter',
+    href: 'https://x.com/photo_palettes',
+    label: 'Twitter',
+  },
   donate: {
     key: 'donate',
     href: '/donations',

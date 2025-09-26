@@ -4,6 +4,10 @@ Social platform for generating color palettes from photos.
 
 # Local Setup/Dev Notes
 
+## Python Environments
+
+There are a lot of python environments. Make sure each folder is properly mapped to its env. For Example `backend/` -> `.venv-backend`. And make sure to pip freeze from the correct env.
+
 ## Root
 
 1. `make bootstrap` - Follow all instructions output to terminal.

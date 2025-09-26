@@ -4,12 +4,12 @@ import ListItem from '@mui/material/ListItem'
 import Typography from '@mui/material/Typography'
 import { useTheme } from '@mui/material/styles'
 
+import { Capacitor } from '@capacitor/core'
 import { ROUTES } from '../consts'
+import Link from '../sharedComponents/Link'
 import useGlobalStore from '../store'
 import { FONT_SIZES, SPACING, subtleBackground } from '../styles/styleConsts'
 import { PERMISSION_LEVEL, type EPermissionLevel } from '../types'
-import Link from '../sharedComponents/Link'
-import { Capacitor } from '@capacitor/core'
 
 const Section = ({
   links,
@@ -73,7 +73,7 @@ const sections = (
   return [
     {
       header: 'Community',
-      links: ['discord', 'bluesky', 'donate'],
+      links: ['discord', 'bluesky', 'twitter', 'instagram', 'donate'],
     },
     {
       header: 'Feedback',

@@ -45,12 +45,13 @@ const Create = ({ mode }: { mode: 'lite' | 'full' }) => {
   const isSmallScreen = useMediaQuery('(max-width:700px)')
   const isNative = Capacitor.isNativePlatform()
   const [wasLoadedFromLiteMode, setWasLoadedFromLiteMode] = useState(false)
+  const [photo, setPhoto] = useState<Blob | null>(null)
+  const [creationStatus, setCreationStatus] =
+    useState<CreationStatus>('INITIAL')
+  const [errorMessage, setErrorMessage] = useState<string | null>(null)
 
   const useSingleColumnDisplay = isNative || isSmallScreen
 
-  const [creationStatus, setCreationStatus] =
-    useState<CreationStatus>('INITIAL')
-  const [photo, setPhoto] = useState<Blob | null>(null)
   const navigate = useNavigate()
 
   const [name, setName] = useState('')
@@ -109,6 +110,9 @@ const Create = ({ mode }: { mode: 'lite' | 'full' }) => {
     mutationFn: generatePaletteFull,
     onError: () => {
       logger.error('Error generating palette')
+      setErrorMessage(
+        'There was an error processing your image. Please try a different image.'
+      )
       setCreationStatus('ERROR')
     },
   })
@@ -119,12 +123,25 @@ const Create = ({ mode }: { mode: 'lite' | 'full' }) => {
         // An error was thrown, it's handled internally by Dropzone.tsx
         return
       }
+
       setCreationStatus('UPLOADING')
       const photo = acceptedFiles[0]
-      const resizedPhoto = await resizeImage(photo, {
-        maxWidth: 1600,
-        maxHeight: 1600,
-      })
+
+      let resizedPhoto: Blob
+      try {
+        resizedPhoto = await resizeImage(photo, {
+          maxWidth: 1600,
+          maxHeight: 1600,
+        })
+      } catch (e) {
+        logger.error('Error resizing image', e)
+        setErrorMessage(
+          'There was an error loading your image. Please try a different image.'
+        )
+        setCreationStatus('ERROR')
+        return
+      }
+
       setPhoto(resizedPhoto)
 
       let response: TGeneratePaletteResponse
@@ -259,6 +276,7 @@ const Create = ({ mode }: { mode: 'lite' | 'full' }) => {
   const handleTryAgain = useCallback(() => {
     setCreationStatus('INITIAL')
     setPalette(null)
+    setErrorMessage(null)
     setPhoto(null)
     setName('')
   }, [setPalette, setPhoto])
@@ -278,7 +296,7 @@ const Create = ({ mode }: { mode: 'lite' | 'full' }) => {
     return (
       <PageWrapper width="full">
         <Message
-          message="Error generating palette"
+          message={errorMessage || 'An error occurred. Please try again.'}
           color="error"
           callback={handleTryAgain}
           callbackText="Try again"
