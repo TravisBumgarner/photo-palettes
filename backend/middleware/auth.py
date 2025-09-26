@@ -20,7 +20,8 @@ class AuthState:
 
 
 class RequestWithAuthState(Request):
-    pass
+    # I'll deal with this later. For now, I get proper type checking in my IDE.
+    state: AuthState  # type: ignore
 
 
 def get_auth_user(supabase: Client, token: str):
