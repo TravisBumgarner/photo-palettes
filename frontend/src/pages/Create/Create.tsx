@@ -121,10 +121,12 @@ const Create = ({ mode }: { mode: 'lite' | 'full' }) => {
       }
       setCreationStatus('UPLOADING')
       const photo = acceptedFiles[0]
+
       const resizedPhoto = await resizeImage(photo, {
         maxWidth: 1600,
         maxHeight: 1600,
       })
+
       setPhoto(resizedPhoto)
 
       let response: TGeneratePaletteResponse
