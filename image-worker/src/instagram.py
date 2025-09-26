@@ -170,7 +170,7 @@ def post_to_instagram(
     if caption:
         text += f"{caption}\n"
 
-    text += " ".join([f"#{color}" for color in colors])
+    text += "Colors: " + " ".join([f"#{color}" for color in colors])
 
     text += "\n\n" + " ".join([f"#{tag}" for tag in hashtags])
 
