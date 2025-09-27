@@ -9,20 +9,20 @@ import { logger } from "../../services/logging";
 import Loading from "../../sharedComponents/Loading";
 import Message from "../../sharedComponents/Message";
 
-import {
-  FONT_SIZES,
-  SPACING,
-  subtleBackground,
-} from "../../styles/styleConsts";
+import { FONT_SIZES, SPACING } from "../../styles/styleConsts";
 import type { TGeneratePaletteResponse } from "../../types";
 import { type TGeneratedPalette } from "../../types";
 import { resizeImage } from "../../utils/images";
 import CanvasAndPalette from "./components/CanvasAndPalette";
 import Dropzone from "./components/Dropzone";
-import SelectGeneratedPalette from "./components/SelectGeneratedPalette";
 import { sharedCSS } from "./components/shared";
 import PageWrapper from "../../sharedComponents/PageWrapper";
 import kmeans from "../../utils/kmeans";
+
+async function blobToUint8Array(blob: Blob): Promise<Uint8Array> {
+  const arrayBuffer = await blob.arrayBuffer();
+  return new Uint8Array(arrayBuffer);
+}
 
 type CreationStatus =
   | "INITIAL"
@@ -32,27 +32,19 @@ type CreationStatus =
   | "SUBMITTED"
   | "ERROR";
 
-const MAX_NAME_LENGTH = 50;
-
 const Create = ({ mode }: { mode: "lite" | "full" }) => {
   const [photo, setPhoto] = useState<Blob | null>(null);
+  const [originalPhoto, setOriginalPhoto] = useState<Blob | null>(null);
   const [creationStatus, setCreationStatus] =
     useState<CreationStatus>("INITIAL");
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-  const useSingleColumnDisplay = true;
-
-  const [name, setName] = useState("");
-  const [generatedPalettes, setGeneratedPalettes] = useState<
-    TGeneratedPalette[]
-  >([]);
   const [palette, setPalette] = useState<TGeneratedPalette | null>(null);
   const [selectedPaletteIndex, setSelectedPaletteIndex] = useState(0);
 
   const [paletteSortOrder, setPaletteSortOrder] = useState<number[]>(
     Array.from({ length: PALETTE_SIZE }, (_, i) => i)
   );
-  const [tempId, setTempId] = useState<string | null>(null);
 
   const updateSwatch = useCallback(
     (index: number, color: string, percentLocation: [number, number]) => {
@@ -67,10 +59,6 @@ const Create = ({ mode }: { mode: "lite" | "full" }) => {
     []
   );
 
-  const resetSortOrder = useCallback(() => {
-    setPaletteSortOrder(Array.from({ length: PALETTE_SIZE }, (_, i) => i));
-  }, [setPaletteSortOrder]);
-
   const onDrop = useCallback(
     async (acceptedFiles: File[]) => {
       if (acceptedFiles.length === 0) {
@@ -80,7 +68,7 @@ const Create = ({ mode }: { mode: "lite" | "full" }) => {
 
       setCreationStatus("UPLOADING");
       const photo = acceptedFiles[0];
-
+      setOriginalPhoto(photo);
       let resizedPhoto: Blob;
       try {
         resizedPhoto = await resizeImage(photo, {
@@ -105,57 +93,47 @@ const Create = ({ mode }: { mode: "lite" | "full" }) => {
       if (response.success) {
         setCreationStatus("SELECTING_COLORS");
 
-        setGeneratedPalettes(response.palettes);
         setPalette(structuredClone(response.palettes[0]));
       } else {
         setCreationStatus("ERROR");
       }
     },
-    [setGeneratedPalettes, setCreationStatus, mode]
-  );
-
-  const handleNameChange = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      setName(e.target.value.slice(0, MAX_NAME_LENGTH));
-    },
-    []
+    [setCreationStatus, mode]
   );
 
   const handleClearPalette = useCallback(() => {
     setPalette(null);
     setCreationStatus("INITIAL");
     setPhoto(null);
-    setName("");
     setSelectedPaletteIndex(0);
-  }, [setPalette, tempId]);
+  }, [setPalette]);
 
-  const handleSaveLite = useCallback(() => {
+  const handleAddToCanvas = useCallback(async () => {
     if (!palette) return;
     setCreationStatus("SUBMITTED");
 
     const sortedPalette = paletteSortOrder.map((index) => palette[index]);
-  }, [name, palette, paletteSortOrder, photo]);
-
-  const handleSavePalette = useCallback(async () => {
-    handleSaveLite();
-  }, [handleSaveLite, mode]);
-
-  const handlePaletteChange = (paletteIndex: number) => {
-    setPalette(structuredClone(generatedPalettes[paletteIndex]));
-    setSelectedPaletteIndex(paletteIndex);
-    resetSortOrder();
-  };
+    parent.postMessage(
+      {
+        pluginMessage: {
+          type: "handle-add-to-canvas",
+          colors: sortedPalette.map(({ color }) => color),
+          title: "FOobar",
+          imageBytes: originalPhoto
+            ? await blobToUint8Array(originalPhoto)
+            : null,
+        },
+      },
+      "*"
+    );
+  }, [palette, paletteSortOrder, photo]);
 
   const handleTryAgain = useCallback(() => {
     setCreationStatus("INITIAL");
     setPalette(null);
     setErrorMessage(null);
     setPhoto(null);
-    setName("");
   }, [setPalette, setPhoto]);
-
-  const nameLabel =
-    name.length > 0 ? `Name: ${name.length} / ${MAX_NAME_LENGTH}` : "Name";
 
   if (creationStatus === "INITIAL") {
     return (
@@ -201,65 +179,14 @@ const Create = ({ mode }: { mode: "lite" | "full" }) => {
 
   return (
     <PageWrapper width="full">
-      <Container useSingleColumnDisplay={useSingleColumnDisplay}>
+      <Container>
         {/* 
           When mode === 'lite' && useSingleColumnDisplay ? null
           LeftColumn becomes empty. No GeneratedPalettes are shown
           and the TextField is moved to the right column.
           Therefore, hide it.
         */}
-        {mode === "lite" && useSingleColumnDisplay ? null : (
-          <LeftColumn useSingleColumnDisplay={useSingleColumnDisplay}>
-            {mode === "full" && (
-              <SectionWrapper>
-                <Typography sx={labelStyles}>Starter Palettes</Typography>
-                <SelectGeneratedPalette
-                  handlePaletteChange={handlePaletteChange}
-                  generatedPalettes={generatedPalettes}
-                />
-              </SectionWrapper>
-            )}
-            {!useSingleColumnDisplay && (
-              <>
-                <SectionWrapper>
-                  <TextField
-                    size="small"
-                    variant="outlined"
-                    fullWidth
-                    label={nameLabel}
-                    placeholder="Name your palette"
-                    value={name}
-                    onChange={handleNameChange}
-                  />
-                </SectionWrapper>
-
-                <SectionWrapper>
-                  <Box
-                    sx={{
-                      display: "flex",
-                      flexDirection: "row",
-                      gap: "10px",
-                      justifyContent: "space-between",
-                    }}
-                  >
-                    <Button variant="text" onClick={handleClearPalette}>
-                      Clear
-                    </Button>
-                    <Button
-                      disabled={!name}
-                      variant="contained"
-                      sx={{ flexGrow: 1 }}
-                      onClick={handleSavePalette}
-                    >
-                      Save
-                    </Button>
-                  </Box>
-                </SectionWrapper>
-              </>
-            )}
-          </LeftColumn>
-        )}
-        <RightColumn>
+        <Box sx={{ margin: "0 auto" }}>
           <CanvasAndPalette
             photo={photo}
             palette={palette}
@@ -268,45 +195,28 @@ const Create = ({ mode }: { mode: "lite" | "full" }) => {
             paletteSortOrder={paletteSortOrder}
             setPaletteSortOrder={setPaletteSortOrder}
           />
-          {useSingleColumnDisplay && (
-            <>
-              <SectionWrapper>
-                <TextField
-                  size="small"
-                  variant="outlined"
-                  fullWidth
-                  label={nameLabel}
-                  placeholder="Name your palette"
-                  value={name}
-                  onChange={handleNameChange}
-                />
-              </SectionWrapper>
-
-              <SectionWrapper>
-                <Box
-                  sx={{
-                    display: "flex",
-                    flexDirection: "row",
-                    gap: "10px",
-                    justifyContent: "space-between",
-                  }}
-                >
-                  <Button variant="text" onClick={handleClearPalette}>
-                    Clear
-                  </Button>
-                  <Button
-                    disabled={!name}
-                    variant="contained"
-                    sx={{ flexGrow: 1 }}
-                    onClick={handleSavePalette}
-                  >
-                    Save
-                  </Button>
-                </Box>
-              </SectionWrapper>
-            </>
-          )}
-        </RightColumn>
+        </Box>
+        <SectionWrapper>
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "row",
+              gap: "10px",
+              justifyContent: "space-between",
+            }}
+          >
+            <Button variant="text" onClick={handleClearPalette}>
+              Clear
+            </Button>
+            <Button
+              variant="contained"
+              sx={{ flexGrow: 1 }}
+              onClick={handleAddToCanvas}
+            >
+              Add to canvas
+            </Button>
+          </Box>
+        </SectionWrapper>
       </Container>
     </PageWrapper>
   );
@@ -323,34 +233,9 @@ const labelStyles: SxProps = {
   fontSize: FONT_SIZES.SMALL.PX,
 };
 
-const LeftColumn = styled(Box, {
-  shouldForwardProp: (prop) => prop !== "useSingleColumnDisplay",
-})<{ useSingleColumnDisplay: boolean }>(
-  ({ theme, useSingleColumnDisplay }) => ({
-    ...(useSingleColumnDisplay ? {} : { flexBasis: "200px" }),
-    width: "100%",
-    flexShrink: 0,
-    display: "flex",
-    flexDirection: "column",
-    gap: SPACING.MEDIUM.PX,
-    padding: SPACING.MEDIUM.PX,
-    backgroundColor: subtleBackground(theme.palette.mode, "slightly"),
-  })
-);
-const RightColumn = styled(Box)(() => ({
-  flexGrow: 1,
-  gap: SPACING.MEDIUM.PX,
+const Container = styled(Box)(() => ({
   display: "flex",
   flexDirection: "column",
-  alignItems: "center",
-  width: "100%",
-}));
-
-const Container = styled(Box, {
-  shouldForwardProp: (prop) => prop !== "useSingleColumnDisplay",
-})<{ useSingleColumnDisplay: boolean }>(({ useSingleColumnDisplay }) => ({
-  display: "flex",
-  flexDirection: useSingleColumnDisplay ? "column" : "row",
   gap: SPACING.MEDIUM.PX,
   alignItems: "flex-start",
 }));
