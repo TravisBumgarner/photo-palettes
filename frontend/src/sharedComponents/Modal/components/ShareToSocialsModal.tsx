@@ -33,8 +33,19 @@ const shouldPostTag = (tag: string, probability: number = 0.2) => {
   return ''
 }
 
-const PROMPT =
-  'Give me 5 social media tags for Instagram, Bluesky, Instagram. No hashtag. Make it copyable in a single line for the photo.'
+const PROMPT = `Look at this image and generate tags and captions.
+
+Give me exactly 5 tags for Twitter, 5 for Bluesky, and 5 for Instagram.
+
+The tags for each platform must be output as a single line inside a fenced Markdown code block. (Example: tag1 tag2 tag3 tag4 tag5 )
+
+After the tags, write exactly 3 captions. Each caption must be a separate fenced Markdown code block, containing only one sentence.
+
+Do not include hashtags (#).
+
+Label each section clearly as Twitter, Bluesky, Instagram, and Captions.
+
+Do not add any explanations or extra text outside of what’s specified.`
 
 const getBlueskyHashtags = () => {
   const hashTags: string[] = [shouldPostTag('designsky', 0.3)].filter((a) => a)
@@ -129,6 +140,7 @@ const ModeratorSharePostToSocials = ({
       }
 
       await navigator.clipboard.write([new ClipboardItem(items)])
+      window.open('https://chat.openai.com/', '_blank') // Open ChatGPT in a new tab
     } catch (err) {
       console.error('Failed to copy prompt and image', err) // eslint-disable-line no-console
       alert('Your browser only supports copying text. Image copy failed.') // eslint-disable-line no-alert
