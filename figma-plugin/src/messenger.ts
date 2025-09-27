@@ -9,8 +9,7 @@ figma.ui.onmessage = async (msg) => {
   if (msg.type !== "handle-add-to-canvas") return;
 
   // Must load font before editing text
-  // await figma.loadFontAsync({ family: "Inter", style: "Regular" });
-  await figma.loadFontAsync({ family: "Arial", style: "Regular" });
+  await figma.loadFontAsync({ family: "Roboto", style: "Bold" });
 
   const nodes: SceneNode[] = [];
 
@@ -29,7 +28,7 @@ figma.ui.onmessage = async (msg) => {
 
     // Text label (safe order!)
     const text = figma.createText();
-    text.fontName = { family: "Arial", style: "Regular" }; // set font first
+    text.fontName = { family: "Roboto", style: "Bold" };
     text.fontSize = 36;
     text.textAlignHorizontal = "CENTER";
     text.textAlignVertical = "CENTER";
