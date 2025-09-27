@@ -8,6 +8,10 @@
       }
     },
     {
+      "name": "escape-hatch",
+      "path": "./"
+    },
+    {
       "name": "frontend",
       "path": "./frontend"
     },
@@ -31,6 +35,10 @@
       "settings": {
         "python.defaultInterpreterPath": ".venv-image-worker/bin/python"
       }
+    },
+    {
+      "name": "figma-plugin",
+      "path": "./figma-plugin"
     }
   ]
 }

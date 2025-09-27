@@ -1,0 +1,8 @@
+{
+  "name": "Photo Palettes - Find color inspiration in the everyday",
+  "id": "00000000",
+  "api": "1.0.0",
+  "main": "dist/messenger.js",
+  "ui": "dist/ui.html",
+  "editorType": ["figma", "figjam"]
+}
