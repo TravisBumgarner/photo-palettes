@@ -1,4 +1,4 @@
-import { getContrastColor } from "./src-messenger";
+import { getContrastColor } from "./src-messenger/getContrastColor";
 
 figma.showUI(__html__, { width: 600, height: 800 });
 
@@ -33,7 +33,7 @@ figma.ui.onmessage = async (msg) => {
     text.textAlignHorizontal = "CENTER";
     text.textAlignVertical = "CENTER";
     text.resize(frame.width, frame.height);
-    text.fills = getContrastColor(color);
+    text.fills = [getContrastColor(color)];
 
     text.characters = color.toUpperCase(); // only now assign characters
 

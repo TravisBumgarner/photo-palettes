@@ -5,7 +5,7 @@
 export const getContrastColor = (
   hexColor: string,
   invert = false
-): [{ type: "SOLID"; color: { r: number; g: number; b: number } }] => {
+): SolidPaint => {
   if (hexColor.startsWith("rgb")) {
     hexColor = rgbToHex(hexColor)!;
   }
@@ -30,8 +30,8 @@ export const getContrastColor = (
   // Return black or white based on luminance
 
   return shouldReturnDark
-    ? [{ type: "SOLID", color: { r: 0, g: 0, b: 0 } }]
-    : [{ type: "SOLID", color: { r: 1, g: 1, b: 1 } }];
+    ? { type: "SOLID", color: { r: 0, g: 0, b: 0 } }
+    : { type: "SOLID", color: { r: 1, g: 1, b: 1 } };
 };
 
 export const rgbToHex = (rgb: string) => {
