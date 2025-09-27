@@ -5,17 +5,20 @@
   "main": "index.js",
   "scripts": {
     "dev:ui": "vite build --watch --config vite.config.ui.ts",
-    "dev:code": "vite build --watch --config vite.config.code.ts",
-    "dev": "npm run dev:ui && npm run dev:code"
+    "dev:messenger": "vite build --watch --config vite.config.messenger.ts",
+    "dev": "concurrently -c \"red,blue\" -n \"UI,Messenger\" \"npm run dev:ui\" \"npm run dev:messenger\""
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
     "@figma/plugin-typings": "^1.117.0",
+    "@types/lodash": "^4.17.20",
     "@types/node": "^24.5.2",
     "@types/react": "^19.1.14",
     "@types/react-dom": "^19.1.9",
+    "@types/skmeans": "^0.11.8",
+    "concurrently": "^9.2.1",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
     "typescript": "^5.9.2",
@@ -23,7 +26,19 @@
     "vite-plugin-singlefile": "^2.3.0"
   },
   "dependencies": {
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.1",
+    "@mui/material": "^7.3.2",
+    "@sentry/react": "^10.15.0",
+    "@use-gesture/react": "^10.3.1",
     "@vitejs/plugin-react": "^5.0.3",
-    "figma": "^0.0.1"
+    "figma": "^0.0.1",
+    "framer-motion": "^12.23.22",
+    "lodash": "^4.17.21",
+    "react-dropzone": "^14.3.8",
+    "react-icons": "^5.5.0",
+    "skmeans": "^0.11.3",
+    "uuid": "^13.0.0",
+    "zod": "^4.1.11"
   }
 }

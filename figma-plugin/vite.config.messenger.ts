@@ -4,7 +4,7 @@ import { resolve } from "path";
 export default defineConfig({
   build: {
     rollupOptions: {
-      input: resolve(__dirname, "src/messenger.ts"),
+      input: resolve(__dirname, "./src/messenger.ts"),
       output: {
         entryFileNames: `messenger.js`,
       },
