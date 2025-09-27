@@ -13,11 +13,6 @@ body {
   -moz-osx-font-smoothing: grayscale;
 } */
 
-#root {
-  max-width: 1000px;
-  margin: 0 auto;
-}
-
 /* CSS Reset */
 
 * {

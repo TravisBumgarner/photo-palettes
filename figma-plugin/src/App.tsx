@@ -6,27 +6,36 @@ import "./src-app/styles/global.css";
 import { Typography } from "@mui/material";
 import AppThemeProvider from "./src-app/styles/Theme";
 import Create from "./src-app/pages/Create";
+import { SPACING } from "./src-app/styles/styleConsts";
 
 function App() {
   return (
     <Box
-      sx={{ width: "100vw", height: "100vh", bgcolor: "background.default" }}
+      sx={{
+        width: "100vw",
+        height: "100vh",
+        padding: SPACING.MEDIUM.PX,
+        bgcolor: "background.default",
+      }}
     >
-      <Typography variant="h1" align="center" sx={{ mt: 4, mb: 2 }}>
-        Photo Palettes
-      </Typography>
-      <Typography
-        variant="h6"
-        align="center"
-        sx={{ mb: 4, color: "text.secondary" }}
+      {/* <Box
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          gap: SPACING.SMALL.PX,
+          mb: SPACING.MEDIUM.PX,
+        }}
       >
-        Find color inspiration in the everyday.
-      </Typography>
-      <img
-        style={{ width: "40%", margin: "auto", display: "block" }}
-        src={Icon}
-        alt="Logo"
-      />
+        <Box>
+          <img style={{ height: "50px" }} src={Icon} alt="Logo" />
+        </Box>
+        <Box>
+          <Typography variant="h1">Photo Palettes</Typography>
+          <Typography variant="body1">
+            Find color inspiration in the everyday.
+          </Typography>
+        </Box>
+      </Box> */}
       <Create mode="lite" />
     </Box>
   );

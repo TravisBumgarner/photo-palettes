@@ -1,4 +1,4 @@
-figma.showUI(__html__, { width: 300, height: 600 });
+figma.showUI(__html__, { width: 600, height: 800 });
 
 figma.ui.onmessage = (msg) => {
   if (msg.type === "create-rect") {

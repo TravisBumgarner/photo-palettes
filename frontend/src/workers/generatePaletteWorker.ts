@@ -43,3 +43,5 @@ self.onmessage = async (event: MessageEvent<MessageFromReact>) => {
   const response: MessageFromWorker = await kmeans(resizedBlob)
   self.postMessage({ id, response })
 }
+
+export {}

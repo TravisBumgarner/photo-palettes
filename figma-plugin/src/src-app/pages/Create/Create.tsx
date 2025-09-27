@@ -3,10 +3,8 @@ import Button from "@mui/material/Button";
 import { styled, type SxProps } from "@mui/material/styles";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
-import { useCallback, useEffect, useState } from "react";
-import { v4 as uuidv4 } from "uuid";
+import { useCallback, useState } from "react";
 import { PALETTE_SIZE } from "../../consts";
-import { useGeneratePaletteWorker } from "../../hooks/useGeneratePaletteWorker";
 import { logger } from "../../services/logging";
 import Loading from "../../sharedComponents/Loading";
 import Message from "../../sharedComponents/Message";
@@ -24,6 +22,7 @@ import Dropzone from "./components/Dropzone";
 import SelectGeneratedPalette from "./components/SelectGeneratedPalette";
 import { sharedCSS } from "./components/shared";
 import PageWrapper from "../../sharedComponents/PageWrapper";
+import kmeans from "../../utils/kmeans";
 
 type CreationStatus =
   | "INITIAL"
@@ -36,7 +35,6 @@ type CreationStatus =
 const MAX_NAME_LENGTH = 50;
 
 const Create = ({ mode }: { mode: "lite" | "full" }) => {
-  const { generatePalette: generatePaletteLite } = useGeneratePaletteWorker();
   const [photo, setPhoto] = useState<Blob | null>(null);
   const [creationStatus, setCreationStatus] =
     useState<CreationStatus>("INITIAL");
@@ -102,8 +100,7 @@ const Create = ({ mode }: { mode: "lite" | "full" }) => {
 
       let response: TGeneratePaletteResponse;
 
-      const photoUrl = URL.createObjectURL(resizedPhoto);
-      response = await generatePaletteLite(photoUrl);
+      response = await kmeans(resizedPhoto);
 
       if (response.success) {
         setCreationStatus("SELECTING_COLORS");
@@ -114,7 +111,7 @@ const Create = ({ mode }: { mode: "lite" | "full" }) => {
         setCreationStatus("ERROR");
       }
     },
-    [setGeneratedPalettes, setCreationStatus, mode, generatePaletteLite]
+    [setGeneratedPalettes, setCreationStatus, mode]
   );
 
   const handleNameChange = useCallback(
