@@ -10,9 +10,12 @@ import NativeNavigation from './components/Navigation/Navigation.Native'
 import WebNavigation from './components/Navigation/Navigation.Web'
 import ScrollToTop from './components/ScrollToTop'
 import useCheckTemporaryPalettesAndRedirect from './hooks/useCheckTemporaryPalettesAndRedirect'
+import useHealthCheck from './hooks/useHealthCheck'
 import useLoadUserIntoState from './hooks/useLoadUserIntoState'
 import useParseAnalyticsFromUrl from './hooks/useParseAnalyticsFromUrl'
+import { logger } from './services/logging'
 import Loading from './sharedComponents/Loading'
+import Message from './sharedComponents/Message'
 import RenderModal from './sharedComponents/Modal'
 import useGlobalStore from './store'
 import PlatformSpecificStyling from './styles/PlatformSpecificStyling'
@@ -26,8 +29,22 @@ function App() {
   useCheckTemporaryPalettesAndRedirect()
   useParseAnalyticsFromUrl()
   const loadingUser = useGlobalStore((state) => state.loadingUser)
+  const { isLoading, isHealthy } = useHealthCheck()
 
-  if (loadingUser) {
+  if (!isHealthy) {
+    logger.error('Backend is unhealthy')
+    SplashScreen.hide()
+    return (
+      <Message
+        color="error"
+        message="The backend is currently unavailable."
+        callback={() => window.location.reload()}
+        callbackText="Retry"
+      />
+    )
+  }
+
+  if (loadingUser || isLoading) {
     if (Capacitor.isNativePlatform()) {
       SplashScreen.show()
       return
