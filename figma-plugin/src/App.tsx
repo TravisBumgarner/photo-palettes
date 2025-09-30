@@ -1,12 +1,17 @@
 import { createRoot } from "react-dom/client";
-import Component from "./src-app/Component";
 import Box from "@mui/material/Box";
-import Icon from "./src-app/public/icon.png";
 import "./src-app/styles/global.css";
-import { Typography } from "@mui/material";
 import AppThemeProvider from "./src-app/styles/Theme";
 import Create from "./src-app/pages/Create";
 import { SPACING } from "./src-app/styles/styleConsts";
+import * as Sentry from "@sentry/react";
+
+Sentry.init({
+  dsn: "https://0cc7281ca80d476d7240e129a28263a3@o196886.ingest.us.sentry.io/4510110002380800",
+  // Setting this option to true will send default PII data to Sentry.
+  // For example, automatic IP address collection on events
+  sendDefaultPii: true,
+});
 
 function App() {
   return (
@@ -18,24 +23,6 @@ function App() {
         bgcolor: "background.default",
       }}
     >
-      {/* <Box
-        sx={{
-          display: "flex",
-          alignItems: "center",
-          gap: SPACING.SMALL.PX,
-          mb: SPACING.MEDIUM.PX,
-        }}
-      >
-        <Box>
-          <img style={{ height: "50px" }} src={Icon} alt="Logo" />
-        </Box>
-        <Box>
-          <Typography variant="h1">Photo Palettes</Typography>
-          <Typography variant="body1">
-            Find color inspiration in the everyday.
-          </Typography>
-        </Box>
-      </Box> */}
       <Create mode="lite" />
     </Box>
   );
