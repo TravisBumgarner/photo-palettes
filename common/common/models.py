@@ -69,6 +69,7 @@ class PaletteColor(Base):
     r: Mapped[int] = mapped_column(Integer)
     g: Mapped[int] = mapped_column(Integer)
     b: Mapped[int] = mapped_column(Integer)
+    name: Mapped[str] = mapped_column(String, default="")
     percent_location: Mapped[list[float]] = mapped_column(
         ARRAY(Float, dimensions=1), default=[0.0, 0.0]
     )

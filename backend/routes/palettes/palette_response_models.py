@@ -13,6 +13,7 @@ class PaletteColorResponse(BaseModel):
     r: int
     g: int
     b: int
+    name: str
 
 
 class PaletteResponse(BaseModel):
@@ -46,6 +47,7 @@ def map_palette_to_response(palette: Palette) -> PaletteResponse:
                 r=color.r,
                 g=color.g,
                 b=color.b,
+                name=color.name,
             )
             for color in palette.colors
         ],

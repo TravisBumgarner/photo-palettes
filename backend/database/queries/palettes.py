@@ -1,6 +1,6 @@
 import uuid
 
-from common.models import ModerationStatus, Palette, PaletteFavorite, SortBy
+from common.models import ModerationStatus, Palette, PaletteColor, PaletteFavorite, SortBy
 from sqlalchemy import func
 from sqlalchemy.orm import Session, joinedload
 
@@ -19,6 +19,29 @@ def get_palettes_count(
             query = query.filter(Palette.app_user_id == author_user_id)
 
         return query.count()
+
+
+def update_color(color_id: uuid.UUID, name: str):
+    with Session(db_engine) as session:
+        color = session.query(PaletteColor).filter(PaletteColor.id == color_id).first()
+        if color:
+            color.name = name
+            session.commit()
+            session.refresh(color)
+        return color
+
+
+def get_colors(size: int | None = None, offset: int | None = None) -> list[PaletteColor]:
+    with Session(db_engine) as session:
+        query = session.query(PaletteColor)
+
+        if offset is not None:
+            query = query.offset(offset)
+        if size is not None:
+            query = query.limit(size)
+
+        colors = query.all()
+        return colors
 
 
 def get_palettes(

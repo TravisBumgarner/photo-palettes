@@ -25,6 +25,7 @@ export const SwatchStory: Story = {
       r: 74,
       g: 144,
       b: 226,
+      name: 'Blue',
     },
   },
   render: () => (
@@ -39,6 +40,7 @@ export const SwatchStory: Story = {
             r: 74,
             g: 144,
             b: 226,
+            name: 'Black',
           } as TSwatch
         }
       />
@@ -52,6 +54,7 @@ export const SwatchStory: Story = {
             r: 74,
             g: 144,
             b: 226,
+            name: 'Gray',
           } as TSwatch
         }
       />
@@ -65,6 +68,7 @@ export const SwatchStory: Story = {
             r: 208,
             g: 2,
             b: 27,
+            name: 'White',
           } as TSwatch
         }
       />
@@ -78,6 +82,7 @@ export const SwatchStory: Story = {
             r: 255,
             g: 87,
             b: 51,
+            name: 'Orange',
           } as TSwatch
         }
       />
@@ -91,6 +96,7 @@ export const SwatchStory: Story = {
             r: 255,
             g: 87,
             b: 51,
+            name: 'Brown',
           } as TSwatch
         }
       />
@@ -104,6 +110,7 @@ export const SwatchStory: Story = {
             r: 74,
             g: 144,
             b: 226,
+            name: 'Light Gray',
           } as TSwatch
         }
       />

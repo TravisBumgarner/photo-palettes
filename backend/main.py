@@ -20,7 +20,9 @@ from routes.feature_requests.feature_requests_router import feature_requests_rou
 from routes.ok import router as ok_router
 from routes.palettes.palettes_router import palettes_router
 from routes.users.users_router import users_router
+from utils.colors import load_colors
 
+load_colors("utils/colors.csv")
 config = get_config()
 
 supabase: Client = create_client(config.supabase.url, config.supabase.key)

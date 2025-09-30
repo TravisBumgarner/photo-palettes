@@ -9,7 +9,7 @@ import { DETAILS_MAP } from '../Palette.consts'
 import type { Details } from '../Palette.types'
 
 const Swatch = ({
-  swatch: { hex },
+  swatch: { hex, name },
   details,
 }: {
   swatch: TSwatch
@@ -100,7 +100,7 @@ const Swatch = ({
             padding: SPACING.SMALL.PX,
           }}
         >
-          {copyLabel}
+          {name}
         </Typography>
       </Box>
     </Box>
