@@ -11,6 +11,7 @@ import authFormCSS from '../styles/shared/authFormCSS'
 import PageTitle from '../styles/shared/PageTitle'
 import PageWrapper from '../styles/shared/PageWrapper'
 
+import Box from '@mui/material/Box'
 import { Navigate, useNavigate } from 'react-router-dom'
 import { queries } from '../database'
 import { trackEvent } from '../services/analytics'
@@ -116,10 +117,19 @@ export default function LoginPage() {
         <Button variant="contained" type="submit" fullWidth>
           Log in
         </Button>
-        <Typography variant="body1">
-          {"Don't have an account? "}
-          <Link href={ROUTES.signup.href}>{ROUTES.signup.label}</Link>.
-        </Typography>
+        <Box>
+          <Typography variant="body1">
+            {"Don't have an account? "}
+            <Link href={ROUTES.signup.href}>{ROUTES.signup.label}</Link>.
+          </Typography>
+          <Typography variant="body1">
+            {'Forgot your password? '}
+            <Link href={ROUTES.passwordReset.href}>
+              {ROUTES.passwordReset.label}
+            </Link>
+            .
+          </Typography>
+        </Box>
       </form>
     </PageWrapper>
   )

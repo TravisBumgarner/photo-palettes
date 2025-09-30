@@ -1,6 +1,7 @@
 import { createClient } from '@supabase/supabase-js'
-import { logger } from './logging'
 import config from '../config'
+import { ROUTES } from '../consts'
+import { logger } from './logging'
 
 //TODO - FIx
 type Response =
@@ -71,4 +72,24 @@ export async function getToken() {
     return { message: 'Get token failed', success: false }
   }
   return { token: data.session?.access_token, success: true }
+}
+
+export async function resetPassword(email: string): Promise<Response> {
+  const { error } = await client.auth.resetPasswordForEmail(email, {
+    redirectTo: ROUTES.passwordReset.href,
+  })
+  if (error) {
+    logger.error(`Password reset failed ${JSON.stringify(error)}`)
+    return { error: 'Failed to send reset email', success: false }
+  }
+  return { success: true }
+}
+
+export async function updatePassword(password: string): Promise<Response> {
+  const { error } = await client.auth.updateUser({ password })
+  if (error) {
+    logger.error(`Password update failed ${JSON.stringify(error)}`)
+    return { error: 'Failed to update password', success: false }
+  }
+  return { success: true }
 }

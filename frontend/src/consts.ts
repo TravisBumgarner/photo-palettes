@@ -68,6 +68,11 @@ export const ROUTES = {
     href: '/logout',
     label: 'Logout',
   },
+  passwordReset: {
+    key: 'passwordReset',
+    href: '/password_reset',
+    label: 'Reset Password',
+  },
   featureRequests: {
     key: 'featureRequests',
     href: '/feature_requests',

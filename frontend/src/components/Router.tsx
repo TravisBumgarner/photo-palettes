@@ -1,6 +1,9 @@
 import { lazy } from 'react'
-import { Routes, Route, Navigate, Outlet } from 'react-router-dom'
+import { Navigate, Outlet, Route, Routes } from 'react-router-dom'
+import { ROUTES } from '../consts'
 import Browse from '../pages/Browse'
+import useGlobalStore from '../store'
+import { PERMISSION_LEVEL } from '../types'
 const TermsOfService = lazy(async () => await import('../pages/TermsOfService'))
 const PrivacyPolicy = lazy(async () => await import('../pages/PrivacyPolicy'))
 const ReleaseNotes = lazy(async () => await import('../pages/ReleaseNotes'))
@@ -20,9 +23,7 @@ const Donations = lazy(async () => await import('../pages/Donations'))
 const Palette = lazy(async () => await import('../pages/Palette'))
 const Favorites = lazy(async () => await import('../pages/Favorites'))
 const Admin = lazy(async () => await import('../pages/Admin'))
-import useGlobalStore from '../store'
-import { PERMISSION_LEVEL } from '../types'
-import { ROUTES } from '../consts'
+const PasswordReset = lazy(async () => await import('../pages/PasswordReset'))
 
 const AnonymousRoute = () => {
   const appUserDetails = useGlobalStore((state) => state.appUserDetails)
@@ -73,6 +74,7 @@ const Router = () => (
     <Route path={`${ROUTES.profile.href}/:id`} element={<Profile />} />
     <Route path={ROUTES.donate.href} element={<Donations />} />
     <Route path={'palette/:id'} element={<Palette />} />
+    <Route path={ROUTES.passwordReset.href} element={<PasswordReset />} />
 
     {/* Moderation only Routes */}
     <Route element={<ModerationRoute />}>
