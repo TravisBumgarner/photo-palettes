@@ -30,16 +30,49 @@ def get_twitter_api_v1() -> tweepy.API:
 
 def init_twitter_clients() -> None:
     """Init v2 Client (tweet) + v1.1 API (media upload + alt text)."""
-    print("initting twitter clients...")  # noqa T201
+    print("[twitter] Starting initialization of clients...")
+
     global twitter_client, twitter_api_v1
 
-    # v2 Client (creates the Tweet)
+    # --- Config presence checks ---
+    print(f"[twitter] API key present: {bool(config.twitter.api_key)}")
+    print(f"[twitter] API key secret present: {bool(config.twitter.api_key_secret)}")
+    print(f"[twitter] Access token present: {bool(config.twitter.access_token)}")
+    print(f"[twitter] Access token secret present: {bool(config.twitter.access_token_secret)}")
+
+    # --- Init v2 client ---
+    print("[twitter] Creating v2 Client...")
     twitter_client = tweepy.Client(
         consumer_key=config.twitter.api_key,
         consumer_secret=config.twitter.api_key_secret,
         access_token=config.twitter.access_token,
         access_token_secret=config.twitter.access_token_secret,
     )
+    print("[twitter] v2 Client created successfully")
+
+    # --- Init v1.1 API ---
+    print("[twitter] Creating v1.1 API client...")
+    auth = tweepy.OAuth1UserHandler(
+        consumer_key=config.twitter.api_key,
+        consumer_secret=config.twitter.api_key_secret,
+        access_token=config.twitter.access_token,
+        access_token_secret=config.twitter.access_token_secret,
+    )
+    twitter_api_v1 = tweepy.API(auth)
+    print("[twitter] v1.1 API client created successfully")
+
+    # --- Sanity check ---
+    try:
+        me = twitter_api_v1.verify_credentials()
+        if me:
+            print(f"[twitter] Verified credentials for @{me.screen_name} (id={me.id})")
+        else:
+            print("[twitter] WARNING: verify_credentials() returned None")
+    except Exception as e:
+        print(f"[twitter] ERROR during verify_credentials: {e}")
+
+    print("[twitter] All clients initialized")
+
 
     # v1.1 API (uploads media + alt text)
     auth = tweepy.OAuth1UserHandler(

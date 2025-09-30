@@ -35,7 +35,7 @@ const shouldPostTag = (tag: string, probability: number = 0.2) => {
 
 const PROMPT = `Look at this image and generate tags and captions.
 
-Give me exactly 5 tags for Twitter, 5 for Bluesky, and 5 for Instagram.
+Give me exactly 5 tags for Twitter, 5 for Bluesky, and 5 for Instagram. These tags should be moderately popular and related to the photo and Photo Palettes as a color palette generation tool. Do not recommend results with zero usages.
 
 The tags for each platform must be output as a single line inside a fenced Markdown code block. (Example: tag1 tag2 tag3 tag4 tag5 )
 
@@ -143,7 +143,10 @@ const ModeratorSharePostToSocials = ({
       window.open('https://chat.openai.com/', '_blank') // Open ChatGPT in a new tab
     } catch (err) {
       console.error('Failed to copy prompt and image', err) // eslint-disable-line no-console
-      alert('Your browser only supports copying text. Image copy failed.') // eslint-disable-line no-alert
+      // eslint-disable-next-line no-alert
+      alert(
+        'You are probably trying to copy an image on localhost and that will Error. Use cloudinary. Your browser only supports copying text. Image copy failed.'
+      )
     }
   }, [palette.photoUrl])
 
