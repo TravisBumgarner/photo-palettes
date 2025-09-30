@@ -68,9 +68,9 @@ const getTwitterHashtags = () => {
 const ModeratorSharePostToSocials = ({
   palette,
 }: ModeratorSharePostToSocialsProps) => {
-  const [shareToBluesky, setShareToBluesky] = useState(false)
-  const [shareToInstagram, setShareToInstagram] = useState(false)
-  const [shareToTwitter, setShareToTwitter] = useState(false)
+  const [shareToBluesky, setShareToBluesky] = useState(true)
+  const [shareToInstagram, setShareToInstagram] = useState(true)
+  const [shareToTwitter, setShareToTwitter] = useState(true)
   const [blueskyHashtags, setBlueskyHashtags] = useState(getBlueskyHashtags())
   const [instagramHashtags, setInstagramHashtags] =
     useState(getInstagramHashtags)
