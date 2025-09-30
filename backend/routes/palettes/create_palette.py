@@ -22,7 +22,7 @@ from routes.shared import (
 from services.logger import log_error
 from services.pushover import send_pushover_notification
 from utils.blurhash import encode_blurhash
-from utils.colors import hex_to_rgb
+from utils.colors import closest_color_name, hex_to_rgb
 
 from .palettes_router import palettes_router
 
@@ -86,6 +86,7 @@ def handle_request(
     colors = []
     for swatch in parsed_palette:
         r, g, b = hex_to_rgb(swatch.color)
+        color_name = closest_color_name((r, g, b))
         colors.append(
             PaletteColor(
                 hex=swatch.color,
@@ -95,6 +96,7 @@ def handle_request(
                 rgb_cube=f"({r},{g},{b})",
                 palette_id=palette_id,
                 percent_location=[round(x, 2) for x in swatch.percent_location],
+                name=color_name,
             )
         )
 
