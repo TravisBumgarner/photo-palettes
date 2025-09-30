@@ -42,6 +42,7 @@ init_cloudinary(config.cloudinary.url)
 while True:
     task = get_next_image_worker(db_engine=db_engine)
     if not task:
+        print("No tasks found, sleeping...")  # noqa T201
         time.sleep(SLEEP)
         continue
 
