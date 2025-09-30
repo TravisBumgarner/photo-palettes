@@ -7,6 +7,7 @@ import { z } from 'zod'
 import { MINIMUM_PASSWORD_LENGTH, ROUTES } from '../consts'
 import { trackEvent } from '../services/analytics'
 import { signup } from '../services/supabase'
+import { GoogleSignInButton } from '../sharedComponents/GoogleButton'
 import Link from '../sharedComponents/Link'
 import { MODAL_ID } from '../sharedComponents/Modal/Modal.types'
 import { activeModalSignal } from '../signals'
@@ -118,6 +119,8 @@ export default function SignupPage() {
       <form onSubmit={handleSubmit} style={authFormCSS}>
         <PageTitle center text="Sign Up" />
         {error && <p style={{ color: 'red' }}>{error}</p>}
+        <GoogleSignInButton text="Sign up with Google" />
+
         <TextField
           id="email"
           name="email"
@@ -168,6 +171,7 @@ export default function SignupPage() {
         >
           Sign up
         </Button>
+
         <Typography variant="body1">
           {'Have have an account? '}
           <Link href={ROUTES.login.href}>{ROUTES.login.label}</Link>.

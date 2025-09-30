@@ -15,6 +15,7 @@ import Box from '@mui/material/Box'
 import { Navigate, useNavigate } from 'react-router-dom'
 import { queries } from '../database'
 import { trackEvent } from '../services/analytics'
+import { GoogleSignInButton } from '../sharedComponents/GoogleButton'
 import Link from '../sharedComponents/Link'
 import { loadUserIntoState } from '../utils/loadUserIntoState'
 
@@ -85,6 +86,7 @@ export default function LoginPage() {
     <PageWrapper minHeight verticallyAlign width="small">
       <form onSubmit={handleSubmit} style={authFormCSS}>
         <PageTitle text="Log In" center />
+        <GoogleSignInButton text="Sign in with Google" />
         {error && <p style={{ color: 'red' }}>{error}</p>}
         <TextField
           id="email"

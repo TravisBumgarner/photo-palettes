@@ -93,3 +93,14 @@ export async function updatePassword(password: string): Promise<Response> {
   }
   return { success: true }
 }
+
+export async function signInWithGoogle() {
+  const { error } = await client.auth.signInWithOAuth({
+    provider: 'google',
+  })
+  if (error) {
+    logger.error(`Google sign-in failed ${JSON.stringify(error)}`)
+    return { error: 'Google sign-in failed', success: false }
+  }
+  return { success: true }
+}
