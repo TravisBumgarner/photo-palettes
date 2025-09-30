@@ -35,10 +35,6 @@
       "settings": {
         "python.defaultInterpreterPath": ".venv-image-worker/bin/python"
       }
-    },
-    {
-      "name": "figma-plugin",
-      "path": "./figma-plugin"
     }
   ]
 }
