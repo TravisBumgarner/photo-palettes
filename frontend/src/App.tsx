@@ -8,6 +8,7 @@ import { SplashScreen } from '@capacitor/splash-screen'
 import Box from '@mui/material/Box'
 import NativeNavigation from './components/Navigation/Navigation.Native'
 import WebNavigation from './components/Navigation/Navigation.Web'
+import ScrollToTop from './components/ScrollToTop'
 import useCheckTemporaryPalettesAndRedirect from './hooks/useCheckTemporaryPalettesAndRedirect'
 import useLoadUserIntoState from './hooks/useLoadUserIntoState'
 import useParseAnalyticsFromUrl from './hooks/useParseAnalyticsFromUrl'
@@ -79,6 +80,7 @@ const WrappedApp = () => {
       <AppThemeProvider>
         <PlatformSpecificStyling>
           <App />
+          <ScrollToTop />
         </PlatformSpecificStyling>
       </AppThemeProvider>
     </BrowserRouter>
