@@ -2,20 +2,22 @@ import Box from '@mui/material/Box'
 import { SPACING } from '../../../styles/styleConsts'
 import { type ColorMix, type TSwatch } from '../../../types'
 import { getColorSchemes } from '../../../utils/color'
-import type { Details } from '../Palette.types'
+import type { ColorMode, ToggleExploration } from '../Palette.types'
 import Gradient from './Gradient'
 import Swatch from './Swatch'
 
 const ColorDetails = ({
   swatch,
-  details,
+  colorMode,
   colorMix,
   index,
+  toggleExploration,
 }: {
   index: number
   swatch: TSwatch
-  details: Details
+  colorMode: ColorMode
   colorMix: ColorMix
+  toggleExploration: ToggleExploration
 }) => {
   const schemes = getColorSchemes(swatch.hex)[colorMix]
   return (
@@ -24,11 +26,15 @@ const ColorDetails = ({
       sx={{
         display: 'flex',
         flexDirection: 'column',
-        gap: SPACING.SMALL.PX,
-        padding: `${SPACING.MEDIUM.PX} ${SPACING.SMALL.PX}`,
+        ...(toggleExploration === 'on'
+          ? {
+              gap: SPACING.SMALL.PX,
+              padding: `${SPACING.MEDIUM.PX} 0`,
+            }
+          : {}),
       }}
     >
-      <Swatch swatch={swatch} details={details} />
+      <Swatch swatch={swatch} colorMode={colorMode} />
       <Box
         sx={{
           display: 'flex',
@@ -39,13 +45,14 @@ const ColorDetails = ({
           },
         }}
       >
-        {schemes.map((hexColor, index) => (
-          <Gradient
-            key={`${hexColor}-${index}`}
-            hexColor={hexColor}
-            details={details}
-          />
-        ))}
+        {toggleExploration === 'on' &&
+          schemes.map((hexColor, index) => (
+            <Gradient
+              key={`${hexColor}-${index}`}
+              hexColor={hexColor}
+              colorMode={colorMode}
+            />
+          ))}
       </Box>
     </Box>
   )

@@ -17,7 +17,7 @@ type Story = StoryObj<typeof meta>
 
 export const SwatchStory: Story = {
   args: {
-    details: 'hex',
+    colorMode: 'hex',
     swatch: {
       percentLocation: [0, 0],
       id: 'default',
@@ -31,7 +31,7 @@ export const SwatchStory: Story = {
   render: () => (
     <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: '20px' }}>
       <Swatch
-        details="hex"
+        colorMode="hex"
         swatch={
           {
             percentLocation: [0, 0],
@@ -45,7 +45,7 @@ export const SwatchStory: Story = {
         }
       />
       <Swatch
-        details="hex"
+        colorMode="hex"
         swatch={
           {
             percentLocation: [0, 0],
@@ -59,7 +59,7 @@ export const SwatchStory: Story = {
         }
       />
       <Swatch
-        details="hex"
+        colorMode="hex"
         swatch={
           {
             percentLocation: [0, 0],
@@ -73,7 +73,7 @@ export const SwatchStory: Story = {
         }
       />
       <Swatch
-        details="hex"
+        colorMode="hex"
         swatch={
           {
             percentLocation: [0, 0],
@@ -87,7 +87,7 @@ export const SwatchStory: Story = {
         }
       />
       <Swatch
-        details="hex"
+        colorMode="hex"
         swatch={
           {
             percentLocation: [0, 0],
@@ -101,7 +101,7 @@ export const SwatchStory: Story = {
         }
       />
       <Swatch
-        details="hex"
+        colorMode="hex"
         swatch={
           {
             percentLocation: [0, 0],

@@ -44,6 +44,12 @@ const baseThemeOptions: ThemeOptions = {
           textTransform: 'none',
           minHeight: TAB_HEIGHT,
           height: TAB_HEIGHT,
+          '&.Mui-selected': {
+            fontWeight: 900,
+          },
+          '&:hover': {
+            fontWeight: 900,
+          },
         },
       },
     },
@@ -359,10 +365,10 @@ const darkThemeOptions: ThemeOptions = {
     MuiTab: {
       styleOverrides: {
         root: {
-          color: PALETTE.grayscale[200], // text color
+          color: PALETTE.grayscale[100], // text color
           '&.Mui-selected': {
-            backgroundColor: PALETTE.grayscale[700],
-            color: PALETTE.grayscale[200],
+            backgroundColor: PALETTE.grayscale[200],
+            color: PALETTE.grayscale[900],
           },
           '&:hover': {
             backgroundColor: PALETTE.grayscale[100],

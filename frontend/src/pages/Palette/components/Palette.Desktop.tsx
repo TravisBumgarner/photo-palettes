@@ -47,9 +47,10 @@ const PaletteDesktop = ({
             <ColorDetails
               index={index}
               colorMix={controls.mix}
-              details={controls.details}
+              colorMode={controls.colorMode}
               swatch={swatch}
               key={swatch.id}
+              toggleExploration={controls.toggleExploration}
             />
           ))}
         </RightColumn>
@@ -67,7 +68,6 @@ const LeftColumn = styled(Box)(({ theme }) => ({
   flexBasis: '250px',
   flexShrink: 0,
   padding: `${SPACING.MEDIUM.PX}`,
-  minHeight: '100vh',
   gap: SPACING.SMALL.PX,
   display: 'flex',
   flexDirection: 'column',
@@ -79,7 +79,7 @@ const LeftColumn = styled(Box)(({ theme }) => ({
 }))
 
 const RightColumn = styled(Box)(() => ({
-  padding: `${SPACING.MEDIUM.PX} ${SPACING.MEDIUM.PX} 40vh ${SPACING.MEDIUM.PX}`,
+  padding: SPACING.MEDIUM.PX,
   flexGrow: 1,
   overflow: 'hidden',
 }))

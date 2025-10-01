@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import healthCheck from '../api/healthCheck'
 
 const useHealthCheck = () => {
-  // Optimistaically assume healthy until we know otherwise
+  // Optimistically assume healthy until we know otherwise
   const [isHealthy, setIsHealthy] = useState(true)
   const [isLoading, setIsLoading] = useState(true)
 

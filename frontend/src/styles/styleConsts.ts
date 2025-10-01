@@ -100,8 +100,8 @@ export const LIGHT_BUTTON_STYLES = {
 
 export const DARK_BUTTON_STYLES = {
   color: PALETTE.grayscale[900],
-  background: PALETTE.grayscale[100],
-  hoverBackground: PALETTE.grayscale[300],
+  background: PALETTE.grayscale[200],
+  hoverBackground: PALETTE.grayscale[100],
 }
 
 export const Z_INDICES = {

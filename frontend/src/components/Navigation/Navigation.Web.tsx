@@ -112,6 +112,8 @@ const Navigation = () => {
       >
         <Link
           sx={createLinkSX(theme.palette.mode)}
+          hideBaseUnderline
+          hideHoverUnderline
           href={ROUTES.create.href}
           onClick={() => {
             if (location.pathname !== ROUTES.create.href) {
