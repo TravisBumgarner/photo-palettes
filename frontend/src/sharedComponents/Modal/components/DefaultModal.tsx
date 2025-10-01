@@ -4,6 +4,7 @@ import MUIModal from '@mui/material/Modal'
 import type { SxProps } from '@mui/material/styles'
 import { useCallback, type FC } from 'react'
 import { IoMdClose } from 'react-icons/io'
+import { useShortcut } from '../../../hooks/useShortcut'
 import { activeModalSignal } from '../../../signals'
 import { BORDER_RADIUS, SPACING, Z_INDICES } from '../../../styles/styleConsts'
 interface ActiveModal {
@@ -22,6 +23,9 @@ const Modal: FC<ActiveModal> = ({ children, closeCallback, sx }) => {
     },
     [closeCallback]
   )
+  useShortcut('escape', () => {
+    activeModalSignal.value = null
+  })
 
   return (
     <MUIModal

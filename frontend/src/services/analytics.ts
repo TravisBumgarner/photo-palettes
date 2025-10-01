@@ -24,8 +24,11 @@ type CreatePhotoLoadedEvent = {
   }
 }
 
-type AnonModelDownloadEvent = {
-  event: 'anon_model_download'
+type PaletteDownloadEvent = {
+  event: 'palette_download'
+  properties: {
+    source: 'anon_download' | 'palette_page'
+  }
 }
 
 type AnonModelSignUpEvent = {
@@ -120,7 +123,7 @@ type Event =
   | CreateButtonClickedEvent
   | CreatePhotoSelectedEvent
   | CreatePhotoLoadedEvent
-  | AnonModelDownloadEvent
+  | PaletteDownloadEvent
   | AnonModelSignUpEvent
   | UserSignUpEvent
   | UserLogInEvent

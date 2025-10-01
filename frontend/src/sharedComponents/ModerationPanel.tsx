@@ -16,7 +16,7 @@ import { deletePalette } from '../api/palettes/deletePalette'
 import { activeModalSignal } from '../signals'
 import useGlobalStore from '../store'
 import { BORDER_RADIUS, SPACING, subtleBackground } from '../styles/styleConsts'
-import { MODAL_ID } from './Modal/Modal.types'
+import { MODAL_ID } from './Modal/Modal.consts'
 
 const ModerationPanel = ({
   refetch,

@@ -2,9 +2,9 @@ import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import Typography from '@mui/material/Typography'
 import { useCallback } from 'react'
-import { MODAL_ID } from '../Modal.types'
-import DefaultModal from './DefaultModal'
 import { activeModalSignal } from '../../../signals'
+import { MODAL_ID } from '../Modal.consts'
+import DefaultModal from './DefaultModal'
 
 export interface ConfirmationModalProps {
   id: typeof MODAL_ID.CONFIRMATION_MODAL

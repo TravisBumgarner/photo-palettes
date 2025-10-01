@@ -1,16 +1,21 @@
 import Box from '@mui/material/Box'
+import Button from '@mui/material/Button'
 import { styled } from '@mui/material/styles'
-import React from 'react'
+import React, { useCallback } from 'react'
 import BlurImage from '../../../sharedComponents/BlurImage'
 import ColorBar from '../../../sharedComponents/ColorBar'
+import { MODAL_ID } from '../../../sharedComponents/Modal/Modal.consts'
 import ModerationPanel from '../../../sharedComponents/ModerationPanel'
+import { activeModalSignal } from '../../../signals'
 import PageWrapper from '../../../styles/shared/PageWrapper'
 import { SPACING, subtleBackground } from '../../../styles/styleConsts'
 import { type TPalette } from '../../../types'
+import downloadPalette from '../../../utils/downloadPalette'
 import type { PaletteControlsState } from '../Palette.types'
 import ColorDetails from './ColorDetails'
 import Controls from './Controls'
 import Summary from './Summary'
+import { trackEvent } from '../../../services/analytics'
 
 const PaletteDesktop = ({
   palette,
@@ -23,6 +28,25 @@ const PaletteDesktop = ({
   controls: PaletteControlsState
   setControls: React.Dispatch<React.SetStateAction<PaletteControlsState>>
 }) => {
+  const setPhotoAsModal = useCallback(() => {
+    activeModalSignal.value = {
+      id: MODAL_ID.LIGHTBOX_MODAL,
+      palette,
+    }
+  }, [palette])
+
+  const handleDownloadPalette = useCallback(() => {
+    trackEvent({
+      event: 'palette_download',
+      properties: { source: 'palette_page' },
+    })
+    downloadPalette({
+      paletteId: palette.id,
+      photoUrl: palette.photoUrl,
+      colors: palette.colors.map((c) => c.hex),
+    })
+  }, [palette])
+
   return (
     <PageWrapper width="full">
       <Container>
@@ -33,13 +57,19 @@ const PaletteDesktop = ({
             height={15}
             colors={palette.colors.map((c) => c.hex)}
           />
-          <BlurImage
-            alt={`${palette.name} thumbnail`}
-            src={palette.photoUrl}
-            aspectRatio={palette.aspectRatio}
-            blurHash={palette.blurhash}
-            maxDimensions={{ maxHeight: '40vh' }}
-          />
+
+          <Box onClick={setPhotoAsModal} sx={{ cursor: 'pointer' }}>
+            <BlurImage
+              alt={`${palette.name} thumbnail`}
+              src={palette.photoUrl}
+              aspectRatio={palette.aspectRatio}
+              blurHash={palette.blurhash}
+              maxDimensions={{ maxHeight: '40vh' }}
+            />
+          </Box>
+          <Button variant="outlined" onClick={handleDownloadPalette}>
+            Download Palette
+          </Button>
           <Controls controls={controls} setControls={setControls} />
         </LeftColumn>
         <RightColumn sx={{ backgroundColor: controls.background }}>
