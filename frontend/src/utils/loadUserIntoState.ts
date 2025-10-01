@@ -1,7 +1,7 @@
+import { setUserId } from '@amplitude/analytics-browser'
 import { getMe } from '../api/getMe'
 import { getUser } from '../services/supabase'
 import useGlobalStore from '../store'
-import { setUserId } from '@amplitude/analytics-browser'
 
 export const loadUserIntoState = async () => {
   const { user } = await getUser()
