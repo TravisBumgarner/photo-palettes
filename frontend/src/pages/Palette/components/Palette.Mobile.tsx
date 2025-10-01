@@ -121,6 +121,7 @@ const PaletteMobile = ({
                 colorMix={controls.mix}
                 colorMode={controls.colorMode}
                 swatch={swatch}
+                backgroundColor={controls.background}
                 key={swatch.id}
               />
             ))}

@@ -146,80 +146,96 @@ const baseThemeOptions: ThemeOptions = {
   },
 }
 
-const lightThemeOptions: ThemeOptions = {
+const getThemeOptions = (mode: 'light' | 'dark'): ThemeOptions => ({
   palette: {
-    mode: 'light',
+    mode,
+    background: {
+      default:
+        mode === 'light' ? PALETTE.grayscale[50] : PALETTE.grayscale[900],
+      paper: mode === 'light' ? PALETTE.grayscale[50] : PALETTE.grayscale[800],
+    },
     info: {
-      main: PALETTE.grayscale[700],
-      contrastText: PALETTE.grayscale[200],
+      main: mode === 'light' ? PALETTE.grayscale[700] : PALETTE.grayscale[200],
+      contrastText:
+        mode === 'light' ? PALETTE.grayscale[200] : PALETTE.grayscale[800],
     },
     error: {
-      main: PALETTE.grayscale[700],
-      contrastText: PALETTE.grayscale[200],
-    },
-    background: {
-      default: PALETTE.grayscale[50],
-      paper: PALETTE.grayscale[50],
+      main: mode === 'light' ? PALETTE.grayscale[700] : PALETTE.grayscale[200],
+      contrastText:
+        mode === 'light' ? PALETTE.grayscale[200] : PALETTE.grayscale[800],
     },
     text: {
-      primary: PALETTE.grayscale[900],
-      secondary: PALETTE.grayscale[800],
+      primary:
+        mode === 'light' ? PALETTE.grayscale[900] : PALETTE.grayscale[100],
+      secondary:
+        mode === 'light' ? PALETTE.grayscale[800] : PALETTE.grayscale[200],
     },
-    divider: PALETTE.grayscale[100],
+    divider: mode === 'light' ? PALETTE.grayscale[100] : PALETTE.grayscale[700],
   },
   typography: {
     h1: {
-      color: PALETTE.grayscale[900],
+      color: mode === 'light' ? PALETTE.grayscale[900] : PALETTE.grayscale[100],
     },
     h2: {
-      color: PALETTE.grayscale[900],
+      color: mode === 'light' ? PALETTE.grayscale[900] : PALETTE.grayscale[100],
     },
     h3: {
-      color: PALETTE.grayscale[900],
+      color: mode === 'light' ? PALETTE.grayscale[900] : PALETTE.grayscale[100],
     },
     body1: {
-      color: PALETTE.grayscale[900],
+      color: mode === 'light' ? PALETTE.grayscale[900] : PALETTE.grayscale[100],
     },
     body2: {
-      color: PALETTE.grayscale[900],
-      fontSize: FONT_SIZES.SMALL.PX,
+      color: mode === 'light' ? PALETTE.grayscale[900] : PALETTE.grayscale[100],
+      fontSize: mode === 'light' ? FONT_SIZES.SMALL.PX : undefined,
     },
   },
   components: {
     MuiSwitch: {
       styleOverrides: {
+        ...(mode === 'dark' && { thumb: { borderRadius: 0 } }),
         switchBase: {
           color: PALETTE.grayscale[500],
           '&.Mui-checked': {
-            color: PALETTE.grayscale[700],
+            color:
+              mode === 'light'
+                ? PALETTE.grayscale[700]
+                : PALETTE.grayscale[200],
           },
           '&.Mui-checked + .MuiSwitch-track': {
-            backgroundColor: PALETTE.grayscale[700],
+            backgroundColor:
+              mode === 'light'
+                ? PALETTE.grayscale[700]
+                : PALETTE.grayscale[200],
           },
         },
         track: {
-          backgroundColor: PALETTE.grayscale[400],
+          backgroundColor:
+            mode === 'light' ? PALETTE.grayscale[400] : PALETTE.grayscale[600],
         },
       },
     },
     MuiTabs: {
       styleOverrides: {
-        indicator: {
-          backgroundColor: PALETTE.grayscale[200], // underline color
-        },
+        indicator: { backgroundColor: PALETTE.grayscale[200] },
       },
     },
     MuiTab: {
       styleOverrides: {
         root: {
-          color: PALETTE.grayscale[700], // text color
-          '&:hover': {
-            backgroundColor: PALETTE.grayscale[800],
-            color: PALETTE.grayscale[50],
-          },
+          color:
+            mode === 'light' ? PALETTE.grayscale[700] : PALETTE.grayscale[100],
           '&.Mui-selected': {
             backgroundColor: PALETTE.grayscale[200],
             color: PALETTE.grayscale[900],
+          },
+          '&:hover': {
+            backgroundColor:
+              mode === 'light'
+                ? PALETTE.grayscale[800]
+                : PALETTE.grayscale[100],
+            color:
+              mode === 'light' ? PALETTE.grayscale[50] : PALETTE.grayscale[900],
           },
         },
       },
@@ -227,12 +243,19 @@ const lightThemeOptions: ThemeOptions = {
     MuiLink: {
       styleOverrides: {
         root: {
-          color: PALETTE.grayscale[800],
+          color:
+            mode === 'light' ? PALETTE.grayscale[800] : PALETTE.grayscale[100],
           '&:hover': {
-            color: PALETTE.grayscale[800],
+            color:
+              mode === 'light'
+                ? PALETTE.grayscale[800]
+                : PALETTE.grayscale[100],
           },
           '&:visited': {
-            color: PALETTE.grayscale[800],
+            color:
+              mode === 'light'
+                ? PALETTE.grayscale[800]
+                : PALETTE.grayscale[100],
           },
         },
       },
@@ -240,166 +263,18 @@ const lightThemeOptions: ThemeOptions = {
     MuiOutlinedInput: {
       styleOverrides: {
         root: {
-          color: PALETTE.grayscale[700],
-          // ...existing styles...
+          color:
+            mode === 'light' ? PALETTE.grayscale[700] : PALETTE.grayscale[300],
           '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-            borderColor: PALETTE.grayscale[700],
+            borderColor:
+              mode === 'light'
+                ? PALETTE.grayscale[700]
+                : PALETTE.grayscale[300],
           },
         },
         notchedOutline: {
-          borderColor: PALETTE.grayscale[400],
-        },
-      },
-    },
-    MuiInputLabel: {
-      styleOverrides: {
-        root: {
-          // ...existing styles...
-          '&.Mui-focused': {
-            color: PALETTE.grayscale[700],
-          },
-        },
-      },
-    },
-    MuiButton: {
-      styleOverrides: {
-        contained: {
-          color: LIGHT_BUTTON_STYLES.color,
-          backgroundColor: LIGHT_BUTTON_STYLES.background,
-          '&:hover': {
-            backgroundColor: LIGHT_BUTTON_STYLES.hoverBackground,
-          },
-          '&:disabled': {
-            backgroundColor: PALETTE.grayscale[400],
-          },
-        },
-        outlined: {
-          color: PALETTE.grayscale[700],
-          borderColor: PALETTE.grayscale[700],
-          '&:hover': {
-            backgroundColor: PALETTE.grayscale[100],
-          },
-          '&:disabled': {
-            textColor: PALETTE.grayscale[400],
-          },
-        },
-        text: {
-          color: PALETTE.grayscale[700],
-          '&:hover': {
-            backgroundColor: PALETTE.grayscale[100],
-          },
-          '&:disabled': {
-            textColor: PALETTE.grayscale[400],
-          },
-        },
-      },
-    },
-  },
-}
-
-const darkThemeOptions: ThemeOptions = {
-  palette: {
-    mode: 'dark',
-    background: {
-      default: PALETTE.grayscale[900],
-      paper: PALETTE.grayscale[800],
-    },
-    info: {
-      main: PALETTE.grayscale[200],
-      contrastText: PALETTE.grayscale[800],
-    },
-    error: {
-      main: PALETTE.grayscale[200],
-      contrastText: PALETTE.grayscale[800],
-    },
-    text: {
-      primary: PALETTE.grayscale[100],
-      secondary: PALETTE.grayscale[200],
-    },
-    divider: PALETTE.grayscale[700],
-  },
-  typography: {
-    h1: {
-      color: PALETTE.grayscale[100],
-    },
-    h2: {
-      color: PALETTE.grayscale[100],
-    },
-    h3: {
-      color: PALETTE.grayscale[100],
-    },
-    body1: {
-      color: PALETTE.grayscale[100],
-    },
-    body2: {
-      color: PALETTE.grayscale[100],
-    },
-  },
-  components: {
-    MuiSwitch: {
-      styleOverrides: {
-        thumb: {
-          borderRadius: 0,
-        },
-        switchBase: {
-          color: PALETTE.grayscale[500],
-          '&.Mui-checked': {
-            color: PALETTE.grayscale[200],
-          },
-          '&.Mui-checked + .MuiSwitch-track': {
-            backgroundColor: PALETTE.grayscale[200],
-          },
-        },
-        track: {
-          backgroundColor: PALETTE.grayscale[600],
-        },
-      },
-    },
-    MuiTabs: {
-      styleOverrides: {
-        indicator: {
-          backgroundColor: PALETTE.grayscale[200], // underline color
-        },
-      },
-    },
-    MuiTab: {
-      styleOverrides: {
-        root: {
-          color: PALETTE.grayscale[100], // text color
-          '&.Mui-selected': {
-            backgroundColor: PALETTE.grayscale[200],
-            color: PALETTE.grayscale[900],
-          },
-          '&:hover': {
-            backgroundColor: PALETTE.grayscale[100],
-            color: PALETTE.grayscale[900],
-          },
-        },
-      },
-    },
-    MuiLink: {
-      styleOverrides: {
-        root: {
-          color: PALETTE.grayscale[100],
-          '&:hover': {
-            color: PALETTE.grayscale[100],
-          },
-          '&:visited': {
-            color: PALETTE.grayscale[100],
-          },
-        },
-      },
-    },
-    MuiOutlinedInput: {
-      styleOverrides: {
-        root: {
-          color: PALETTE.grayscale[300],
-          '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-            borderColor: PALETTE.grayscale[300],
-          },
-        },
-        notchedOutline: {
-          borderColor: PALETTE.grayscale[600],
+          borderColor:
+            mode === 'light' ? PALETTE.grayscale[400] : PALETTE.grayscale[600],
         },
       },
     },
@@ -407,7 +282,10 @@ const darkThemeOptions: ThemeOptions = {
       styleOverrides: {
         root: {
           '&.Mui-focused': {
-            color: PALETTE.grayscale[300],
+            color:
+              mode === 'light'
+                ? PALETTE.grayscale[700]
+                : PALETTE.grayscale[300],
           },
         },
       },
@@ -415,41 +293,70 @@ const darkThemeOptions: ThemeOptions = {
     MuiButton: {
       styleOverrides: {
         contained: {
-          color: DARK_BUTTON_STYLES.color,
-          backgroundColor: DARK_BUTTON_STYLES.background,
+          color:
+            mode === 'light'
+              ? LIGHT_BUTTON_STYLES.color
+              : DARK_BUTTON_STYLES.color,
+          backgroundColor:
+            mode === 'light'
+              ? LIGHT_BUTTON_STYLES.background
+              : DARK_BUTTON_STYLES.background,
           '&:hover': {
-            backgroundColor: DARK_BUTTON_STYLES.hoverBackground,
+            backgroundColor:
+              mode === 'light'
+                ? LIGHT_BUTTON_STYLES.hoverBackground
+                : DARK_BUTTON_STYLES.hoverBackground,
           },
           '&:disabled': {
-            backgroundColor: PALETTE.grayscale[700],
+            backgroundColor:
+              mode === 'light'
+                ? PALETTE.grayscale[400]
+                : PALETTE.grayscale[700],
           },
         },
         outlined: {
-          color: PALETTE.grayscale[100],
-          borderColor: PALETTE.grayscale[200],
+          color:
+            mode === 'light' ? PALETTE.grayscale[700] : PALETTE.grayscale[100],
+          borderColor:
+            mode === 'light' ? PALETTE.grayscale[700] : PALETTE.grayscale[200],
           '&:hover': {
-            backgroundColor: PALETTE.grayscale[700],
+            backgroundColor:
+              mode === 'light'
+                ? PALETTE.grayscale[100]
+                : PALETTE.grayscale[700],
           },
           '&:disabled': {
-            textColor: PALETTE.grayscale[600],
+            textColor:
+              mode === 'light'
+                ? PALETTE.grayscale[400]
+                : PALETTE.grayscale[600],
           },
         },
         text: {
-          color: PALETTE.grayscale[100],
+          color:
+            mode === 'light' ? PALETTE.grayscale[700] : PALETTE.grayscale[100],
           '&:hover': {
-            backgroundColor: PALETTE.grayscale[700],
+            backgroundColor:
+              mode === 'light'
+                ? PALETTE.grayscale[100]
+                : PALETTE.grayscale[700],
           },
           '&:disabled': {
-            textColor: PALETTE.grayscale[700],
+            textColor:
+              mode === 'light'
+                ? PALETTE.grayscale[400]
+                : PALETTE.grayscale[700],
           },
         },
       },
     },
   },
-}
+})
 
-const darkTheme = createTheme(merge(baseThemeOptions, darkThemeOptions))
-const lightTheme = createTheme(merge(baseThemeOptions, lightThemeOptions))
+const lightTheme = createTheme(
+  merge(baseThemeOptions, getThemeOptions('light'))
+)
+const darkTheme = createTheme(merge(baseThemeOptions, getThemeOptions('dark')))
 
 const AppThemeProvider = ({ children }: { children: React.ReactNode }) => {
   const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)')

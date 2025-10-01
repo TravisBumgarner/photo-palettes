@@ -109,6 +109,13 @@ type UserOriginEvent = {
   }
 }
 
+type CopyCSSGradientEvent = {
+  event: 'copy_gradient_css_variables'
+  properties: {
+    color_mode: ColorMode
+  }
+}
+
 type Event =
   | CreateButtonClickedEvent
   | CreatePhotoSelectedEvent
@@ -126,6 +133,7 @@ type Event =
   | BrowseNavigationEvent
   | CopyColorDetailEvent
   | UserOriginEvent
+  | CopyCSSGradientEvent
 
 export const trackEvent = (event: Event) => {
   const properties = {

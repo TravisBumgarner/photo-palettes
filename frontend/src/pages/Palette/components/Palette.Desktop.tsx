@@ -50,6 +50,7 @@ const PaletteDesktop = ({
               colorMode={controls.colorMode}
               swatch={swatch}
               key={swatch.id}
+              backgroundColor={controls.background}
               toggleExploration={controls.toggleExploration}
             />
           ))}
@@ -65,7 +66,7 @@ const PaletteDesktop = ({
 }
 
 const LeftColumn = styled(Box)(({ theme }) => ({
-  flexBasis: '180px',
+  flexBasis: '240px',
   flexShrink: 0,
   padding: `${SPACING.MEDIUM.PX}`,
   gap: SPACING.SMALL.PX,

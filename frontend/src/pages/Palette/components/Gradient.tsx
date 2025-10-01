@@ -1,7 +1,8 @@
 import Box from '@mui/material/Box'
+import Button from '@mui/material/Button'
 import Typography from '@mui/material/Typography'
 import Color from 'color'
-import { useCallback, useMemo } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import useMediaQuery from '../../../hooks/UseMediaQuery'
 import { trackEvent } from '../../../services/analytics'
 import { FONT_SIZES, SPACING } from '../../../styles/styleConsts'
@@ -11,7 +12,7 @@ import type { ColorMode } from '../Palette.types'
 
 // There's flickering when just a single column of gradient is selected. Hardcoding makes it super straightforward.
 const ROW_HEIGHT = '40px'
-const COLUMN_HEIGHT = '82px'
+const COLUMN_HEIGHT = '60px'
 const HEIGHT_LOOKUP: Record<
   `${ColorMode}-${'vertical' | 'horizontal'}`,
   string
@@ -40,7 +41,7 @@ const Step = ({
   hexColor: string
 }) => {
   const switchVertical = useMediaQuery('(max-width:700px)')
-
+  const [isRecentlyCopied, setIsRecentlyCopied] = useState(false)
   const stepColor = Color(hexColor).lightness(100 - step / 10)
 
   const colorFormat = useMemo(() => {
@@ -102,6 +103,8 @@ const Step = ({
   }, [colorMode, step, stepColor])
 
   const handleCopyClick = useCallback(() => {
+    setIsRecentlyCopied(true)
+    setTimeout(() => setIsRecentlyCopied(false), 2000)
     trackEvent({
       event: 'copy_color_detail',
       properties: {
@@ -123,7 +126,6 @@ const Step = ({
         justifyContent: 'center',
         alignItems: 'center',
         cursor: 'pointer',
-        padding: SPACING.SMALL.PX,
         minHeight: HEIGHT_LOOKUP[lookupKey],
         '&:hover .normalText': { display: 'none' },
         '&:hover .hoverText': { display: 'initial' },
@@ -134,10 +136,9 @@ const Step = ({
         sx={{
           position: 'relative',
           textAlign: 'center',
-          fontSize: FONT_SIZES.SMALL.PX,
           display: 'flex',
           flexDirection: switchVertical ? 'column' : 'row',
-          gap: SPACING.TINY.PX,
+          gap: switchVertical ? 0 : SPACING.TINY.PX,
         }}
       >
         <Typography
@@ -149,7 +150,7 @@ const Step = ({
             fontSize: FONT_SIZES.SMALL.PX,
           }}
         >
-          Copy {colorFormat}
+          {isRecentlyCopied ? 'Copied!' : `Copy ${colorFormat}`}
         </Typography>
         {label.map((labelPart, index) => (
           <Typography
@@ -163,7 +164,7 @@ const Step = ({
             }}
             key={`${labelPart}-${index}`}
           >
-            {labelPart}
+            {isRecentlyCopied ? 'Copied!' : labelPart}
           </Typography>
         ))}
       </Box>
@@ -174,26 +175,64 @@ const Step = ({
 const Gradient = ({
   colorMode,
   hexColor,
+  backgroundColor,
 }: {
   colorMode: ColorMode
   hexColor: string
+  backgroundColor: string
 }) => {
+  const [isRecentlyCopied, setIsRecentlyCopied] = useState(false)
+
+  const handleCopyToCSSVariables = useCallback(() => {
+    setIsRecentlyCopied(true)
+    setTimeout(() => setIsRecentlyCopied(false), 2000)
+    trackEvent({
+      event: 'copy_gradient_css_variables',
+      properties: {
+        color_mode: colorMode,
+      },
+    })
+    const cssVariables = STEPS.map(
+      (step) =>
+        `--color-${step}: ${Color(hexColor)
+          .lightness(100 - step / 10)
+          .hex()
+          .toString()};`
+    ).join('\n')
+    navigator.clipboard.writeText(cssVariables)
+  }, [colorMode, hexColor])
+
   return (
     <Box
       sx={{
         display: 'flex',
         flexDirection: 'column',
         flexGrow: 1,
+        gap: SPACING.TINY.PX,
       }}
     >
-      {STEPS.map((step) => (
-        <Step
-          key={step}
-          step={step}
-          colorMode={colorMode}
-          hexColor={hexColor}
-        />
-      ))}
+      <Button
+        sx={{
+          color: getContrastColor(backgroundColor),
+          '&:hover': {
+            backgroundColor: 'transparent',
+          },
+        }}
+        variant="text"
+        onClick={handleCopyToCSSVariables}
+      >
+        {isRecentlyCopied ? 'Copied!' : `Copy Column`}
+      </Button>
+      <Box>
+        {STEPS.map((step) => (
+          <Step
+            key={step}
+            step={step}
+            colorMode={colorMode}
+            hexColor={hexColor}
+          />
+        ))}
+      </Box>
     </Box>
   )
 }

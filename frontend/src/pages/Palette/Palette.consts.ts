@@ -30,11 +30,11 @@ export const COLOR_MIXES_MAP: Record<ColorMix, string> = {
 }
 
 export const BACKGROUND_COLORS: string[] = [
-  '#fff',
-  '#ccc',
-  '#888',
-  '#444',
-  '#000',
+  '#ffffff',
+  '#cccccc',
+  '#888888',
+  '#444444',
+  '#000000',
 ]
 
 export const TOGGLE_EXPLORATION: ToggleExploration[] = ['on', 'off']
