@@ -9,6 +9,23 @@ import { getContrastColor } from '../../../utils/getContrastColor'
 import { COLOR_MODE_MAP } from '../Palette.consts'
 import type { ColorMode } from '../Palette.types'
 
+// There's flickering when just a single column of gradient is selected. Hardcoding makes it super straightforward.
+const HEIGHT_LOOKUP: Record<
+  `${ColorMode}-${'vertical' | 'horizontal'}`,
+  string
+> = {
+  'hex-vertical': '48px',
+  'hex-horizontal': '48px',
+  'none-vertical': '48px',
+  'none-horizontal': '48px',
+  'rgb-vertical': '82px',
+  'rgb-horizontal': '48px',
+  'hsl-vertical': '82px',
+  'hsl-horizontal': '48px',
+  'steps-vertical': '48px',
+  'steps-horizontal': '48px',
+}
+
 const STEPS = [50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 950]
 
 const Step = ({
@@ -30,6 +47,9 @@ const Step = ({
     }
     return COLOR_MODE_MAP[colorMode]
   }, [colorMode])
+
+  const lookupKey =
+    `${colorMode}-${switchVertical ? 'vertical' : 'horizontal'}` as const
 
   const { label, copyLabel } = useMemo<{
     label: string[]
@@ -102,7 +122,7 @@ const Step = ({
         alignItems: 'center',
         cursor: 'pointer',
         padding: SPACING.SMALL.PX,
-        minHeight: '48px',
+        minHeight: HEIGHT_LOOKUP[lookupKey],
         '&:hover .normalText': { display: 'none' },
         '&:hover .hoverText': { display: 'initial' },
       }}
