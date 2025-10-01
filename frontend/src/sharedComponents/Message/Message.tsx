@@ -72,7 +72,7 @@ const Message = ({
       <Box
         sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
       >
-        {icon}
+        <Box>{icon}</Box>
         <Typography
           sx={{ marginLeft: SPACING.SMALL.PX }}
           variant="h5"

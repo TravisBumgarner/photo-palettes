@@ -1,6 +1,5 @@
-/** Auth */
-
-export const MINIMUM_PASSWORD_LENGTH = 8 // This should maybe go to backend? Or maybe shared in JSON?
+// This value is controlled by Supabase, so if you change it here, be sure to also.
+export const MINIMUM_PASSWORD_LENGTH = 10
 
 export const ROUTES = {
   privacy: {
@@ -77,6 +76,11 @@ export const ROUTES = {
     key: 'featureRequests',
     href: '/feature_requests',
     label: 'Feature Requests',
+  },
+  settings: {
+    key: 'settings',
+    href: '/settings',
+    label: 'Settings',
   },
   discord: {
     key: 'discord',

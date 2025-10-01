@@ -76,7 +76,7 @@ export async function getToken() {
 
 export async function resetPassword(email: string): Promise<Response> {
   const { error } = await client.auth.resetPasswordForEmail(email, {
-    redirectTo: ROUTES.passwordReset.href,
+    redirectTo: `${window.location.origin}${ROUTES.passwordReset.href}`,
   })
   if (error) {
     logger.error(`Password reset failed ${JSON.stringify(error)}`)

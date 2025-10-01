@@ -1,5 +1,5 @@
-import type { ROUTES } from '../../consts'
 import { Capacitor } from '@capacitor/core'
+import type { ROUTES } from '../../consts'
 
 type Items = (keyof typeof ROUTES | 'divider')[]
 
@@ -7,6 +7,7 @@ export const USER_ROUTES: Items = [
   ...(Capacitor.isNativePlatform() ? (['browse'] as const) : []),
   'favorites',
   'profile',
+  'settings',
   'feedback',
   'featureRequests',
   'logout',

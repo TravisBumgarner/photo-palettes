@@ -3,8 +3,8 @@ import Button from '@mui/material/Button'
 import TextField from '@mui/material/TextField'
 import Typography from '@mui/material/Typography'
 
-import { type ChangeEvent, useCallback, useEffect, useState } from 'react'
-import { Navigate, useNavigate, useSearchParams } from 'react-router-dom'
+import { type ChangeEvent, useCallback, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { z } from 'zod'
 import { MINIMUM_PASSWORD_LENGTH, ROUTES } from '../consts'
 import { resetPassword, updatePassword } from '../services/supabase'
@@ -13,10 +13,12 @@ import PageTitle from '../styles/shared/PageTitle'
 import PageWrapper from '../styles/shared/PageWrapper'
 // import { trackEvent } from '../services/analytics'
 import Link from '../sharedComponents/Link'
+import Loading from '../sharedComponents/Loading'
+import Message from '../sharedComponents/Message'
 import useGlobalStore from '../store'
 
 const EmailSchema = z.object({
-  email: z.string().email('Please enter a valid email address'),
+  email: z.email('Please enter a valid email address'),
 })
 
 const PasswordSchema = z
@@ -41,21 +43,10 @@ export default function PasswordResetPage() {
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
   const [isLoading, setIsLoading] = useState(false)
+  const appUserDetails = useGlobalStore((state) => state.appUserDetails)
+  const loadingUser = useGlobalStore((state) => state.loadingUser)
 
   const navigate = useNavigate()
-  const [searchParams] = useSearchParams()
-  const appUserDetails = useGlobalStore((state) => state.appUserDetails)
-
-  // Check if this is a password update (user clicked email link) or reset request
-  const isPasswordUpdate =
-    searchParams.has('access_token') || searchParams.has('type')
-
-  useEffect(() => {
-    // If user is already logged in and this isn't a password update, redirect
-    if (appUserDetails && !isPasswordUpdate) {
-      navigate('/')
-    }
-  }, [appUserDetails, isPasswordUpdate, navigate])
 
   const handleEmailChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
     setError(null)
@@ -125,12 +116,10 @@ export default function PasswordResetPage() {
       const response = await updatePassword(password)
 
       if (response.success) {
-        setMessage('Password updated successfully! Redirecting to login...')
-        // trackEvent for password reset completed could be added to analytics types
+        setMessage('Password updated successfully! Redirecting home...')
 
-        // Redirect after a short delay
         setTimeout(() => {
-          navigate(ROUTES.login.href)
+          navigate(ROUTES.home.href)
         }, 2000)
       } else {
         setError(response.error || 'Failed to update password')
@@ -141,35 +130,30 @@ export default function PasswordResetPage() {
     [password, confirmPassword, navigate]
   )
 
-  // If user is logged in and not updating password, redirect
-  if (appUserDetails && !isPasswordUpdate) {
-    return <Navigate to="/" />
+  if (loadingUser) {
+    return (
+      <PageWrapper minHeight verticallyAlign width="small">
+        <Loading />
+      </PageWrapper>
+    )
   }
 
   return (
     <PageWrapper minHeight verticallyAlign width="small">
       <form
-        onSubmit={isPasswordUpdate ? handlePasswordUpdate : handleResetRequest}
+        onSubmit={appUserDetails ? handlePasswordUpdate : handleResetRequest}
         style={authFormCSS}
       >
         <PageTitle
-          text={isPasswordUpdate ? 'Set New Password' : 'Reset Password'}
+          text={appUserDetails ? 'Set New Password' : 'Reset Password'}
           center
         />
 
-        {error && (
-          <Box sx={{ p: 2, bgcolor: 'error.light', borderRadius: 1, mb: 2 }}>
-            <Typography color="error.contrastText">{error}</Typography>
-          </Box>
-        )}
+        {error && <Message color="error" message={error} />}
 
-        {message && (
-          <Box sx={{ p: 2, bgcolor: 'success.light', borderRadius: 1, mb: 2 }}>
-            <Typography color="success.contrastText">{message}</Typography>
-          </Box>
-        )}
+        {message && <Message color="info" message={message} />}
 
-        {!isPasswordUpdate ? (
+        {!appUserDetails ? (
           // Email reset form
           <>
             <Typography variant="body2" sx={{ mb: 2, color: 'text.secondary' }}>
@@ -252,7 +236,7 @@ export default function PasswordResetPage() {
             <Link href={ROUTES.login.href}>{ROUTES.login.label}</Link>
           </Typography>
 
-          {!isPasswordUpdate && (
+          {!appUserDetails && (
             <Typography variant="body1">
               {"Don't have an account? "}
               <Link href={ROUTES.signup.href}>{ROUTES.signup.label}</Link>
