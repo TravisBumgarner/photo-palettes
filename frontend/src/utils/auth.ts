@@ -15,13 +15,8 @@ export const emailSchema = z.object({
   email: emailField,
 })
 
-export const loginSchema = z.object({
-  email: emailField,
-  password: passwordField,
-})
-
 // Password confirmation schemas with refinement
-export const passwordWithConfirmationSchema = z
+const passwordWithConfirmationSchema = z
   .object({
     password: passwordField,
     confirmPassword: z.string(),
@@ -42,17 +37,12 @@ export const signupSchema = z
     path: ['confirmPassword'],
   })
 
-// Utility types for better TypeScript integration
-export type EmailData = z.infer<typeof emailSchema>
-export type LoginData = z.infer<typeof loginSchema>
-export type PasswordData = z.infer<typeof passwordWithConfirmationSchema>
-export type SignupData = z.infer<typeof signupSchema>
-
 // Utility functions for validation
 export const validateEmail = (email: string) => emailSchema.safeParse({ email })
 
 export const validatePassword = (password: string, confirmPassword: string) =>
   passwordWithConfirmationSchema.safeParse({ password, confirmPassword })
+
 export const validateSignup = (
   email: string,
   password: string,

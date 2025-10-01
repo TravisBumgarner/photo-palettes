@@ -17,7 +17,7 @@ import { trackEvent } from '../services/analytics'
 import { GoogleSignInButton } from '../sharedComponents/GoogleButton'
 import Link from '../sharedComponents/Link'
 import Message from '../sharedComponents/Message'
-import { validateEmail } from '../utils/auth'
+import { getValidationError, validateEmail } from '../utils/auth'
 import { loadUserIntoState } from '../utils/loadUserIntoState'
 
 export default function LoginPage() {
@@ -47,7 +47,7 @@ export default function LoginPage() {
       const result = validateEmail(email)
 
       if (!result.success) {
-        setError(result.error.issues[0].message)
+        setError(getValidationError(result))
         return
       }
       setIsSubmitting(true)

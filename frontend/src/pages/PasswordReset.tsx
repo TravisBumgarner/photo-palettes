@@ -15,7 +15,11 @@ import Link from '../sharedComponents/Link'
 import Loading from '../sharedComponents/Loading'
 import Message from '../sharedComponents/Message'
 import useGlobalStore from '../store'
-import { validateEmail, validatePassword } from '../utils/auth'
+import {
+  getValidationError,
+  validateEmail,
+  validatePassword,
+} from '../utils/auth'
 
 export default function PasswordResetPage() {
   const [error, setError] = useState<string | null>(null)
@@ -59,7 +63,7 @@ export default function PasswordResetPage() {
       const result = validateEmail(email)
 
       if (!result.success) {
-        setError(result.error.issues[0].message)
+        setError(getValidationError(result))
         setIsLoading(false)
         return
       }
