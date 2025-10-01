@@ -9,8 +9,8 @@ import PageWrapper from '../styles/shared/PageWrapper'
 
 export default function Logout() {
   const navigate = useNavigate()
-  const setAuthId = useGlobalStore((state) => state.setAuthId)
-  const setAppUserDetails = useGlobalStore((state) => state.setAppUserDetails)
+  const setAuthUser = useGlobalStore((state) => state.setAuthUser)
+  const setAppUser = useGlobalStore((state) => state.setAppUser)
   const setLoadingUser = useGlobalStore((state) => state.setLoadingUser)
 
   useEffect(() => {
@@ -21,8 +21,8 @@ export default function Logout() {
         navigate('/')
       }
 
-      setAuthId(null)
-      setAppUserDetails(null)
+      setAuthUser(null)
+      setAppUser(null)
       setUserId(undefined)
 
       // There's flickering that goes on which navigates `/` -> `/login` -> `/` when logging out while on a
@@ -31,7 +31,7 @@ export default function Logout() {
       setTimeout(() => setLoadingUser(false), 50) // Give some time for the redirect to happen
     }
     logoutUser()
-  }, [navigate, setAuthId, setAppUserDetails, setLoadingUser])
+  }, [navigate, setAuthUser, setAppUser, setLoadingUser])
 
   return (
     <PageWrapper width="small">

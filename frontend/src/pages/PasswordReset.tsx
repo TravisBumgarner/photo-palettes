@@ -4,7 +4,7 @@ import TextField from '@mui/material/TextField'
 import Typography from '@mui/material/Typography'
 
 import { type ChangeEvent, useCallback, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { Navigate, useNavigate } from 'react-router-dom'
 import { ROUTES } from '../consts'
 import { resetPassword, updatePassword } from '../services/supabase'
 import authFormCSS from '../styles/shared/authFormCSS'
@@ -28,8 +28,13 @@ export default function PasswordResetPage() {
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
   const [isLoading, setIsLoading] = useState(false)
-  const appUserDetails = useGlobalStore((state) => state.appUserDetails)
+  const appUser = useGlobalStore((state) => state.appUser)
   const loadingUser = useGlobalStore((state) => state.loadingUser)
+  const authUser = useGlobalStore((state) => state.authUser)
+  const isGoogleAuth =
+    !!authUser &&
+    !!authUser.identities &&
+    authUser.identities[0].provider === 'google'
 
   const navigate = useNavigate()
 
@@ -115,6 +120,10 @@ export default function PasswordResetPage() {
     [password, confirmPassword, navigate]
   )
 
+  if (isGoogleAuth) {
+    return <Navigate to="/" />
+  }
+
   if (loadingUser) {
     return (
       <PageWrapper minHeight verticallyAlign width="small">
@@ -126,11 +135,11 @@ export default function PasswordResetPage() {
   return (
     <PageWrapper minHeight verticallyAlign width="small">
       <form
-        onSubmit={appUserDetails ? handlePasswordUpdate : handleResetRequest}
+        onSubmit={appUser ? handlePasswordUpdate : handleResetRequest}
         style={authFormCSS}
       >
         <PageTitle
-          text={appUserDetails ? 'Set New Password' : 'Reset Password'}
+          text={appUser ? 'Set New Password' : 'Reset Password'}
           center
         />
 
@@ -138,7 +147,7 @@ export default function PasswordResetPage() {
 
         {message && <Message color="info" message={message} />}
 
-        {!appUserDetails ? (
+        {!appUser ? (
           // Email reset form
           <>
             <Typography variant="body2" sx={{ mb: 2, color: 'text.secondary' }}>
@@ -221,7 +230,7 @@ export default function PasswordResetPage() {
             <Link href={ROUTES.login.href}>{ROUTES.login.label}</Link>
           </Typography>
 
-          {!appUserDetails && (
+          {!appUser && (
             <Typography variant="body1">
               {"Don't have an account? "}
               <Link href={ROUTES.signup.href}>{ROUTES.signup.label}</Link>

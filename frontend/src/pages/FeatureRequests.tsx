@@ -27,7 +27,7 @@ const FeatureRequestCard = ({
   readonly: boolean
   refetch: () => void
 }) => {
-  const appUserDetails = useGlobalStore((store) => store.appUserDetails)
+  const appUser = useGlobalStore((store) => store.appUser)
   const { mutateAsync, isPending, isSuccess, isError } = useMutation({
     mutationFn: (featureRequestId: string) =>
       upvoteFeatureRequest(featureRequestId),
@@ -47,10 +47,9 @@ const FeatureRequestCard = ({
     if (readonly) return ''
     if (isPending) return 'Upvoting...'
     if (isSuccess) return 'Upvoted'
-    if (featureRequest.votes.includes(appUserDetails?.id || ''))
-      return 'Upvoted'
+    if (featureRequest.votes.includes(appUser?.id || '')) return 'Upvoted'
     return 'Upvote'
-  }, [readonly, isPending, isSuccess, featureRequest.votes, appUserDetails])
+  }, [readonly, isPending, isSuccess, featureRequest.votes, appUser])
 
   if (isError) {
     return <Navigate to="/error500" />
@@ -98,7 +97,7 @@ const FeatureRequestCard = ({
             disabled={
               isPending ||
               isSuccess ||
-              featureRequest.votes.includes(appUserDetails?.id || '')
+              featureRequest.votes.includes(appUser?.id || '')
             }
             onClick={handleClick}
             variant="contained"
@@ -218,7 +217,7 @@ const NewFeatureSubmission = ({ refetch }: { refetch: () => void }) => {
 }
 
 const FeatureRequests = () => {
-  const appUserDetails = useGlobalStore((store) => store.appUserDetails)
+  const appUser = useGlobalStore((store) => store.appUser)
   const noop = useCallback(() => {}, [])
 
   const { data, isLoading, error, refetch } = useQuery({
@@ -238,9 +237,7 @@ const FeatureRequests = () => {
   return (
     <PageWrapper width="full">
       <PageTitle marginBottom text="Feature Requests" />
-      {!appUserDetails && (
-        <Typography variant="body1">Log in to upvote.</Typography>
-      )}
+      {!appUser && <Typography variant="body1">Log in to upvote.</Typography>}
       <Typography variant="body1">
         <Link href="/feedback">Submit a feature request.</Link>
       </Typography>
@@ -264,7 +261,7 @@ const FeatureRequests = () => {
                 drag={false}
               >
                 <FeatureRequestCard
-                  readonly={!appUserDetails}
+                  readonly={!appUser}
                   featureRequest={featureRequest}
                   refetch={refetch}
                 />
@@ -272,10 +269,9 @@ const FeatureRequests = () => {
             ))}
         </Reorder.Group>
       </Box>
-      {appUserDetails &&
-        appUserDetails?.permissionLevel >= PERMISSION_LEVEL.MODERATOR && (
-          <NewFeatureSubmission refetch={refetch} />
-        )}
+      {appUser && appUser?.permissionLevel >= PERMISSION_LEVEL.MODERATOR && (
+        <NewFeatureSubmission refetch={refetch} />
+      )}
     </PageWrapper>
   )
 }

@@ -31,12 +31,10 @@ const Profile = () => {
   const params = useParams()
   const [page, setPage] = useState(1)
   const navigate = useNavigate()
-  const appUserDetails = useGlobalStore((state) => state.appUserDetails)
+  const appUser = useGlobalStore((state) => state.appUser)
 
   const authorUserId =
-    (Array.isArray(params.id) ? params.id[0] : params.id) ||
-    appUserDetails?.id ||
-    ''
+    (Array.isArray(params.id) ? params.id[0] : params.id) || appUser?.id || ''
 
   const { data, isLoading, error, refetch } = useQuery({
     queryKey: ['profile', authorUserId, filterTabIndex, page],
@@ -112,7 +110,7 @@ const Profile = () => {
     )
   }, [data, error, isLoading, handlePageChange, page, refetch])
 
-  const isProfileUser = authorUserId === appUserDetails?.id
+  const isProfileUser = authorUserId === appUser?.id
 
   const displayName = getUserColorFromUUID(authorUserId)
 

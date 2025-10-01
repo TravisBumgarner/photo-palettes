@@ -1,7 +1,7 @@
 import { type User } from '@supabase/supabase-js'
 import type { EPermissionLevel } from '../types'
 
-export interface AppUserDetails {
+export interface AppUser {
   permissionLevel: EPermissionLevel
   displayName: string
   email: string
@@ -9,10 +9,10 @@ export interface AppUserDetails {
 }
 
 export interface State {
-  authId: User['id'] | null
-  setAuthId: (authId: User['id'] | null) => void
+  authUser: User | null
+  setAuthUser: (authUser: User | null) => void
   loadingUser: boolean
   setLoadingUser: (loadingUser: boolean) => void
-  appUserDetails: AppUserDetails | null
-  setAppUserDetails: (appUserDetails: AppUserDetails | null) => void
+  appUser: AppUser | null
+  setAppUser: (appUser: AppUser | null) => void
 }

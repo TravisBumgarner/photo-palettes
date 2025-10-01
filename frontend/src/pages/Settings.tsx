@@ -8,23 +8,38 @@ import PageTitle from '../styles/shared/PageTitle'
 import PageWrapper from '../styles/shared/PageWrapper'
 
 const Profile = () => {
-  const appUserDetails = useGlobalStore((state) => state.appUserDetails)
+  const appUser = useGlobalStore((state) => state.appUser)
+  const authUser = useGlobalStore((state) => state.authUser)
 
-  if (!appUserDetails) {
+  if (!appUser || !authUser) {
     return <Navigate to="/" />
   }
 
+  const isEmailAuth =
+    !!authUser &&
+    !!authUser.identities &&
+    authUser.identities[0].provider === 'email'
+
+  const regDate = new Date(authUser.created_at).toDateString()
   return (
     <PageWrapper width="small" minHeight>
       <PageTitle text="User Settings" marginBottom />
       <List>
         <Typography variant="body1">
-          <strong>Username:</strong> {appUserDetails.displayName.toUpperCase()}
+          <strong>Username:</strong> {appUser.displayName.toUpperCase()}
         </Typography>
         <Typography variant="body1">
-          <strong>Email:</strong> {appUserDetails.email}
+          <strong>Email:</strong> {appUser.email}
         </Typography>
-        <Link href={ROUTES.passwordReset.href}>Change Password</Link>
+        {isEmailAuth && (
+          <Typography variant="body1">
+            <strong>Password:</strong>{' '}
+            <Link href={ROUTES.passwordReset.href}> Change Password</Link>
+          </Typography>
+        )}
+        <Typography variant="body1">
+          <strong>Registration Date:</strong> {regDate}
+        </Typography>
       </List>
     </PageWrapper>
   )

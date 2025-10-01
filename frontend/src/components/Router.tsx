@@ -2,9 +2,9 @@ import { lazy } from 'react'
 import { Navigate, Outlet, Route, Routes } from 'react-router-dom'
 import { ROUTES } from '../consts'
 import Browse from '../pages/Browse'
+import Settings from '../pages/Settings'
 import useGlobalStore from '../store'
 import { PERMISSION_LEVEL } from '../types'
-import Settings from '../pages/Settings'
 const TermsOfService = lazy(async () => await import('../pages/TermsOfService'))
 const PrivacyPolicy = lazy(async () => await import('../pages/PrivacyPolicy'))
 const ReleaseNotes = lazy(async () => await import('../pages/ReleaseNotes'))
@@ -27,18 +27,18 @@ const Admin = lazy(async () => await import('../pages/Admin'))
 const PasswordReset = lazy(async () => await import('../pages/PasswordReset'))
 
 const AnonymousRoute = () => {
-  const appUserDetails = useGlobalStore((state) => state.appUserDetails)
-  return !appUserDetails ? <Outlet /> : <Navigate to="/" />
+  const appUser = useGlobalStore((state) => state.appUser)
+  return !appUser ? <Outlet /> : <Navigate to="/" />
 }
 
 const MemberRoute = () => {
-  const appUserDetails = useGlobalStore((state) => state.appUserDetails)
-  return appUserDetails ? <Outlet /> : <Navigate to="/login" />
+  const appUser = useGlobalStore((state) => state.appUser)
+  return appUser ? <Outlet /> : <Navigate to="/login" />
 }
 
 const ModerationRoute = () => {
-  const appUserDetails = useGlobalStore((state) => state.appUserDetails)
-  return (appUserDetails?.permissionLevel || PERMISSION_LEVEL.ANONYMOUS) >=
+  const appUser = useGlobalStore((state) => state.appUser)
+  return (appUser?.permissionLevel || PERMISSION_LEVEL.ANONYMOUS) >=
     PERMISSION_LEVEL.MODERATOR ? (
     <Outlet />
   ) : (
@@ -47,8 +47,8 @@ const ModerationRoute = () => {
 }
 
 const AdminRoute = () => {
-  const appUserDetails = useGlobalStore((state) => state.appUserDetails)
-  return (appUserDetails?.permissionLevel || PERMISSION_LEVEL.ANONYMOUS) >=
+  const appUser = useGlobalStore((state) => state.appUser)
+  return (appUser?.permissionLevel || PERMISSION_LEVEL.ANONYMOUS) >=
     PERMISSION_LEVEL.ADMIN ? (
     <Outlet />
   ) : (
@@ -62,8 +62,8 @@ const Router = () => (
     <Route
       path={ROUTES.create.href}
       element={(() => {
-        const appUserDetails = useGlobalStore.getState().appUserDetails
-        return <Create mode={appUserDetails ? 'full' : 'lite'} />
+        const appUser = useGlobalStore.getState().appUser
+        return <Create mode={appUser ? 'full' : 'lite'} />
       })()}
     />
     <Route path={ROUTES.tos.href} element={<TermsOfService />} />

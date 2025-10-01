@@ -25,19 +25,18 @@ import {
 import { createLinkSX, WrapperSX } from './Navigation.styles'
 
 const DropdownLinks = ({ onClose }: { onClose: () => void }) => {
-  const appUserDetails = useGlobalStore((state) => state.appUserDetails)
+  const appUser = useGlobalStore((state) => state.appUser)
 
   const userSpecificRouteKeys = useMemo(() => {
-    if (!appUserDetails) return ANON_ROUTES
+    if (!appUser) return ANON_ROUTES
 
-    if (appUserDetails.permissionLevel == PERMISSION_LEVEL.ADMIN)
-      return ADMIN_ROUTES
+    if (appUser.permissionLevel == PERMISSION_LEVEL.ADMIN) return ADMIN_ROUTES
 
-    if (appUserDetails.permissionLevel >= PERMISSION_LEVEL.MODERATOR)
+    if (appUser.permissionLevel >= PERMISSION_LEVEL.MODERATOR)
       return MODERATOR_ROUTES
 
     return USER_ROUTES
-  }, [appUserDetails])
+  }, [appUser])
 
   const boringRoutes: (keyof typeof ROUTES)[] = [
     'discord',
@@ -80,7 +79,7 @@ const DropdownLinks = ({ onClose }: { onClose: () => void }) => {
 }
 
 const Navigation = () => {
-  const appUserDetails = useGlobalStore((state) => state.appUserDetails)
+  const appUser = useGlobalStore((state) => state.appUser)
   const location = useLocation()
 
   const [drawerOpen, setDrawerOpen] = useState(false)
@@ -115,7 +114,7 @@ const Navigation = () => {
             if (location.pathname !== ROUTES.create.href) {
               trackEvent({
                 event: 'create_button_clicked',
-                properties: { mode: appUserDetails ? 'full' : 'lite' },
+                properties: { mode: appUser ? 'full' : 'lite' },
               })
             }
           }}

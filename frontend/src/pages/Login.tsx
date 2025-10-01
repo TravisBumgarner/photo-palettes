@@ -25,7 +25,7 @@ export default function LoginPage() {
   const [password, setPassword] = useState('')
   const [email, setEmail] = useState('')
   const navigate = useNavigate()
-  const appUserDetails = useGlobalStore((state) => state.appUserDetails)
+  const appUser = useGlobalStore((state) => state.appUser)
   const [isSubmitting, setIsSubmitting] = useState(false)
 
   const handleEmailChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
@@ -73,7 +73,7 @@ export default function LoginPage() {
     [navigate, email, password]
   )
 
-  if (appUserDetails) {
+  if (appUser) {
     return <Navigate to="/" />
   }
 
