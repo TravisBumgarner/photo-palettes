@@ -10,7 +10,7 @@ import { activeModalSignal } from '../../../signals'
 import downloadPalette from '../../../utils/downloadPalette'
 import { photoUrlToBlob } from '../../../utils/image'
 import ColorBar from '../../ColorBar'
-import { type MODAL_ID } from '../Modal.types'
+import { type MODAL_ID } from '../Modal.consts'
 import DefaultModal from './DefaultModal'
 
 export interface AnonPaletteCreationModalProps {
@@ -31,7 +31,10 @@ const AnonPaletteCreationModal = ({
   const navigate = useNavigate()
 
   const handleDownload = useCallback(async () => {
-    trackEvent({ event: 'anon_model_download' })
+    trackEvent({
+      event: 'palette_download',
+      properties: { source: 'anon_download' },
+    })
 
     await downloadPalette({
       paletteId,

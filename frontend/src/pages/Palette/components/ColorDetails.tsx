@@ -12,11 +12,13 @@ const ColorDetails = ({
   colorMix,
   index,
   toggleExploration,
+  backgroundColor,
 }: {
   index: number
   swatch: TSwatch
   colorMode: ColorMode
   colorMix: ColorMix
+  backgroundColor: string
   toggleExploration: ToggleExploration
 }) => {
   const schemes = getColorSchemes(swatch.hex)[colorMix]
@@ -51,6 +53,7 @@ const ColorDetails = ({
               key={`${hexColor}-${index}`}
               hexColor={hexColor}
               colorMode={colorMode}
+              backgroundColor={backgroundColor}
             />
           ))}
       </Box>

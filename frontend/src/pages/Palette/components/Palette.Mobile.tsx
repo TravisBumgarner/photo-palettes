@@ -4,12 +4,14 @@ import { useTheme } from '@mui/material/styles'
 import Tab from '@mui/material/Tab'
 import Tabs from '@mui/material/Tabs'
 import React, { useCallback, useState } from 'react'
+import { trackEvent } from '../../../services/analytics'
 import BlurImage from '../../../sharedComponents/BlurImage'
 import ColorBar from '../../../sharedComponents/ColorBar'
 import ModerationPanel from '../../../sharedComponents/ModerationPanel'
 import PageWrapper from '../../../styles/shared/PageWrapper'
 import { SPACING, subtleBackground } from '../../../styles/styleConsts'
 import { type TPalette } from '../../../types'
+import downloadPalette from '../../../utils/downloadPalette'
 import type { PaletteControlsState } from '../Palette.types'
 import ColorDetails from './ColorDetails'
 import Controls from './Controls'
@@ -39,6 +41,18 @@ const PaletteMobile = ({
   const handleTabChange = useCallback((_event: unknown, v: number) => {
     setTabIndex(v)
   }, [])
+
+  const handleDownloadPalette = useCallback(() => {
+    trackEvent({
+      event: 'palette_download',
+      properties: { source: 'palette_page' },
+    })
+    downloadPalette({
+      paletteId: palette.id,
+      photoUrl: palette.photoUrl,
+      colors: palette.colors.map((c) => c.hex),
+    })
+  }, [palette])
 
   const handleFilterToggle = useCallback(() => {
     setShowFilters((prev) => !prev)
@@ -76,6 +90,7 @@ const PaletteMobile = ({
           }}
         >
           <ColorBar height={15} colors={palette.colors.map((c) => c.hex)} />
+
           <BlurImage
             alt={`${name} thumbnail`}
             src={palette.photoUrl}
@@ -83,6 +98,9 @@ const PaletteMobile = ({
             blurHash={palette.blurhash}
             maxDimensions={{ maxHeight: '90vh' }}
           />
+          <Button variant="outlined" onClick={handleDownloadPalette}>
+            Download Palette
+          </Button>
         </Box>
       )}
 
@@ -121,6 +139,7 @@ const PaletteMobile = ({
                 colorMix={controls.mix}
                 colorMode={controls.colorMode}
                 swatch={swatch}
+                backgroundColor={controls.background}
                 key={swatch.id}
               />
             ))}

@@ -24,8 +24,11 @@ type CreatePhotoLoadedEvent = {
   }
 }
 
-type AnonModelDownloadEvent = {
-  event: 'anon_model_download'
+type PaletteDownloadEvent = {
+  event: 'palette_download'
+  properties: {
+    source: 'anon_download' | 'palette_page'
+  }
 }
 
 type AnonModelSignUpEvent = {
@@ -109,11 +112,18 @@ type UserOriginEvent = {
   }
 }
 
+type CopyCSSGradientEvent = {
+  event: 'copy_gradient_css_variables'
+  properties: {
+    color_mode: ColorMode
+  }
+}
+
 type Event =
   | CreateButtonClickedEvent
   | CreatePhotoSelectedEvent
   | CreatePhotoLoadedEvent
-  | AnonModelDownloadEvent
+  | PaletteDownloadEvent
   | AnonModelSignUpEvent
   | UserSignUpEvent
   | UserLogInEvent
@@ -126,6 +136,7 @@ type Event =
   | BrowseNavigationEvent
   | CopyColorDetailEvent
   | UserOriginEvent
+  | CopyCSSGradientEvent
 
 export const trackEvent = (event: Event) => {
   const properties = {

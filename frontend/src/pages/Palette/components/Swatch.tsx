@@ -1,7 +1,7 @@
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
 import Color from 'color'
-import { useCallback, useMemo } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import { trackEvent } from '../../../services/analytics'
 import { FONT_SIZES, SPACING } from '../../../styles/styleConsts'
 import type { TSwatch } from '../../../types'
@@ -15,6 +15,8 @@ const Swatch = ({
   swatch: TSwatch
   colorMode: ColorMode
 }) => {
+  const [isRecentlyCopied, setIsRecentlyCopied] = useState(false)
+
   const color = Color(hex)
   const primaryBackground = color.hsl()
 
@@ -51,6 +53,8 @@ const Swatch = ({
   }, [colorMode, hex])
 
   const handleCopyClick = useCallback(() => {
+    setIsRecentlyCopied(true)
+    setTimeout(() => setIsRecentlyCopied(false), 2000)
     trackEvent({
       event: 'copy_color_detail',
       properties: {
@@ -88,7 +92,7 @@ const Swatch = ({
             display: 'none',
           }}
         >
-          Copy {colorFormat}
+          {isRecentlyCopied ? 'Copied!' : `Copy ${colorFormat}`}
         </Typography>
         <Typography
           className="normalText"
@@ -100,9 +104,9 @@ const Swatch = ({
             padding: SPACING.SMALL.PX,
           }}
         >
-          {copyLabel}
+          {isRecentlyCopied ? '' : copyLabel}
           <br />
-          {name}
+          {isRecentlyCopied ? 'Copied!' : name}
         </Typography>
       </Box>
     </Box>

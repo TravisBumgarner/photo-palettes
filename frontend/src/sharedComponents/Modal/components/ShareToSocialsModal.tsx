@@ -12,7 +12,7 @@ import { activeModalSignal } from '../../../signals'
 import { SPACING } from '../../../styles/styleConsts'
 import type { TPalette } from '../../../types'
 import ColorBar from '../../ColorBar'
-import { type MODAL_ID } from '../Modal.types'
+import { type MODAL_ID } from '../Modal.consts'
 import DefaultModal from './DefaultModal'
 
 export interface ModeratorSharePostToSocialsProps {
