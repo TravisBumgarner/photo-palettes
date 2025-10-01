@@ -6,18 +6,18 @@ import useMediaQuery from '../../../hooks/UseMediaQuery'
 import { trackEvent } from '../../../services/analytics'
 import { FONT_SIZES, SPACING } from '../../../styles/styleConsts'
 import { getContrastColor } from '../../../utils/getContrastColor'
-import { DETAILS_MAP } from '../Palette.consts'
-import type { Details } from '../Palette.types'
+import { COLOR_MODE_MAP } from '../Palette.consts'
+import type { ColorMode } from '../Palette.types'
 
 const STEPS = [50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 950]
 
 const Step = ({
   step,
-  details,
+  colorMode,
   hexColor,
 }: {
   step: number
-  details: Details
+  colorMode: ColorMode
   hexColor: string
 }) => {
   const switchVertical = useMediaQuery('(max-width:700px)')
@@ -25,11 +25,11 @@ const Step = ({
   const stepColor = Color(hexColor).lightness(100 - step / 10)
 
   const colorFormat = useMemo(() => {
-    if (details === 'none' || details === 'steps') {
-      return DETAILS_MAP['hex']
+    if (colorMode === 'none' || colorMode === 'steps') {
+      return COLOR_MODE_MAP['hex']
     }
-    return DETAILS_MAP[details]
-  }, [details])
+    return COLOR_MODE_MAP[colorMode]
+  }, [colorMode])
 
   const { label, copyLabel } = useMemo<{
     label: string[]
@@ -39,7 +39,7 @@ const Step = ({
 
     const fallbackLabel = Color(stepColor).hex().toString()
 
-    switch (details) {
+    switch (colorMode) {
       case 'steps':
         return { label: [String(step)], copyLabel: fallbackLabel }
       case 'hex': {
@@ -77,19 +77,19 @@ const Step = ({
       default:
         return { label: [''], copyLabel: fallbackLabel }
     }
-  }, [details, step, stepColor])
+  }, [colorMode, step, stepColor])
 
   const handleCopyClick = useCallback(() => {
     trackEvent({
       event: 'copy_color_detail',
       properties: {
-        detail: details,
+        detail: colorMode,
         step,
         is_swatch: false,
       },
     })
     navigator.clipboard.writeText(copyLabel)
-  }, [copyLabel, details, step])
+  }, [copyLabel, colorMode, step])
 
   return (
     <Box
@@ -148,10 +148,10 @@ const Step = ({
 }
 
 const Gradient = ({
-  details,
+  colorMode,
   hexColor,
 }: {
-  details: Details
+  colorMode: ColorMode
   hexColor: string
 }) => {
   return (
@@ -163,7 +163,12 @@ const Gradient = ({
       }}
     >
       {STEPS.map((step) => (
-        <Step key={step} step={step} details={details} hexColor={hexColor} />
+        <Step
+          key={step}
+          step={step}
+          colorMode={colorMode}
+          hexColor={hexColor}
+        />
       ))}
     </Box>
   )

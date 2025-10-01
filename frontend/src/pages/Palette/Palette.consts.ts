@@ -1,9 +1,9 @@
-import { type Details } from './Palette.types'
 import { type ColorMix } from '../../types'
+import { type ColorMode, type ToggleExploration } from './Palette.types'
 
-export const DETAILS: Details[] = ['none', 'hex', 'rgb', 'hsl', 'steps']
+export const COLOR_MODES: ColorMode[] = ['none', 'hex', 'rgb', 'hsl', 'steps']
 
-export const DETAILS_MAP: Record<Details, string> = {
+export const COLOR_MODE_MAP: Record<ColorMode, string> = {
   none: 'None',
   hex: 'Hex',
   rgb: 'RGB',
@@ -36,3 +36,10 @@ export const BACKGROUND_COLORS: string[] = [
   '#444',
   '#000',
 ]
+
+export const TOGGLE_EXPLORATION: ToggleExploration[] = ['on', 'off']
+
+export const TOGGLE_EXPLORATION_MAP: Record<ToggleExploration, string> = {
+  on: 'On',
+  off: 'Off',
+}

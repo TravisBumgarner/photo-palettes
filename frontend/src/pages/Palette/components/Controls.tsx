@@ -8,8 +8,10 @@ import {
   BACKGROUND_COLORS,
   COLOR_MIXES,
   COLOR_MIXES_MAP,
-  DETAILS,
-  DETAILS_MAP,
+  COLOR_MODE_MAP,
+  COLOR_MODES,
+  TOGGLE_EXPLORATION,
+  TOGGLE_EXPLORATION_MAP,
 } from '../Palette.consts'
 import type { PaletteControlsState } from '../Palette.types'
 
@@ -27,6 +29,36 @@ const Controls: React.FC<ControlsProps> = ({ controls, setControls }) => {
         gap: SPACING.SMALL.PX,
       }}
     >
+      <FilterWrapper>
+        <Typography sx={labelStyles}>Color details</Typography>
+        <Box sx={{ display: 'flex', gap: SPACING.TINY.PX }}>
+          {TOGGLE_EXPLORATION.map((key) => (
+            <Button
+              sx={{ ...filterButtonsStyles, width: '50%' }}
+              size="small"
+              variant={
+                key === controls.toggleExploration ? 'contained' : 'outlined'
+              }
+              key={key}
+              onClick={() => {
+                trackEvent({
+                  event: 'palette_filter_button',
+                  properties: {
+                    toggleExploration: key,
+                  },
+                })
+                setControls((prev) => ({
+                  ...prev,
+                  toggleExploration: key,
+                }))
+              }}
+            >
+              {TOGGLE_EXPLORATION_MAP[key]}
+            </Button>
+          ))}
+        </Box>
+      </FilterWrapper>
+
       <FilterWrapper>
         <Typography sx={labelStyles}>Background</Typography>
         <Box
@@ -58,13 +90,13 @@ const Controls: React.FC<ControlsProps> = ({ controls, setControls }) => {
       </FilterWrapper>
 
       <FilterWrapper>
-        <Typography sx={labelStyles}>Details</Typography>
+        <Typography sx={labelStyles}>Color Mode</Typography>
         <Box sx={{ display: 'flex', gap: SPACING.TINY.PX, flexWrap: 'wrap' }}>
-          {DETAILS.map((key) => (
+          {COLOR_MODES.map((key) => (
             <Button
               sx={filterButtonsStyles}
               size="small"
-              variant={key === controls.details ? 'contained' : 'outlined'}
+              variant={key === controls.colorMode ? 'contained' : 'outlined'}
               key={key}
               onClick={() => {
                 trackEvent({
@@ -73,10 +105,14 @@ const Controls: React.FC<ControlsProps> = ({ controls, setControls }) => {
                     details: key,
                   },
                 })
-                setControls((prev) => ({ ...prev, details: key }))
+                setControls((prev) => ({
+                  ...prev,
+                  colorMode: key,
+                  toggleExploration: 'on',
+                }))
               }}
             >
-              {DETAILS_MAP[key]}
+              {COLOR_MODE_MAP[key]}
             </Button>
           ))}
         </Box>
@@ -98,7 +134,11 @@ const Controls: React.FC<ControlsProps> = ({ controls, setControls }) => {
                     color_mix: key,
                   },
                 })
-                setControls((prev) => ({ ...prev, mix: key }))
+                setControls((prev) => ({
+                  ...prev,
+                  mix: key,
+                  toggleExploration: 'on',
+                }))
               }}
             >
               {COLOR_MIXES_MAP[key]}

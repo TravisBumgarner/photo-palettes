@@ -47,9 +47,10 @@ const PaletteDesktop = ({
             <ColorDetails
               index={index}
               colorMix={controls.mix}
-              details={controls.details}
+              colorMode={controls.colorMode}
               swatch={swatch}
               key={swatch.id}
+              toggleExploration={controls.toggleExploration}
             />
           ))}
         </RightColumn>

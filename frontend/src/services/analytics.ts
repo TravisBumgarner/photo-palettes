@@ -1,7 +1,7 @@
 import * as amplitude from '@amplitude/analytics-browser'
 import { Capacitor } from '@capacitor/core'
 import config from '../config'
-import type { Details } from '../pages/Palette/Palette.types'
+import type { ColorMode } from '../pages/Palette/Palette.types'
 
 type CreateButtonClickedEvent = {
   event: 'create_button_clicked'
@@ -82,6 +82,7 @@ type PaletteFilterButtonEvent = {
     background?: string // hex value
     color_mix?: 'none' | 'complementary' | string
     details?: 'none' | 'hex' | string
+    toggleExploration?: 'on' | 'off'
   }
 }
 
@@ -95,7 +96,7 @@ type CreatePaletteCreatedEvent = {
 type CopyColorDetailEvent = {
   event: 'copy_color_detail'
   properties: {
-    detail: Details
+    detail: ColorMode
     step: number
     is_swatch: boolean
   }

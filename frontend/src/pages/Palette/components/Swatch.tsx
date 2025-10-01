@@ -5,15 +5,15 @@ import { useCallback, useMemo } from 'react'
 import { trackEvent } from '../../../services/analytics'
 import { FONT_SIZES, SPACING } from '../../../styles/styleConsts'
 import type { TSwatch } from '../../../types'
-import { DETAILS_MAP } from '../Palette.consts'
-import type { Details } from '../Palette.types'
+import { COLOR_MODE_MAP } from '../Palette.consts'
+import type { ColorMode } from '../Palette.types'
 
 const Swatch = ({
   swatch: { hex, name },
-  details,
+  colorMode,
 }: {
   swatch: TSwatch
-  details: Details
+  colorMode: ColorMode
 }) => {
   const color = Color(hex)
   const primaryBackground = color.hsl()
@@ -27,16 +27,16 @@ const Swatch = ({
   })
 
   const colorFormat = useMemo(() => {
-    if (details === 'none' || details === 'steps') {
-      return DETAILS_MAP['hex']
+    if (colorMode === 'none' || colorMode === 'steps') {
+      return COLOR_MODE_MAP['hex']
     }
-    return DETAILS_MAP[details]
-  }, [details])
+    return COLOR_MODE_MAP[colorMode]
+  }, [colorMode])
 
   const copyLabel = useMemo(() => {
     // If a label is null or step, fallback to hex so the user has something to copy.
 
-    switch (details) {
+    switch (colorMode) {
       case 'steps':
       case 'hex':
       case 'none':
@@ -48,26 +48,26 @@ const Swatch = ({
       case 'hsl':
         return Color(hex).hsl().string(0)
     }
-  }, [details, hex])
+  }, [colorMode, hex])
 
   const handleCopyClick = useCallback(() => {
     trackEvent({
       event: 'copy_color_detail',
       properties: {
-        detail: details,
+        detail: colorMode,
         step: -1,
         is_swatch: true,
       },
     })
     navigator.clipboard.writeText(copyLabel)
-  }, [copyLabel, details])
+  }, [copyLabel, colorMode])
 
   return (
     <Box>
       <Box
         onClick={handleCopyClick}
         sx={{
-          height: '80px',
+          height: '12vh',
           backgroundColor: primaryBackground.toString(),
           display: 'flex',
           justifyContent: 'flex-end',
@@ -100,6 +100,8 @@ const Swatch = ({
             padding: SPACING.SMALL.PX,
           }}
         >
+          {copyLabel}
+          <br />
           {name}
         </Typography>
       </Box>

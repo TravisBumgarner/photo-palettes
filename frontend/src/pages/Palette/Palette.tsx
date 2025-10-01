@@ -18,8 +18,9 @@ const Palette = () => {
   const isDesktop = useMediaQuery('(min-width:600px)')
   const [controls, setControls] = React.useState<PaletteControlsState>({
     background: BACKGROUND_COLORS[0],
-    details: 'none',
+    colorMode: 'none',
     mix: 'none',
+    toggleExploration: 'on',
   })
 
   const { data, isLoading, error, refetch } = useQuery({

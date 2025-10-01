@@ -18,8 +18,8 @@ import Summary from './Summary'
 const TABS = ['photo', 'color']
 
 const TABS_LABEL = {
-  [TABS[0]]: 'Photo',
-  [TABS[1]]: 'Color Exploration',
+  [TABS[0]]: 'Overview',
+  [TABS[1]]: 'Explore',
 }
 
 const PaletteMobile = ({
@@ -57,18 +57,33 @@ const PaletteMobile = ({
         onChange={handleTabChange}
       >
         {TABS.map((key) => (
-          <Tab key={key} label={TABS_LABEL[key]} />
+          <Tab
+            key={key}
+            label={TABS_LABEL[key]}
+            sx={{
+              width: '50%',
+            }}
+          />
         ))}
       </Tabs>
 
       {TABS[tabIndex] === 'photo' && (
-        <BlurImage
-          alt={`${name} thumbnail`}
-          src={palette.photoUrl}
-          aspectRatio={palette.aspectRatio}
-          blurHash={palette.blurhash}
-          maxDimensions={{ maxHeight: '90vh' }}
-        />
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: SPACING.MEDIUM.PX,
+          }}
+        >
+          <ColorBar height={15} colors={palette.colors.map((c) => c.hex)} />
+          <BlurImage
+            alt={`${name} thumbnail`}
+            src={palette.photoUrl}
+            aspectRatio={palette.aspectRatio}
+            blurHash={palette.blurhash}
+            maxDimensions={{ maxHeight: '90vh' }}
+          />
+        </Box>
       )}
 
       {TABS[tabIndex] === 'color' && (
@@ -78,30 +93,20 @@ const PaletteMobile = ({
               position: 'sticky',
               top: 'env(safe-area-inset-top)',
               zIndex: 999,
-              padding: SPACING.SMALL.PX,
               backgroundColor: subtleBackground(theme.palette.mode, 'slightly'),
-              gap: SPACING.SMALL.PX,
+              marginBottom: SPACING.SMALL.PX,
               display: 'flex',
               flexDirection: 'column',
             }}
           >
-            <ColorBar
-              interactive
-              height={25}
-              colors={palette.colors.map((c) => c.hex)}
-            />
-
             <Button variant="contained" fullWidth onClick={handleFilterToggle}>
-              {showFilters ? 'Hide Filters' : 'Show Filters'}
+              {showFilters ? 'Hide' : 'Change color information'}
             </Button>
 
             {showFilters && (
               <Box
                 sx={{
-                  backgroundColor: subtleBackground(theme.palette.mode),
                   padding: SPACING.MEDIUM.PX,
-                  marginBottom: SPACING.MEDIUM.PX,
-                  borderRadius: 1,
                 }}
               >
                 <Controls setControls={setControls} controls={controls} />
@@ -111,9 +116,10 @@ const PaletteMobile = ({
           <Box sx={{ backgroundColor: controls.background }}>
             {palette.colors.map((swatch, index) => (
               <ColorDetails
+                toggleExploration={controls.toggleExploration}
                 index={index}
                 colorMix={controls.mix}
-                details={controls.details}
+                colorMode={controls.colorMode}
                 swatch={swatch}
                 key={swatch.id}
               />
