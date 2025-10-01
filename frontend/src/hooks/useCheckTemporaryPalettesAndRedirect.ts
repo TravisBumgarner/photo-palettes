@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { useLocation, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { ROUTES } from '../consts'
 import { queries } from '../database'
 import useGlobalStore from '../store'
@@ -13,7 +13,6 @@ const useCheckTemporaryPalettesAndRedirect = () => {
   const appUserDetails = useGlobalStore((state) => state.appUserDetails)
   const [hasTemporaryPalettes, setHasTemporaryPalettes] = useState(false)
   const [hasRedirected, setHasRedirected] = useState(false)
-  const location = useLocation()
 
   const navigate = useNavigate()
   useEffect(() => {
@@ -23,11 +22,6 @@ const useCheckTemporaryPalettesAndRedirect = () => {
   }, [])
 
   useEffect(() => {
-    // Don't redirect if user is on password reset page
-    if (location.pathname === ROUTES.passwordReset.href) {
-      return
-    }
-
     if (appUserDetails && hasTemporaryPalettes && !hasRedirected) {
       // There's a race condition that causes the navigation to not work when signing in.
       // The timeout gives a tick to the event loop, allowing the sign-in process to complete.
@@ -36,13 +30,7 @@ const useCheckTemporaryPalettesAndRedirect = () => {
       }, 0)
       setHasRedirected(true)
     }
-  }, [
-    appUserDetails,
-    hasTemporaryPalettes,
-    navigate,
-    hasRedirected,
-    location.pathname,
-  ])
+  }, [appUserDetails, hasTemporaryPalettes, navigate, hasRedirected])
 }
 
 export default useCheckTemporaryPalettesAndRedirect

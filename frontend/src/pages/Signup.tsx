@@ -3,25 +3,20 @@ import TextField from '@mui/material/TextField'
 import Typography from '@mui/material/Typography'
 import { type ChangeEvent, useCallback, useState } from 'react'
 import { Navigate, useNavigate } from 'react-router-dom'
-import { z } from 'zod'
-import { MINIMUM_PASSWORD_LENGTH, ROUTES } from '../consts'
+import { ROUTES } from '../consts'
 import { trackEvent } from '../services/analytics'
 import { signup } from '../services/supabase'
 import { GoogleSignInButton } from '../sharedComponents/GoogleButton'
 import Link from '../sharedComponents/Link'
+import Message from '../sharedComponents/Message'
 import { MODAL_ID } from '../sharedComponents/Modal/Modal.types'
 import { activeModalSignal } from '../signals'
 import useGlobalStore from '../store'
 import authFormCSS from '../styles/shared/authFormCSS'
 import PageTitle from '../styles/shared/PageTitle'
 import PageWrapper from '../styles/shared/PageWrapper'
+import { getValidationError, validateSignup } from '../utils/auth'
 import { loadUserIntoState } from '../utils/loadUserIntoState'
-
-const SignupSchema = z.object({
-  email: z.string().email(),
-  password: z.string().min(MINIMUM_PASSWORD_LENGTH),
-  repeatPassword: z.string().min(MINIMUM_PASSWORD_LENGTH),
-})
 
 export default function SignupPage() {
   const [error, setError] = useState<string | null>(null)
@@ -60,13 +55,10 @@ export default function SignupPage() {
         return
       }
 
-      const result = SignupSchema.safeParse({
-        email,
-        password,
-        repeatPassword,
-      })
+      const result = validateSignup(email, password, repeatPassword)
+
       if (!result.success) {
-        setError(result.error.message)
+        setError(getValidationError(result))
         return
       }
 
@@ -118,7 +110,7 @@ export default function SignupPage() {
     <PageWrapper minHeight verticallyAlign width="small">
       <form onSubmit={handleSubmit} style={authFormCSS}>
         <PageTitle center text="Sign Up" />
-        {error && <p style={{ color: 'red' }}>{error}</p>}
+        {error && <Message color="error" message={error} />}
         <GoogleSignInButton text="Sign up with Google" />
 
         <TextField

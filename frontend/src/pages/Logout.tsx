@@ -1,29 +1,37 @@
+import { setUserId } from '@amplitude/analytics-browser'
 import Typography from '@mui/material/Typography'
 import { useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { logout } from '../services/supabase'
 import useGlobalStore from '../store'
 import PageTitle from '../styles/shared/PageTitle'
 import PageWrapper from '../styles/shared/PageWrapper'
-import { useNavigate } from 'react-router-dom'
-import { setUserId } from '@amplitude/analytics-browser'
 
 export default function Logout() {
   const navigate = useNavigate()
   const setAuthId = useGlobalStore((state) => state.setAuthId)
   const setAppUserDetails = useGlobalStore((state) => state.setAppUserDetails)
+  const setLoadingUser = useGlobalStore((state) => state.setLoadingUser)
 
   useEffect(() => {
     const logoutUser = async () => {
-      setAuthId(null)
-      setAppUserDetails(null)
-      setUserId(undefined)
+      setLoadingUser(true)
       const response = await logout()
       if (response?.success) {
         navigate('/')
       }
+
+      setAuthId(null)
+      setAppUserDetails(null)
+      setUserId(undefined)
+
+      // There's flickering that goes on which navigates `/` -> `/login` -> `/` when logging out while on a
+      // protected route. The timeout gives a tick to the event loop, allowing the redirect to
+      // complete before we hide the loading state.
+      setTimeout(() => setLoadingUser(false), 50) // Give some time for the redirect to happen
     }
     logoutUser()
-  }, [navigate, setAuthId, setAppUserDetails])
+  }, [navigate, setAuthId, setAppUserDetails, setLoadingUser])
 
   return (
     <PageWrapper width="small">

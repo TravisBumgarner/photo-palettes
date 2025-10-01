@@ -24,6 +24,8 @@ const Palettes = ({
 }) => {
   const { data, isLoading, error, refetch } = useQuery({
     queryKey: ['palettes', page, sortBy],
+    // Next line - Prevent flickering when going to a route that redirects such as Browse -> Login -> Browse.
+    placeholderData: (prev) => prev,
     queryFn: () =>
       getPaletteList({
         size: PAGINATION_SIZE,

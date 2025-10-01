@@ -5,8 +5,7 @@ import Typography from '@mui/material/Typography'
 
 import { type ChangeEvent, useCallback, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { z } from 'zod'
-import { MINIMUM_PASSWORD_LENGTH, ROUTES } from '../consts'
+import { ROUTES } from '../consts'
 import { resetPassword, updatePassword } from '../services/supabase'
 import authFormCSS from '../styles/shared/authFormCSS'
 import PageTitle from '../styles/shared/PageTitle'
@@ -16,25 +15,7 @@ import Link from '../sharedComponents/Link'
 import Loading from '../sharedComponents/Loading'
 import Message from '../sharedComponents/Message'
 import useGlobalStore from '../store'
-
-const EmailSchema = z.object({
-  email: z.email('Please enter a valid email address'),
-})
-
-const PasswordSchema = z
-  .object({
-    password: z
-      .string()
-      .min(
-        MINIMUM_PASSWORD_LENGTH,
-        `Password must be at least ${MINIMUM_PASSWORD_LENGTH} characters`
-      ),
-    confirmPassword: z.string(),
-  })
-  .refine((data) => data.password === data.confirmPassword, {
-    message: "Passwords don't match",
-    path: ['confirmPassword'],
-  })
+import { validateEmail, validatePassword } from '../utils/auth'
 
 export default function PasswordResetPage() {
   const [error, setError] = useState<string | null>(null)
@@ -75,7 +56,7 @@ export default function PasswordResetPage() {
       e.preventDefault()
       setIsLoading(true)
 
-      const result = EmailSchema.safeParse({ email })
+      const result = validateEmail(email)
 
       if (!result.success) {
         setError(result.error.issues[0].message)
@@ -105,7 +86,7 @@ export default function PasswordResetPage() {
       e.preventDefault()
       setIsLoading(true)
 
-      const result = PasswordSchema.safeParse({ password, confirmPassword })
+      const result = validatePassword(password, confirmPassword)
 
       if (!result.success) {
         setError(result.error.issues[0].message)
@@ -179,7 +160,7 @@ export default function PasswordResetPage() {
               variant="contained"
               type="submit"
               fullWidth
-              disabled={isLoading}
+              disabled={isLoading || !email}
             >
               {isLoading ? 'Sending...' : 'Send Reset Instructions'}
             </Button>
