@@ -28,7 +28,7 @@ const Favorite = ({
   refetch,
 }: FavoriteProps) => {
   const isDark = useTheme().palette.mode === 'dark'
-  const appUserDetails = useGlobalStore((state) => state.appUserDetails)
+  const appUser = useGlobalStore((state) => state.appUser)
   const color = isDark ? PALETTE.grayscale[200] : PALETTE.grayscale[700]
 
   const addMutation = useMutation({
@@ -45,7 +45,7 @@ const Favorite = ({
     },
   })
 
-  if (!appUserDetails) {
+  if (!appUser) {
     return (
       <Box
         sx={{ display: 'flex', alignItems: 'center', gap: SPACING.SMALL.PX }}

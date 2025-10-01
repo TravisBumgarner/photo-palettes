@@ -96,7 +96,7 @@ const sections = (
 }
 
 const Footer = () => {
-  const appUserDetails = useGlobalStore((state) => state.appUserDetails)
+  const appUser = useGlobalStore((state) => state.appUser)
   const theme = useTheme()
   if (Capacitor.isNativePlatform()) return null
 
@@ -113,7 +113,7 @@ const Footer = () => {
         backgroundColor: subtleBackground(theme.palette.mode),
       }}
     >
-      {sections(appUserDetails?.permissionLevel).map((section) => (
+      {sections(appUser?.permissionLevel).map((section) => (
         <Section
           key={section.header}
           links={section.links}

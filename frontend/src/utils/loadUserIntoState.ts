@@ -10,11 +10,11 @@ export const loadUserIntoState = async () => {
   const store = useGlobalStore.getState()
 
   if (user) {
-    store.setAuthId(user.id)
+    store.setAuthUser(user)
     const userDetails = await getMe()
     if (userDetails.success) {
       setUserId(user.id)
-      store.setAppUserDetails(userDetails)
+      store.setAppUser(userDetails)
       success = true
     }
   }

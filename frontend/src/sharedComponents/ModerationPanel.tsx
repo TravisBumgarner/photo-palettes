@@ -28,7 +28,7 @@ const ModerationPanel = ({
   palette: TPalette
 }) => {
   const [isFetching, setIsFetching] = useState(false)
-  const appUserDetails = useGlobalStore((state) => state.appUserDetails)
+  const appUser = useGlobalStore((state) => state.appUser)
   const theme = useTheme()
 
   const handleShareToSocials = useCallback(() => {
@@ -96,10 +96,7 @@ const ModerationPanel = ({
     }
   }, [handleDeleteCallback])
 
-  if (
-    !appUserDetails ||
-    appUserDetails.permissionLevel < PERMISSION_LEVEL.MODERATOR
-  ) {
+  if (!appUser || appUser.permissionLevel < PERMISSION_LEVEL.MODERATOR) {
     return null
   }
 

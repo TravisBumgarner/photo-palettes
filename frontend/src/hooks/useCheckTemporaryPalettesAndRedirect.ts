@@ -10,7 +10,7 @@ import useGlobalStore from '../store'
 // email confirm before they can sign in. The email link will auth them for the first time so this
 // catch that.
 const useCheckTemporaryPalettesAndRedirect = () => {
-  const appUserDetails = useGlobalStore((state) => state.appUserDetails)
+  const appUser = useGlobalStore((state) => state.appUser)
   const [hasTemporaryPalettes, setHasTemporaryPalettes] = useState(false)
   const [hasRedirected, setHasRedirected] = useState(false)
 
@@ -22,7 +22,7 @@ const useCheckTemporaryPalettesAndRedirect = () => {
   }, [])
 
   useEffect(() => {
-    if (appUserDetails && hasTemporaryPalettes && !hasRedirected) {
+    if (appUser && hasTemporaryPalettes && !hasRedirected) {
       // There's a race condition that causes the navigation to not work when signing in.
       // The timeout gives a tick to the event loop, allowing the sign-in process to complete.
       setTimeout(() => {
@@ -30,7 +30,7 @@ const useCheckTemporaryPalettesAndRedirect = () => {
       }, 0)
       setHasRedirected(true)
     }
-  }, [appUserDetails, hasTemporaryPalettes, navigate, hasRedirected])
+  }, [appUser, hasTemporaryPalettes, navigate, hasRedirected])
 }
 
 export default useCheckTemporaryPalettesAndRedirect

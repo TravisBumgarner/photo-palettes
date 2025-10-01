@@ -4,7 +4,7 @@
 IGNORE_DIRS="node_modules dist dist-web dist-native build .git frontend/ios frontend/android explorations"
 
 # Extensions to ignore (space-separated, no leading dot)
-IGNORE_EXTS="jpg png gif svg mp4 mp3 zip gz tar lock ttf woff woff2 xml jar webp"
+IGNORE_EXTS="csv jpg png gif svg mp4 mp3 zip gz tar lock ttf woff woff2 xml jar webp"
 
 # Filenames to ignore (space-separated, no paths)
 IGNORE_FILES="package-lock.json"

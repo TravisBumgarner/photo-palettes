@@ -25,7 +25,7 @@ export default function SignupPage() {
   const [repeatPassword, setRepeatPassword] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)
 
-  const appUserDetails = useGlobalStore((state) => state.appUserDetails)
+  const appUser = useGlobalStore((state) => state.appUser)
   const navigate = useNavigate()
 
   const handlePasswordChange = useCallback(
@@ -102,7 +102,7 @@ export default function SignupPage() {
     [setEmail]
   )
 
-  if (appUserDetails) {
+  if (appUser) {
     return <Navigate to="/" />
   }
 
