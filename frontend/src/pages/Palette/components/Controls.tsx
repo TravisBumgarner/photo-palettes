@@ -30,7 +30,7 @@ const Controls: React.FC<ControlsProps> = ({ controls, setControls }) => {
       }}
     >
       <FilterWrapper>
-        <Typography sx={labelStyles}>Color details</Typography>
+        <Typography sx={labelStyles}>Gradients</Typography>
         <Box sx={{ display: 'flex', gap: SPACING.TINY.PX }}>
           {TOGGLE_EXPLORATION.map((key) => (
             <Button
@@ -90,7 +90,7 @@ const Controls: React.FC<ControlsProps> = ({ controls, setControls }) => {
       </FilterWrapper>
 
       <FilterWrapper>
-        <Typography sx={labelStyles}>Color Mode</Typography>
+        <Typography sx={labelStyles}>Color Info</Typography>
         <Box sx={{ display: 'flex', gap: SPACING.TINY.PX, flexWrap: 'wrap' }}>
           {COLOR_MODES.map((key) => (
             <Button
@@ -119,7 +119,7 @@ const Controls: React.FC<ControlsProps> = ({ controls, setControls }) => {
       </FilterWrapper>
 
       <FilterWrapper>
-        <Typography sx={labelStyles}>Color Mix</Typography>
+        <Typography sx={labelStyles}>Color Wheel</Typography>
         <Box sx={{ display: 'flex', gap: SPACING.TINY.PX, flexWrap: 'wrap' }}>
           {COLOR_MIXES.map((key) => (
             <Button

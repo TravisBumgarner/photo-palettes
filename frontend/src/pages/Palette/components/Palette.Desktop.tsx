@@ -65,7 +65,7 @@ const PaletteDesktop = ({
 }
 
 const LeftColumn = styled(Box)(({ theme }) => ({
-  flexBasis: '250px',
+  flexBasis: '180px',
   flexShrink: 0,
   padding: `${SPACING.MEDIUM.PX}`,
   gap: SPACING.SMALL.PX,

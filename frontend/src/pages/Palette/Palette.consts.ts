@@ -26,7 +26,7 @@ export const COLOR_MIXES_MAP: Record<ColorMix, string> = {
   analogous: 'Analogous',
   triadic: 'Triadic',
   tetradic: 'Tetradic',
-  splitComplementary: 'Split Complementary',
+  splitComplementary: 'Split Comp.',
 }
 
 export const BACKGROUND_COLORS: string[] = [
