@@ -21,6 +21,7 @@ export const ANON_ROUTES: Items = [
   ...(Capacitor.isNativePlatform() ? (['browse'] as const) : []),
   'login',
   'signup',
-  'feedback',
-  'featureRequests',
+  ...(Capacitor.isNativePlatform()
+    ? []
+    : (['feedback', 'featureRequests'] as const)),
 ]

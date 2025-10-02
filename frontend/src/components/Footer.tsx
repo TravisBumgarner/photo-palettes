@@ -1,3 +1,4 @@
+import React from 'react'
 import Box from '@mui/material/Box'
 import List from '@mui/material/List'
 import ListItem from '@mui/material/ListItem'
@@ -7,16 +8,17 @@ import { useTheme } from '@mui/material/styles'
 import { Capacitor } from '@capacitor/core'
 import { ROUTES } from '../consts'
 import Link from '../sharedComponents/Link'
-import useGlobalStore from '../store'
 import { FONT_SIZES, SPACING, subtleBackground } from '../styles/styleConsts'
-import { PERMISSION_LEVEL, type EPermissionLevel } from '../types'
+import { iconMap } from '../consts'
 
 const Section = ({
   links,
   header,
+  direction,
 }: {
   links: (keyof typeof ROUTES)[]
   header: string
+  direction: 'row' | 'column'
 }) => {
   return (
     <Box sx={{ width: '150px' }}>
@@ -29,7 +31,14 @@ const Section = ({
       >
         {header}
       </Typography>
-      <List sx={{ margin: 0, padding: 0 }}>
+      <List
+        sx={{
+          margin: 0,
+          padding: 0,
+          display: 'flex',
+          flexDirection: direction,
+        }}
+      >
         {links.map((link) => (
           <ListItem
             key={link}
@@ -41,7 +50,9 @@ const Section = ({
             }}
           >
             <Link hideBaseUnderline href={ROUTES[link].href}>
-              {ROUTES[link].label}
+              {iconMap[link]
+                ? React.createElement(iconMap[link]!, { size: 30 })
+                : ROUTES[link].label}
             </Link>
           </ListItem>
         ))}
@@ -50,53 +61,7 @@ const Section = ({
   )
 }
 
-const getBasedOnPermissionLevel = (
-  user: EPermissionLevel | undefined,
-  loggedOut: (keyof typeof ROUTES)[],
-  loggedIn: (keyof typeof ROUTES)[],
-  moderator: (keyof typeof ROUTES)[]
-) => {
-  if (user === PERMISSION_LEVEL.MODERATOR || user === PERMISSION_LEVEL.ADMIN) {
-    return moderator
-  }
-
-  if (user === PERMISSION_LEVEL.MEMBER) {
-    return loggedIn
-  }
-
-  return loggedOut
-}
-
-const sections = (
-  user: EPermissionLevel | undefined
-): { header: string; links: (keyof typeof ROUTES)[] }[] => {
-  return [
-    {
-      header: 'Community',
-      links: ['discord', 'bluesky', 'twitter', 'instagram', 'donate'],
-    },
-    {
-      header: 'Feedback',
-      links: ['feedback', 'featureRequests'],
-    },
-    {
-      header: 'Site Info',
-      links: ['releaseNotes', 'privacy', 'tos'],
-    },
-    {
-      header: 'User',
-      links: getBasedOnPermissionLevel(
-        user,
-        ['login', 'signup'],
-        ['profile', 'logout'],
-        ['profile', 'moderation', 'logout']
-      ),
-    },
-  ]
-}
-
 const Footer = () => {
-  const appUser = useGlobalStore((state) => state.appUser)
   const theme = useTheme()
   if (Capacitor.isNativePlatform()) return null
 
@@ -113,13 +78,21 @@ const Footer = () => {
         backgroundColor: subtleBackground(theme.palette.mode),
       }}
     >
-      {sections(appUser?.permissionLevel).map((section) => (
-        <Section
-          key={section.header}
-          links={section.links}
-          header={section.header}
-        />
-      ))}
+      <Section
+        direction="row"
+        links={['discord', 'bluesky', 'twitter', 'instagram']}
+        header={'Community'}
+      />{' '}
+      <Section
+        direction="column"
+        links={['feedback', 'featureRequests']}
+        header={'Feedback'}
+      />{' '}
+      <Section
+        direction="column"
+        links={['donate', 'releaseNotes', 'privacy', 'tos']}
+        header={'Site Info'}
+      />
     </Box>
   )
 }

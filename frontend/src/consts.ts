@@ -1,3 +1,16 @@
+import { FaBluesky } from 'react-icons/fa6'
+import { FaInstagram } from 'react-icons/fa'
+import { FaDiscord } from 'react-icons/fa6'
+import { FaTwitter } from 'react-icons/fa'
+import type { IconType } from 'react-icons/lib'
+
+export const iconMap: Partial<Record<keyof typeof ROUTES, IconType>> = {
+  bluesky: FaBluesky,
+  instagram: FaInstagram,
+  discord: FaDiscord,
+  twitter: FaTwitter,
+}
+
 // This value is controlled by Supabase, so if you change it here, be sure to also.
 export const MINIMUM_PASSWORD_LENGTH = 10
 
