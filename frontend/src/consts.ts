@@ -1,3 +1,16 @@
+import { FaBluesky } from 'react-icons/fa6'
+import { FaInstagram } from 'react-icons/fa'
+import { FaDiscord } from 'react-icons/fa6'
+import { FaTwitter } from 'react-icons/fa'
+import type { IconType } from 'react-icons/lib'
+
+export const iconMap: Partial<Record<keyof typeof ROUTES, IconType>> = {
+  bluesky: FaBluesky,
+  instagram: FaInstagram,
+  discord: FaDiscord,
+  twitter: FaTwitter,
+}
+
 // This value is controlled by Supabase, so if you change it here, be sure to also.
 export const MINIMUM_PASSWORD_LENGTH = 10
 
@@ -127,3 +140,5 @@ export const ROUTES = {
 export const PAGINATION_SIZE = 10
 
 export const PALETTE_SIZE = 6
+
+export const NATIVE_AUTH_CALLBACK_URL = 'com.photopalettes://auth/callback'

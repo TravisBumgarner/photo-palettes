@@ -8,8 +8,9 @@ export const USER_ROUTES: Items = [
   'favorites',
   'profile',
   'settings',
-  'feedback',
-  'featureRequests',
+  ...(Capacitor.isNativePlatform()
+    ? []
+    : (['feedback', 'featureRequests'] as const)),
   'logout',
 ]
 
@@ -21,6 +22,7 @@ export const ANON_ROUTES: Items = [
   ...(Capacitor.isNativePlatform() ? (['browse'] as const) : []),
   'login',
   'signup',
-  'feedback',
-  'featureRequests',
+  ...(Capacitor.isNativePlatform()
+    ? []
+    : (['feedback', 'featureRequests'] as const)),
 ]

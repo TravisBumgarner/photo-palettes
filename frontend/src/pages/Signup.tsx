@@ -110,7 +110,9 @@ export default function SignupPage() {
     <PageWrapper minHeight verticallyAlign width="small">
       <form onSubmit={handleSubmit} style={authFormCSS}>
         <PageTitle center text="Sign Up" />
-        {error && <Message color="error" message={error} />}
+        {error && (
+          <Message includeVerticalMargin color="error" message={error} />
+        )}
         <GoogleSignInButton text="Sign up with Google" />
 
         <TextField

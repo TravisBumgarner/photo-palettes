@@ -1,14 +1,15 @@
 import { createClient } from '@supabase/supabase-js'
 import config from '../config'
-import { ROUTES } from '../consts'
+import { NATIVE_AUTH_CALLBACK_URL, ROUTES } from '../consts'
 import { logger } from './logging'
+import { Capacitor } from '@capacitor/core'
+import { Browser } from '@capacitor/browser'
 
-//TODO - FIx
 type Response =
   | { success: true; data?: unknown }
   | { error: string; success: false }
 
-const client = createClient(config.supabaseUrl, config.supabaseAnonKey)
+export const client = createClient(config.supabaseUrl, config.supabaseAnonKey)
 
 export async function getUser() {
   const sessionExists = await client.auth.getSession()
@@ -95,12 +96,41 @@ export async function updatePassword(password: string): Promise<Response> {
 }
 
 export async function signInWithGoogle() {
-  const { error } = await client.auth.signInWithOAuth({
-    provider: 'google',
-  })
-  if (error) {
-    logger.error(`Google sign-in failed ${JSON.stringify(error)}`)
-    return { error: 'Google sign-in failed', success: false }
+  try {
+    if (Capacitor.isNativePlatform()) {
+      // Native (iOS/Android)
+      const { data, error } = await client.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          redirectTo: NATIVE_AUTH_CALLBACK_URL,
+        },
+      })
+
+      if (error) {
+        logger.error(`Google sign-in failed (native): ${JSON.stringify(error)}`)
+        return { error: 'Google sign-in failed', success: false }
+      }
+
+      if (data?.url) {
+        await Browser.open({ url: data.url })
+      }
+
+      return { success: true }
+    } else {
+      // Browser
+      const { error } = await client.auth.signInWithOAuth({
+        provider: 'google',
+      })
+
+      if (error) {
+        logger.error(`Google sign-in failed (web): ${JSON.stringify(error)}`)
+        return { error: 'Google sign-in failed', success: false }
+      }
+
+      return { success: true }
+    }
+  } catch (err) {
+    logger.error(`Unexpected error in Google sign-in: ${err}`)
+    return { error: 'Unexpected error', success: false }
   }
-  return { success: true }
 }

@@ -35,6 +35,8 @@
     "@amplitude/analytics-browser": "^2.24.0",
     "@amplitude/plugin-session-replay-browser": "^1.22.13",
     "@capacitor/android": "^7.4.3",
+    "@capacitor/app": "^7.1.0",
+    "@capacitor/browser": "^7.0.2",
     "@capacitor/core": "^7.4.3",
     "@capacitor/filesystem": "^7.1.4",
     "@capacitor/ios": "^7.4.3",

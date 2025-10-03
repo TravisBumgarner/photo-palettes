@@ -81,7 +81,9 @@ export default function LoginPage() {
     <PageWrapper minHeight verticallyAlign width="small">
       <form onSubmit={handleSubmit} style={authFormCSS}>
         <PageTitle text="Log In" center />
-        {error && <Message color="error" message={error} />}
+        {error && (
+          <Message includeVerticalMargin color="error" message={error} />
+        )}
         <GoogleSignInButton text="Sign in with Google" />
         <TextField
           id="email"
