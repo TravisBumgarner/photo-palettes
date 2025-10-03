@@ -16,7 +16,7 @@ import { type MODAL_ID } from '../Modal.consts'
 import DefaultModal from './DefaultModal'
 
 export interface ModeratorSharePostToSocialsProps {
-  id: typeof MODAL_ID.SHARE_TO_SOCIALS
+  id: typeof MODAL_ID.SHARE_TO_SOCIALS_MODAL
   palette: TPalette
 }
 

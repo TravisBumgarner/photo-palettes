@@ -17,7 +17,7 @@ config = get_config()
 
 def get_user_auth_headers():
     # First thing to check if this test is failing is if the test user exists is a user.
-    supabase = create_client(config.supabase.url, config.supabase.key)
+    supabase = create_client(config.supabase.url, config.supabase.anon_key)
 
     email = os.getenv("TEST_USER_EMAIL")
     password = os.getenv("TEST_USER_PASSWORD")
@@ -41,7 +41,7 @@ def get_user_auth_headers():
 
 def get_moderator_auth_headers():
     # First thing to check if this test is failing is if the test user exists and is a moderator.
-    supabase = create_client(config.supabase.url, config.supabase.key)
+    supabase = create_client(config.supabase.url, config.supabase.anon_key)
 
     email = os.getenv("TEST_MODERATOR_EMAIL")
     password = os.getenv("TEST_MODERATOR_PASSWORD")

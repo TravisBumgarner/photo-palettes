@@ -1,3 +1,3 @@
 # Required to register routes with FastAPI
 
-from . import get_me
+from . import delete_me, get_me

@@ -51,11 +51,16 @@ class AppUser(Base):
     email: Mapped[str] = mapped_column(String, unique=True)
     display_name: Mapped[str] = mapped_column(String)
     created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.now)
-    palettes: Mapped[list["Palette"]] = relationship("Palette", back_populates="user")
+
+    palettes: Mapped[list["Palette"]] = relationship(
+        "Palette", back_populates="user", passive_deletes=True
+    )
     permission_level: Mapped[PermissionLevel] = mapped_column(
         Integer, default=PermissionLevel.MEMBER
     )
-    favorites = relationship("PaletteFavorite", back_populates="user")
+    favorites: Mapped[list["PaletteFavorite"]] = relationship(
+        "PaletteFavorite", back_populates="user", passive_deletes=True
+    )
 
 
 class PaletteColor(Base):
@@ -105,16 +110,24 @@ class Palette(Base):
     photo_details: Mapped[str] = mapped_column(String)
     og_photo_details: Mapped[str] = mapped_column(String)
     colors: Mapped[list["PaletteColor"]] = relationship(
-        "PaletteColor", back_populates="palette", cascade="all, delete-orphan"
+        "PaletteColor",
+        back_populates="palette",
+        cascade="all, delete-orphan",
+        passive_deletes=True,
     )
-    user: Mapped["AppUser"] = relationship("AppUser", back_populates="palettes")
     moderation_status: Mapped[ModerationStatus] = mapped_column(
         Integer, default=ModerationStatus.AWAITING_MODERATION
     )
     blurhash: Mapped[str] = mapped_column(String)
     aspect_ratio: Mapped[float] = mapped_column(Float)
     favorites: Mapped[list["PaletteFavorite"]] = relationship(
-        "PaletteFavorite", back_populates="palette", cascade="all, delete-orphan"
+        "PaletteFavorite",
+        back_populates="palette",
+        cascade="all, delete-orphan",
+        passive_deletes=True,
+    )
+    user: Mapped["AppUser"] = relationship(
+        "AppUser", back_populates="palettes", passive_deletes=True
     )
 
     def check_has_user_favorited(self, user_id: uuid.UUID, session) -> bool:
@@ -139,8 +152,12 @@ class PaletteFavorite(Base):
     )
     created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.now)
 
-    user: Mapped["AppUser"] = relationship("AppUser", back_populates="favorites")
-    palette: Mapped["Palette"] = relationship("Palette", back_populates="favorites")
+    user: Mapped["AppUser"] = relationship(
+        "AppUser", back_populates="favorites", passive_deletes=True
+    )
+    palette: Mapped["Palette"] = relationship(
+        "Palette", back_populates="favorites", passive_deletes=True
+    )
 
 
 class FeatureRequestStatus(IntEnum):

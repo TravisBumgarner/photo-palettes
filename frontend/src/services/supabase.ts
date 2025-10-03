@@ -60,6 +60,8 @@ export async function signup({
 }
 
 export async function logout(): Promise<Response> {
+  // Will throw error when logging out a user that has been deleted
+  // It does succeed on clearing local storage so on refresh there will be no session stored.
   await client.auth.signOut()
   return { success: true }
 }

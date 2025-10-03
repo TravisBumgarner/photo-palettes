@@ -24,7 +24,8 @@ class PushoverSettings(BaseServiceSettings):
 class SupabaseSettings(BaseServiceSettings):
     model_config = SettingsConfigDict(env_prefix="SUPABASE_")
     url: str = ""
-    key: str = ""
+    anon_key: str = ""
+    service_role_key: str = ""
 
 
 class Config(BaseSettings):

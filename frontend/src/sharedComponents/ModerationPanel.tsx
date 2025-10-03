@@ -33,7 +33,7 @@ const ModerationPanel = ({
 
   const handleShareToSocials = useCallback(() => {
     activeModalSignal.value = {
-      id: MODAL_ID.SHARE_TO_SOCIALS,
+      id: MODAL_ID.SHARE_TO_SOCIALS_MODAL,
       palette,
     }
   }, [palette])
