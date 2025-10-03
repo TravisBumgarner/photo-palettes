@@ -1,7 +1,10 @@
 import React, { useCallback, useMemo } from 'react'
 import { PAGINATION_SIZE } from '../consts'
 import Button from '@mui/material/Button'
-
+import IconButton from '@mui/material/IconButton'
+import { GrFormPrevious } from 'react-icons/gr'
+import { GrFormNext } from 'react-icons/gr'
+import { SPACING } from '../styles/styleConsts'
 interface PaginationProps {
   total: number
   currentPage: number
@@ -23,12 +26,13 @@ const PageNumber = ({
 
   return (
     <Button
-      variant="outlined"
+      variant={isActive ? 'contained' : 'text'}
       onClick={handleOnClick}
-      style={{
+      size="small"
+      sx={{
         fontWeight: isActive ? 'bold' : 'normal',
-        margin: '0 4px',
-        border: isActive ? '2px solid' : 'none',
+        padding: `${SPACING.TINY.PX} ${SPACING.SMALL.PX}`,
+        minWidth: 'auto',
       }}
     >
       {page}
@@ -79,19 +83,19 @@ const Pagination: React.FC<PaginationProps> = ({
     <div
       style={{
         display: 'flex',
-        gap: 8,
+        gap: SPACING.SMALL.PX,
         alignItems: 'center',
         justifyContent: 'center',
-        margin: '16px 0',
+        margin: `${SPACING.MEDIUM.PX} 0`,
       }}
     >
-      <Button
-        variant="outlined"
+      <IconButton
+        size="small"
         onClick={handlePrev}
         disabled={currentPage === 1}
       >
-        &laquo;
-      </Button>
+        <GrFormPrevious />
+      </IconButton>
       {pageNumbers[0] > 1 && <span>...</span>}
       {pageNumbers.map((page) => (
         <PageNumber
@@ -102,13 +106,13 @@ const Pagination: React.FC<PaginationProps> = ({
         />
       ))}
       {pageNumbers[pageNumbers.length - 1] < totalPages && <span>...</span>}
-      <Button
-        variant="outlined"
+      <IconButton
+        size="small"
         onClick={handleNext}
         disabled={currentPage === totalPages}
       >
-        &raquo;
-      </Button>
+        <GrFormNext />
+      </IconButton>
     </div>
   )
 }
