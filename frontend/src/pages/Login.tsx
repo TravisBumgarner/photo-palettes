@@ -14,7 +14,6 @@ import Box from '@mui/material/Box'
 import { Navigate, useNavigate } from 'react-router-dom'
 import { queries } from '../database'
 import { trackEvent } from '../services/analytics'
-import { GoogleSignInButton } from '../sharedComponents/GoogleButton'
 import Link from '../sharedComponents/Link'
 import Message from '../sharedComponents/Message'
 import { getValidationError, validateEmail } from '../utils/auth'
@@ -84,7 +83,7 @@ export default function LoginPage() {
         {error && (
           <Message includeVerticalMargin color="error" message={error} />
         )}
-        <GoogleSignInButton text="Sign in with Google" />
+        {/* <GoogleSignInButton text="Sign in with Google" /> */}
         <TextField
           id="email"
           name="email"

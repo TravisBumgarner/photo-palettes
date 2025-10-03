@@ -141,4 +141,4 @@ export const PAGINATION_SIZE = 10
 
 export const PALETTE_SIZE = 6
 
-export const NATIVE_AUTH_CALLBACK_URL = 'com.photopalettes://auth/callback'
+// export const NATIVE_AUTH_CALLBACK_URL = 'com.photopalettes://auth/callback'
