@@ -4,7 +4,7 @@ import TextField from '@mui/material/TextField'
 import Typography from '@mui/material/Typography'
 
 import { type ChangeEvent, useCallback, useState } from 'react'
-import { Navigate, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { ROUTES } from '../consts'
 import { resetPassword, updatePassword } from '../services/supabase'
 import authFormCSS from '../styles/shared/authFormCSS'
@@ -30,11 +30,11 @@ export default function PasswordResetPage() {
   const [isLoading, setIsLoading] = useState(false)
   const appUser = useGlobalStore((state) => state.appUser)
   const loadingUser = useGlobalStore((state) => state.loadingUser)
-  const authUser = useGlobalStore((state) => state.authUser)
-  const isGoogleAuth =
-    !!authUser &&
-    !!authUser.identities &&
-    authUser.identities[0].provider === 'google'
+  // const authUser = useGlobalStore((state) => state.authUser)
+  // const isGoogleAuth =
+  //   !!authUser &&
+  //   !!authUser.identities &&
+  //   authUser.identities[0].provider === 'google'
 
   const navigate = useNavigate()
 
@@ -120,9 +120,9 @@ export default function PasswordResetPage() {
     [password, confirmPassword, navigate]
   )
 
-  if (isGoogleAuth) {
-    return <Navigate to="/" />
-  }
+  // if (isGoogleAuth) {
+  //   return <Navigate to="/" />
+  // }
 
   if (loadingUser) {
     return (

@@ -6,7 +6,6 @@ import { Navigate, useNavigate } from 'react-router-dom'
 import { ROUTES } from '../consts'
 import { trackEvent } from '../services/analytics'
 import { signup } from '../services/supabase'
-import { GoogleSignInButton } from '../sharedComponents/GoogleButton'
 import Link from '../sharedComponents/Link'
 import Message from '../sharedComponents/Message'
 import { MODAL_ID } from '../sharedComponents/Modal/Modal.consts'
@@ -113,7 +112,7 @@ export default function SignupPage() {
         {error && (
           <Message includeVerticalMargin color="error" message={error} />
         )}
-        <GoogleSignInButton text="Sign up with Google" />
+        {/* <GoogleSignInButton text="Sign up with Google" /> */}
 
         <TextField
           id="email"
