@@ -55,7 +55,7 @@ const Header = () => {
         >
           {ROUTES.create.label}
         </Link>
-        {!Capacitor.isNativePlatform() ? (
+        {Capacitor.isNativePlatform() ? (
           <NavigationNative />
         ) : (
           <NavigationWeb />

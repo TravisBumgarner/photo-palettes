@@ -138,9 +138,8 @@ const Navigation = () => {
         slotProps={{
           paper: {
             sx: {
-              backgroundColor: 'background',
+              backgroundColor: 'background.default',
               borderRadius: BORDER_RADIUS.ZERO.PX,
-              minWidth: 220,
               paddingTop: 'env(safe-area-inset-top)',
               paddingBottom: 'env(safe-area-inset-bottom)',
             },

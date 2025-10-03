@@ -28,6 +28,9 @@ const config = {
       launchAutoHide: false,
       backgroundColor: '#FFFFFF',
     },
+    App: {
+      urlSchemes: ['com.photopalettes'], // 👈 scheme part of photopalettes://auth/callback
+    },
   },
 }
 

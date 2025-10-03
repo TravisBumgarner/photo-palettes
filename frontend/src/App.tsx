@@ -20,12 +20,14 @@ import PlatformSpecificStyling from './styles/PlatformSpecificStyling'
 import { Z_INDICES } from './styles/styleConsts'
 import AppThemeProvider from './styles/Theme'
 import Header from './components/Header'
+import { useNativeGoogleAuth } from './hooks/useNativeGoogleAuth'
 
 const queryClient = new QueryClient()
 
 function App() {
   useLoadUserIntoState()
   useCheckTemporaryPalettesAndRedirect()
+  useNativeGoogleAuth()
   useParseAnalyticsFromUrl()
   const loadingUser = useGlobalStore((state) => state.loadingUser)
   const { isLoading, isHealthy } = useHealthCheck()
