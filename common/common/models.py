@@ -94,6 +94,7 @@ class SortBy(Enum):
     NEWEST = "newest"
     FAVORITES_COUNT = "favorites_count"
     OLDEST = "oldest"
+    COLOR = "color"
 
 
 class Palette(Base):

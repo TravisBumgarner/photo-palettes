@@ -1,10 +1,10 @@
 import uuid
 from typing import Annotated
 
+from common.models import PermissionLevel, SortBy
 from fastapi import Query
 from pydantic import BaseModel
 
-from common.models import PermissionLevel, SortBy
 from consts import ErrorMsg
 from database.queries.favorites import get_app_user_favorites, get_favorites_count
 from middleware.auth import RequestWithAuthState

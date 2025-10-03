@@ -2,6 +2,7 @@ import * as amplitude from '@amplitude/analytics-browser'
 import { Capacitor } from '@capacitor/core'
 import config from '../config'
 import type { ColorMode } from '../pages/Palette/Palette.types'
+import type { ESortBy } from '../types'
 
 type CreateButtonClickedEvent = {
   event: 'create_button_clicked'
@@ -65,7 +66,10 @@ type UserUnfavoriteButtonEvent = {
 type BrowseFilterButtonEvent = {
   event: 'browse_filter_button'
   properties: {
-    browse_filter: 'newest' | 'oldest' | 'favorites_count'
+    options?: {
+      color: string
+    }
+    browse_filter: ESortBy
     page: 'browse' | 'favorites'
   }
 }
@@ -73,7 +77,10 @@ type BrowseFilterButtonEvent = {
 type BrowseNavigationEvent = {
   event: 'browse_navigation'
   properties: {
-    browse_filter: 'newest' | 'oldest' | 'favorites_count'
+    browse_filter: ESortBy
+    options?: {
+      color: string
+    }
     page: 'browse' | 'favorites' | 'profile'
     page_number: number
   }

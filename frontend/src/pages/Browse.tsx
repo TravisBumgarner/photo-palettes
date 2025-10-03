@@ -17,20 +17,23 @@ const Palettes = ({
   page,
   sortBy,
   handlePageChange,
+  color,
 }: {
   page: number
   sortBy: ESortBy
+  color: string
   handlePageChange: (newPage: number) => void
 }) => {
   const { data, isLoading, error, refetch } = useQuery({
-    queryKey: ['palettes', page, sortBy],
+    queryKey: ['palettes', page, sortBy, color],
     // Next line - Prevent flickering when going to a route that redirects such as Browse -> Login -> Browse.
     placeholderData: (prev) => prev,
     queryFn: () =>
       getPaletteList({
         size: PAGINATION_SIZE,
         offset: (page - 1) * PAGINATION_SIZE,
-        sortBy: sortBy,
+        sortBy,
+        color,
       }),
     retry: false,
   })
@@ -94,6 +97,7 @@ const Palettes = ({
 const Browse = () => {
   const [page, setPage] = useState(1)
   const [sortBy, setSortBy] = useState<ESortBy>(SORT_BY.NEWEST)
+  const [color, setColor] = useState<string>('#000000')
 
   const handlePageChange = useCallback(
     (newPage: number) => {
@@ -110,22 +114,28 @@ const Browse = () => {
     [sortBy]
   )
 
-  const handleSortChange = useCallback((newSortBy: ESortBy) => {
+  const handleSortChange = useCallback((newSortBy: ESortBy, color?: string) => {
     trackEvent({
       event: 'browse_filter_button',
       properties: { browse_filter: newSortBy, page: 'browse' },
     })
     setSortBy(newSortBy)
     setPage(1)
+    if (color) setColor(color)
   }, [])
 
   return (
     <PageWrapper width="full" minHeight>
-      <SortsAndFilters sortBy={sortBy} handleSortChange={handleSortChange} />
+      <SortsAndFilters
+        color={color}
+        sortBy={sortBy}
+        handleSortChange={handleSortChange}
+      />
       <Palettes
         handlePageChange={handlePageChange}
         page={page}
         sortBy={sortBy}
+        color={color}
       />
     </PageWrapper>
   )

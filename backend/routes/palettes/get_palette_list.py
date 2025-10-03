@@ -37,6 +37,7 @@ def handle_request(
     moderation_status: ModerationStatus,
     author_user_id: uuid.UUID | None,
     sort_by: SortBy,
+    color: str | None,
     app_user_id: uuid.UUID | None,
 ) -> SuccessResponse:
     can_see_all_moderation_statuses = calculate_can_see_all_moderation_statuses(
@@ -53,6 +54,7 @@ def handle_request(
         moderation_status=moderation_status,
         author_user_id=author_user_id,
         sort_by=sort_by,
+        color=color,
         app_user_id=app_user_id,
     )
 
@@ -74,6 +76,7 @@ async def get_palette_list(
     moderation_status: ModerationStatus = ModerationStatus.APPROVED,
     author_user_id: uuid.UUID | None = None,
     sort_by: SortBy = SortBy.NEWEST,
+    color: str | None = None,
 ):
     try:
         return handle_request(
@@ -83,6 +86,7 @@ async def get_palette_list(
             author_user_id=author_user_id,
             sort_by=sort_by,
             app_user_id=request.state.app_user_id,
+            color=color,
         )
 
     except Exception as error:
