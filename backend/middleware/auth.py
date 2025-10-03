@@ -3,12 +3,10 @@ import uuid
 from common.models import PermissionLevel
 from fastapi import Request
 from fastapi.responses import JSONResponse
-from pydantic import BaseModel
-from supabase import Client
 
 from config import get_config
-from database.queries.users import get_or_create_app_user
 from services.logger import log_error
+from services.supabase import get_app_user_details, get_auth_user
 
 config = get_config()
 
@@ -24,37 +22,9 @@ class RequestWithAuthState(Request):
     state: AuthState  # type: ignore
 
 
-def get_auth_user(supabase: Client, token: str):
-    if not token or token == "undefined":
-        return None
+def create_auth_middleware():
+    print(config.supabase)
 
-    auth = supabase.auth.get_user(token)
-
-    if not auth or not auth.user:
-        return None
-
-    supabase.postgrest.auth(token)
-    return auth.user
-
-
-class AppUserDetails(BaseModel):
-    app_user_id: uuid.UUID
-    permission_level: PermissionLevel
-
-
-def get_app_user_details(auth_user):
-    app_user = get_or_create_app_user(
-        auth_id=uuid.UUID(auth_user.id),
-        email=auth_user.email,
-    )
-
-    return AppUserDetails(
-        app_user_id=app_user.id,
-        permission_level=app_user.permission_level,
-    )
-
-
-def create_auth_middleware(supabase: Client):
     async def add_authentication(request: RequestWithAuthState, call_next):
         if request.method == "OPTIONS":
             return await call_next(request)
@@ -81,7 +51,7 @@ def create_auth_middleware(supabase: Client):
             request.state.permission_level = PermissionLevel.Anonymous
             return await call_next(request)
 
-        auth_user = get_auth_user(supabase, token)
+        auth_user = get_auth_user(token)
         if token and not auth_user:
             log_error(
                 RuntimeError("User supplied an invalid token. Attack?"),

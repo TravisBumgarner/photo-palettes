@@ -1,5 +1,5 @@
 import { setUserId } from '@amplitude/analytics-browser'
-import { getMe } from '../api/getMe'
+import { getMe } from '../api/user/getMe'
 import { getUser } from '../services/supabase'
 import useGlobalStore from '../store'
 

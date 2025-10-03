@@ -7,7 +7,6 @@ from common import models
 # Update the import to match the actual function name in palettes.py
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
-from supabase import Client, create_client
 
 from config import get_config
 from database.engine import db_engine
@@ -25,7 +24,6 @@ from utils.colors import load_colors
 load_colors("utils/colors.csv")
 config = get_config()
 
-supabase: Client = create_client(config.supabase.url, config.supabase.key)
 
 app = FastAPI()
 
@@ -40,7 +38,7 @@ sentry_sdk.init(
 # Setup middleware
 MAX_UPLOAD_SIZE = 10 * 1024 * 1024  # 10 MB
 app.add_middleware(LimitUploadSizeMiddleware, max_upload_size=MAX_UPLOAD_SIZE)
-app.middleware("http")(create_auth_middleware(supabase))
+app.middleware("http")(create_auth_middleware())
 setup_cors(app, config.is_production)
 
 # Mount the uploads directory for static file serving

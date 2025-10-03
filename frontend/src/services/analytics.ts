@@ -119,6 +119,10 @@ type CopyCSSGradientEvent = {
   }
 }
 
+type ConfirmAccountDeletionEvent = {
+  event: 'confirm_account_deletion'
+}
+
 type Event =
   | CreateButtonClickedEvent
   | CreatePhotoSelectedEvent
@@ -137,6 +141,7 @@ type Event =
   | CopyColorDetailEvent
   | UserOriginEvent
   | CopyCSSGradientEvent
+  | ConfirmAccountDeletionEvent
 
 export const trackEvent = (event: Event) => {
   const properties = {

@@ -7,6 +7,16 @@ from sqlalchemy.orm import Session
 from database.engine import db_engine
 
 
+def delete_app_user_by_app_user_id(app_user_id: uuid.UUID) -> bool:
+    with Session(db_engine) as session:
+        app_user = session.query(AppUser).filter(AppUser.id == app_user_id).first()
+        if app_user:
+            session.delete(app_user)
+            session.commit()
+            return True
+        return False
+
+
 def get_app_user_by_app_user_id(app_user_id: uuid.UUID) -> AppUser | None:
     with Session(db_engine) as session:
         return session.query(AppUser).filter(AppUser.id == app_user_id).first()
