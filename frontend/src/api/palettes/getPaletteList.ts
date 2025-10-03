@@ -21,12 +21,14 @@ const getPaletteList = async ({
   authorUserId,
   moderationStatus,
   sortBy,
+  color,
 }: {
   size: number
   offset: number
   authorUserId?: string
   moderationStatus?: number
   sortBy: ESortBy
+  color?: string
 }) => {
   const tokenResponse = await getToken()
 
@@ -44,6 +46,7 @@ const getPaletteList = async ({
   if (authorUserId !== undefined) params.append('author_user_id', authorUserId)
   if (moderationStatus !== undefined)
     params.append('moderation_status', `${moderationStatus}`)
+  if (color) params.append('color', color)
 
   const response = await fetch(
     `${config.apiUrl}/palettes?${params.toString()}`,

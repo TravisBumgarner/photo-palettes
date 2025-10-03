@@ -23,8 +23,6 @@ class RequestWithAuthState(Request):
 
 
 def create_auth_middleware():
-    print(config.supabase)
-
     async def add_authentication(request: RequestWithAuthState, call_next):
         if request.method == "OPTIONS":
             return await call_next(request)

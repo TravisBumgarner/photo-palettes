@@ -16,7 +16,9 @@ import { type ESortBy, SORT_BY } from '../types'
 
 const Favorites = () => {
   const [page, setPage] = useState(1)
-  const [sortBy, setSortBy] = useState<ESortBy>(SORT_BY.NEWEST)
+  const [sortBy, setSortBy] = useState<Exclude<ESortBy, 'color'>>(
+    SORT_BY.NEWEST
+  )
 
   const { data, isLoading, error, refetch } = useQuery({
     queryKey: ['favorites', page, sortBy],
@@ -34,6 +36,11 @@ const Favorites = () => {
   }, [page, sortBy])
 
   const handleSortChange = useCallback((newSortBy: ESortBy) => {
+    if (newSortBy === 'color') {
+      // Favorites does not support color for now.
+      return
+    }
+
     trackEvent({
       event: 'browse_filter_button',
       properties: { browse_filter: newSortBy, page: 'favorites' },

@@ -8,6 +8,15 @@ from database.engine import db_engine
 from database.queries.shared import ORDER_BY
 
 
+def hex_to_rgb(hex_color: str) -> tuple[int, int, int]:
+    """Convert hex color to RGB tuple."""
+    hex_color = hex_color.lstrip("#")
+    r = int(hex_color[0:2], 16)
+    g = int(hex_color[2:4], 16)
+    b = int(hex_color[4:6], 16)
+    return (r, g, b)
+
+
 def get_palettes_count(
     moderation_status: ModerationStatus,
     author_user_id: uuid.UUID | None = None,
@@ -50,20 +59,70 @@ def get_palettes(
     offset: int | None = None,
     author_user_id: uuid.UUID | None = None,
     sort_by: SortBy = SortBy.NEWEST,
+    color: str | None = None,
     app_user_id: uuid.UUID | None = None,
 ) -> list[Palette]:
+    print("got options", color)
     with Session(db_engine) as session:
-        query = (
-            session.query(
-                Palette,
-                func.count(PaletteFavorite.palette_id).label("favorites_count"),
+        # Handle color-based sorting
+        if sort_by == SortBy.COLOR and color:
+            try:
+                r_target, g_target, b_target = hex_to_rgb(color)
+
+                # Subquery to find minimum color distance for each palette
+                color_distance_subquery = (
+                    session.query(
+                        PaletteColor.palette_id,
+                        func.min(
+                            func.pow(PaletteColor.r - r_target, 2)
+                            + func.pow(PaletteColor.g - g_target, 2)
+                            + func.pow(PaletteColor.b - b_target, 2)
+                        ).label("min_dist2"),
+                    )
+                    .group_by(PaletteColor.palette_id)
+                    .subquery()
+                )
+
+                query = (
+                    session.query(
+                        Palette,
+                        func.count(PaletteFavorite.palette_id).label("favorites_count"),
+                        color_distance_subquery.c.min_dist2,
+                    )
+                    .join(
+                        color_distance_subquery, Palette.id == color_distance_subquery.c.palette_id
+                    )
+                    .outerjoin(PaletteFavorite, Palette.id == PaletteFavorite.palette_id)
+                    .options(joinedload(Palette.colors))
+                    .filter(Palette.moderation_status == moderation_status)
+                    .group_by(Palette.id, color_distance_subquery.c.min_dist2)
+                    .order_by(color_distance_subquery.c.min_dist2.asc())
+                )
+            except (ValueError, AttributeError):
+                # Fallback to default sorting if color parsing fails
+                query = (
+                    session.query(
+                        Palette,
+                        func.count(PaletteFavorite.palette_id).label("favorites_count"),
+                    )
+                    .outerjoin(PaletteFavorite, Palette.id == PaletteFavorite.palette_id)
+                    .options(joinedload(Palette.colors))
+                    .filter(Palette.moderation_status == moderation_status)
+                    .group_by(Palette.id)
+                    .order_by(ORDER_BY.get(sort_by, Palette.created_at.asc()))
+                )
+        else:
+            query = (
+                session.query(
+                    Palette,
+                    func.count(PaletteFavorite.palette_id).label("favorites_count"),
+                )
+                .outerjoin(PaletteFavorite, Palette.id == PaletteFavorite.palette_id)
+                .options(joinedload(Palette.colors))
+                .filter(Palette.moderation_status == moderation_status)
+                .group_by(Palette.id)
+                .order_by(ORDER_BY.get(sort_by, Palette.created_at.asc()))
             )
-            .outerjoin(PaletteFavorite, Palette.id == PaletteFavorite.palette_id)
-            .options(joinedload(Palette.colors))
-            .filter(Palette.moderation_status == moderation_status)
-            .group_by(Palette.id)
-            .order_by(ORDER_BY.get(sort_by, Palette.created_at.asc()))
-        )
 
         if author_user_id:
             query = query.filter(Palette.app_user_id == author_user_id)
@@ -71,10 +130,16 @@ def get_palettes(
         query = query.offset(offset)
         query = query.limit(size)
 
-        results = query.all()  # (Palette, favorites_count)
+        results = query.all()  # (Palette, favorites_count) or (Palette, favorites_count, min_dist2)
 
         palettes: list[Palette] = []
-        for palette, favorites_count in results:
+        for result in results:
+            # Handle both regular and color-sorted results
+            if sort_by == SortBy.COLOR and color:
+                palette, favorites_count, _ = result  # Ignore min_dist2
+            else:
+                palette, favorites_count = result
+
             palette.favorites_count = favorites_count
             palette.has_user_favorited = palette.check_has_user_favorited(app_user_id, session)
             palettes.append(palette)
