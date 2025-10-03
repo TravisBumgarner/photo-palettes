@@ -37,9 +37,10 @@ const DrawerLinks = ({ onClose }: { onClose: () => void }) => {
   }, [appUser])
 
   const footerRoutes: (keyof typeof ROUTES)[] = [
+    'feedback',
     'featureRequests',
-    'releaseNotes',
     'donate',
+    'releaseNotes',
     'privacy',
     'tos',
   ]

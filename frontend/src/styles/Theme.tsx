@@ -170,7 +170,7 @@ const getThemeOptions = (mode: 'light' | 'dark'): ThemeOptions => ({
       secondary:
         mode === 'light' ? PALETTE.grayscale[800] : PALETTE.grayscale[200],
     },
-    divider: mode === 'light' ? PALETTE.grayscale[100] : PALETTE.grayscale[700],
+    divider: mode === 'light' ? PALETTE.grayscale[200] : PALETTE.grayscale[800],
   },
   typography: {
     h1: {

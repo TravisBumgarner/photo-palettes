@@ -8,8 +8,9 @@ export const USER_ROUTES: Items = [
   'favorites',
   'profile',
   'settings',
-  'feedback',
-  'featureRequests',
+  ...(Capacitor.isNativePlatform()
+    ? []
+    : (['feedback', 'featureRequests'] as const)),
   'logout',
 ]
 
