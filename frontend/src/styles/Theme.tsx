@@ -21,6 +21,11 @@ const TAB_HEIGHT = '36px' // for some reason all are needed.
 // Base theme options shared between light and dark
 const baseThemeOptions: ThemeOptions = {
   components: {
+    MuiButtonBase: {
+      defaultProps: {
+        disableRipple: true,
+      },
+    },
     MuiIconButton: {
       styleOverrides: {
         root: {
