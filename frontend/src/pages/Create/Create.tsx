@@ -21,7 +21,7 @@ import Message from '../../sharedComponents/Message'
 import { MODAL_ID } from '../../sharedComponents/Modal/Modal.consts'
 import { activeModalSignal } from '../../signals'
 import PageWrapper from '../../styles/shared/PageWrapper'
-import { FONT_SIZES, SPACING, subtleBackground } from '../../styles/styleConsts'
+import { FONT_SIZES, SPACING, backgroundColor } from '../../styles/styleConsts'
 import type { TGeneratePaletteResponse } from '../../types'
 import { type TGeneratedPalette } from '../../types'
 import { resizeImage } from '../../utils/image'
@@ -461,7 +461,7 @@ const LeftColumn = styled(Box, {
     flexDirection: 'column',
     gap: SPACING.MEDIUM.PX,
     padding: SPACING.MEDIUM.PX,
-    backgroundColor: subtleBackground(theme.palette.mode, 'slightly'),
+    backgroundColor: backgroundColor(theme.palette.mode, 'low'),
   })
 )
 const RightColumn = styled(Box)(() => ({

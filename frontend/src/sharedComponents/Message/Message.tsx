@@ -11,7 +11,7 @@ import {
   BORDER_RADIUS,
   FONT_SIZES,
   SPACING,
-  subtleBackground,
+  backgroundColor,
 } from '../../styles/styleConsts'
 
 const Message = ({
@@ -57,7 +57,7 @@ const Message = ({
   return (
     <Box
       sx={{
-        backgroundColor: subtleBackground(theme.palette.mode, 'slightly'),
+        backgroundColor: backgroundColor(theme.palette.mode, 'low'),
         borderRadius: BORDER_RADIUS.ZERO.PX,
         padding: SPACING.MEDIUM.PX,
         margin: includeVerticalMargin ? `${SPACING.MEDIUM.PX} 0` : 0,

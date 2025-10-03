@@ -1,7 +1,7 @@
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
 import { useTheme } from '@mui/material/styles'
-import { BORDER_RADIUS, SPACING, subtleBackground } from '../styles/styleConsts'
+import { BORDER_RADIUS, SPACING, backgroundColor } from '../styles/styleConsts'
 import { type TPalette } from '../types'
 import { getUserColorFromUUID } from '../utils/getUserColorFromUUID'
 import BlurImage from './BlurImage'
@@ -24,9 +24,9 @@ const PaletteThumbnail = ({
         sx={{
           borderRadius: BORDER_RADIUS.ZERO.PX,
           padding: SPACING.SMALL.PX,
-          backgroundColor: subtleBackground(theme.palette.mode),
+          backgroundColor: backgroundColor(theme.palette.mode, 'low'),
           '&:hover': {
-            backgroundColor: subtleBackground(theme.palette.mode, 'slightly'),
+            backgroundColor: backgroundColor(theme.palette.mode, 'high'),
           },
           display: 'flex',
           flexDirection: 'column',

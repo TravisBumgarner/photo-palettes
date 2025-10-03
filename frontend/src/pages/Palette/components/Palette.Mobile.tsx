@@ -9,7 +9,7 @@ import BlurImage from '../../../sharedComponents/BlurImage'
 import ColorBar from '../../../sharedComponents/ColorBar'
 import ModerationPanel from '../../../sharedComponents/ModerationPanel'
 import PageWrapper from '../../../styles/shared/PageWrapper'
-import { SPACING, subtleBackground } from '../../../styles/styleConsts'
+import { SPACING, backgroundColor } from '../../../styles/styleConsts'
 import { type TPalette } from '../../../types'
 import downloadPalette from '../../../utils/downloadPalette'
 import type { PaletteControlsState } from '../Palette.types'
@@ -111,7 +111,7 @@ const PaletteMobile = ({
               position: 'sticky',
               top: 'env(safe-area-inset-top)',
               zIndex: 999,
-              backgroundColor: subtleBackground(theme.palette.mode, 'slightly'),
+              backgroundColor: backgroundColor(theme.palette.mode, 'low'),
               marginBottom: SPACING.SMALL.PX,
               display: 'flex',
               flexDirection: 'column',

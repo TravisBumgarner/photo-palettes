@@ -8,7 +8,7 @@ import { MODAL_ID } from '../../../sharedComponents/Modal/Modal.consts'
 import ModerationPanel from '../../../sharedComponents/ModerationPanel'
 import { activeModalSignal } from '../../../signals'
 import PageWrapper from '../../../styles/shared/PageWrapper'
-import { SPACING, subtleBackground } from '../../../styles/styleConsts'
+import { backgroundColor, SPACING } from '../../../styles/styleConsts'
 import { type TPalette } from '../../../types'
 import downloadPalette from '../../../utils/downloadPalette'
 import type { PaletteControlsState } from '../Palette.types'
@@ -106,7 +106,7 @@ const LeftColumn = styled(Box)(({ theme }) => ({
   position: 'sticky',
   top: '0px',
   left: '0px',
-  backgroundColor: subtleBackground(theme.palette.mode, 'slightly'),
+  backgroundColor: backgroundColor(theme.palette.mode, 'low'),
 }))
 
 const RightColumn = styled(Box)(() => ({

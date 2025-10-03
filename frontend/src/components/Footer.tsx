@@ -8,7 +8,7 @@ import { useTheme } from '@mui/material/styles'
 import { Capacitor } from '@capacitor/core'
 import { ROUTES } from '../consts'
 import Link from '../sharedComponents/Link'
-import { FONT_SIZES, SPACING, subtleBackground } from '../styles/styleConsts'
+import { FONT_SIZES, SPACING, backgroundColor } from '../styles/styleConsts'
 import { iconMap } from '../consts'
 
 const Section = ({
@@ -75,7 +75,7 @@ const Footer = () => {
         flexDirection: 'row',
         flexWrap: 'wrap',
         justifyContent: 'space-between',
-        backgroundColor: subtleBackground(theme.palette.mode),
+        backgroundColor: backgroundColor(theme.palette.mode, 'low'),
       }}
     >
       <Section

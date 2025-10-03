@@ -1,18 +1,18 @@
-import Box from '@mui/material/Box'
-import Button from '@mui/material/Button'
-import Typography from '@mui/material/Typography'
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import Typography from "@mui/material/Typography";
 
-import { useTheme } from '@mui/material/styles'
-import { useMemo } from 'react'
-import { GiPartyPopper } from 'react-icons/gi'
-import { IoMdWarning } from 'react-icons/io'
-import { IoInformationCircleOutline } from 'react-icons/io5'
+import { useTheme } from "@mui/material/styles";
+import { useMemo } from "react";
+import { GiPartyPopper } from "react-icons/gi";
+import { IoMdWarning } from "react-icons/io";
+import { IoInformationCircleOutline } from "react-icons/io5";
 import {
   BORDER_RADIUS,
   FONT_SIZES,
   SPACING,
-  subtleBackground,
-} from '../../styles/styleConsts'
+  backgroundColor,
+} from "../../styles/styleConsts";
 
 const Message = ({
   message,
@@ -21,62 +21,62 @@ const Message = ({
   callbackText,
   includeVerticalMargin,
 }: {
-  message: string
-  color: 'info' | 'error' | 'success'
-  callback?: () => void
-  callbackText?: string
-  includeVerticalMargin?: boolean
+  message: string;
+  color: "info" | "error" | "success";
+  callback?: () => void;
+  callbackText?: string;
+  includeVerticalMargin?: boolean;
 }) => {
-  const theme = useTheme()
+  const theme = useTheme();
 
   const icon = useMemo(() => {
-    if (color === 'error') {
+    if (color === "error") {
       return (
         <IoMdWarning
           size={FONT_SIZES.LARGE.PX}
           color={theme.palette.info.main}
         />
-      )
+      );
     }
-    if (color === 'success') {
+    if (color === "success") {
       return (
         <GiPartyPopper
           size={FONT_SIZES.LARGE.PX}
           color={theme.palette.info.main}
         />
-      )
+      );
     }
     return (
       <IoInformationCircleOutline
         size={FONT_SIZES.LARGE.PX}
         color={theme.palette.info.main}
       />
-    )
-  }, [color, theme])
+    );
+  }, [color, theme]);
 
   return (
     <Box
       sx={{
-        backgroundColor: subtleBackground(theme.palette.mode, 'slightly'),
+        backgroundColor: backgroundColor(theme.palette.mode, "low"),
         borderRadius: BORDER_RADIUS.ZERO.PX,
         padding: SPACING.MEDIUM.PX,
         margin: includeVerticalMargin ? `${SPACING.MEDIUM.PX} 0` : 0,
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
         flexGrow: 1,
         gap: SPACING.MEDIUM.PX,
       }}
     >
       <Box
-        sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+        sx={{ display: "flex", alignItems: "center", justifyContent: "center" }}
       >
         {icon}
         <Typography
           sx={{ marginLeft: SPACING.SMALL.PX }}
           variant="h5"
-          color={'info.main'}
+          color={"info.main"}
         >
           {message}
         </Typography>
@@ -87,7 +87,7 @@ const Message = ({
         </Button>
       )}
     </Box>
-  )
-}
+  );
+};
 
-export default Message
+export default Message;

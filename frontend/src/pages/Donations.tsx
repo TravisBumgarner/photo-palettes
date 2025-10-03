@@ -9,7 +9,7 @@ import Typography from '@mui/material/Typography'
 import { useTheme } from '@mui/material/styles'
 import PageTitle from '../styles/shared/PageTitle'
 import PageWrapper from '../styles/shared/PageWrapper'
-import { BORDER_RADIUS, subtleBackground } from '../styles/styleConsts'
+import { BORDER_RADIUS, backgroundColor } from '../styles/styleConsts'
 import Link from '../sharedComponents/Link'
 
 interface TableProps {
@@ -31,7 +31,7 @@ const Table: React.FC<TableProps> = ({ items }) => {
     >
       <MuiTable
         sx={{
-          backgroundColor: subtleBackground(theme.palette.mode),
+          backgroundColor: backgroundColor(theme.palette.mode, 'high'),
         }}
       >
         <TableHead

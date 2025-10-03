@@ -15,7 +15,7 @@ import { useTheme } from '@mui/material/styles'
 import { deletePalette } from '../api/palettes/deletePalette'
 import { activeModalSignal } from '../signals'
 import useGlobalStore from '../store'
-import { BORDER_RADIUS, SPACING, subtleBackground } from '../styles/styleConsts'
+import { BORDER_RADIUS, SPACING, backgroundColor } from '../styles/styleConsts'
 import { MODAL_ID } from './Modal/Modal.consts'
 
 const ModerationPanel = ({
@@ -105,7 +105,7 @@ const ModerationPanel = ({
       sx={{
         display: 'flex',
         gap: SPACING.SMALL.PX,
-        backgroundColor: subtleBackground(theme.palette.mode),
+        backgroundColor: backgroundColor(theme.palette.mode, 'low'),
         borderRadius: BORDER_RADIUS.ZERO.PX,
         padding: SPACING.SMALL.PX,
       }}
