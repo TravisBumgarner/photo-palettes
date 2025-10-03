@@ -62,7 +62,6 @@ def get_palettes(
     color: str | None = None,
     app_user_id: uuid.UUID | None = None,
 ) -> list[Palette]:
-    print("got options", color)
     with Session(db_engine) as session:
         # Handle color-based sorting
         if sort_by == SortBy.COLOR and color:

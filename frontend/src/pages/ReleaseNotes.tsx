@@ -47,6 +47,31 @@ const UpdateComponent = ({ title, date, updates }: Update) => {
 
 const UPDATES: Update[] = [
   {
+    title: 'Full Release',
+    date: '2025-10-04',
+    updates: {
+      add: [
+        'iOS App available in app store',
+        'Create accounts for Instagram, Twitter, and Bluesky',
+        'Automate posting to Instagram, Twitter, and Bluesky when palettes are approved',
+        'Download single palettes',
+        'Copy colors to clipboard',
+        'Backend health check to ensure frontend connects to backend',
+        'Users can delete their accounts',
+      ],
+      update: [
+        'Clean up single palette view with better filtering.',
+        'Separate backend into backend + worker to reduce app memory usage from 850MB to 300MB',
+        'Improve pagination experience',
+      ],
+      fix: [
+        'Use correct styling on iPad',
+        'Properly handle supported and unsupported image formats',
+        'Open graph image generation',
+      ],
+    },
+  },
+  {
     title: 'Open Beta Release',
     date: '2025-09-15',
     updates: {
