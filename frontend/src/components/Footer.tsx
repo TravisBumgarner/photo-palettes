@@ -1,15 +1,14 @@
-import React from 'react'
 import Box from '@mui/material/Box'
 import List from '@mui/material/List'
 import ListItem from '@mui/material/ListItem'
 import Typography from '@mui/material/Typography'
 import { useTheme } from '@mui/material/styles'
+import React from 'react'
 
 import { Capacitor } from '@capacitor/core'
-import { ROUTES } from '../consts'
+import { iconMap, ROUTES } from '../consts'
 import Link from '../sharedComponents/Link'
 import { FONT_SIZES, SPACING, subtleBackground } from '../styles/styleConsts'
-import { iconMap } from '../consts'
 
 const Section = ({
   links,
@@ -21,7 +20,7 @@ const Section = ({
   direction: 'row' | 'column'
 }) => {
   return (
-    <Box sx={{ width: '150px' }}>
+    <Box sx={{ width: '200px', marginBottom: SPACING.LARGE.PX }}>
       <Typography
         variant="h6"
         sx={{
@@ -37,6 +36,7 @@ const Section = ({
           padding: 0,
           display: 'flex',
           flexDirection: direction,
+          gap: direction === 'row' ? SPACING.SMALL.PX : SPACING.TINY.PX,
         }}
       >
         {links.map((link) => (
@@ -47,6 +47,8 @@ const Section = ({
               padding: 0,
               fontSize: FONT_SIZES.MEDIUM.PX,
               listStyleType: 'none',
+              width: 'auto',
+              flex: 'none',
             }}
           >
             <Link hideBaseUnderline href={ROUTES[link].href}>
@@ -82,12 +84,17 @@ const Footer = () => {
         direction="row"
         links={['discord', 'bluesky', 'twitter', 'instagram']}
         header={'Community'}
-      />{' '}
+      />
+      <Section
+        direction="row"
+        links={['android', 'apple', 'figma']}
+        header={'Apps'}
+      />
       <Section
         direction="column"
         links={['feedback', 'featureRequests']}
         header={'Feedback'}
-      />{' '}
+      />
       <Section
         direction="column"
         links={['donate', 'releaseNotes', 'privacy', 'tos']}

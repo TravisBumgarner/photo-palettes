@@ -1,12 +1,20 @@
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import TextField from '@mui/material/TextField'
-import Typography from '@mui/material/Typography'
 import Message from './Message'
 
+import Typography from '@mui/material/Typography'
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 
-const WhatWentWrongContactForm = () => {
+const MAX_CHARS = 800
+
+const ContactForm = ({
+  fieldsToHide,
+  formSuffix,
+}: {
+  fieldsToHide?: ('name' | 'email')[]
+  formSuffix: string
+}) => {
   const [success, setSuccess] = useState(false)
   const [failure, setFailure] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -15,11 +23,14 @@ const WhatWentWrongContactForm = () => {
     name: '',
     email: '',
     message: '',
-    website: 'photo-palettes-something-went-wrong',
+    website: `photo-palettes-${formSuffix}`,
   })
 
   const handleChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+      if (e.target.name === 'message' && e.target.value.length > MAX_CHARS) {
+        return
+      }
       setFormData({
         ...formData,
         [e.target.name]: e.target.value,
@@ -77,7 +88,6 @@ const WhatWentWrongContactForm = () => {
 
   return (
     <>
-      <Typography variant="body1">What were you trying to do?</Typography>
       <Box sx={{ width: '100%', maxWidth: '600px', margin: '0 auto' }}>
         <form
           style={{
@@ -88,6 +98,30 @@ const WhatWentWrongContactForm = () => {
           }}
           onSubmit={handleSubmit}
         >
+          {!fieldsToHide?.includes('name') && (
+            <TextField
+              placeholder="Name"
+              name="name"
+              value={formData.name}
+              onChange={handleChange}
+              style={{ display: fieldsToHide?.includes('name') ? 'none' : '' }}
+            />
+          )}
+          {!fieldsToHide?.includes('email') && (
+            <TextField
+              placeholder="Email"
+              name="email"
+              type="email"
+              value={formData.email}
+              onChange={handleChange}
+              style={{ display: fieldsToHide?.includes('email') ? 'none' : '' }}
+            />
+          )}
+          <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+            <Typography variant="body2" color="textSecondary">
+              {formData.message.length}/{MAX_CHARS} characters
+            </Typography>
+          </Box>
           <TextField
             placeholder="Message"
             name="message"
@@ -123,4 +157,4 @@ const WhatWentWrongContactForm = () => {
   )
 }
 
-export default WhatWentWrongContactForm
+export default ContactForm

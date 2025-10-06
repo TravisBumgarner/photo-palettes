@@ -1,7 +1,6 @@
-import { FaBluesky } from 'react-icons/fa6'
-import { FaInstagram } from 'react-icons/fa'
-import { FaDiscord } from 'react-icons/fa6'
-import { FaTwitter } from 'react-icons/fa'
+import { FaApple, FaFigma, FaInstagram, FaTwitter } from 'react-icons/fa'
+import { FaBluesky, FaDiscord } from 'react-icons/fa6'
+import { IoLogoAndroid } from 'react-icons/io'
 import type { IconType } from 'react-icons/lib'
 
 export const iconMap: Partial<Record<keyof typeof ROUTES, IconType>> = {
@@ -9,6 +8,9 @@ export const iconMap: Partial<Record<keyof typeof ROUTES, IconType>> = {
   instagram: FaInstagram,
   discord: FaDiscord,
   twitter: FaTwitter,
+  figma: FaFigma,
+  apple: FaApple,
+  android: IoLogoAndroid,
 }
 
 // This value is controlled by Supabase, so if you change it here, be sure to also.
@@ -89,6 +91,21 @@ export const ROUTES = {
     key: 'featureRequests',
     href: '/feature_requests',
     label: 'Feature Requests',
+  },
+  figma: {
+    key: 'figma',
+    href: 'https://www.figma.com/community/plugin/1553603263291862336/photo-palettes',
+    label: 'Figma Plugin',
+  },
+  android: {
+    key: 'android',
+    href: '/android_signup',
+    label: 'Android App',
+  },
+  apple: {
+    key: 'apple',
+    href: 'https://apps.apple.com/us/app/photo-palettes/id6751658619',
+    label: 'Apple App',
   },
   settings: {
     key: 'settings',

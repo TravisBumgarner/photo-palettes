@@ -6,16 +6,19 @@ import { ROUTES } from '../consts'
 import { trackEvent } from '../services/analytics'
 import Link from '../sharedComponents/Link'
 import useGlobalStore from '../store'
-import NavigationWeb from './Navigation/Navigation.Web'
 import NavigationNative from './Navigation/Navigation.Native'
+import NavigationWeb from './Navigation/Navigation.Web'
 
+import { Capacitor } from '@capacitor/core'
+import Tooltip from '@mui/material/Tooltip'
+import { FaApple, FaFigma } from 'react-icons/fa'
+import { IoLogoAndroid } from 'react-icons/io'
 import {
   BORDER_RADIUS,
   DARK_BUTTON_STYLES,
   LIGHT_BUTTON_STYLES,
   SPACING,
 } from '../styles/styleConsts'
-import { Capacitor } from '@capacitor/core'
 const Header = () => {
   const appUser = useGlobalStore((state) => state.appUser)
   const location = useLocation()
@@ -35,10 +38,49 @@ const Header = () => {
         sx={{
           display: 'flex',
           flexDirection: 'row',
-          gap: SPACING.MEDIUM.PX,
+          gap: SPACING.SMALL.PX,
           alignItems: 'center',
         }}
       >
+        {!Capacitor.isNativePlatform() && (
+          <>
+            <Tooltip title="iOS App (iPhone & iPad)" arrow>
+              <Box>
+                <Link
+                  hideBaseUnderline
+                  hideHoverUnderline
+                  href={ROUTES.apple.href}
+                  target="_blank"
+                >
+                  <FaApple size={30} />
+                </Link>
+              </Box>
+            </Tooltip>
+            <Tooltip title="Android App" arrow>
+              <Box>
+                <Link
+                  hideBaseUnderline
+                  hideHoverUnderline
+                  href={ROUTES.android.href}
+                >
+                  <IoLogoAndroid size={36} />
+                </Link>
+              </Box>
+            </Tooltip>
+            <Tooltip title="Figma Plugin" arrow>
+              <Box>
+                <Link
+                  hideBaseUnderline
+                  hideHoverUnderline
+                  href={ROUTES.figma.href}
+                  target="_blank"
+                >
+                  <FaFigma size={26} />
+                </Link>
+              </Box>
+            </Tooltip>
+          </>
+        )}
         <Link
           sx={createLinkSX(theme.palette.mode)}
           hideBaseUnderline
