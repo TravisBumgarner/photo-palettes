@@ -11,7 +11,6 @@ services:
       - ./backend:/app
       - ./backend/uploads:/app/uploads
       - ./common:/common
-
     environment:
       - PYTHONPATH=/app:/common
     depends_on:
@@ -25,7 +24,7 @@ services:
     env_file:
       - ./image-worker/.env
     volumes:
-      - ./image-worker:/app     # << mount code here
+      - ./image-worker:/app
       - ./common:/common
       - ./image-worker/uploads:/app/uploads
     environment:
@@ -34,8 +33,6 @@ services:
       db:
         condition: service_healthy
     command: watchfiles --filter python "python -u main.py"
-
-
 
   frontend:
     build:
@@ -67,3 +64,8 @@ services:
 
 volumes:
   frontend_node_modules:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ./frontend/node_modules
