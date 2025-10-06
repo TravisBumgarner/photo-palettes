@@ -2,11 +2,12 @@ import Box from '@mui/material/Box'
 import Tab from '@mui/material/Tab'
 import Tabs from '@mui/material/Tabs'
 
-import TextField from '@mui/material/TextField'
+import Typography from '@mui/material/Typography'
 import { useCallback, useState } from 'react'
 import { BORDER_RADIUS, SPACING } from '../styles/styleConsts'
 import { TAB_HEIGHT } from '../styles/Theme'
 import { SORT_BY, type ESortBy } from '../types'
+import { getContrastColor } from '../utils/getContrastColor'
 
 const SortsAndFilters = ({
   sortBy,
@@ -30,6 +31,7 @@ const SortsAndFilters = ({
         borderRadius: BORDER_RADIUS.ZERO.PX,
         marginBottom: SPACING.MEDIUM.PX,
         display: 'flex',
+        gap: SPACING.TINY.PX,
       }}
     >
       <Tabs
@@ -49,40 +51,54 @@ const SortsAndFilters = ({
         {color && <Tab key="color" value="color" label="Color" />}
       </Tabs>
 
-      <TextField
-        size="small"
-        sx={{
-          marginLeft: SPACING.TINY.PX,
-          borderRadius: 0,
-          border: 0,
-          width: '60px',
-          '& .MuiInputBase-root': {
-            height: TAB_HEIGHT,
-            padding: 0,
-          },
-          '& .MuiInputBase-input': {
-            padding: '8px',
-            cursor: 'pointer',
-            '&::-webkit-color-swatch-wrapper': {
-              padding: 0,
-            },
-            '&::-webkit-color-swatch': {
-              border: 'none',
-              borderRadius: 0,
-            },
-            '&::-moz-color-swatch': {
-              border: 'none',
-              borderRadius: 0,
-            },
-          },
-        }}
-        type="color"
+      <Box
+        position="relative"
+        width="70px"
+        height={TAB_HEIGHT}
         onClick={() => handleSortChange(SORT_BY.COLOR, tempColor)}
-        value={tempColor}
-        onChange={(e) => setTempColor(e.target.value)}
-        onBlur={handleColorChange}
-        onMouseUp={handleColorChange}
-      />
+        sx={{
+          opacity: sortBy === SORT_BY.COLOR ? 1 : 0.1,
+        }}
+      >
+        <Box
+          component="input"
+          type="color"
+          value={tempColor}
+          onClick={handleColorChange}
+          onChange={(e) => setTempColor(e.target.value)}
+          onBlur={handleColorChange}
+          onMouseUp={handleColorChange}
+          sx={{
+            appearance: 'none',
+            WebkitAppearance: 'none',
+            MozAppearance: 'none',
+            border: 'none',
+            p: 0,
+            width: '100%',
+            height: '100%',
+            cursor: 'pointer',
+            display: 'block',
+            '&::-webkit-color-swatch-wrapper': { p: 0 },
+            '&::-webkit-color-swatch': { border: 'none', borderRadius: 0 },
+            '&::-moz-color-swatch': { border: 'none', borderRadius: 0 },
+          }}
+        />
+
+        <Typography
+          variant="caption"
+          sx={{
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            color: getContrastColor(tempColor),
+            fontWeight: 600,
+            pointerEvents: 'none',
+          }}
+        >
+          {tempColor.toUpperCase()}
+        </Typography>
+      </Box>
     </Box>
   )
 }
