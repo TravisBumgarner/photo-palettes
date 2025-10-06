@@ -26,7 +26,7 @@ Run tests - docker-compose exec -T backend pytest
 
 ### Installing dependencies
 
-If docker is running and a new dependency is installed, the app will crash. Run `docker compose exec frontend npm i` after installing a dependency to have it synced to Docker. Will need a better approach in the future but this is a nice bandaid.
+Dependencies are fully managed by Docker. Bootstrap and package install script add an empty node_modules/ which is needed for Docker. The `frontend_node_modules` volume then shares things installed in Docker to the host. To install a new package run `npm run docker:install foobar` within frontend. Can also run without args to sync packages to package.json
 
 ### Testing index.js (Server for frontend)
 

@@ -22,7 +22,8 @@
     "generate-mobile-assets": "npx capacitor-assets generate",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
-    "install-docker-deps": "docker compose exec frontend npm i"
+    "if-not-node-modules": "if [ ! -d node_modules ]; then mkdir node_modules; fi",
+    "docker:install": "npm run if-not-node-modules && docker compose exec frontend npm install"
   },
   "prettier": {
     "trailingComma": "es5",

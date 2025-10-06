@@ -37,8 +37,8 @@ cd ..
 
 echo "######################### Setting up frontend #########################"
 
-echo "Installing dependencies..."
-cd frontend && npm install
+# echo "Installing dependencies..." Dependencies are now managed by docker compose up. 
+cd frontend && mkdir node_modules
 cd ..
 
 echo "######################### Setting up Common #########################"
