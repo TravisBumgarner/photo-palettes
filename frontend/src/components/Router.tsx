@@ -25,6 +25,7 @@ const Palette = lazy(async () => await import('../pages/Palette'))
 const Favorites = lazy(async () => await import('../pages/Favorites'))
 const Admin = lazy(async () => await import('../pages/Admin'))
 const PasswordReset = lazy(async () => await import('../pages/PasswordReset'))
+const AndroidSignup = lazy(async () => await import('../pages/AndroidSignup'))
 
 const AnonymousRoute = () => {
   const appUser = useGlobalStore((state) => state.appUser)
@@ -76,6 +77,7 @@ const Router = () => (
     <Route path={ROUTES.donate.href} element={<Donations />} />
     <Route path={'palette/:id'} element={<Palette />} />
     <Route path={ROUTES.passwordReset.href} element={<PasswordReset />} />
+    <Route path={ROUTES.android.href} element={<AndroidSignup />} />
 
     {/* Protected routes */}
     <Route element={<MemberRoute />}>
