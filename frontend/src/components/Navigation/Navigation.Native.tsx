@@ -6,8 +6,10 @@ import IconButton from '@mui/material/IconButton'
 import Tooltip from '@mui/material/Tooltip'
 
 import Divider from '@mui/material/Divider'
+import List from '@mui/material/List'
+import ListItem from '@mui/material/ListItem'
 import React, { useCallback, useMemo, useState } from 'react'
-import { ROUTES } from '../../consts'
+import { iconMap, ROUTES } from '../../consts'
 import Link from '../../sharedComponents/Link'
 import useGlobalStore from '../../store'
 import { BORDER_RADIUS, SPACING } from '../../styles/styleConsts'
@@ -18,9 +20,6 @@ import {
   MODERATOR_ROUTES,
   USER_ROUTES,
 } from './Navigation.shared'
-import { iconMap } from '../../consts'
-import ListItem from '@mui/material/ListItem'
-import List from '@mui/material/List'
 
 const DrawerLinks = ({ onClose }: { onClose: () => void }) => {
   const appUser = useGlobalStore((state) => state.appUser)
@@ -37,8 +36,7 @@ const DrawerLinks = ({ onClose }: { onClose: () => void }) => {
   }, [appUser])
 
   const footerRoutes: (keyof typeof ROUTES)[] = [
-    'feedback',
-    'featureRequests',
+    'figma',
     'donate',
     'releaseNotes',
     'privacy',
