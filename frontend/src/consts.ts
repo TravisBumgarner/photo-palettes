@@ -105,7 +105,7 @@ export const ROUTES = {
   apple: {
     key: 'apple',
     href: 'https://apps.apple.com/us/app/photo-palettes/id6751658619',
-    label: 'Apple App',
+    label: 'iOS App',
   },
   settings: {
     key: 'settings',

@@ -37,13 +37,21 @@ const SortsAndFilters = ({
       <Tabs
         value={sortBy}
         onChange={(_, value) => handleSortChange(value as ESortBy)}
-        variant="scrollable"
-        scrollButtons="auto"
+        allowScrollButtonsMobile={false}
         aria-label="Sort By Tabs"
+        scrollButtons={false}
       >
-        <Tab key="newest" value="newest" label="New" />
-        <Tab key="favorites_count" value="favorites_count" label="Popular" />
-        {color && <Tab key="color" value="color" label="Color" />}
+        <Tab sx={{ width: '60px' }} key="newest" value="newest" label="New" />
+        <Tab sx={{ width: '60px' }} key="oldest" value="oldest" label="Old" />
+        <Tab
+          sx={{ width: '60px' }}
+          key="favorites_count"
+          value="favorites_count"
+          label="Hot"
+        />
+        {color && (
+          <Tab sx={{ width: '70px' }} key="color" value="color" label="Color" />
+        )}
       </Tabs>
 
       <Box

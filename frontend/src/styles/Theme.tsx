@@ -41,6 +41,7 @@ const baseThemeOptions: ThemeOptions = {
     MuiTab: {
       styleOverrides: {
         root: {
+          minWidth: 0,
           textTransform: 'none',
           minHeight: TAB_HEIGHT,
           height: TAB_HEIGHT,
