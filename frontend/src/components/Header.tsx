@@ -10,15 +10,13 @@ import NavigationNative from './Navigation/Navigation.Native'
 import NavigationWeb from './Navigation/Navigation.Web'
 
 import { Capacitor } from '@capacitor/core'
-import Tooltip from '@mui/material/Tooltip'
-import { FaApple, FaFigma } from 'react-icons/fa'
-import { IoLogoAndroid } from 'react-icons/io'
 import {
   BORDER_RADIUS,
   DARK_BUTTON_STYLES,
   LIGHT_BUTTON_STYLES,
   SPACING,
 } from '../styles/styleConsts'
+import { TAB_HEIGHT } from '../styles/Theme'
 const Header = () => {
   const appUser = useGlobalStore((state) => state.appUser)
   const location = useLocation()
@@ -30,7 +28,11 @@ const Header = () => {
       <Link href={ROUTES.home.href} hideBaseUnderline>
         <img
           src="/public/favicon.png"
-          style={{ width: '36px', height: '36px', display: 'block' }}
+          style={{
+            width: TAB_HEIGHT,
+            aspectRatio: '1 / 1',
+            display: 'block',
+          }}
         />
       </Link>
 
@@ -42,7 +44,7 @@ const Header = () => {
           alignItems: 'center',
         }}
       >
-        {!Capacitor.isNativePlatform() && (
+        {/* {!Capacitor.isNativePlatform() && (
           <>
             <Tooltip title="iOS App (iPhone & iPad)" arrow>
               <Box>
@@ -80,7 +82,7 @@ const Header = () => {
               </Box>
             </Tooltip>
           </>
-        )}
+        )} */}
         <Link
           sx={createLinkSX(theme.palette.mode)}
           hideBaseUnderline
@@ -109,14 +111,17 @@ const Header = () => {
 
 const createLinkSX = (theme: 'dark' | 'light'): SxProps => ({
   fontWeight: 900,
+  display: 'flex',
   textDecoration: 'none',
   backgroundColor:
     theme === 'dark'
       ? DARK_BUTTON_STYLES.background
       : LIGHT_BUTTON_STYLES.background,
   color: `${theme === 'dark' ? DARK_BUTTON_STYLES.color : LIGHT_BUTTON_STYLES.color} !important`, // Boo me.
-  padding: SPACING.SMALL.PX,
+  padding: `0 ${SPACING.SMALL.PX}`,
+  height: TAB_HEIGHT,
   borderRadius: BORDER_RADIUS.ZERO.PX,
+  alignItems: 'center',
   '&:hover': {
     backgroundColor:
       theme === 'dark'

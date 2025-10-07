@@ -41,13 +41,8 @@ const SortsAndFilters = ({
         scrollButtons="auto"
         aria-label="Sort By Tabs"
       >
-        <Tab key="newest" value="newest" label="Newest" />
-        <Tab key="oldest" value="oldest" label="Oldest" />
-        <Tab
-          key="favorites_count"
-          value="favorites_count"
-          label="Popular"
-        ></Tab>
+        <Tab key="newest" value="newest" label="New" />
+        <Tab key="favorites_count" value="favorites_count" label="Popular" />
         {color && <Tab key="color" value="color" label="Color" />}
       </Tabs>
 

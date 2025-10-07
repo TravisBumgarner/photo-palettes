@@ -25,4 +25,8 @@ export const ANON_ROUTES: Items = [
   ...(Capacitor.isNativePlatform()
     ? []
     : (['feedback', 'featureRequests'] as const)),
+  'divider',
+  'apple',
+  'android',
+  'figma',
 ]
