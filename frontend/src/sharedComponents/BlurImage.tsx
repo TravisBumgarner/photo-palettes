@@ -12,6 +12,7 @@ interface Props {
   loadingEndCallback?: (src: string) => void
   aspectRatio: number
   maxDimensions?: { maxWidth?: string; maxHeight?: string } // Fuck fuck fuck.
+  includeBorder?: boolean
 }
 
 const BlurImage = ({
@@ -22,6 +23,7 @@ const BlurImage = ({
   loadingEndCallback,
   aspectRatio,
   maxDimensions,
+  includeBorder,
 }: Props) => {
   const imgRef = useRef<HTMLImageElement>(null)
 
@@ -63,6 +65,7 @@ const BlurImage = ({
         backgroundPosition: 'center',
         overflow: 'hidden',
         ...maxDimensions,
+        ...(includeBorder ? { border: '10px solid white' } : {}),
       }}
     >
       <Box
@@ -75,7 +78,7 @@ const BlurImage = ({
         sx={{
           width: '100%',
           height: '100%',
-          objectFit: 'contain',
+          objectFit: 'fill',
           display: 'block',
           transition: 'all 0.3s ease',
           position: 'absolute',

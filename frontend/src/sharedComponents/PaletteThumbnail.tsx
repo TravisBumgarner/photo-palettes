@@ -42,16 +42,47 @@ const PaletteThumbnail = ({
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
+            position: 'relative',
           }}
         >
-          <BlurImage
-            blurHash={palette.blurhash}
-            src={palette.photoUrl}
-            alt={palette.name}
-            aspectRatio={palette.aspectRatio}
-          />
+          <Box
+            sx={{
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              width: '100%',
+              height: '100%',
+              zIndex: 0,
+            }}
+          >
+            <ColorBar
+              colors={palette.colors.map((i) => i.hex)}
+              height="100%"
+              // Visually nicer? I think. Ensures that every color bar is slightly obstructed. Better visual balance.
+              direction={palette.aspectRatio >= 1 ? 'row' : 'column'}
+            />
+          </Box>
+          <Box
+            sx={{
+              zIndex: 1,
+              position: 'relative',
+              width: '100%',
+              height: '100%',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+          >
+            <BlurImage
+            includeBorder
+              maxDimensions={{ maxHeight: '90%', maxWidth: '90%' }}
+              blurHash={palette.blurhash}
+              src={palette.photoUrl}
+              alt={palette.name}
+              aspectRatio={palette.aspectRatio}
+            />
+          </Box>
         </Box>
-        <ColorBar colors={palette.colors.map((i) => i.hex)} height={15} />
         <Box
           sx={{
             display: 'flex',
