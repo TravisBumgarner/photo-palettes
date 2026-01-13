@@ -8,7 +8,7 @@ const Color = ({
   interactive,
 }: {
   color: string
-  height: number
+  height: number | string
   index: number
   interactive?: boolean
 }) => {
@@ -37,16 +37,20 @@ const ColorBar = ({
   colors,
   height,
   interactive,
+  direction,
 }: {
   colors: string[]
-  height: number
+  height: number | string
   interactive?: boolean
+  direction?: 'row' | 'column'
 }) => {
   return (
     colors.length > 0 && (
       <Box
         sx={{
           display: 'flex',
+          height: '100%',
+          flexDirection: direction || 'row',
         }}
       >
         {colors.map((color, index) => (
