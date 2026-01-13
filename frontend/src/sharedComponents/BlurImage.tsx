@@ -78,7 +78,7 @@ const BlurImage = ({
         sx={{
           width: '100%',
           height: '100%',
-          objectFit: 'contain',
+          objectFit: 'fill',
           display: 'block',
           transition: 'all 0.3s ease',
           position: 'absolute',
