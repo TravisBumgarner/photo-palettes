@@ -11,6 +11,7 @@ import ConfirmationModal from './components/ConfirmationModal'
 import Lightbox, { type LightboxProps } from './components/LightboxModal'
 import type { ModeratorSharePostToSocialsProps } from './components/ShareToSocialsModal'
 import ModeratorSharePostToSocials from './components/ShareToSocialsModal'
+import WhatsNewModal, { type WhatsNewModalProps } from './components/WhatsNewModal'
 import { MODAL_ID } from './Modal.consts'
 
 export type ActiveModal =
@@ -19,6 +20,7 @@ export type ActiveModal =
   | ModeratorSharePostToSocialsProps
   | LightboxProps
   | ConfirmAccountDeletionModalProps
+  | WhatsNewModalProps
 
 export type ModalId = (typeof MODAL_ID)[keyof typeof MODAL_ID]
 
@@ -38,6 +40,8 @@ const RenderModal: FC = () => {
       return <Lightbox {...activeModalSignal.value} />
     case MODAL_ID.CONFIRM_ACCOUNT_DELETION_MODAL:
       return <ConfirmAccountDeletionModal />
+    case MODAL_ID.WHATS_NEW_MODAL:
+      return <WhatsNewModal {...activeModalSignal.value} />
     default:
       return null
   }

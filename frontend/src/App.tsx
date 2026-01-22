@@ -12,6 +12,7 @@ import useCheckTemporaryPalettesAndRedirect from './hooks/useCheckTemporaryPalet
 import useHealthCheck from './hooks/useHealthCheck'
 import useLoadUserIntoState from './hooks/useLoadUserIntoState'
 import useParseAnalyticsFromUrl from './hooks/useParseAnalyticsFromUrl'
+import useWhatsNew from './hooks/useWhatsNew'
 import { logger } from './services/logging'
 import Loading from './sharedComponents/Loading'
 import Message from './sharedComponents/Message'
@@ -28,6 +29,7 @@ function App() {
   useCheckTemporaryPalettesAndRedirect()
   // useNativeGoogleAuth()
   useParseAnalyticsFromUrl()
+  useWhatsNew()
   const loadingUser = useGlobalStore((state) => state.loadingUser)
   const { isLoading, isHealthy } = useHealthCheck()
 
