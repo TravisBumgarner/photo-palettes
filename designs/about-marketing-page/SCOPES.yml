@@ -35,7 +35,7 @@ tasks:
       - Page uses existing styling patterns and is responsive
     depends_on: []
     effort: 2
-    status: testing
+    status: implementing
 
   - id: 2
     github_issue: 159
