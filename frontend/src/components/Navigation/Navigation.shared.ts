@@ -25,6 +25,7 @@ export const ADMIN_ROUTES: Items = [...MODERATOR_ROUTES, 'divider', 'admin']
 
 export const ANON_ROUTES: Items = [
   'browse',
+  ...(Capacitor.isNativePlatform() ? [] : (['about'] as const)),
   'login',
   'signup',
   'divider',
