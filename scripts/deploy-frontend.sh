@@ -9,8 +9,10 @@ if ! ./scripts/check-frontend.sh; then
 fi
 
 APP_NAME="photo-palettes-frontend"
-DEPLOY_DIR="tmp-heroku-deploy"
-LOCAL_DIR="frontend"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
+DEPLOY_DIR="$PROJECT_ROOT/tmp-heroku-deploy"
+LOCAL_DIR="$PROJECT_ROOT/frontend"
 
 # Clean and recreate deploy directory
 rm -rf "$DEPLOY_DIR"
@@ -29,6 +31,12 @@ find "$DEPLOY_DIR" -type f
 # Go into deploy directory and set up temp git repo
 cd "$DEPLOY_DIR"
 git init -b main
+
+# Check if heroku remote already exists, if so remove it first
+if git remote | grep -q heroku; then
+    git remote remove heroku
+fi
+
 heroku git:remote -a "$APP_NAME"
 
 git add .
@@ -37,8 +45,8 @@ git commit -m "Deploy frontend"
 # Force push to Heroku
 git push -f heroku main
 
-# Go back and clean up
-cd ..
+# Go back to project root and clean up
+cd "$PROJECT_ROOT"
 rm -rf "$DEPLOY_DIR"
 
 # Open deployed app
