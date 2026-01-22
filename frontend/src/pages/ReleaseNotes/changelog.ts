@@ -6,6 +6,7 @@ export type Update = {
 }
 
 export const UPDATES: Update[] = [
+  {title: 'New Color Palettes', date: '2025-01-22', updates: {add: ['New color palette options to choose from'], update: [], fix: []}},
   {
     title: 'Full Release',
     date: '2025-10-06',

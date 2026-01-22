@@ -22,7 +22,7 @@ import { MODAL_ID } from '../../sharedComponents/Modal/Modal.consts'
 import { activeModalSignal } from '../../signals'
 import PageWrapper from '../../styles/shared/PageWrapper'
 import { FONT_SIZES, SPACING, subtleBackground } from '../../styles/styleConsts'
-import type { TGeneratePaletteResponse } from '../../types'
+import type { TGeneratePaletteResponse, TGeneratedPaletteWithName } from '../../types'
 import { type TGeneratedPalette } from '../../types'
 import { resizeImage } from '../../utils/image'
 import CanvasAndPalette from './components/CanvasAndPalette'
@@ -57,7 +57,7 @@ const Create = ({ mode }: { mode: 'lite' | 'full' }) => {
 
   const [name, setName] = useState('')
   const [generatedPalettes, setGeneratedPalettes] = useState<
-    TGeneratedPalette[]
+    TGeneratedPaletteWithName[]
   >([])
   const [palette, setPalette] = useState<TGeneratedPalette | null>(null)
   const [selectedPaletteIndex, setSelectedPaletteIndex] = useState(0)
@@ -158,7 +158,7 @@ const Create = ({ mode }: { mode: 'lite' | 'full' }) => {
         setCreationStatus('SELECTING_COLORS')
 
         setGeneratedPalettes(response.palettes)
-        setPalette(structuredClone(response.palettes[0]))
+        setPalette(structuredClone(response.palettes[0].swatches))
       } else {
         setCreationStatus('ERROR')
       }
@@ -269,7 +269,7 @@ const Create = ({ mode }: { mode: 'lite' | 'full' }) => {
   }, [handleSaveFull, handleSaveLite, mode, wasLoadedFromLiteMode])
 
   const handlePaletteChange = (paletteIndex: number) => {
-    setPalette(structuredClone(generatedPalettes[paletteIndex]))
+    setPalette(structuredClone(generatedPalettes[paletteIndex].swatches))
     setSelectedPaletteIndex(paletteIndex)
     resetSortOrder()
   }
@@ -348,6 +348,7 @@ const Create = ({ mode }: { mode: 'lite' | 'full' }) => {
               <SectionWrapper>
                 <Typography sx={labelStyles}>Starter Palettes</Typography>
                 <SelectGeneratedPalette
+                  useSingleColumnDisplay={useSingleColumnDisplay}
                   handlePaletteChange={handlePaletteChange}
                   generatedPalettes={generatedPalettes}
                 />

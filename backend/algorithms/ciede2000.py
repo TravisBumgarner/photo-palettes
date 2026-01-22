@@ -1,3 +1,4 @@
+from collections import defaultdict
 from typing import Literal
 
 import numpy as np
@@ -7,6 +8,8 @@ from colormath.color_objects import LabColor, sRGBColor
 from PIL import Image
 
 from algorithms.types import TSwatch
+
+from .consts import PALETTE_SIZE
 
 # colormath seems to not work with newer versions of numpy. So monkey patch.
 if not hasattr(np, "asscalar"):
@@ -30,9 +33,6 @@ def ciede2000(image: Image.Image, mode: Literal["light", "dark"]) -> list[TSwatc
     pixels = img_array.reshape(-1, 3)
     target_color = "FFFFFF" if mode == "light" else "000000"
     hex_colors = [f"#{r:02x}{g:02x}{b:02x}" for r, g, b in pixels]
-
-    # Build a mapping from color to list of indices
-    from collections import defaultdict
 
     color_to_indices = defaultdict(list)
     for idx, color in enumerate(hex_colors):
@@ -64,7 +64,7 @@ def ciede2000(image: Image.Image, mode: Literal["light", "dark"]) -> list[TSwatc
         y_percent = (row / (height - 1)) * 100
         percent_locations.append((x_percent, y_percent))
 
-        if len(palettes) == 6:
+        if len(palettes) == PALETTE_SIZE:
             break
 
     return [
