@@ -145,9 +145,9 @@ const About = () => {
         See It In Action
       </Typography>
 
-      <ScreenshotPlaceholder image="/marketing/create.png" strongText="Create" text="Choose a pre-defined palette or create your own." />
-      <ScreenshotPlaceholder image="/marketing/search.png" strongText="Get Inspired" text="Find palettes by color, popularity, or recency. Save your favorites." />
-      <ScreenshotPlaceholder image="/marketing/explore2.png" strongText="Dive Deep" text="Use any palette as a starting point to explore the color wheel." />
+      <ScreenshotPlaceholder image="public/marketing/create.png" strongText="Create" text="Choose a pre-defined palette or create your own." />
+      <ScreenshotPlaceholder image="public/marketing/search.png" strongText="Get Inspired" text="Find palettes by color, popularity, or recency. Save your favorites." />
+      <ScreenshotPlaceholder image="public/marketing/explore2.png" strongText="Dive Deep" text="Use any palette as a starting point to explore the color wheel." />
 
 
       {/* Call to Action */}
