@@ -23,6 +23,8 @@ const Header = () => {
 
   const theme = useTheme()
 
+  const showAbout = !appUser && !Capacitor.isNativePlatform()
+
   return (
     <Box sx={WrapperSX}>
       <Link href={ROUTES.home.href} hideBaseUnderline>
@@ -44,45 +46,7 @@ const Header = () => {
           alignItems: 'center',
         }}
       >
-        {/* {!Capacitor.isNativePlatform() && (
-          <>
-            <Tooltip title="iOS App (iPhone & iPad)" arrow>
-              <Box>
-                <Link
-                  hideBaseUnderline
-                  hideHoverUnderline
-                  href={ROUTES.apple.href}
-                  target="_blank"
-                >
-                  <FaApple size={30} />
-                </Link>
-              </Box>
-            </Tooltip>
-            <Tooltip title="Android App" arrow>
-              <Box>
-                <Link
-                  hideBaseUnderline
-                  hideHoverUnderline
-                  href={ROUTES.android.href}
-                >
-                  <IoLogoAndroid size={36} />
-                </Link>
-              </Box>
-            </Tooltip>
-            <Tooltip title="Figma Plugin" arrow>
-              <Box>
-                <Link
-                  hideBaseUnderline
-                  hideHoverUnderline
-                  href={ROUTES.figma.href}
-                  target="_blank"
-                >
-                  <FaFigma size={26} />
-                </Link>
-              </Box>
-            </Tooltip>
-          </>
-        )} */}
+        {showAbout && <Link href={ROUTES.about.href} hideBaseUnderline>About</Link>}
         <Link
           sx={createLinkSX(theme.palette.mode)}
           hideBaseUnderline
