@@ -17,6 +17,11 @@ export const iconMap: Partial<Record<keyof typeof ROUTES, IconType>> = {
 export const MINIMUM_PASSWORD_LENGTH = 10
 
 export const ROUTES = {
+  about: {
+    key: 'about',
+    href: '/about',
+    label: 'About',
+  },
   privacy: {
     key: 'privacy',
     href: '/privacy',

@@ -62,4 +62,4 @@ tasks:
       - Navigation to /about displays the About page
     depends_on: [1]
     effort: 1
-    status: scoped
+    status: completed

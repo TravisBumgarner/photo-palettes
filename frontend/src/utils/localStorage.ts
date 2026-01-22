@@ -1,7 +1,10 @@
 import { logger } from '../services/logging'
 
 // Define keys used in localStorage
-export const LOCAL_STORAGE_KEYS = {} as const
+export const LOCAL_STORAGE_KEYS = {
+  HAS_VISITED_BEFORE: 'hasVisitedBefore',
+  LAST_SEEN_RELEASE_DATE: 'lastSeenReleaseDate',
+} as const
 
 type LocalStorageKey =
   (typeof LOCAL_STORAGE_KEYS)[keyof typeof LOCAL_STORAGE_KEYS]

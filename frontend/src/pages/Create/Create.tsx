@@ -29,6 +29,7 @@ import CanvasAndPalette from './components/CanvasAndPalette'
 import Dropzone from './components/Dropzone'
 import SelectGeneratedPalette from './components/SelectGeneratedPalette'
 import { sharedCSS } from './components/shared'
+import Alert from '@mui/material/Alert'
 
 type CreationStatus =
   | 'INITIAL'
@@ -287,6 +288,9 @@ const Create = ({ mode }: { mode: 'lite' | 'full' }) => {
   if (creationStatus === 'INITIAL') {
     return (
       <PageWrapper width="full">
+        {mode === 'lite' && <Alert severity="info" sx={{ mb: SPACING.MEDIUM.PX }}>
+          Heads up: you're in Lite Mode - no login needed. Log in to save, or download your results.
+        </Alert>}
         <Dropzone onDrop={onDrop} />
       </PageWrapper>
     )
@@ -328,6 +332,9 @@ const Create = ({ mode }: { mode: 'lite' | 'full' }) => {
 
   return (
     <PageWrapper width="full">
+      {mode === 'lite' && <Alert severity="info" sx={{ mb: SPACING.MEDIUM.PX }}>
+        Heads up: you're in Lite Mode - no login needed. Log in to save, or download your results.
+      </Alert>}
       <Container useSingleColumnDisplay={useSingleColumnDisplay}>
         {/* 
           When mode === 'lite' && useSingleColumnDisplay ? null

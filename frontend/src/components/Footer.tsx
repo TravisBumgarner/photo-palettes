@@ -92,12 +92,12 @@ const Footer = () => {
       />
       <Section
         direction="column"
-        links={['feedback', 'featureRequests']}
-        header={'Feedback'}
+        links={['feedback', 'featureRequests', 'donate']}
+        header={'Get Involved'}
       />
       <Section
         direction="column"
-        links={['donate', 'releaseNotes', 'privacy', 'tos']}
+        links={['about', 'releaseNotes', 'privacy', 'tos']}
         header={'Site Info'}
       />
     </Box>

@@ -63,40 +63,51 @@ const PlatformCard = ({
   )
 }
 
-const ScreenshotPlaceholder = ({ label }: { label: string }) => {
-  const theme = useTheme()
-
+const ScreenshotPlaceholder = ({ image, strongText, text, }: { image: string; strongText: string; text: string }) => {
   return (
-    <Paper
+    <Box
       sx={{
-        padding: SPACING.LARGE.PX,
+        margin: `${SPACING.HUGE.PX} 0`,
         display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        backgroundColor: subtleBackground(theme.palette.mode),
-        minHeight: '200px',
+        flexDirection: 'column',
         flex: 1,
-        minWidth: '250px',
+        gap: SPACING.SMALL.PX,
       }}
-      elevation={0}
     >
-      <Typography variant="body2" sx={{ opacity: 0.5 }}>
-        {label}
-      </Typography>
-    </Paper>
+      <Box sx={{ backgroundColor: ({ palette }) => subtleBackground(palette.mode, 'slightly'), padding: SPACING.MEDIUM.PX, }}>
+        <Typography variant="h3" textAlign="center" fontSize="1.5rem">
+          <strong>{strongText}</strong>
+        </Typography>
+        <Typography variant="body1" textAlign="center">
+          {text}
+        </Typography>
+      </Box>
+      <Box
+        component="img"
+        src={image}
+        alt={text}
+        sx={{
+          width: '100%',
+          height: 'auto',
+        }}
+      />
+
+    </Box>
   )
 }
 
 const About = () => {
   return (
-    <PageWrapper minHeight staticContent width="medium">
+    <PageWrapper minHeight staticContent width="full">
       {/* Hero Section */}
-      <PageTitle text="Photo Palettes" center />
-      <Typography variant="body1" sx={{ textAlign: 'center' }}>
-        Generate beautiful color palettes from your photos. Whether you're a
-        designer, artist, or just love colors, Photo Palettes helps you extract
-        and share stunning color combinations from any image.
-      </Typography>
+      <Box sx={{ backgroundColor: ({ palette }) => subtleBackground(palette.mode, 'slightly'), padding: SPACING.LARGE.PX, marginBottom: SPACING.LARGE.PX, textAlign: 'center', }}>
+        <PageTitle text="Photo Palettes" center />
+        <Typography variant="body1" sx={{ textAlign: 'center' }}>
+          Generate beautiful color palettes from your photos. Whether you're a
+          designer, artist, or just love colors, Photo Palettes helps you extract
+          and share stunning color combinations from any image.
+        </Typography>
+      </Box>
 
       {/* Platform Availability Section */}
       <Typography variant="h4" component="h2" sx={{ marginTop: SPACING.LARGE.PX }}>
@@ -125,7 +136,7 @@ const About = () => {
           icon={<IoLogoAndroid />}
           title="Android App"
           description="Native Android app for your phone and tablet."
-          comingSoon
+          href={ROUTES.android.href}
         />
       </Box>
 
@@ -133,26 +144,11 @@ const About = () => {
       <Typography variant="h4" component="h2" sx={{ marginTop: SPACING.LARGE.PX }}>
         See It In Action
       </Typography>
-      <Box
-        sx={{
-          display: 'flex',
-          gap: SPACING.MEDIUM.PX,
-          flexWrap: 'wrap',
-        }}
-      >
-        <ScreenshotPlaceholder label="Screenshot: Upload a photo" />
-        <ScreenshotPlaceholder label="Screenshot: Extract colors" />
-      </Box>
-      <Box
-        sx={{
-          display: 'flex',
-          gap: SPACING.MEDIUM.PX,
-          flexWrap: 'wrap',
-        }}
-      >
-        <ScreenshotPlaceholder label="Screenshot: Save and share" />
-        <ScreenshotPlaceholder label="Screenshot: Browse palettes" />
-      </Box>
+
+      <ScreenshotPlaceholder image="/marketing/create.png" strongText="Create" text="Choose a pre-defined palette or create your own." />
+      <ScreenshotPlaceholder image="/marketing/search.png" strongText="Get Inspired" text="Find palettes by color, popularity, or recency. Save your favorites." />
+      <ScreenshotPlaceholder image="/marketing/explore2.png" strongText="Dive Deep" text="Use any palette as a starting point to explore the color wheel." />
+
 
       {/* Call to Action */}
       <Box
