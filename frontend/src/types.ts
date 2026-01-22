@@ -88,7 +88,7 @@ export const zodPalette = z.object({
   colors: z.array(zodSwatch),
 })
 
-export const zodGeneratedPalette = z.object({
+export const zodGeneratedSwatch = z.object({
   color: z
     .string()
     .length(7)
@@ -96,9 +96,17 @@ export const zodGeneratedPalette = z.object({
   percentLocation: z.tuple([z.number(), z.number()]),
 })
 
-export type TGeneratedSwatch = z.infer<typeof zodGeneratedPalette>
+export type TGeneratedSwatch = z.infer<typeof zodGeneratedSwatch>
 
+// For backwards compatibility with lite mode (which returns flat arrays)
 export type TGeneratedPalette = TGeneratedSwatch[]
+
+export const zodGeneratedPaletteWithName = z.object({
+  name: z.string(),
+  swatches: z.array(zodGeneratedSwatch),
+})
+
+export type TGeneratedPaletteWithName = z.infer<typeof zodGeneratedPaletteWithName>
 
 export type TPalette = z.infer<typeof zodPalette>
 
@@ -114,7 +122,7 @@ export type ESortBy = (typeof SORT_BY)[keyof typeof SORT_BY]
 export const zodGeneratePaletteResponse = z.discriminatedUnion('success', [
   z.object({
     success: z.literal(true),
-    palettes: z.array(z.array(zodGeneratedPalette)),
+    palettes: z.array(zodGeneratedPaletteWithName),
   }),
   z.object({
     success: z.literal(false),

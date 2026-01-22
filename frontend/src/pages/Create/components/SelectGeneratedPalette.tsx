@@ -1,24 +1,30 @@
-import type { TGeneratedPalette } from '../../../types'
+import type { TGeneratedPaletteWithName } from '../../../types'
 import Box from '@mui/material/Box'
+import Tooltip from '@mui/material/Tooltip'
 import { SPACING } from '../../../styles/styleConsts'
 import { useCallback } from 'react'
 
 const SelectGeneratedPalette = ({
   generatedPalettes,
   handlePaletteChange,
+  useSingleColumnDisplay,
 }: {
-  generatedPalettes: TGeneratedPalette[]
+  generatedPalettes: TGeneratedPaletteWithName[]
   handlePaletteChange: (paletteIndex: number) => void
+  useSingleColumnDisplay: boolean
 }) => {
-  return generatedPalettes.map((palette, index) => (
-    <Palette
-      key={index}
-      height={30}
-      palette={palette}
-      index={index}
-      handlePaletteChange={handlePaletteChange}
-    />
-  ))
+  return (
+    <Box sx={{ columns: useSingleColumnDisplay ? 2 : 1 }}>{generatedPalettes.map((palette, index) => (
+      <Palette
+        key={index}
+        height={30}
+        palette={palette}
+        index={index}
+        handlePaletteChange={handlePaletteChange}
+      />
+    ))}
+    </Box>
+  )
 }
 
 const Palette = ({
@@ -27,7 +33,7 @@ const Palette = ({
   index,
   handlePaletteChange,
 }: {
-  palette: TGeneratedPalette
+  palette: TGeneratedPaletteWithName
   height: number
   index: number
   handlePaletteChange: (index: number) => void
@@ -37,28 +43,35 @@ const Palette = ({
   }, [index, handlePaletteChange])
 
   return (
-    <Box
-      component="button"
-      onClick={handleClick}
-      sx={{
-        display: 'flex',
-        marginBottom: SPACING.TINY.PX,
-        width: '100%',
-        border: 0,
-        cursor: 'pointer',
-      }}
-    >
-      {Object.values(palette).map(({ color }, index) => (
-        <Box
-          key={index}
-          sx={{
-            flexGrow: 1,
-            height,
-            backgroundColor: color,
-          }}
-        />
-      ))}
-    </Box>
+    <Tooltip title={palette.name} arrow placement="right">
+      <Box
+        component="button"
+        onClick={handleClick}
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          marginBottom: SPACING.TINY.PX,
+          border: 0,
+          cursor: 'pointer',
+          padding: 0,
+          background: 'transparent',
+          width: '100%'
+        }}
+      >
+        <Box sx={{ display: 'flex', width: '100%' }}>
+          {palette.swatches.map(({ color }, swatchIndex) => (
+            <Box
+              key={swatchIndex}
+              sx={{
+                flexGrow: 1,
+                height,
+                backgroundColor: color,
+              }}
+            />
+          ))}
+        </Box>
+      </Box>
+    </Tooltip>
   )
 }
 
