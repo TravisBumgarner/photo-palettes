@@ -1,0 +1,65 @@
+project: About Marketing Page
+repo: TravisBumgarner/photo-palettes
+design_file: designs/about-marketing-page/DESIGN.md
+scoping_date: 2026-01-22
+
+milestones:
+  - number: 1
+    title: "1. About Marketing Page"
+    description: Add an About marketing page accessible from the top navigation for logged-out web users. Includes page content with platform availability info and screenshot placeholders.
+    branch:
+      working: 158-about-marketing-page
+      base: main
+
+tasks:
+  - id: 1
+    github_issue: 158
+    milestone: 1
+    title: Create About page component with marketing content
+    description: |
+      Create a new About page component at `/frontend/src/pages/About.tsx` that serves as a marketing page for Photo Palettes.
+
+      The page should include:
+      - Hero section with app name and description
+      - Platform availability section (iOS available, Figma plugin available, Android coming soon)
+      - 3-4 screenshot placeholder sections using MUI Paper/Card components
+      - Call to action with signup button and browse link
+
+      Follow existing page patterns from Donations.tsx and PrivacyPolicy.tsx. Use PageWrapper, PageTitle, and existing MUI styling.
+    acceptance_criteria:
+      - About page component created at /frontend/src/pages/About.tsx
+      - Hero section displays app name and description
+      - Platform availability shows iOS (with link), Figma (with link), and Android (coming soon)
+      - 3-4 screenshot placeholder sections are visible
+      - Call to action buttons/links for signup and browse are present
+      - Page uses existing styling patterns and is responsive
+    depends_on: []
+    effort: 2
+    status: completed
+
+  - id: 2
+    github_issue: 159
+    milestone: 1
+    title: Add About link to navigation for logged-out web users
+    description: |
+      Add the About page to the application routing and navigation.
+
+      1. Add `about` route constant to `/frontend/src/consts.ts`
+      2. Add route to `/frontend/src/components/Router.tsx` with lazy loading
+      3. Update `/frontend/src/components/Navigation/Navigation.shared.ts` to include About in ANON_ROUTES, but only for web platform (not native)
+
+      The About link should only be visible when:
+      - User is logged out (anonymous)
+      - User is on web platform (not iOS/Android native app)
+
+      Use existing Capacitor.isNativePlatform() pattern already in Navigation.shared.ts.
+    acceptance_criteria:
+      - about route constant added to consts.ts
+      - Route added to Router.tsx with lazy loading
+      - About link appears in navigation for logged-out web users
+      - About link does NOT appear for logged-in users
+      - About link does NOT appear on native mobile apps
+      - Navigation to /about displays the About page
+    depends_on: [1]
+    effort: 1
+    status: scoped
