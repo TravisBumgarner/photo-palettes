@@ -1,5 +1,7 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { Suspense } from 'react'
 import { BrowserRouter } from 'react-router-dom'
+import ChunkErrorBoundary from './components/ChunkErrorBoundary'
 import Footer from './components/Footer'
 import Router from './components/Router'
 
@@ -86,7 +88,11 @@ function App() {
         }}
       />
       <Header />
-      <Router />
+      <ChunkErrorBoundary>
+        <Suspense fallback={<Loading />}>
+          <Router />
+        </Suspense>
+      </ChunkErrorBoundary>
       <Footer />
       <RenderModal />
     </QueryClientProvider>

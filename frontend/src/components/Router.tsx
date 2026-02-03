@@ -1,32 +1,55 @@
-import { lazy } from 'react'
+import { type ComponentType, lazy } from 'react'
 import { Navigate, Outlet, Route, Routes } from 'react-router-dom'
 import { ROUTES } from '../consts'
 import Browse from '../pages/Browse'
 import Settings from '../pages/Settings'
 import useGlobalStore from '../store'
 import { PERMISSION_LEVEL } from '../types'
-const TermsOfService = lazy(async () => await import('../pages/TermsOfService'))
-const PrivacyPolicy = lazy(async () => await import('../pages/PrivacyPolicy'))
-const ReleaseNotes = lazy(async () => await import('../pages/ReleaseNotes'))
-const Feedback = lazy(async () => await import('../pages/Feedback'))
-const Create = lazy(async () => await import('../pages/Create/Create'))
-const Login = lazy(async () => await import('../pages/Login'))
-const Error500 = lazy(async () => await import('../pages/Error500'))
-const Error404 = lazy(async () => await import('../pages/Error404'))
-const FeatureRequests = lazy(
+
+// Helper that auto-reloads once if a chunk fails to load (handles stale deployments)
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const lazyWithRetry = <T extends ComponentType<any>>(
+  importFn: () => Promise<{ default: T }>
+) => {
+  return lazy(async () => {
+    const storageKey = 'chunk-refresh'
+    const hasRefreshed = sessionStorage.getItem(storageKey)
+    try {
+      const module = await importFn()
+      sessionStorage.removeItem(storageKey)
+      return module
+    } catch (error) {
+      if (!hasRefreshed) {
+        sessionStorage.setItem(storageKey, 'true')
+        window.location.reload()
+      }
+      throw error
+    }
+  })
+}
+
+const TermsOfService = lazyWithRetry(async () => await import('../pages/TermsOfService'))
+const PrivacyPolicy = lazyWithRetry(async () => await import('../pages/PrivacyPolicy'))
+const ReleaseNotes = lazyWithRetry(async () => await import('../pages/ReleaseNotes'))
+const Feedback = lazyWithRetry(async () => await import('../pages/Feedback'))
+const Create = lazyWithRetry(async () => await import('../pages/Create'))
+const Login = lazyWithRetry(async () => await import('../pages/Login'))
+const Error500 = lazyWithRetry(async () => await import('../pages/Error500'))
+const Error404 = lazyWithRetry(async () => await import('../pages/Error404'))
+const FeatureRequests = lazyWithRetry(
   async () => await import('../pages/FeatureRequests')
 )
-const Signup = lazy(async () => await import('../pages/Signup'))
-const Profile = lazy(async () => await import('../pages/Profile'))
-const Logout = lazy(async () => await import('../pages/Logout'))
-const Moderation = lazy(async () => await import('../pages/Moderation'))
-const Donations = lazy(async () => await import('../pages/Donations'))
-const Palette = lazy(async () => await import('../pages/Palette'))
-const Favorites = lazy(async () => await import('../pages/Favorites'))
-const Admin = lazy(async () => await import('../pages/Admin'))
-const PasswordReset = lazy(async () => await import('../pages/PasswordReset'))
-const AndroidSignup = lazy(async () => await import('../pages/AndroidSignup'))
-const About = lazy(async () => await import('../pages/About'))
+const Signup = lazyWithRetry(async () => await import('../pages/Signup'))
+const Profile = lazyWithRetry(async () => await import('../pages/Profile'))
+const Logout = lazyWithRetry(async () => await import('../pages/Logout'))
+const Moderation = lazyWithRetry(async () => await import('../pages/Moderation'))
+const Donations = lazyWithRetry(async () => await import('../pages/Donations'))
+const Palette = lazyWithRetry(async () => await import('../pages/Palette'))
+const Favorites = lazyWithRetry(async () => await import('../pages/Favorites'))
+const Admin = lazyWithRetry(async () => await import('../pages/Admin'))
+const PasswordReset = lazyWithRetry(async () => await import('../pages/PasswordReset'))
+const AndroidSignup = lazyWithRetry(async () => await import('../pages/AndroidSignup'))
+const About = lazyWithRetry(async () => await import('../pages/About'))
 
 const AnonymousRoute = () => {
   const appUser = useGlobalStore((state) => state.appUser)
