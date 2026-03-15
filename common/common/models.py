@@ -88,6 +88,7 @@ class ModerationStatus(IntEnum):
     AWAITING_MODERATION = 0
     APPROVED = 1
     REJECTED = 2
+    PRIVATE = 3
 
 
 class SortBy(Enum):
