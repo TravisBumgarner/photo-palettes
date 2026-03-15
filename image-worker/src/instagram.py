@@ -156,8 +156,8 @@ def post_to_instagram(
             # Session expired -> reset and re-login
             client.set_settings({})
             delete_service_session(db_engine, service_name)
+            client.login(config.instagram.username, config.instagram.password)
     else:
-        # No valid session, so login fresh
         client.login(config.instagram.username, config.instagram.password)
 
     # Save latest session back to DB
