@@ -7,6 +7,7 @@ from . import (
     get_palette_by_id,
     get_palette_list,
     get_palette_list_as_moderator,
+    make_private,
     moderate_palette,
     share_to_socials,
     submit_to_public,

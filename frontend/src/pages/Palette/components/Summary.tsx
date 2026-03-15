@@ -1,6 +1,7 @@
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import { useMutation } from '@tanstack/react-query'
+import { makePrivate } from '../../../api/palettes/makePrivate'
 import { submitToPublic } from '../../../api/palettes/submitToPublic'
 import Favorite from '../../../sharedComponents/Favorite'
 import Link from '../../../sharedComponents/Link'
@@ -23,6 +24,13 @@ const Summary = ({
 
   const submitMutation = useMutation({
     mutationFn: () => submitToPublic({ paletteId: id }),
+    onSuccess: (data) => {
+      if (data.success) refetch()
+    },
+  })
+
+  const makePrivateMutation = useMutation({
+    mutationFn: () => makePrivate({ paletteId: id }),
     onSuccess: (data) => {
       if (data.success) refetch()
     },
@@ -53,6 +61,16 @@ const Summary = ({
               onClick={() => submitMutation.mutate()}
             >
               Share with public
+            </Button>
+          )}
+          {isOwner && !isPrivate && (
+            <Button
+              variant="outlined"
+              size="small"
+              disabled={makePrivateMutation.isPending}
+              onClick={() => makePrivateMutation.mutate()}
+            >
+              Make private
             </Button>
           )}
           {!isPrivate && (
