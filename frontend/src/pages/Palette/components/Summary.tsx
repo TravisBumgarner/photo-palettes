@@ -52,37 +52,38 @@ const Summary = ({
           {getUserColorFromUUID(appUserId)}
         </Link>
 
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          {isOwner && isPrivate && (
-            <Button
-              variant="outlined"
-              size="small"
-              disabled={submitMutation.isPending}
-              onClick={() => submitMutation.mutate()}
-            >
-              Share with public
-            </Button>
-          )}
-          {isOwner && !isPrivate && (
-            <Button
-              variant="outlined"
-              size="small"
-              disabled={makePrivateMutation.isPending}
-              onClick={() => makePrivateMutation.mutate()}
-            >
-              Make private
-            </Button>
-          )}
-          {!isPrivate && (
-            <Favorite
-              refetch={refetch}
-              paletteId={id}
-              favorites={favoritesCount}
-              hasUserFavorited={hasUserFavorited}
-            />
-          )}
-        </Box>
+        {!isPrivate && (
+          <Favorite
+            refetch={refetch}
+            paletteId={id}
+            favorites={favoritesCount}
+            hasUserFavorited={hasUserFavorited}
+          />
+        )}
       </Box>
+
+      {isOwner && isPrivate && (
+        <Button
+          variant="outlined"
+          size="small"
+          fullWidth
+          disabled={submitMutation.isPending}
+          onClick={() => submitMutation.mutate()}
+        >
+          Share with public
+        </Button>
+      )}
+      {isOwner && !isPrivate && (
+        <Button
+          variant="outlined"
+          size="small"
+          fullWidth
+          disabled={makePrivateMutation.isPending}
+          onClick={() => makePrivateMutation.mutate()}
+        >
+          Make private
+        </Button>
+      )}
     </div>
   )
 }
