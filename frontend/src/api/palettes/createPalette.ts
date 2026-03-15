@@ -18,10 +18,12 @@ export const createPalette = async ({
   generatedPalette,
   name,
   image,
+  shareWithPublic,
 }: {
   generatedPalette: TGeneratedPalette
   name: string
   image: Blob
+  shareWithPublic: boolean
 }) => {
   const tokenResponse = await getToken()
 
@@ -46,6 +48,7 @@ export const createPalette = async ({
     )
   )
   formData.append('image', image)
+  formData.append('share_with_public', String(shareWithPublic))
 
   const response = await fetch(`${config.apiUrl}/palettes/create`, {
     method: 'POST',

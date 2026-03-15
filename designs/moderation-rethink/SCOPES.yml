@@ -1,0 +1,42 @@
+project: Moderation Flow Rethink
+repo: travisbumgarner/photo-palettes
+scoping_date: 2026-03-14
+
+milestones:
+  - number: 1
+    title: "1. Private palettes and share-with-public flow"
+    description: Add PRIVATE moderation status, update backend and frontend to support share-with-public opt-in, redesign profile page
+    branch:
+      working: moderation-rethink
+      base: main
+
+tasks:
+  - id: 1
+    milestone: 1
+    title: Add PRIVATE moderation status and database migration
+    status: completed
+
+  - id: 2
+    milestone: 1
+    title: Update create_palette to accept share_with_public parameter
+    status: completed
+
+  - id: 3
+    milestone: 1
+    title: Update get_palette_list for unified profile view
+    status: completed
+
+  - id: 4
+    milestone: 1
+    title: Update frontend types and createPalette API call
+    status: completed
+
+  - id: 5
+    milestone: 1
+    title: Add share-with-public checkbox to Create page
+    status: completed
+
+  - id: 6
+    milestone: 1
+    title: Redesign Profile page - remove tabs, add status indicators
+    status: completed

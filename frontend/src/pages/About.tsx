@@ -105,7 +105,8 @@ const About = () => {
         <Typography variant="body1" sx={{ textAlign: 'center' }}>
           Generate beautiful color palettes from your photos. Whether you're a
           designer, artist, or just love colors, Photo Palettes helps you extract
-          and share stunning color combinations from any image.
+          stunning color combinations from any image. Save palettes to your
+          private library or share them with the community.
         </Typography>
       </Box>
 
@@ -145,7 +146,7 @@ const About = () => {
         See It In Action
       </Typography>
 
-      <ScreenshotPlaceholder image="public/marketing/create.png" strongText="Create" text="Choose a pre-defined palette or create your own." />
+      <ScreenshotPlaceholder image="public/marketing/create.png" strongText="Create" text="Choose a pre-defined palette or create your own. Keep it private or share it with the community." />
       <ScreenshotPlaceholder image="public/marketing/search.png" strongText="Get Inspired" text="Find palettes by color, popularity, or recency. Save your favorites." />
       <ScreenshotPlaceholder image="public/marketing/explore2.png" strongText="Dive Deep" text="Use any palette as a starting point to explore the color wheel." />
 
@@ -164,7 +165,7 @@ const About = () => {
           Get Started
         </Typography>
         <Typography variant="body1" sx={{ textAlign: 'center' }}>
-          Create your free account to save palettes and join our community.
+          Create your free account to build your private palette library or share your creations with the community.
         </Typography>
         <Box sx={{ display: 'flex', gap: SPACING.MEDIUM.PX, flexWrap: 'wrap', justifyContent: 'center' }}>
           <Button

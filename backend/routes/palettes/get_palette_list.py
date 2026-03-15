@@ -34,7 +34,7 @@ def calculate_can_see_all_moderation_statuses(
 def handle_request(
     size: int,
     offset: int,
-    moderation_status: ModerationStatus,
+    moderation_status: ModerationStatus | None,
     author_user_id: uuid.UUID | None,
     sort_by: SortBy,
     color: str | None,
@@ -44,14 +44,17 @@ def handle_request(
         app_user_id=app_user_id, author_user_id=author_user_id
     )
 
-    moderation_status = (
-        moderation_status if can_see_all_moderation_statuses else ModerationStatus.APPROVED
-    )
+    if can_see_all_moderation_statuses:
+        # Profile owner viewing own profile: use requested filter or show all
+        effective_status = moderation_status
+    else:
+        # Everyone else: only show approved palettes
+        effective_status = ModerationStatus.APPROVED
 
     palettes = get_palettes(
         size=size,
         offset=offset,
-        moderation_status=moderation_status,
+        moderation_status=effective_status,
         author_user_id=author_user_id,
         sort_by=sort_by,
         color=color,
@@ -59,7 +62,7 @@ def handle_request(
     )
 
     total_count = get_palettes_count(
-        moderation_status=moderation_status,
+        moderation_status=effective_status,
         author_user_id=author_user_id,
     )
     return SuccessResponse(
@@ -73,7 +76,7 @@ async def get_palette_list(
     request: RequestWithAuthState,
     size: int = Query(25, ge=1, le=100),
     offset: int = Query(0, ge=0),
-    moderation_status: ModerationStatus = ModerationStatus.APPROVED,
+    moderation_status: ModerationStatus | None = None,
     author_user_id: uuid.UUID | None = None,
     sort_by: SortBy = SortBy.NEWEST,
     color: str | None = None,

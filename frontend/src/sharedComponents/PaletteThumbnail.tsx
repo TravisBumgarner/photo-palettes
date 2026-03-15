@@ -2,7 +2,7 @@ import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
 import { useTheme } from '@mui/material/styles'
 import { BORDER_RADIUS, SPACING, subtleBackground } from '../styles/styleConsts'
-import { type TPalette } from '../types'
+import { MODERATION_STATUS, type TPalette } from '../types'
 import { getUserColorFromUUID } from '../utils/getUserColorFromUUID'
 import BlurImage from './BlurImage'
 import ColorBar from './ColorBar'
@@ -12,9 +12,11 @@ import Link from './Link'
 const PaletteThumbnail = ({
   palette,
   refetch,
+  statusChip,
 }: {
   palette: TPalette
   refetch: () => void
+  statusChip?: React.ReactNode
 }) => {
   const theme = useTheme()
 
@@ -91,16 +93,21 @@ const PaletteThumbnail = ({
         >
           <Box>
             <Typography variant="body1">{palette.name}</Typography>
-            <Typography variant="body2">
-              {getUserColorFromUUID(palette.appUserId)}
-            </Typography>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: SPACING.TINY.PX }}>
+              <Typography variant="body2">
+                {getUserColorFromUUID(palette.appUserId)}
+              </Typography>
+              {statusChip}
+            </Box>
           </Box>
-          <Favorite
-            refetch={refetch}
-            paletteId={palette.id}
-            favorites={palette.favoritesCount}
-            hasUserFavorited={palette.hasUserFavorited}
-          />
+          {palette.moderationStatus !== MODERATION_STATUS.PRIVATE && (
+            <Favorite
+              refetch={refetch}
+              paletteId={palette.id}
+              favorites={palette.favoritesCount}
+              hasUserFavorited={palette.hasUserFavorited}
+            />
+          )}
         </Box>
       </Box>
     </Link>

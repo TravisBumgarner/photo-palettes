@@ -74,6 +74,23 @@ const ModerationPanel = ({
     }
   }, [palette.id, refetch])
 
+  const handleMakePrivate = useCallback(async () => {
+    setIsFetching(true)
+    try {
+      const response = await moderatePalette({
+        paletteId: palette.id,
+        status: MODERATION_STATUS.PRIVATE,
+      })
+      if (response.success) {
+        refetch?.()
+      } else {
+        alert('Failed to moderate palette') // eslint-disable-line
+      }
+    } finally {
+      setIsFetching(false)
+    }
+  }, [palette.id, refetch])
+
   const handleDeleteCallback = useCallback(async () => {
     setIsFetching(true)
     const response = await deletePalette(palette.id)
@@ -130,6 +147,13 @@ const ModerationPanel = ({
         onClick={handleReject}
       >
         Reject
+      </Button>
+      <Button
+        variant="outlined"
+        disabled={isFetching || moderationStatus === MODERATION_STATUS.PRIVATE}
+        onClick={handleMakePrivate}
+      >
+        Make Private
       </Button>
       <Button variant="outlined" disabled={isFetching} onClick={handleDelete}>
         Delete

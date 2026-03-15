@@ -14,12 +14,14 @@ export const MODERATION_STATUS = {
   AWAITING_MODERATION: 0,
   APPROVED: 1,
   REJECTED: 2,
+  PRIVATE: 3,
 }
 
 export const MODERATION_STATUS_LABEL = {
   [MODERATION_STATUS.AWAITING_MODERATION]: 'Pending Approval',
   [MODERATION_STATUS.APPROVED]: 'Approved',
   [MODERATION_STATUS.REJECTED]: 'Rejected',
+  [MODERATION_STATUS.PRIVATE]: 'Private',
 }
 
 export type EModerationStatus =

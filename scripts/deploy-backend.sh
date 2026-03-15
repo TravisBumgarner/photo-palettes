@@ -25,10 +25,14 @@ cp -r $COMMON_DIR/common/* $DEPLOY_DIR/common/
 sed 's|^-e git+.*subdirectory=common.*$|-e ./common|' \
     $BACKEND_DIR/requirements.txt > $DEPLOY_DIR/requirements.txt
 
+# Copy database/alembic for migrations
+mkdir -p $DEPLOY_DIR/database
+cp -r database/alembic $DEPLOY_DIR/database/
+cp database/alembic.ini $DEPLOY_DIR/database/
+
 # Copy extra files
 cp $BACKEND_DIR/.python-version $DEPLOY_DIR/ || true
 cp $BACKEND_DIR/.gitignore $DEPLOY_DIR/ || true
-cp Procfile $DEPLOY_DIR/
 
 cd $DEPLOY_DIR
 git init
@@ -40,7 +44,3 @@ cd ..
 rm -rf $DEPLOY_DIR
 
 heroku open --app photo-palettes-backend
-
-echo "Do you need to deploy migrations?"
-echo "Do you need to deploy migrations?"
-echo "Do you need to deploy migrations?"

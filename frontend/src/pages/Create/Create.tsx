@@ -1,6 +1,8 @@
 import { Capacitor } from '@capacitor/core'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
+import Checkbox from '@mui/material/Checkbox'
+import FormControlLabel from '@mui/material/FormControlLabel'
 import { styled, type SxProps } from '@mui/material/styles'
 import TextField from '@mui/material/TextField'
 import Typography from '@mui/material/Typography'
@@ -65,6 +67,7 @@ const Create = ({ mode }: { mode: 'lite' | 'full' }) => {
   const [paletteSortOrder, setPaletteSortOrder] = useState<number[]>(
     Array.from({ length: PALETTE_SIZE }, (_, i) => i)
   )
+  const [shareWithPublic, setShareWithPublic] = useState(false)
   const [tempId, setTempId] = useState<string | null>(null)
   useEffect(() => {
     // When the user is signed out, they can create palettes.
@@ -235,6 +238,7 @@ const Create = ({ mode }: { mode: 'lite' | 'full' }) => {
       generatedPalette: sortedPalette,
       name,
       image: photo,
+      shareWithPublic,
     })
 
     if (response.success) {
@@ -242,8 +246,12 @@ const Create = ({ mode }: { mode: 'lite' | 'full' }) => {
       activeModalSignal.value = {
         id: MODAL_ID.CONFIRMATION_MODAL,
         confirmationCallback: () => handleSaveFullCallback(response.paletteId),
-        title: 'Thanks for your submission!',
-        body: 'Once it is approved, it will be added to the site.',
+        title: shareWithPublic
+          ? 'Thanks for your submission!'
+          : 'Palette saved!',
+        body: shareWithPublic
+          ? 'Once approved, it will appear on the browse page.'
+          : 'Your palette has been saved to your library.',
       }
       setCreationStatus('SUBMITTED')
     } else {
@@ -256,6 +264,7 @@ const Create = ({ mode }: { mode: 'lite' | 'full' }) => {
     palette,
     paletteSortOrder,
     photo,
+    shareWithPublic,
     tempId,
   ])
 
@@ -369,6 +378,24 @@ const Create = ({ mode }: { mode: 'lite' | 'full' }) => {
                 </SectionWrapper>
 
                 <SectionWrapper>
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        checked={shareWithPublic}
+                        onChange={(e) => setShareWithPublic(e.target.checked)}
+                        size="small"
+                      />
+                    }
+                    label="Share with public"
+                  />
+                  {shareWithPublic && (
+                    <Typography variant="caption" color="text.secondary">
+                      Your palette will be reviewed and may be featured on the public browse page
+                    </Typography>
+                  )}
+                </SectionWrapper>
+
+                <SectionWrapper>
                   <Box
                     sx={{
                       display: 'flex',
@@ -415,6 +442,24 @@ const Create = ({ mode }: { mode: 'lite' | 'full' }) => {
                   value={name}
                   onChange={handleNameChange}
                 />
+              </SectionWrapper>
+
+              <SectionWrapper>
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={shareWithPublic}
+                      onChange={(e) => setShareWithPublic(e.target.checked)}
+                      size="small"
+                    />
+                  }
+                  label="Share with public"
+                />
+                {shareWithPublic && (
+                  <Typography variant="caption" color="text.secondary">
+                    Your palette will be reviewed and may be featured on the public browse page
+                  </Typography>
+                )}
               </SectionWrapper>
 
               <SectionWrapper>

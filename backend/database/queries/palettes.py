@@ -18,11 +18,14 @@ def hex_to_rgb(hex_color: str) -> tuple[int, int, int]:
 
 
 def get_palettes_count(
-    moderation_status: ModerationStatus,
+    moderation_status: ModerationStatus | None = None,
     author_user_id: uuid.UUID | None = None,
 ) -> int:
     with Session(db_engine) as session:
-        query = session.query(Palette).filter(Palette.moderation_status == moderation_status)
+        query = session.query(Palette)
+
+        if moderation_status is not None:
+            query = query.filter(Palette.moderation_status == moderation_status)
 
         if author_user_id:
             query = query.filter(Palette.app_user_id == author_user_id)
@@ -53,8 +56,14 @@ def get_colors(size: int | None = None, offset: int | None = None) -> list[Palet
         return colors
 
 
+def _apply_moderation_filter(query, moderation_status: ModerationStatus | None):
+    if moderation_status is not None:
+        return query.filter(Palette.moderation_status == moderation_status)
+    return query
+
+
 def get_palettes(
-    moderation_status: ModerationStatus = ModerationStatus.APPROVED,
+    moderation_status: ModerationStatus | None = ModerationStatus.APPROVED,
     size: int | None = None,
     offset: int | None = None,
     author_user_id: uuid.UUID | None = None,
@@ -62,7 +71,6 @@ def get_palettes(
     color: str | None = None,
     app_user_id: uuid.UUID | None = None,
 ) -> list[Palette]:
-    print("got options", color)
     with Session(db_engine) as session:
         # Handle color-based sorting
         if sort_by == SortBy.COLOR and color:
@@ -94,10 +102,10 @@ def get_palettes(
                     )
                     .outerjoin(PaletteFavorite, Palette.id == PaletteFavorite.palette_id)
                     .options(joinedload(Palette.colors))
-                    .filter(Palette.moderation_status == moderation_status)
                     .group_by(Palette.id, color_distance_subquery.c.min_dist2)
                     .order_by(color_distance_subquery.c.min_dist2.asc())
                 )
+                query = _apply_moderation_filter(query, moderation_status)
             except (ValueError, AttributeError):
                 # Fallback to default sorting if color parsing fails
                 query = (
@@ -107,10 +115,10 @@ def get_palettes(
                     )
                     .outerjoin(PaletteFavorite, Palette.id == PaletteFavorite.palette_id)
                     .options(joinedload(Palette.colors))
-                    .filter(Palette.moderation_status == moderation_status)
                     .group_by(Palette.id)
                     .order_by(ORDER_BY.get(sort_by, Palette.created_at.asc()))
                 )
+                query = _apply_moderation_filter(query, moderation_status)
         else:
             query = (
                 session.query(
@@ -119,10 +127,10 @@ def get_palettes(
                 )
                 .outerjoin(PaletteFavorite, Palette.id == PaletteFavorite.palette_id)
                 .options(joinedload(Palette.colors))
-                .filter(Palette.moderation_status == moderation_status)
                 .group_by(Palette.id)
                 .order_by(ORDER_BY.get(sort_by, Palette.created_at.asc()))
             )
+            query = _apply_moderation_filter(query, moderation_status)
 
         if author_user_id:
             query = query.filter(Palette.app_user_id == author_user_id)
