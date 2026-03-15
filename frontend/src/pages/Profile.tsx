@@ -1,7 +1,6 @@
-import Tab from '@mui/material/Tab'
-import Tabs from '@mui/material/Tabs'
+import Chip from '@mui/material/Chip'
 import { useQuery } from '@tanstack/react-query'
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import getPaletteList from '../api/palettes/getPaletteList'
 import { PAGINATION_SIZE, ROUTES } from '../consts'
@@ -19,15 +18,16 @@ import { SPACING } from '../styles/styleConsts'
 import { MODERATION_STATUS, MODERATION_STATUS_LABEL, SORT_BY } from '../types'
 import { getContrastColor } from '../utils/getContrastColor'
 import { getUserColorFromUUID } from '../utils/getUserColorFromUUID'
+import { useState } from 'react'
 
-const STATUS_TABS = [
-  MODERATION_STATUS.APPROVED,
-  MODERATION_STATUS.AWAITING_MODERATION,
-  MODERATION_STATUS.REJECTED,
-]
+const STATUS_CHIP_COLOR: Record<number, 'default' | 'success' | 'warning' | 'error' | 'info'> = {
+  [MODERATION_STATUS.PRIVATE]: 'default',
+  [MODERATION_STATUS.AWAITING_MODERATION]: 'warning',
+  [MODERATION_STATUS.APPROVED]: 'success',
+  [MODERATION_STATUS.REJECTED]: 'error',
+}
 
 const Profile = () => {
-  const [filterTabIndex, setFilterTabIndex] = useState(0)
   const params = useParams()
   const [page, setPage] = useState(1)
   const navigate = useNavigate()
@@ -36,14 +36,15 @@ const Profile = () => {
   const authorUserId =
     (Array.isArray(params.id) ? params.id[0] : params.id) || appUser?.id || ''
 
+  const isProfileUser = authorUserId === appUser?.id
+
   const { data, isLoading, error, refetch } = useQuery({
-    queryKey: ['profile', authorUserId, filterTabIndex, page],
+    queryKey: ['profile', authorUserId, page],
     queryFn: () =>
       getPaletteList({
         size: PAGINATION_SIZE,
         offset: (page - 1) * PAGINATION_SIZE,
         authorUserId,
-        moderationStatus: STATUS_TABS[filterTabIndex],
         sortBy: SORT_BY.NEWEST,
       }),
     retry: false,
@@ -71,11 +72,6 @@ const Profile = () => {
     }
   }, [authorUserId, navigate])
 
-  const handleTabChange = useCallback((_event: unknown, v: number) => {
-    setFilterTabIndex(v)
-    setPage(1)
-  }, [])
-
   useEffect(() => {
     if (error) {
       logger.error('Error fetching profile palettes', error, data?.success)
@@ -98,6 +94,16 @@ const Profile = () => {
               refetch={refetch}
               key={palette.id}
               palette={palette}
+              statusChip={
+                isProfileUser ? (
+                  <Chip
+                    label={MODERATION_STATUS_LABEL[palette.moderationStatus]}
+                    color={STATUS_CHIP_COLOR[palette.moderationStatus] ?? 'default'}
+                    size="small"
+                    variant="outlined"
+                  />
+                ) : undefined
+              }
             />
           ))}
         </ThumbnailGridDisplay>
@@ -108,9 +114,7 @@ const Profile = () => {
         />
       </>
     )
-  }, [data, error, isLoading, handlePageChange, page, refetch])
-
-  const isProfileUser = authorUserId === appUser?.id
+  }, [data, error, isLoading, handlePageChange, page, refetch, isProfileUser])
 
   const displayName = getUserColorFromUUID(authorUserId)
 
@@ -128,22 +132,6 @@ const Profile = () => {
           alignSelf: 'flex-start',
         }}
       />
-      {isProfileUser && (
-        <Tabs
-          variant="scrollable"
-          value={filterTabIndex}
-          onChange={handleTabChange}
-          sx={{ marginBottom: SPACING.MEDIUM.PX }}
-        >
-          {STATUS_TABS.map((key) => (
-            <Tab
-              disabled={isLoading}
-              key={key}
-              label={MODERATION_STATUS_LABEL[key]}
-            />
-          ))}
-        </Tabs>
-      )}
       {content}
     </PageWrapper>
   )

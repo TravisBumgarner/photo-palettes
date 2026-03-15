@@ -12,9 +12,11 @@ import Link from './Link'
 const PaletteThumbnail = ({
   palette,
   refetch,
+  statusChip,
 }: {
   palette: TPalette
   refetch: () => void
+  statusChip?: React.ReactNode
 }) => {
   const theme = useTheme()
 
@@ -91,9 +93,12 @@ const PaletteThumbnail = ({
         >
           <Box>
             <Typography variant="body1">{palette.name}</Typography>
-            <Typography variant="body2">
-              {getUserColorFromUUID(palette.appUserId)}
-            </Typography>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: SPACING.TINY.PX }}>
+              <Typography variant="body2">
+                {getUserColorFromUUID(palette.appUserId)}
+              </Typography>
+              {statusChip}
+            </Box>
           </Box>
           <Favorite
             refetch={refetch}

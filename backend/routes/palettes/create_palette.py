@@ -2,7 +2,7 @@ import json
 import uuid
 from io import BytesIO
 
-from common.models import ImageWorkerActionEnum, Palette, PaletteColor, PermissionLevel
+from common.models import ImageWorkerActionEnum, ModerationStatus, Palette, PaletteColor, PermissionLevel
 from common.queries.worker import insert_image_worker
 from common.utils.photos import save_photo
 from fastapi import Form, UploadFile
@@ -64,6 +64,7 @@ def handle_request(
     name: str,
     parsed_palette: list[PaletteItem],
     request: RequestWithAuthState,
+    share_with_public: bool = False,
 ):
     palette_id = uuid.uuid4()
 
@@ -100,6 +101,10 @@ def handle_request(
             )
         )
 
+    moderation_status = (
+        ModerationStatus.AWAITING_MODERATION if share_with_public else ModerationStatus.PRIVATE
+    )
+
     new_palette = Palette(
         id=palette_id,
         name=name,
@@ -109,6 +114,7 @@ def handle_request(
         blurhash=blurhash,
         aspect_ratio=pil_image.width / pil_image.height,
         colors=colors,
+        moderation_status=moderation_status,
     )
 
     create_palette(new_palette)
@@ -120,7 +126,9 @@ def handle_request(
         json_data=None,
     )
 
-    send_pushover_notification(f"New palette submitted: {name}")
+    if share_with_public:
+        send_pushover_notification(f"New palette submitted: {name}")
+
     return SuccessResponse(
         paletteId=new_palette.id,
     )
@@ -132,6 +140,7 @@ async def create(
     image: UploadFile,
     name: str = Form(...),
     palette: str = Form(...),
+    share_with_public: bool = Form(False),
 ):
     if request.state.permission_level < PermissionLevel.MEMBER:
         return BaseErrorResponse(message=ErrorMsg.CANNOT_PERFORM_ACTION)
@@ -146,7 +155,7 @@ async def create(
         return BaseErrorResponse(message=str(e))
 
     try:
-        return handle_request(image, name, parsed_palette, request)
+        return handle_request(image, name, parsed_palette, request, share_with_public)
 
     except Exception as e:
         log_error(e, ROUTE_NAME)

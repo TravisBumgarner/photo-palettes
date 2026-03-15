@@ -14,141 +14,29 @@ tasks:
   - id: 1
     milestone: 1
     title: Add PRIVATE moderation status and database migration
-    description: |
-      Add `PRIVATE = 3` to the `ModerationStatus` IntEnum in `common/common/models.py`.
-      Create an Alembic migration documenting the new status value.
-      Since ModerationStatus is stored as an Integer column, no DDL change is needed —
-      the migration just documents the new valid value.
-      No existing palette data changes.
-    acceptance_criteria:
-      - ModerationStatus.PRIVATE exists with value 3
-      - An Alembic migration is created
-      - Existing tests still pass
-    depends_on: []
-    effort: 1
-    status: implementing
+    status: completed
 
   - id: 2
     milestone: 1
     title: Update create_palette to accept share_with_public parameter
-    description: |
-      Update `POST /palettes/create` to accept an optional `share_with_public` boolean
-      form field (defaults to `false`).
-
-      - If `share_with_public=true`: set `moderation_status = AWAITING_MODERATION` (current behavior)
-      - If `share_with_public=false`: set `moderation_status = PRIVATE`
-
-      Only send pushover notification when `share_with_public=true`, since private
-      palettes don't need moderator attention.
-
-      Key file: `backend/routes/palettes/create_palette.py`
-    acceptance_criteria:
-      - Endpoint accepts share_with_public boolean form field (default false)
-      - share_with_public=false creates palette with moderation_status=PRIVATE
-      - share_with_public=true creates palette with moderation_status=AWAITING_MODERATION
-      - Pushover notification only sent when share_with_public=true
-    depends_on: [1]
-    effort: 1
-    status: scoped
+    status: completed
 
   - id: 3
     milestone: 1
     title: Update get_palette_list for unified profile view
-    description: |
-      Update `GET /palettes` so the profile owner can fetch all their palettes
-      in a single request (all statuses combined) instead of requiring tab-based
-      moderation_status filtering.
-
-      Changes:
-      - Make `moderation_status` parameter optional (default None instead of APPROVED)
-      - When None and user is viewing own profile: return all statuses
-      - When None and viewing others or browsing: return only APPROVED
-      - PRIVATE palettes must never be visible to anyone except the owner
-      - Update `get_palettes` and `get_palettes_count` queries to handle None status
-
-      Key files:
-      - `backend/routes/palettes/get_palette_list.py`
-      - `backend/database/queries/palettes.py` and/or `common/common/queries/palettes.py`
-    acceptance_criteria:
-      - Profile owner can fetch all their palettes in a single request by omitting moderation_status
-      - Non-owners and unauthenticated users only see APPROVED palettes
-      - PRIVATE palettes never visible to non-owners
-      - Browse page still defaults to APPROVED only
-    depends_on: [1]
-    effort: 2
-    status: scoped
+    status: completed
 
   - id: 4
     milestone: 1
     title: Update frontend types and createPalette API call
-    description: |
-      Update frontend types and API call to support the new flow.
-
-      `frontend/src/types.ts`:
-      - Add `PRIVATE: 3` to MODERATION_STATUS
-      - Add `'Private'` label to MODERATION_STATUS_LABEL
-
-      `frontend/src/api/palettes/createPalette.ts`:
-      - Add `shareWithPublic: boolean` to the function params
-      - Append `share_with_public` to the FormData sent to the backend
-    acceptance_criteria:
-      - MODERATION_STATUS includes PRIVATE with value 3
-      - MODERATION_STATUS_LABEL includes label for PRIVATE
-      - createPalette API call sends share_with_public in FormData
-    depends_on: []
-    effort: 1
-    status: scoped
+    status: completed
 
   - id: 5
     milestone: 1
     title: Add share-with-public checkbox to Create page
-    description: |
-      Add a "Share with public" checkbox to the Create page's save section
-      (both desktop and mobile layouts).
-
-      - Checkbox is unchecked by default
-      - Below the checkbox, show helper text: "Your palette will be reviewed and may be featured on the public browse page"
-      - Pass the checkbox value through to `createPalette` API call
-      - Update the confirmation modal message:
-        - If shared: "Thanks for your submission! Once approved, it will appear on the browse page."
-        - If private: "Palette saved to your library!"
-
-      Key file: `frontend/src/pages/Create/Create.tsx`
-    acceptance_criteria:
-      - Checkbox labeled "Share with public" appears near the Save button in both layouts
-      - Helper text shown below checkbox explaining the review process
-      - Checkbox value passed to createPalette API
-      - Confirmation modal message differs based on share choice
-    depends_on: [4]
-    effort: 2
-    status: scoped
+    status: completed
 
   - id: 6
     milestone: 1
     title: Redesign Profile page - remove tabs, add status indicators
-    description: |
-      Replace the tab-based profile layout with a unified list showing all
-      of the user's palettes with status indicators.
-
-      Own profile:
-      - Remove the MUI Tabs component
-      - Show all palettes in a single list sorted by newest
-      - Add a small status chip/badge on each PaletteThumbnail indicating:
-        Private, Pending Review, Public, or Rejected
-      - Query the backend with no moderation_status filter (relies on task 3)
-
-      Other users' profiles:
-      - No change needed — backend already returns only APPROVED palettes
-      - No status badges shown (all visible palettes are public)
-
-      Key files:
-      - `frontend/src/pages/Profile.tsx` — Remove tabs, update query, add status display
-      - `frontend/src/sharedComponents/PaletteThumbnail.tsx` — Add optional status badge prop
-    acceptance_criteria:
-      - Own profile shows all palettes in a single unified list
-      - Each palette on own profile has a status indicator (Private/Pending/Public/Rejected)
-      - No tabs on the profile page
-      - Other users' profiles still show only approved palettes with no status badges
-    depends_on: [4]
-    effort: 3
-    status: scoped
+    status: completed
