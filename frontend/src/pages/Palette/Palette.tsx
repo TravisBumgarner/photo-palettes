@@ -51,6 +51,13 @@ const Palette = () => {
 
   return (
     <>
+      {data.palette.moderationStatus === MODERATION_STATUS.PRIVATE && (
+        <Message
+          includeVerticalMargin
+          message="This palette is in your private library."
+          color="info"
+        />
+      )}
       {data.palette.moderationStatus ===
         MODERATION_STATUS.AWAITING_MODERATION && (
         <Message

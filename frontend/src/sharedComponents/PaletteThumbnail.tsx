@@ -2,7 +2,7 @@ import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
 import { useTheme } from '@mui/material/styles'
 import { BORDER_RADIUS, SPACING, subtleBackground } from '../styles/styleConsts'
-import { type TPalette } from '../types'
+import { MODERATION_STATUS, type TPalette } from '../types'
 import { getUserColorFromUUID } from '../utils/getUserColorFromUUID'
 import BlurImage from './BlurImage'
 import ColorBar from './ColorBar'
@@ -100,12 +100,14 @@ const PaletteThumbnail = ({
               {statusChip}
             </Box>
           </Box>
-          <Favorite
-            refetch={refetch}
-            paletteId={palette.id}
-            favorites={palette.favoritesCount}
-            hasUserFavorited={palette.hasUserFavorited}
-          />
+          {palette.moderationStatus !== MODERATION_STATUS.PRIVATE && (
+            <Favorite
+              refetch={refetch}
+              paletteId={palette.id}
+              favorites={palette.favoritesCount}
+              hasUserFavorited={palette.hasUserFavorited}
+            />
+          )}
         </Box>
       </Box>
     </Link>
