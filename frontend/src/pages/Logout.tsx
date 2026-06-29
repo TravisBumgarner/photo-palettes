@@ -1,7 +1,8 @@
-import { setUserId } from '@amplitude/analytics-browser'
 import Typography from '@mui/material/Typography'
+import posthog from 'posthog-js'
 import { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
+import config from '../config'
 import { logout } from '../services/supabase'
 import useGlobalStore from '../store'
 import PageTitle from '../styles/shared/PageTitle'
@@ -23,7 +24,9 @@ export default function Logout() {
 
       setAuthUser(null)
       setAppUser(null)
-      setUserId(undefined)
+      if (config.isProduction) {
+        posthog.reset()
+      }
 
       // There's flickering that goes on which navigates `/` -> `/login` -> `/` when logging out while on a
       // protected route. The timeout gives a tick to the event loop, allowing the redirect to

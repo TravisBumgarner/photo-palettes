@@ -1,3 +1,8 @@
+> [!NOTE]
+> **This project has been sunset.** A live version is still available at
+> https://palettes.travisbumgarner.dev/ or as a Figma plugin at
+> https://www.figma.com/community/plugin/1553603263291862336
+
 Photo Palettes
 
 Social platform for generating color palettes from photos.

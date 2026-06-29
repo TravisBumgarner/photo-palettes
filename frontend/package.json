@@ -33,8 +33,6 @@
     "printWidth": 80
   },
   "dependencies": {
-    "@amplitude/analytics-browser": "^2.24.0",
-    "@amplitude/plugin-session-replay-browser": "^1.22.13",
     "@capacitor/android": "^7.4.3",
     "@capacitor/app": "^7.1.0",
     "@capacitor/browser": "^7.0.2",
@@ -61,6 +59,7 @@
     "framer-motion": "^12.23.12",
     "lodash.merge": "^4.6.2",
     "mousetrap": "^1.6.5",
+    "posthog-js": "^1.252.0",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
     "react-dropzone": "^14.3.8",

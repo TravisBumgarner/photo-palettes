@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/png" href="favicon.png" />
+    <title>Photo Palettes</title>
+    <meta
+      name="description"
+      content="Photo Palettes — generate color palettes from your photos."
+    />
+
+    <style>
+      @font-face {
+        font-family: 'Satoshi';
+        src:
+          url('fonts/Satoshi-Variable.woff2') format('woff2'),
+          url('fonts/Satoshi-Variable.woff') format('woff'),
+          url('fonts/Satoshi-Variable.ttf') format('truetype');
+        font-weight: 100 900;
+        font-style: normal;
+        font-display: swap;
+      }
+
+      :root {
+        --bg: hsl(0 0% 95%);
+        --surface: hsl(0 0% 90%);
+        --text: hsl(0 0% 10%);
+        --text-muted: hsl(0 0% 30%);
+        --border: hsl(0 0% 80%);
+      }
+
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --bg: hsl(0 0% 10%);
+          --surface: hsl(0 0% 15%);
+          --text: hsl(0 0% 90%);
+          --text-muted: hsl(0 0% 70%);
+          --border: hsl(0 0% 20%);
+        }
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        height: 100%;
+      }
+
+      body {
+        font-family: 'Satoshi', 'Roboto', 'Helvetica', 'Arial', sans-serif;
+        background-color: var(--bg);
+        color: var(--text);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        min-height: 100%;
+        padding: 40px 20px;
+        gap: 24px;
+        -webkit-font-smoothing: antialiased;
+      }
+
+      .content {
+        width: min(420px, 90vw);
+        text-align: left;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        font-size: 18px;
+        line-height: 1.5;
+        color: var(--text-muted);
+      }
+
+      .palette-bar {
+        display: flex;
+        width: min(420px, 90vw);
+        height: 14px;
+      }
+
+      .palette-bar span {
+        flex: 1;
+      }
+
+      .title {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+      }
+
+      .title img {
+        width: 48px;
+        height: 48px;
+        aspect-ratio: 1 / 1;
+        display: block;
+      }
+
+      h1 {
+        font-size: clamp(32px, 6vw, 48px);
+        font-weight: 900;
+        letter-spacing: -0.02em;
+      }
+
+      .content p a {
+        color: var(--text);
+        font-weight: 600;
+        text-decoration: none;
+        white-space: nowrap;
+      }
+
+      .content p a:hover {
+        text-decoration: underline;
+      }
+
+      ul.links {
+        list-style: none;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 24px;
+        margin-top: 4px;
+      }
+
+      ul.links a {
+        color: var(--text);
+        font-weight: 600;
+        text-decoration: none;
+        font-size: 15px;
+      }
+
+      ul.links a:hover {
+        text-decoration: underline;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="title">
+      <img src="favicon.png" alt="Photo Palettes" />
+      <h1>Photo Palettes</h1>
+    </div>
+
+    <div class="palette-bar" aria-hidden="true">
+      <span style="background: #e63946"></span>
+      <span style="background: #f4a261"></span>
+      <span style="background: #e9c46a"></span>
+      <span style="background: #2a9d8f"></span>
+      <span style="background: #264653"></span>
+      <span style="background: #8d99ae"></span>
+    </div>
+
+    <div class="content">
+      <p>
+        Today I have decided to sunset Photo Palettes.
+        Thanks for joining me on this adventure! 
+      </p>
+
+      <p>
+        <a
+          href="https://travisbumgarner.dev/blog/photo-palettes"
+          target="_blank"
+          rel="noopener noreferrer"
+          >Read the post-mortem →</a
+        >
+      </p>
+
+      <p>
+        Until next time, happy making!
+      </p>
+
+      <p>
+        Cheers,<br />
+        Travis
+      </p>
+
+      <ul class="links">
+        <li><a href="https://travisbumgarner.dev/">Keep in touch</a></li>
+        <li>
+          <a
+            href="https://www.figma.com/community/plugin/1553603263291862336"
+            target="_blank"
+            rel="noopener noreferrer"
+            >Figma Plugin</a
+          >
+        </li>
+        <li>
+          <a
+            href="https://github.com/TravisBumgarner/photo-palettes"
+            target="_blank"
+            rel="noopener noreferrer"
+            >GitHub</a
+          >
+        </li>
+      </ul>
+    </div>
+  </body>
+</html>

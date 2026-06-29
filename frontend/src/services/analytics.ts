@@ -1,5 +1,5 @@
-import * as amplitude from '@amplitude/analytics-browser'
 import { Capacitor } from '@capacitor/core'
+import posthog from 'posthog-js'
 import config from '../config'
 import type { ColorMode } from '../pages/Palette/Palette.types'
 import type { ESortBy } from '../types'
@@ -157,7 +157,7 @@ export const trackEvent = (event: Event) => {
   }
 
   if (config.isProduction) {
-    amplitude.track(event.event, properties)
+    posthog.capture(event.event, properties)
     return
   }
   // eslint-disable-next-line no-console

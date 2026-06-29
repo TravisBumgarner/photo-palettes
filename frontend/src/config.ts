@@ -6,6 +6,8 @@ const envSchema = z.object({
   VITE_PUBLIC_SUPABASE_ANON_KEY: z.string(),
   VITE_PUBLIC_ENVIRONMENT: z.enum(['development', 'production']),
   VITE_PUBLIC_FE_URL: z.string().url(),
+  VITE_PUBLIC_POSTHOG_KEY: z.string().min(1),
+  VITE_PUBLIC_POSTHOG_HOST: z.string().min(1),
 })
 
 const envVars = {
@@ -14,6 +16,8 @@ const envVars = {
   VITE_PUBLIC_SUPABASE_ANON_KEY: import.meta.env.VITE_PUBLIC_SUPABASE_ANON_KEY,
   VITE_PUBLIC_ENVIRONMENT: import.meta.env.VITE_PUBLIC_ENVIRONMENT,
   VITE_PUBLIC_FE_URL: import.meta.env.VITE_PUBLIC_FE_URL,
+  VITE_PUBLIC_POSTHOG_KEY: import.meta.env.VITE_PUBLIC_POSTHOG_KEY,
+  VITE_PUBLIC_POSTHOG_HOST: import.meta.env.VITE_PUBLIC_POSTHOG_HOST,
 }
 
 const parsed = envSchema.safeParse(envVars)
@@ -31,6 +35,8 @@ const config = {
   supabaseAnonKey: parsed.data.VITE_PUBLIC_SUPABASE_ANON_KEY,
   isProduction: parsed.data.VITE_PUBLIC_ENVIRONMENT === 'production',
   frontendUrl: parsed.data.VITE_PUBLIC_FE_URL,
+  posthogKey: parsed.data.VITE_PUBLIC_POSTHOG_KEY,
+  posthogHost: parsed.data.VITE_PUBLIC_POSTHOG_HOST,
 }
 
 export default config

@@ -1,6 +1,6 @@
-import * as amplitude from '@amplitude/analytics-browser'
-import { sessionReplayPlugin } from '@amplitude/plugin-session-replay-browser'
+import { Capacitor } from '@capacitor/core'
 import { init } from '@sentry/react'
+import posthog from 'posthog-js'
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import App from './App.tsx'
@@ -9,20 +9,18 @@ import config from './config.ts'
 import './styles/global.css'
 
 if (config.isProduction) {
-  amplitude.add(sessionReplayPlugin())
-  amplitude.init('d398356d5961d66d5f5aa55ccf5ea679', {
-    autocapture: {
-      attribution: true,
-      fileDownloads: true,
-      formInteractions: true,
-      pageViews: true,
-      sessions: true,
-      elementInteractions: true,
-      networkTracking: true,
-      webVitals: true,
-      frustrationInteractions: true,
-    },
+  const platform = Capacitor.getPlatform()
+  const isNative = platform !== 'web'
+
+  posthog.init(config.posthogKey, {
+    api_host: config.posthogHost,
+    defaults: '2026-01-30',
+    person_profiles: 'identified_only',
+    capture_exceptions: true,
+    ...(isNative && { persistence: 'localStorage' }),
   })
+
+  posthog.register({ platform })
 }
 
 init({
