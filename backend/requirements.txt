@@ -36,7 +36,7 @@ pathspec==0.12.1
 pillow==11.3.0
 pluggy==1.6.0
 postgrest==2.19.0
-psycopg2==2.9.10
+psycopg2-binary==2.9.10
 pycparser==2.23
 pydantic==2.11.9
 pydantic-settings==2.10.1

@@ -19,7 +19,7 @@ bootstrap:
 
 up:
 	@echo "Starting services..."
-	@docker compose up --build --watch
+	@docker compose up --build
 
 down:
 	@docker compose down

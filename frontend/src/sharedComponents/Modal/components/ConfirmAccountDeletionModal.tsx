@@ -1,12 +1,13 @@
-import { setUserId } from '@amplitude/analytics-browser'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import TextField from '@mui/material/TextField'
 import Typography from '@mui/material/Typography'
 import { useMutation } from '@tanstack/react-query'
+import posthog from 'posthog-js'
 import { useCallback, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { deleteMe } from '../../../api/user/deleteMe'
+import config from '../../../config'
 import { trackEvent } from '../../../services/analytics'
 import { logout } from '../../../services/supabase'
 import { activeModalSignal } from '../../../signals'
@@ -37,7 +38,9 @@ const ConfirmAccountDeletionModal = () => {
         logout()
         setAuthUser(null)
         setAppUser(null)
-        setUserId(undefined)
+        if (config.isProduction) {
+          posthog.reset()
+        }
         activeModalSignal.value = null
         navigate('/')
       } else {
