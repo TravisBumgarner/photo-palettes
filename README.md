@@ -1,6 +1,5 @@
 > [!NOTE]
-> **This project has been sunset.** A live version is still available at
-> https://palettes.travisbumgarner.dev/ or as a Figma plugin at
+> **This project has been sunset.** The Figma plugin is still available at
 > https://www.figma.com/community/plugin/1553603263291862336
 
 Photo Palettes
